@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as Actions from 'app/store/actions';
 import FuseNavBadge from './../FuseNavBadge';
+import { APP_ROLE } from '../../../../constant';
 
 const propTypes = {
     item: PropTypes.shape(
@@ -51,7 +52,7 @@ const styles = theme => ({
 
 function FuseNavVerticalItem({item, classes, nestedLevel, userRole, navbarCloseMobile, active})
 {
-    if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
+    if ( item.auth && (!item.auth.includes(userRole) || (userRole !== APP_ROLE.GUEST && item.auth.length === 1 && item.auth.includes(APP_ROLE.GUEST))) )
     {
         return null;
     }

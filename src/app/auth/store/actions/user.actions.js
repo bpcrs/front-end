@@ -4,29 +4,30 @@ import _ from '@lodash';
 import store from 'app/store';
 import * as Actions from 'app/store/actions';
 import jwtService from 'app/services/jwtService';
+import { APP_ROLE } from '../../../../constant';
 
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
 export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
 
-/**
- * Set user data from Auth0 token data
- */
-export function setUserDataAuth0(tokenData) {
-    const user = {
-        role: 'admin',
-        from: 'auth0',
-        data: {
-            displayName: tokenData.username,
-            photoURL: tokenData.picture,
-            email: tokenData.email,
-            settings: (tokenData.user_metadata && tokenData.user_metadata.settings) ? tokenData.user_metadata.settings : {},
-            shortcuts: (tokenData.user_metadata && tokenData.user_metadata.shortcuts) ? tokenData.user_metadata.shortcuts : []
-        }
-    };
+// /**
+//  * Set user data from Auth0 token data
+//  */
+// export function setUserDataAuth0(tokenData) {
+//     const user = {
+//         role: 'admin',
+//         from: 'auth0',
+//         data: {
+//             displayName: tokenData.username,
+//             photoURL: tokenData.picture,
+//             email: tokenData.email,
+//             settings: (tokenData.user_metadata && tokenData.user_metadata.settings) ? tokenData.user_metadata.settings : {},
+//             shortcuts: (tokenData.user_metadata && tokenData.user_metadata.shortcuts) ? tokenData.user_metadata.shortcuts : []
+//         }
+//     };
 
-    return setUserData(user);
-}
+//     return setUserData(user);
+// }
 
 /**
  * Set User Data
@@ -42,6 +43,8 @@ export function setUserData(user) {
         /*
         Set User Data
          */
+        console.log(user);
+        
         dispatch({
             type: SET_USER_DATA,
             payload: user
@@ -101,7 +104,7 @@ export function logoutUser() {
 
         const user = getState().auth.user;
 
-        if (user.role === 'guest') {
+        if (user.role === APP_ROLE.GUEST) {
             return null;
         }
 
@@ -123,7 +126,7 @@ export function logoutUser() {
  * Update User Data
  */
 function updateUserData(user) {
-    if (user.role === 'guest') {
+    if (user.role === APP_ROLE.GUEST) {
         return;
     }
     jwtService.updateUserData(user)

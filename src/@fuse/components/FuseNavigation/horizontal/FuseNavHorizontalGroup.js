@@ -10,6 +10,7 @@ import * as ReactDOM from 'react-dom';
 import FuseNavHorizontalCollapse from './FuseNavHorizontalCollapse';
 import FuseNavHorizontalItem from './FuseNavHorizontalItem';
 import FuseNavHorizontalLink from './FuseNavHorizontalLink';
+import { APP_ROLE } from '../../../../constant';
 
 const propTypes = {
     item: PropTypes.shape(
@@ -70,7 +71,7 @@ class FuseNavHorizontalGroup extends Component {
         const {item, nestedLevel, userRole, classes, dense} = this.props;
         const {open} = this.state;
 
-        if ( item.auth && (!item.auth.includes(userRole) || (userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))) )
+        if ( item.auth && (!item.auth.includes(userRole) || (userRole !== APP_ROLE.GUEST && item.auth.length === 1 && item.auth.includes(APP_ROLE.GUEST))) )
         {
             return null;
         }

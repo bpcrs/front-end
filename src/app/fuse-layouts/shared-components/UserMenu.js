@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import * as authActions from 'app/auth/store/actions';
 import {bindActionCreators} from 'redux';
 import {Link} from 'react-router-dom';
+import { APP_ROLE } from '../../../constant';
 
 class UserMenu extends Component {
 
@@ -68,7 +69,7 @@ class UserMenu extends Component {
                         paper: "py-8"
                     }}
                 >
-                    {user.role === 'guest' ? (
+                    {user.role === APP_ROLE.GUEST ? (
                         <React.Fragment>
                             <MenuItem component={Link} to="/login">
                                 <ListItemIcon>

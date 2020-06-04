@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import {FuseLayoutConfigs} from '@fuse';
 import classNames from 'classnames';
 import _ from '@lodash';
+import { APP_ROLE } from '../../../constant';
 
 const styles = theme => ({
     root          : {},
@@ -53,7 +54,7 @@ class FuseSettings extends Component {
             newSettings.layout.config = {};
         }
 
-        if ( this.props.user.role === 'guest' )
+        if ( this.props.user.role === APP_ROLE.GUEST )
         {
             this.props.setDefaultSettings(newSettings);
         }

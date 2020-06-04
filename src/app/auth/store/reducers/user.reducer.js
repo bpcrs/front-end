@@ -1,11 +1,12 @@
 import * as Actions from '../actions';
+import { APP_ROLE } from '../../../../constant';
 
 const initialState = {
-    role: 'guest',
+    role: APP_ROLE.GUEST,
     data: {
-        'displayName': 'John Doe',
-        'photoURL'   : 'assets/images/avatars/Velazquez.jpg',
-        'email'      : 'johndoe@withinpixels.com',
+        displayName: 'John Doe',
+        photoURL   : 'assets/images/avatars/Velazquez.jpg',
+        email      : 'johndoe@withinpixels.com',
         shortcuts    : [
             'calendar',
             'mail',

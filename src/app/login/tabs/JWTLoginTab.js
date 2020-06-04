@@ -8,22 +8,24 @@ import connect from 'react-redux/es/connect/connect';
 import * as authActions from 'app/auth/store/actions';
 import { GoogleLogin } from 'react-google-login';
 import { APP_CONST } from '../../../constant';
-import store from 'app/store';
-import * as Actions from 'app/store/actions';
+import { showMessage } from '../../store/actions/fuse';
+import { useDispatch } from 'react-redux';
+import { submitLogin } from '../../auth/store/actions';
 function JWTLoginTab(props) {
+    const dispatch = useDispatch()
 
     const responseGoogle = (response) => {
         if (response.tokenId) {
-            props.submitLogin(response.tokenId)
+            dispatch(submitLogin(response.tokenId))
+            // props.submitLogin(response.tokenId);
+            dispatch(showMessage({
+                message : "Login successfully",
+                variant : "success"
+            }));
         } else {
-            store.dispatch(Actions.showMessage({
-                message: 'Your account not permitted',//text or html
-                autoHideDuration: 3000,//ms
-                anchorOrigin: {
-                    vertical: 'top',//top bottom
-                    horizontal: 'right'//left center right
-                },
-                variant: 'error'
+            dispatch(showMessage({
+                message : "Your account not permitted",
+                variant : "error"
             }));
         }
     }
@@ -52,17 +54,17 @@ function JWTLoginTab(props) {
 }
 
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        submitLogin: authActions.submitLogin
-    }, dispatch);
-}
+// function mapDispatchToProps(dispatch) {
+//     return bindActionCreators({
+//         submitLogin: authActions.submitLogin
+//     }, dispatch);
+// }
 
-function mapStateToProps({ auth }) {
-    return {
-        login: auth.login,
-        user: auth.user
-    }
-}
+// function mapStateToProps({ auth }) {
+//     return {
+//         login: auth.login,
+//         user: auth.user
+//     }
+// }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(JWTLoginTab));
+export default withRouter(JWTLoginTab);

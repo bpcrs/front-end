@@ -9,6 +9,7 @@ import {withRouter} from 'react-router-dom';
 import deburr from 'lodash/deburr';
 import Autosuggest from 'react-autosuggest';
 import _ from '@lodash';
+import { APP_ROLE } from '../../../constant';
 
 const propTypes = {};
 
@@ -209,7 +210,7 @@ class FuseSearch extends Component {
     };
 
     itemAuthAllowed = (item) => {
-        return !(item.auth && (!item.auth.includes(this.props.userRole) || (this.props.userRole !== 'guest' && item.auth.length === 1 && item.auth.includes('guest'))))
+        return !(item.auth && (!item.auth.includes(this.props.userRole) || (this.props.userRole !== APP_ROLE.GUEST && item.auth.length === 1 && item.auth.includes(APP_ROLE.GUEST))))
     };
 
     flattenNavigation(navigation)

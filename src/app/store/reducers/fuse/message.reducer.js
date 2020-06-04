@@ -1,42 +1,41 @@
 import * as Actions from '../../actions/fuse/index';
 
 const initialState = {
-    state  : null,
+    state: null,
     options: {
-        anchorOrigin    : {
-            vertical  : 'top',
-            horizontal: 'center'
+        anchorOrigin: {
+            vertical: 'top',//top bottom
+            horizontal: 'right'//left center right
         },
-        autoHideDuration: 6000,
-        message         : "Hi",
-        variant         : null
+        autoHideDuration: 3000,
+        message: "Hi",
+        variant: null
     }
 };
 
 const message = function (state = initialState, action) {
-    switch ( action.type )
-    {
+    switch (action.type) {
         case Actions.SHOW_MESSAGE:
-        {
-            return {
-                state  : true,
-                options: {
-                    ...initialState.options,
-                    ...action.options
-                }
-            };
-        }
+            {
+                return {
+                    state: true,
+                    options: {
+                        ...initialState.options,
+                        ...action.options
+                    }
+                };
+            }
         case Actions.HIDE_MESSAGE:
-        {
-            return {
-                ...state,
-                state: null
-            };
-        }
+            {
+                return {
+                    ...state,
+                    state: null
+                };
+            }
         default:
-        {
-            return state;
-        }
+            {
+                return state;
+            }
     }
 };
 
