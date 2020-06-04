@@ -8,11 +8,23 @@ import connect from 'react-redux/es/connect/connect';
 import * as authActions from 'app/auth/store/actions';
 import { GoogleLogin } from 'react-google-login';
 import { APP_CONST } from '../../../constant';
+import store from 'app/store';
+import * as Actions from 'app/store/actions';
 function JWTLoginTab(props) {
 
     const responseGoogle = (response) => {
         if (response.tokenId) {
             props.submitLogin(response.tokenId)
+        } else {
+            store.dispatch(Actions.showMessage({
+                message: 'Your account not permitted',//text or html
+                autoHideDuration: 3000,//ms
+                anchorOrigin: {
+                    vertical: 'top',//top bottom
+                    horizontal: 'right'//left center right
+                },
+                variant: 'error'
+            }));
         }
     }
     return (

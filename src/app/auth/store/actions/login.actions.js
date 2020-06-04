@@ -1,7 +1,7 @@
 import jwtService from 'app/services/jwtService';
 import { setUserData } from './user.actions';
 import * as Actions from 'app/store/actions';
-
+import store from 'app/store';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 
@@ -19,13 +19,14 @@ export function submitLogin(token) {
                         shortcuts: []
                     }
                 }));
-
+                
                 return dispatch({
                     type: LOGIN_SUCCESS
                 });
             }
             )
             .catch(error => {
+                store.dispatch(Actions.showMessage({message: error.message}));
                 return dispatch({
                     type: LOGIN_ERROR,
                     payload: error
