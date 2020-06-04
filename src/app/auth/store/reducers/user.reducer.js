@@ -1,13 +1,14 @@
 import * as Actions from '../actions';
 import { APP_ROLE } from '../../../../constant';
+import jwtService from '../../../services/jwtService';
 
 const initialState = {
     role: APP_ROLE.GUEST,
     data: {
         displayName: 'John Doe',
-        photoURL   : 'assets/images/avatars/Velazquez.jpg',
-        email      : 'johndoe@withinpixels.com',
-        shortcuts    : [
+        photoURL: 'assets/images/avatars/Velazquez.jpg',
+        email: 'johndoe@withinpixels.com',
+        shortcuts: [
             'calendar',
             'mail',
             'contacts',
@@ -17,29 +18,42 @@ const initialState = {
 };
 
 const user = function (state = initialState, action) {
-    switch ( action.type )
-    {
+    switch (action.type) {
         case Actions.SET_USER_DATA:
-        {
-            return {
-                ...initialState,
-                ...action.payload
-            };
-        }
+            {
+                return {
+                    ...initialState,
+                    ...action.payload
+                };
+            }
         case Actions.REMOVE_USER_DATA:
-        {
-            return {
-                ...initialState
-            };
-        }
+            {
+                return {
+                    ...initialState
+                };
+            }
         case Actions.USER_LOGGED_OUT:
-        {
-            return initialState;
-        }
+            {
+                return initialState;
+            }
         default:
-        {
-            return state
-        }
+            {
+                const userFromToken = jwtService.getUserDataFromToken();
+                if (userFromToken) {
+                    return {
+                        ...initialState, ...{
+                            role: userFromToken.roleName,
+                            data: {
+                                displayName: userFromToken.fullName,
+                                photoURL: userFromToken.imageUrl,
+                                email: userFromToken.email,
+                                shortcuts: []
+                            }
+                        }
+                    }
+                }
+                return state
+            }
     }
 };
 

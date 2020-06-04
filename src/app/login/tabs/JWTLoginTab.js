@@ -1,17 +1,12 @@
-import React, { Component } from 'react';
-import { Button, Divider, Typography, InputAdornment, Icon } from '@material-ui/core';
-import { TextFieldFormsy } from '@fuse';
-import Formsy from 'formsy-react';
-import { bindActionCreators } from 'redux';
-import { withRouter, useHistory } from 'react-router-dom';
-import connect from 'react-redux/es/connect/connect';
-import * as authActions from 'app/auth/store/actions';
+import React from 'react';
+import { Button } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import { APP_CONST } from '../../../constant';
 import { showMessage } from '../../store/actions/fuse';
 import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
-function JWTLoginTab(props) {
+function JWTLoginTab() {
     const dispatch = useDispatch()
 
     const responseGoogle = (response) => {

@@ -43,7 +43,6 @@ export function setUserData(user) {
         /*
         Set User Data
          */
-        console.log(user);
         
         dispatch({
             type: SET_USER_DATA,

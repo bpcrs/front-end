@@ -8,7 +8,7 @@ export function submitLogin(token) {
         jwtService.signInWithToken(token)
             .then((token) => {
                 const userFromToken = jwtService.getUserDataFromToken();
-                dispatch(setUserData({
+                return dispatch(setUserData({
                     role: userFromToken.roleName,
                     data: {
                         displayName: userFromToken.fullName,
@@ -17,9 +17,9 @@ export function submitLogin(token) {
                         shortcuts: []
                     }
                 }));
-                return dispatch({
-                    type: LOGIN_SUCCESS
-                });
+                // return dispatch({
+                //     type: LOGIN_SUCCESS
+                // });
             })
             .catch(error => {
                 return dispatch({

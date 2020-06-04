@@ -1,34 +1,33 @@
 import * as Actions from '../actions';
-
+import jwtService from '../../../services/jwtService'
 const initialState = {
-    success: false,
-    error  : {
+    success: jwtService.getAccessToken() != null,
+    error: {
         username: null,
         password: null
     }
 };
 
 const login = function (state = initialState, action) {
-    switch ( action.type )
-    {
+    switch (action.type) {
         case Actions.LOGIN_SUCCESS:
-        {
-            return {
-                ...initialState,
-                success: true
-            };
-        }
+            {
+                return {
+                    ...initialState,
+                    success: true
+                };
+            }
         case Actions.LOGIN_ERROR:
-        {
-            return {
-                success: false,
-                error  : action.payload
-            };
-        }
+            {
+                return {
+                    success: false,
+                    error: action.payload
+                };
+            }
         default:
-        {
-            return state
-        }
+            {
+                return state
+            }
     }
 };
 
