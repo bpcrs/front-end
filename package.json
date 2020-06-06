@@ -2,6 +2,7 @@
     "name": "fuse-react-app",
     "version": "2.2.0",
     "private": true,
+    "license": "MIT",
     "dependencies": {
         "@chakra-ui/core": "^0.8.0",
         "@date-io/date-fns": "1.0.2",
