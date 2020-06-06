@@ -10,6 +10,7 @@ import {
     TextFieldFormsy
 } from '../../../@fuse/components/formsy';
 import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks } from 'landing-blocks/dist'
+import { Link, useHistory } from 'react-router-dom';
 // import Head from 'next/head'
 // import background from "../../../../public/assets/images/backgrounds/header-bg.png"
 
@@ -20,23 +21,24 @@ const listImage = [
 const styles = theme => ({
     layoutRoot: {}
 });
-
 function Landing(props) {
+    const history = useHistory();
     const { classes } = props;
-
 
     return (
         <>
             <LandingProvider primary='#5D21D2' background='#fff'>
                 <NavBar
-                    logo={<img width='80px' src={"https://filebin.net/uc9pu0ezk4m2phyp/favicon.ico?t=y2wui74v"} />}
+                    logo={<img width='80px' src="assets/images/logos/fuse.svg" />}
                     navs={[
-                        <Button variant="outlined">Features</Button>,
-                        <Button variant="outlined">Use Cases</Button>,
-                        <Button variant="outlined">Pricing</Button>,
-                        <Button variant="outlined">About Us</Button>,
+                        <Button variant="contained">Features</Button>,
+                        <Button variant="contained">Use Cases</Button>,
+                        <Button variant="contained">Pricing</Button>,
+                        <Button variant="contained">About Us</Button>,
+                        <Button variant="contained" onClick={() => history.push("/login")}>Login</Button>,
                     ]}
                 />
+                <Grid xs={12}></Grid>
                 <SectionTitle
                     heading={
                         <Heading
@@ -56,46 +58,48 @@ function Landing(props) {
                     // floatingElement={<GradientCurtains mt='-600px' />}
                     heading={<Typography variant="h5" >Choose your plan</Typography>}
                     image={<img style={{ borderRadius: "10px" }} width='1000px' src={listImage[1]} />}
-                    cta={<Formsy className="flex flex-col justify-center">
-                        <TextField
-                            id="datetime-local"
-                            label="Pick-up appointment"
-                            type="datetime-local"
-                            defaultValue="2017-05-24T10:30"
-                            className={"mb-16"}
-                            InputLabelProps={{
-                                shrink: true
-                            }}
-                            variant="outlined"
-                        />
-                        <TextField
-                            id="datetime-local"
-                            label="Drop-off appointment"
-                            type="datetime-local"
-                            defaultValue="2017-05-24T10:30"
-                            className={classes.textField}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant="outlined"
-                        />
-                        <SelectFormsy
-                            className="my-16"
-                            name="related-outlined"
-                            label="Pick-up location"
-                            value="sg"
-                            variant="outlined"
-                        >
-                            <MenuItem value="sg">Ho Chi Minh</MenuItem>
-                            <MenuItem value="olivier">Olivier</MenuItem>
-                            <MenuItem value="kevin">Kevin</MenuItem>
-                        </SelectFormsy>
-                        <Button variant="contained" color="primary">
-                            Book now
+                    cta={
+                        <Formsy className="flex flex-col justify-center">
+                            <TextField
+                                id="datetime-local"
+                                label="Pick-up appointment"
+                                type="datetime-local"
+                                defaultValue="2017-05-24T10:30"
+                                className={"mb-16"}
+                                InputLabelProps={{
+                                    shrink: true
+                                }}
+                                variant="outlined"
+                            />
+                            <TextField
+                                id="datetime-local"
+                                label="Drop-off appointment"
+                                type="datetime-local"
+                                defaultValue="2017-05-24T10:30"
+                                className={classes.textField}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="outlined"
+                            />
+                            <SelectFormsy
+                                className="my-16"
+                                name="related-outlined"
+                                label="Pick-up location"
+                                value="sg"
+                                variant="outlined"
+                            >
+                                <MenuItem value="sg">Ho Chi Minh</MenuItem>
+                                <MenuItem value="olivier">Olivier</MenuItem>
+                                <MenuItem value="kevin">Kevin</MenuItem>
+                            </SelectFormsy>
+                            <Button variant="contained" color="primary">
+                                Book now
                         </Button>
-                    </Formsy>}
-                // fingerprint='Already using xxx? Sign in'
+                        </Formsy>}
+                    fingerprint='Already have account? Sign in'
                 />
+                <Grid xs={12}></Grid>
                 <HowItWorks
                     heading='How Prismic works'
                     subheading='A tool built to allow your content, design, and development teams to produce a finished product that they can all be proud of.'
