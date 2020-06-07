@@ -55,6 +55,18 @@ function Booking(props) {
                         <Grid item xs={12} xl={3} className={classes.paper}>
                             <CarItem />
                         </Grid>
+                        <Grid item xs={12} xl={3} className={classes.paper}>
+                            <CarItem />
+                        </Grid>
+                        <Grid item xs={12} xl={3} className={classes.paper}>
+                            <CarItem />
+                        </Grid>
+                        <Grid item xs={12} xl={3} className={classes.paper}>
+                            <CarItem />
+                        </Grid>
+                        <Grid item xs={12} xl={3} className={classes.paper}>
+                            <CarItem />
+                        </Grid>
                     </Grid>
                 </Container>
             </LandingProvider>

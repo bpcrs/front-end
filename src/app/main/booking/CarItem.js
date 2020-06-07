@@ -73,29 +73,29 @@ export default function CarItem() {
         title="Paella dish"
       />
       <CardContent>
-        <Grid xs={12} spacing={1} container justify="space-between" alignItems="baseline">
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} justify="center" container>
+        <Grid spacing={1} container justify="space-between" alignItems="baseline">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid justify="center" container>
               <Icon fontSize={"default"}>airline_seat_recline_normal_outlined</Icon>
             </Grid>
-            <Grid xs={12} item container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">4 people</Typography>
             </Grid>
           </Grid>
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid item container justify="center">
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">Automatic</Typography>
             </Grid>
           </Grid>
 
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid item container justify="center">
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">SUV Car</Typography>
             </Grid>
           </Grid>
