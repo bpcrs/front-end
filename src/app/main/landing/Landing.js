@@ -36,6 +36,7 @@ function Landing(props) {
                         <Button variant="contained">Pricing</Button>,
                         <Button variant="contained">About Us</Button>,
                         <Button variant="contained" onClick={() => history.push("/login")}>Login</Button>,
+                        <Button variant="contained" onClick={() => history.push("/car")}>Car</Button>,
                     ]}
                 />
                 <Grid xs={12}></Grid>
