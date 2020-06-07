@@ -93,7 +93,7 @@ function Landing(props) {
                                 <MenuItem value="olivier">Olivier</MenuItem>
                                 <MenuItem value="kevin">Kevin</MenuItem>
                             </SelectFormsy>
-                            <Button variant="contained" color="primary">
+                            <Button variant="contained" color="primary" onClick={() => history.push("/booking")}>
                                 Book now
                         </Button>
                         </Formsy>}
@@ -139,46 +139,6 @@ function Landing(props) {
                     }}
                 />
             </LandingProvider>
-            {/*<FusePageSimple*/}
-            {/*    classes={{*/}
-            {/*        root: classes.layoutRoot*/}
-            {/*    }}*/}
-            {/*    // header={*/}
-            {/*    //     <>*/}
-            {/*    //         <div>BPCRS</div>*/}
-
-            {/*    //     </>*/}
-            {/*    //     // <div className="p-24"><h4>Header</h4></div>*/}
-            {/*    // }*/}
-            {/*    contentToolbar={*/}
-            {/*        <>*/}
-            {/*            <div className="px-24"><h4>Content Toolbar</h4></div>*/}
-            {/*        </>*/}
-            {/*    }*/}
-            {/*    // content={*/}
-            {/*        // <div className="p-24">*/}
-            {/*        //     <Grid container className={classes.root} spacing={2}>*/}
-            {/*        //         <Grid item xs={6} >*/}
-            {/*        //             <Typography className="h2 mb-24">Schedule your plan</Typography>*/}
-            {/*        //             <Grid item xs={10}>*/}
-
-            {/*        //             </Grid>*/}
-            {/*        //         </Grid>*/}
-            {/*        //         <Grid item justify="center" xs={6}>*/}
-            {/*        //             <Paper square elevation={0} className={classes.header}>*/}
-            {/*        //                 <Typography>{tutorialSteps[activeStep].label}</Typography>*/}
-            {/*        //             </Paper>*/}
-            {/*        //             <img*/}
-            {/*        //                 src={tutorialSteps[activeStep].imgPath}*/}
-            {/*        //                 alt={tutorialSteps[activeStep].label}*/}
-            {/*        //             />*/}
-            {/*        //         </Grid>*/}
-            {/*        //*/}
-            {/*        //     </Grid>*/}
-            {/*        //*/}
-            {/*        // </div>*/}
-            {/*    // }*/}
-            {/*/>*/}
         </>
     )
 }
