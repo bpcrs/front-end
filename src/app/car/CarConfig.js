@@ -1,6 +1,7 @@
 import Car from './Car';
 import {authRoles} from 'app/auth';
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+import CarDetail from './CarDetail';
 
 export const CarConfig = {
     settings: {
@@ -26,9 +27,13 @@ export const CarConfig = {
     },
     auth    : authRoles.onlyGuest,
     routes  : [
+        // {
+        //     path     : '/car',
+        //     component: Car
+        // },
         {
-            path     : '/car',
-            component: Car
+            path     : '/car/details',
+            component: CarDetail
         }
     ]
 };

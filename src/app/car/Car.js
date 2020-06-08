@@ -6,8 +6,7 @@ import Formsy from 'formsy-react';
 import {
     SelectFormsy
 } from '@fuse/components/formsy';
-import { Link, useHistory } from 'react-router-dom';
-import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks } from 'landing-blocks/dist'
+import { NavBar, LandingProvider } from 'landing-blocks/dist'
 
 const styles = theme => ({
     root: {
@@ -45,7 +44,7 @@ class Car extends Component {
                         ]}
                     />
                     <div className="flex flex-col flex-1 flex-no-shrink p-12 md:flex-row">
-                        <div className="max-w-400 mx-auto m-16 md:m-0" square>
+                        <div className="max-w-400 mx-auto m-16 md:m-0">
                             <div className="flex flex-col items-center justify-center p-32 md:p-48 ">
                                 <Typography variant="h3" className="text-center md:w-full mb-20">Filter</Typography>
                                 <Typography variant="h6" className="text-center md:w-full mt-20">Car type</Typography>
@@ -206,25 +205,25 @@ class Car extends Component {
                                             <CardContent>
                                                 <Typography gutterBottom variant="h5" component="h2">
                                                     TOYOTA CAMRY 2.0G
-                                </Typography>
+                                                </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     Manual, 7 Seats, Petrol
-                                </Typography>
+                                                </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     FPT Software 3 - Ho Chi Minh City
-                                </Typography>
+                                                </Typography>
                                                 <Typography variant="body2" color="textSecondary" component="p">
                                                     6.5 km away
-                                </Typography>
+                                                </Typography>
                                             </CardContent>
                                         </CardActionArea>
                                         <CardActions>
                                             <Button size="small" color="primary">
                                                 Details
-                            </Button>
+                                            </Button>
                                             <Button size="small" color="primary">
                                                 Compare
-                            </Button>
+                                            </Button>
                                         </CardActions>
                                     </Card>
                                 </Grid>
