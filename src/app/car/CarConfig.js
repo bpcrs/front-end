@@ -1,5 +1,6 @@
 import Car from './Car';
 import {authRoles} from 'app/auth';
+import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 
 export const CarConfig = {
     settings: {
