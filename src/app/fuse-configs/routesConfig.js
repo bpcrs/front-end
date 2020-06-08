@@ -16,10 +16,10 @@ const routeConfigs = [
 
  const routes = [
     ...FuseUtils.generateRoutesFromConfigs(routeConfigs),
-    // {
-    //     path     : '/',
-    //     component: () => <Redirect to="/404"/>
-    // }
+    {
+        path     : '/',
+        component: () => <Redirect to="/example"/>
+    }
 ];
 
  export default routes;

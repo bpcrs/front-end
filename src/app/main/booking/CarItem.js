@@ -15,8 +15,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Grid, Icon, ListItemIcon, ListItemText } from '@material-ui/core';
-
+import { Grid, Icon, ListItemIcon, ListItemText, Button, Badge } from '@material-ui/core';
+import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 400,
@@ -41,6 +41,9 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  alignRight: {
+    textAlign: "right"
+  }
 }));
 
 export default function CarItem() {
@@ -109,12 +112,19 @@ export default function CarItem() {
         </Typography> */}
       </CardContent>
       <CardActions className={classes.actions}>
-        <IconButton aria-label="Add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="Share">
-          <ShareIcon />
-        </IconButton>
+        <Grid container alignContent="flex-end" spacing={1} alignItems="center">
+          <Grid item xs={6}>
+            <IconButton aria-label="Add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="Share">
+              <ShareIcon />
+            </IconButton>
+          </Grid>
+          <Grid item xs={6} className={classes.alignRight}>
+            <Typography>3.000.000 VND</Typography>
+          </Grid>
+        </Grid>
       </CardActions>
     </Card>
   );

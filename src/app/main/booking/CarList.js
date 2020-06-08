@@ -25,7 +25,7 @@ const styles = (theme) => ({
     },
 });
 
-function Booking(props) {
+function CarList(props) {
     const history = useHistory();
     const classes = { props };
     return (
@@ -42,29 +42,14 @@ function Booking(props) {
                     ]}
                 />
                 <Container >
-                    <Grid container spacing={2} justify="space-between" className={classes.root}  >
-                        <Grid item xs={12} xl={3} className={classes.paper}>
+                    <Grid container spacing={2} className={classes.root}  >
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
                             <CarItem />
                         </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
                             <CarItem />
                         </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} className={classes.paper}>
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
                             <CarItem />
                         </Grid>
                     </Grid>
@@ -74,4 +59,4 @@ function Booking(props) {
     )
 }
 
-export default withStyles(styles, { withTheme: true })(Booking);
+export default withStyles(styles, { withTheme: true })(CarList);

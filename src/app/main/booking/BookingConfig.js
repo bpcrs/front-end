@@ -25,9 +25,9 @@ export const BookingConfig = {
     },
     routes  : [
         {
-            path     : '/booking',
+            path     : '/car',
             component: FuseLoadable({
-                loader: () => import('./Booking')
+                loader: () => import('./CarList')
             }),
         }
     ],

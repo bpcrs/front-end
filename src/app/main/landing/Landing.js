@@ -184,7 +184,7 @@ function Landing(props) {
                                 <MenuItem value="olivier">Olivier</MenuItem>
                                 <MenuItem value="kevin">Kevin</MenuItem>
                             </SelectFormsy>
-                            <Button variant="contained" color="primary" onClick={() => history.push("/booking")}>
+                            <Button variant="contained" color="primary" onClick={() => history.push("/car")}>
                                 Book now
                         </Button>
                         </Formsy>}
