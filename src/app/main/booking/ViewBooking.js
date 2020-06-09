@@ -1,9 +1,10 @@
 import React from 'react'
-import { Container, Grid, Breadcrumbs, Chip, withStyles, Typography, AppBar, Toolbar, Button, IconButton, makeStyles, TextField, Icon, Card, CardContent, Box, CardHeader, CardActionArea, CardActions, FormControl } from '@material-ui/core'
+import { Container, Grid, Breadcrumbs, Chip, withStyles, Typography, AppBar, Toolbar, Button, IconButton, makeStyles, TextField, Icon, Card, CardContent, Box, CardHeader, CardActionArea, CardActions, FormControl, FormControlLabel, Checkbox } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home';
 import ExpandMoreIcon from '@material-ui/icons/';
 import CarItem from './CarItem';
 import Formsy from 'formsy-react';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -44,7 +45,7 @@ export default function ViewBooking() {
                         <Typography variant="h6" className={classes.title}>
                             Review Plan
                                 </Typography>
-                        <Button color="inherit">Login</Button>
+                        <Button color="inherit" variant="outlined">Login</Button>
                     </Toolbar>
                 </AppBar>
             </Grid>
@@ -121,6 +122,27 @@ export default function ViewBooking() {
                             </Card>
                         </Grid>
                     </Grid>
+                </Container>
+                <Container className={classes.spacingCard}>
+                    <Grid container className={classes.root} spacing={2} justify="center">
+                        <Grid item xs={12} lg={12} xl={12} className={classes.paper}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        // checked={state.checkedB}
+                                        // onChange={handleChange}
+                                        name="checkedB"
+                                        color="primary"
+                                    />
+                                }
+                                label={<div><span>I am over 21 years old, I agree to all </span><Link href="#" variant="body2">Terms & Conditions</Link></div>}
+                            />
+                        </Grid>
+                        <Grid item xs={12} lg={6} xl={6} className={classes.paper}>
+                            <Button variant="outlined" fullWidth>Book</Button>
+                        </Grid>
+                    </Grid>
+
                 </Container>
             </Container>
         </>
