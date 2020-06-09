@@ -15,7 +15,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Grid, Icon, ListItemIcon, ListItemText, Button, Badge } from '@material-ui/core';
+import { Grid, Icon, ListItemIcon, ListItemText, Button, Badge, Fab } from '@material-ui/core';
 import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 const useStyles = makeStyles(theme => ({
   card: {
@@ -28,31 +28,19 @@ const useStyles = makeStyles(theme => ({
   actions: {
     display: 'flex',
   },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
   avatar: {
     backgroundColor: red[500],
   },
   alignRight: {
     textAlign: "right"
-  }
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
 }));
 
-export default function CarItem(props = { isAction : true }) {
+export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
-  const [expanded, setExpanded] = useState(false);
-
-  function handleExpandClick() {
-    setExpanded(!expanded);
-  }
 
   return (
     <Card className={classes.card}>
@@ -72,7 +60,7 @@ export default function CarItem(props = { isAction : true }) {
       />
       <CardMedia
         className={classes.media}
-        image="/static/images/cards/paella.jpg"
+        image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
         title="Paella dish"
       />
       <CardContent>
@@ -104,16 +92,14 @@ export default function CarItem(props = { isAction : true }) {
           </Grid>
         </Grid>
       </CardContent>
-      {props.isAction? (
+      {props.isAction ? (
         <CardActions className={classes.actions} >
           <Grid container alignContent="flex-end" spacing={1} alignItems="center">
             <Grid item xs={6}>
-              <IconButton aria-label="Add to favorites" onClick={props.onBooking}>
-                <FavoriteIcon />
-              </IconButton>
-              <IconButton aria-label="Share">
-                <ShareIcon />
-              </IconButton>
+              <Fab size="small" color="inherit" aria-label="add" className={classes.margin} variant="extended" onClick={props.onBooking}>
+                <FavoriteIcon /> 
+                <span className={classes.margin}>View</span>
+              </Fab>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
               <Typography>3.000.000 VND</Typography>

@@ -10,7 +10,7 @@ const navigationConfig = [
                 'title': 'Example',
                 'type' : 'item',
                 'icon' : 'whatshot',
-                'url'  : '/dash'
+                'url'  : '/example'
             }
         ]
     }

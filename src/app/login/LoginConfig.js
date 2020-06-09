@@ -1,5 +1,6 @@
 import Login from './Login';
 import {authRoles} from 'app/auth';
+import { APP_PATH } from '../../constant';
 
 export const LoginConfig = {
     settings: {
@@ -26,7 +27,7 @@ export const LoginConfig = {
     auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : '/login',
+            path     : APP_PATH.LOGIN,
             component: Login
         }
     ]

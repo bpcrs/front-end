@@ -16,6 +16,7 @@ import { Link, useHistory } from 'react-router-dom';
 import {
     isMobile
   } from "react-device-detect";
+import { APP_PATH } from '../../../constant';
 const listImage = [
     "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2989&q=80",
     "https://images.unsplash.com/photo-1471479917193-f00955256257?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3848&q=80"
@@ -48,8 +49,7 @@ function Landing(props) {
                         <Button variant="contained">Use Cases</Button>,
                         <Button variant="contained">Pricing</Button>,
                         <Button variant="contained">About Us</Button>,
-                        <Button variant="contained" onClick={() => history.push("/login")}>Login</Button>,
-                        <Button variant="contained" onClick={() => history.push("/car")}>Car</Button>,
+                        <Button variant="contained" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,
                     ]}
                 />
                 <SectionTitle
@@ -185,7 +185,7 @@ function Landing(props) {
                                 <MenuItem value="olivier">Olivier</MenuItem>
                                 <MenuItem value="kevin">Kevin</MenuItem>
                             </SelectFormsy>
-                            <Button variant="contained" color="primary" onClick={() => history.push("/car")}>
+                            <Button variant="contained" color="primary" onClick={() => history.push(APP_PATH.CAR_LIST)}>
                                 Book now
                         </Button>
                         </Formsy>}

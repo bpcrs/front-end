@@ -1,11 +1,14 @@
 import React from 'react'
 import { Typography, AppBar, Toolbar, Button, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home';
+import ArrowBackIcon from '@material-ui/icons/ArrowBackIosOutlined';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
+import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     appBar: {
-        top: 'auto',
+        top: "auto",
         bottom: 0,
     },
     grow: {
@@ -38,22 +41,24 @@ const useStyles = makeStyles((theme) => ({
         right: 0,
         margin: '0 auto',
     },
-    spacingCard : {
-        marginTop : theme.spacing(10)
+    spacingCard: {
+        marginTop: theme.spacing(10),
+        marginBottom: theme.spacing(12)
     }
 }));
 export default function Layout(props) {
     const classes = useStyles();
+    const history = useHistory();
     return (
         <>
             <AppBar position="fixed">
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <HomeIcon />
+                    <IconButton onClick={() => history.goBack()} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         {props.name}
-                                </Typography>
+                    </Typography>
                     <Button color="inherit" variant="outlined">Login</Button>
                 </Toolbar>
             </AppBar>

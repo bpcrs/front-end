@@ -1,7 +1,7 @@
 import Car from './Car';
 import {authRoles} from 'app/auth';
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
-import CarDetail from './CarDetail';
+import CarDetail from '../main/booking/CarDetail';
 
 export const CarConfig = {
     settings: {
@@ -32,7 +32,7 @@ export const CarConfig = {
         //     component: Car
         // },
         {
-            path     : '/car/details',
+            path     : '/car/1',
             component: CarDetail
         }
     ]

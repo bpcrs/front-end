@@ -14,6 +14,7 @@ import { Link, useHistory } from 'react-router-dom';
 import CarItem from './CarItem';
 
 import Layout from '../../layout';
+import { APP_PATH } from '../../../constant';
 
 const useStyles = makeStyles(theme => ({
     layoutRoot: {},
@@ -50,13 +51,13 @@ function CarList(props) {
             <Container >
                 <Grid container spacing={2} className={classes.root}  >
                     <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem onBooking={() => history.push("/view-booking")} />
+                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
                     </Grid>
                     <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem />
+                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
                     </Grid>
                     <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem />
+                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
                     </Grid>
                 </Grid>
             </Container>

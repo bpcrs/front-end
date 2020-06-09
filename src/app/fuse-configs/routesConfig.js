@@ -10,7 +10,6 @@ const routeConfigs = [
     UserConfig,
     LoginConfig,
     LandingConfig,
-    CarConfig,
     BookingConfig
 ];
 
