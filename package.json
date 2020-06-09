@@ -8,7 +8,7 @@
         "@date-io/date-fns": "1.0.2",
         "@emotion/core": "^10.0.28",
         "@emotion/styled": "^10.0.27",
-        "@material-ui/core": "3.9.1",
+        "@material-ui/core": "v4.10.1",
         "@material-ui/icons": "3.0.2",
         "auth0-lock": "11.14.0",
         "autosuggest-highlight": "3.1.1",
