@@ -54,7 +54,7 @@ class FuseAuthorization extends Component {
         */
         if (user.role === APP_ROLE.GUEST) {
             history.push({
-                pathname: '/login',
+                pathname: '/car',
                 state: { redirectUrl: pathname }
             });
         }
