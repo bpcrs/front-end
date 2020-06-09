@@ -12,11 +12,8 @@ import {
 import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks } from 'landing-blocks/dist'
 import { Link, useHistory } from 'react-router-dom';
 import CarItem from './CarItem';
-import MenuIcon from '@material-ui/icons/Menu';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/More';
-import { isMobile } from 'react-device-detect';
+
+import Layout from '../../layout';
 
 const useStyles = makeStyles(theme => ({
     layoutRoot: {},
@@ -49,51 +46,22 @@ function CarList(props) {
     const history = useHistory();
     const classes = useStyles();
     return (
-        <>
-            {/* <LandingProvider primary='#5D21D2' background='#fff'>
-                <NavBar
-                    logo={<img width='80px' src="assets/images/logos/fuse.svg" />}
-                    navs={[
-                        <Button variant="contained">Features</Button>,
-                        <Button variant="contained">Use Cases</Button>,
-                        <Button variant="contained">Pricing</Button>,
-                        <Button variant="contained">About Us</Button>,
-                        <Button variant="contained" onClick={() => history.push("/login")}>Login</Button>,
-                    ]}
-                /> */}
-                <Container >
-                    <Grid container spacing={2} className={classes.root}  >
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem onBooking={() => history.push("/view-booking")} />
-                        </Grid>
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem />
-                        </Grid>
+        <Layout name="Car Available">
+            <Container >
+                <Grid container spacing={2} className={classes.root}  >
+                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                        <CarItem onBooking={() => history.push("/view-booking")} />
                     </Grid>
-                </Container>
-                {isMobile ? (<AppBar position="fixed" color="primary" className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton edge="start" color="inherit" aria-label="open drawer">
-                            <MenuIcon />
-                        </IconButton>
-                        <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                            <AddIcon />
-                        </Fab>
-                        <div className={classes.grow} />
-                        <IconButton color="inherit">
-                            <SearchIcon />
-                        </IconButton>
-                        <IconButton edge="end" color="inherit">
-                            <MoreIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>) : <></>}
-                
-            {/* </LandingProvider> */}
-        </>
+                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                        <CarItem />
+                    </Grid>
+                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                        <CarItem />
+                    </Grid>
+                </Grid>
+            </Container>
+
+        </Layout>
     )
 }
 
