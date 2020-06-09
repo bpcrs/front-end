@@ -15,8 +15,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Grid, Icon, ListItemIcon, ListItemText } from '@material-ui/core';
-
+import { Grid, Icon, ListItemIcon, ListItemText, Button, Badge } from '@material-ui/core';
+import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 400,
@@ -41,9 +41,12 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  alignRight: {
+    textAlign: "right"
+  }
 }));
 
-export default function CarItem() {
+export default function CarItem(props = { isAction : true }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -73,50 +76,51 @@ export default function CarItem() {
         title="Paella dish"
       />
       <CardContent>
-        <Grid xs={12} spacing={1} container justify="space-between" alignItems="baseline">
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} justify="center" container>
+        <Grid spacing={1} container justify="space-between" alignItems="baseline">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid justify="center" container>
               <Icon fontSize={"default"}>airline_seat_recline_normal_outlined</Icon>
             </Grid>
-            <Grid xs={12} item container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">4 people</Typography>
             </Grid>
           </Grid>
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid item container justify="center">
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">Automatic</Typography>
             </Grid>
           </Grid>
 
-          <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+            <Grid item container justify="center">
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid item container justify="center">
               <Typography variant="caption">SUV Car</Typography>
             </Grid>
           </Grid>
-
-          {/* <Grid xs={4}>2</Grid>
-          <Grid xs={4}>3</Grid> */}
         </Grid>
-        {/* <Typography component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
-        </Typography> */}
       </CardContent>
-      <CardActions className={classes.actions}>
-        <IconButton aria-label="Add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="Share">
-          <ShareIcon />
-        </IconButton>
-      </CardActions>
+      {props.isAction? (
+        <CardActions className={classes.actions} >
+          <Grid container alignContent="flex-end" spacing={1} alignItems="center">
+            <Grid item xs={6}>
+              <IconButton aria-label="Add to favorites" onClick={props.onBooking}>
+                <FavoriteIcon />
+              </IconButton>
+              <IconButton aria-label="Share">
+                <ShareIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={6} className={classes.alignRight}>
+              <Typography>3.000.000 VND</Typography>
+            </Grid>
+          </Grid>
+        </CardActions>
+      ) : null}
     </Card>
   );
 }
-

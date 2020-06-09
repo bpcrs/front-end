@@ -12,7 +12,6 @@ function JWTLoginTab() {
     const responseGoogle = (response) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
-            // props.submitLogin(response.tokenId);
             dispatch(showMessage({
                 message : "Login successfully",
                 variant : "success"

@@ -1,12 +1,12 @@
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
-import { authRoles } from 'app/auth';
+import User from './User';
 
-export const BookingConfig = {
+export const UserConfig = {
     settings: {
         layout: {
             config: {
                 navbar        : {
-                    display: false
+                    display: true
                 },
                 toolbar       : {
                     display: false
@@ -25,16 +25,8 @@ export const BookingConfig = {
     },
     routes  : [
         {
-            path     : '/car',
-            component: FuseLoadable({
-                loader: () => import('./CarList')
-            }),
-        },
-        {
-            path     : '/view-booking',
-            component: FuseLoadable({
-                loader: () => import('./ViewBooking')
-            }),
+            path     : '/user',
+            component: User
         }
-    ],
+    ]
 };

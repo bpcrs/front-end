@@ -67,7 +67,7 @@ class Login extends Component {
                                 <Tab
                                     icon={<img className="h-40 p-4 rounded-12" src="assets/images/logos/icons8-google.svg" alt="firebase" />}
                                     className="min-w-0"
-                                    label="JWT"
+                                    label="Google"
                                 />
                             </Tabs>
 
