@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Grid, Breadcrumbs, Chip, withStyles, Typography, AppBar, Toolbar, Button, IconButton, makeStyles, TextField, Icon, Card, CardContent, Box, CardHeader, CardActionArea, CardActions } from '@material-ui/core'
+import { Container, Grid, Breadcrumbs, Chip, withStyles, Typography, AppBar, Toolbar, Button, IconButton, makeStyles, TextField, Icon, Card, CardContent, Box, CardHeader, CardActionArea, CardActions, FormControl } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home';
 import ExpandMoreIcon from '@material-ui/icons/';
 import CarItem from './CarItem';
@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     },
     paper: {
         padding: theme.spacing(2),
-        textAlign: 'center',
         color: theme.palette.text.secondary,
     },
     root: {
@@ -55,11 +54,15 @@ export default function ViewBooking() {
                         <CardContent>
                             <Grid container>
                                 <Grid item xs={12} xl={6}>
-                                    <Typography variant="subtitle1">PICK UP & DROP</Typography>
+                                    <Typography variant="subtitle1">PICK UP & DESTINAION</Typography>
                                 </Grid>
-                                <Grid item xs={12} xl={6} justify="flex-end" container>
-                                    <Typography> <Icon>location_on</Icon>FPT University, District 9, Ho Chi Minh City</Typography>
-
+                                <Grid item xs={12} xl={6} justify="flex-end" container >
+                                    <FormControl fullWidth className={classes.spacingCard}>
+                                        <TextField id="outlined-basic" label="Pickup" variant="outlined" fullWidth value="FPT University, District 9, Ho Chi Minh City" />
+                                    </FormControl>
+                                    <FormControl fullWidth className={classes.spacingCard}>
+                                        <TextField id="outlined-basic" label="Destinaion" variant="outlined" fullWidth value="Vung Tau City" />
+                                    </FormControl>
                                 </Grid>
                             </Grid>
                         </CardContent>
@@ -101,9 +104,21 @@ export default function ViewBooking() {
                     </Card>
                 </Container>
                 <Container className={classes.spacingCard}>
-                    <Grid container justify="space-evenly" className={classes.root} alignItems="center" spacing={2}>
-                        <Grid item xs={12} lg={12} xl={12} className={classes.paper}>
+                    <Grid container className={classes.root} spacing={2}>
+                        <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
                             <CarItem isAction={false} />
+                        </Grid>
+                        <Grid item xs={12} lg={8} xl={8} className={classes.paper}>
+                            <Card>
+                                <CardContent>
+                                    <Grid container alignItems="flex-start">
+                                        <Grid item xs={12}>
+                                            <Typography variant="subtitle1">GUILINES & POLICIES</Typography>
+                                        </Grid>
+
+                                    </Grid>
+                                </CardContent>
+                            </Card>
                         </Grid>
                     </Grid>
                 </Container>
