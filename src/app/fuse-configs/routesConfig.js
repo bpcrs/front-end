@@ -6,6 +6,7 @@ import { LoginConfig } from '../login/LoginConfig';
 import Landing from '../main/landing/Landing';
 import { LandingConfig } from '../main/landing/LandingConfig';
 import { BookingConfig } from '../main/booking/BookingConfig';
+import {CompareCarConfig} from '../main/CompareCar/CompareCarConfig';
 const routeConfigs = [
     LoginConfig,
     LandingConfig,
