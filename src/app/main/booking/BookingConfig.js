@@ -29,6 +29,12 @@ export const BookingConfig = {
             component: FuseLoadable({
                 loader: () => import('./CarList')
             }),
+        },
+        {
+            path     : '/view-booking',
+            component: FuseLoadable({
+                loader: () => import('./ViewBooking')
+            }),
         }
     ],
 };

@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CarItem() {
+export default function CarItem(props = { isAction : true }) {
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
 
@@ -102,31 +102,25 @@ export default function CarItem() {
               <Typography variant="caption">SUV Car</Typography>
             </Grid>
           </Grid>
-
-          {/* <Grid xs={4}>2</Grid>
-          <Grid xs={4}>3</Grid> */}
         </Grid>
-        {/* <Typography component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
-        </Typography> */}
       </CardContent>
-      <CardActions className={classes.actions}>
-        <Grid container alignContent="flex-end" spacing={1} alignItems="center">
-          <Grid item xs={6}>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
+      {props.isAction? (
+        <CardActions className={classes.actions} >
+          <Grid container alignContent="flex-end" spacing={1} alignItems="center">
+            <Grid item xs={6}>
+              <IconButton aria-label="Add to favorites" onClick={props.onBooking}>
+                <FavoriteIcon />
+              </IconButton>
+              <IconButton aria-label="Share">
+                <ShareIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={6} className={classes.alignRight}>
+              <Typography>3.000.000 VND</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={6} className={classes.alignRight}>
-            <Typography>3.000.000 VND</Typography>
-          </Grid>
-        </Grid>
-      </CardActions>
+        </CardActions>
+      ) : null}
     </Card>
   );
 }
-
