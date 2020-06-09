@@ -49,30 +49,30 @@ class Car extends Component {
                                 <Typography variant="h3" className="text-center md:w-full mb-20">Filter</Typography>
                                 <Typography variant="h6" className="text-center md:w-full mt-20">Car type</Typography>
                                 <Grid container spacing={8}>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6} >
                                         <Button className="w-full mb-20" variant="outlined" color="primary">Hatchback</Button>
                                         <Button className="w-full" variant="outlined" color="primary">Sedan</Button>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6}>
                                         <Button className="w-full mb-20" variant="outlined" color="primary">SUV</Button>
                                         <Button className="w-full" variant="outlined" color="primary">Mini SUV</Button>
                                     </Grid>
                                 </Grid>
                                 <Typography variant="h6" className="text-center md:w-full mt-20">Tranminssion Type</Typography>
                                 <Grid container spacing={8}>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6}>
                                         <Button className="w-full" variant="outlined" color="primary">Manual</Button>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6}>
                                         <Button className="w-full" variant="outlined" color="primary">Automatic</Button>
                                     </Grid>
                                 </Grid>
                                 <Typography variant="h6" className="text-center md:w-full mt-20">Fuel Type</Typography>
                                 <Grid container spacing={8}>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6}>
                                         <Button className="w-full" variant="outlined" color="primary">Diesel</Button>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={12} sm={6}>
                                         <Button className="w-full" variant="outlined" color="primary">Petrol</Button>
                                     </Grid>
                                 </Grid>
@@ -81,7 +81,7 @@ class Car extends Component {
                         <div className="flex flex-col flex-no-grow items-center text-white p-16 md:items-start md:flex-no-shrink md:flex-1 md:text-left">
                             <Formsy className="flex flex-col justify-center">
                                 <Grid container spacing={8}>
-                                    <Grid item xs >
+                                    <Grid item xs={12} sm={6} >
                                         <TextField
                                             id="datetime-local"
                                             label="Pick-up appointment"
@@ -94,7 +94,7 @@ class Car extends Component {
                                             variant="outlined"
                                         />
                                     </Grid>
-                                    <Grid item xs >
+                                    <Grid item xs={12} sm={6} >
                                         <TextField
                                             id="datetime-local"
                                             label="Drop-off appointment"
@@ -107,7 +107,7 @@ class Car extends Component {
                                             variant="outlined"
                                         />
                                     </Grid>
-                                    <Grid item xs >
+                                    <Grid item xs={12} sm={6} >
                                         <SelectFormsy
                                             name="related-outlined"
                                             label="Pick-up location"

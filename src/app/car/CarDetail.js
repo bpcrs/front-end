@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import { withStyles, Icon, CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardActionArea, CardMedia, CardActions } from '@material-ui/core';
+import { withStyles, CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardActionArea, CardMedia, CardActions } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
-import Formsy from 'formsy-react';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {
     SelectFormsy
 } from '@fuse/components/formsy';
@@ -45,8 +42,8 @@ class CarDetails extends Component {
                             <Button variant="contained">Login</Button>,
                         ]}
                     />
-                    <div className="flex flex-col flex-1 flex-no-shrink p-24 md:flex-row md:p-0">
-                        <Card className="flex flex-col flex-no-grow items-center text-white p-16 text-center  md:items-start md:flex-no-shrink md:flex-1 md:text-left">
+                    <div className="flex flex-col flex-1 flex-no-shrink p-24 md:flex-row md:p-2">
+                        <Card className="flex flex-col pl-60 flex-no-grow items-center text-white p-16 text-center  md:items-start md:flex-no-shrink md:flex-1 md:text-left">
                             <Typography gutterBottom variant="h4" component="h2">
                                 Car Details
                             </Typography>
@@ -54,14 +51,14 @@ class CarDetails extends Component {
                                 VINFAST LUX SA 2.0
                             </Typography>
                             <Grid container spacing={8}>
-                                <Grid item xs={3}>
+                                <Grid item xs={6} sm={3}>
                                     <CardMedia
                                         className={classes.media}
                                         image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
                                         title="Contemplative Reptile"
                                     />
                                 </Grid>
-                                <Grid item xs={9}>
+                                <Grid item xs={12} sm={6}>
                                     <CardContent>
                                         <Typography variant="body1" color="textPrimary" component="p">
                                             Manual, 7 Seats, Diesel
@@ -75,31 +72,79 @@ class CarDetails extends Component {
                                         <Button variant="contained" color="primary" >4.3</Button>
                                         <Button color="default">3 reviews</Button>
                                     </CardContent>
+
                                 </Grid>
                             </Grid>
-
-                            <Typography gutterBottom variant="h4" component="h2" className="mt-20">
-                                Owner Details
-                                </Typography>
-                            <CardHeader
-                                avatar={
-                                    <Avatar aria-label="recipe" className={classes.avatar}>
-                                        TT
-                                    </Avatar>
-                                }
-                            />
-                            <Typography variant="body2" color="textPrimary" component="p">
-                                Fullname: Trần Đức Thái
-                            </Typography>
-                            <Typography variant="body2" color="textPrimary" component="p">
-                                Email: thaitdse62593@fpt.edu.vn
-                            </Typography>
-                            <Typography variant="body2" color="textPrimary" component="p">
-                                Mobile Number: 0348130639
-                            </Typography>
                             <Typography gutterBottom variant="h4" component="h2" className="mt-20">
                                 Reviews
                             </Typography>
+                            <Grid container spacing={8} >
+                                <Grid item xs={6} sm={3}>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar aria-label="recipe" className={classes.avatar}>
+                                                R
+                                            </Avatar>
+                                        }
+                                        title="Trần Đức Thái"
+                                        subheader="May 14, 2020"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography fontWeight="fontWeightBold">
+                                        Excellent price
+                                    </Typography>
+                                    <Typography>
+                                        Excellent price, will definitely return to this application for car rentals
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={8} className="mt-20">
+                                <Grid item xs={6} sm={3}>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar aria-label="recipe" className={classes.avatar}>
+                                                R
+                                            </Avatar>
+                                        }
+                                        title="Trần Đức Thái"
+                                        subheader="May 14, 2020"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} >
+                                    <Typography fontWeight="fontWeightBold">
+                                        Excellent price
+                                    </Typography>
+                                    <Typography>
+                                        Excellent price, will definitely return to this application for car rentals
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={8} className="mt-20">
+                                <Grid item xs={6} sm={3}>
+                                </Grid>
+                                <Grid item xs={12} sm={6}></Grid>
+                                <Grid item xs={6} sm={3}>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar aria-label="recipe" className={classes.avatar}>
+                                                R
+                                            </Avatar>
+                                        }
+                                        title="Trần Đức Thái"
+                                        subheader="May 14, 2020"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography fontWeight="fontWeightBold">
+                                        Excellent price
+                                    </Typography>
+
+                                    <Typography>
+                                        Excellent price, will definitely return to this application for car rentals
+                                    </Typography>
+                                </Grid>
+                            </Grid>
                         </Card>
                         <div className="max-w-400 mx-auto p-128 md:p-48 ">                                <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
                             <CardContent>
