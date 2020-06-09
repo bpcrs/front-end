@@ -61,7 +61,7 @@ const styles = theme => ({
         )
     },
     noOptionsMessage: {
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
+        padding: `${theme.spacing(1)} ${theme.spacing(2)}px`
     },
     singleValue     : {
         fontSize: 16
@@ -75,12 +75,12 @@ const styles = theme => ({
     paper           : {
         position : 'absolute',
         zIndex   : 2,
-        marginTop: theme.spacing.unit,
+        marginTop: theme.spacing(),
         left     : 0,
         right    : 0
     },
     divider         : {
-        height: theme.spacing.unit * 2
+        height: theme.spacing(2)
     }
 });
 

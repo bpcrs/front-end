@@ -1,25 +1,24 @@
 import React from 'react';
-import {Redirect} from 'react-router-dom';
-import {FuseUtils} from '@fuse/index';
-import {ExampleConfig} from 'app/main/example/ExampleConfig';
+import { Redirect } from 'react-router-dom';
+import { FuseUtils } from '@fuse/index';
+import { UserConfig } from 'app/main/user/UserConfig';
 import { LoginConfig } from '../login/LoginConfig';
-import Landing from '../main/landing/Landing';
 import { LandingConfig } from '../main/landing/LandingConfig';
 import { BookingConfig } from '../main/booking/BookingConfig';
 
 const routeConfigs = [
-    ExampleConfig,
+    UserConfig,
     LoginConfig,
     LandingConfig,
     BookingConfig
 ];
 
- const routes = [
+const routes = [
     ...FuseUtils.generateRoutesFromConfigs(routeConfigs),
     {
-        path     : '/',
-        component: () => <Redirect to="/example"/>
+        path: '/',
+        component: () => <Redirect to="/example" />
     }
 ];
 
- export default routes;
+export default routes;
