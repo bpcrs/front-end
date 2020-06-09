@@ -5,11 +5,13 @@ import {ExampleConfig} from 'app/main/example/ExampleConfig';
 import { LoginConfig } from '../login/LoginConfig';
 import Landing from '../main/landing/Landing';
 import { LandingConfig } from '../main/landing/LandingConfig';
+import {CompareCarConfig} from '../main/CompareCar/CompareCarConfig';
 
 const routeConfigs = [
     ExampleConfig,
     LoginConfig,
-    LandingConfig
+    LandingConfig,
+    CompareCarConfig
 ];
 
  const routes = [
