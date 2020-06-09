@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { withStyles, CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardActionArea, CardMedia, CardActions } from '@material-ui/core';
+import { withStyles, CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardMedia, CardActions } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
+
 import {
     SelectFormsy
 } from '@fuse/components/formsy';
@@ -30,7 +31,9 @@ class CarDetails extends Component {
     render() {
         const { classes } = this.props;
         return (
+
             <div className={classNames(classes.root, "flex flex-col flex-1 flex-no-shrink")}>
+               
                 <LandingProvider primary='#5D21D2' background='#fff'>
                     <NavBar
                         logo={<img width='80px' src="assets/images/logos/fuse.svg" />}
@@ -51,7 +54,7 @@ class CarDetails extends Component {
                                 VINFAST LUX SA 2.0
                             </Typography>
                             <Grid container spacing={8}>
-                                <Grid item xs={6} sm={3}>
+                                <Grid item xs={12} sm={6}>
                                     <CardMedia
                                         className={classes.media}
                                         image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
@@ -72,9 +75,9 @@ class CarDetails extends Component {
                                         <Button variant="contained" color="primary" >4.3</Button>
                                         <Button color="default">3 reviews</Button>
                                     </CardContent>
-
                                 </Grid>
                             </Grid>
+
                             <Typography gutterBottom variant="h4" component="h2" className="mt-20">
                                 Reviews
                             </Typography>
@@ -91,7 +94,7 @@ class CarDetails extends Component {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography fontWeight="fontWeightBold">
+                                    <Typography>
                                         Excellent price
                                     </Typography>
                                     <Typography>
@@ -99,7 +102,7 @@ class CarDetails extends Component {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={8} className="mt-20">
+                            <Grid container spacing={8}>
                                 <Grid item xs={6} sm={3}>
                                     <CardHeader
                                         avatar={
@@ -120,10 +123,7 @@ class CarDetails extends Component {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid container spacing={8} className="mt-20">
-                                <Grid item xs={6} sm={3}>
-                                </Grid>
-                                <Grid item xs={12} sm={6}></Grid>
+                            <Grid container spacing={8}>
                                 <Grid item xs={6} sm={3}>
                                     <CardHeader
                                         avatar={
@@ -136,10 +136,9 @@ class CarDetails extends Component {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography fontWeight="fontWeightBold">
+                                    <Typography>
                                         Excellent price
                                     </Typography>
-
                                     <Typography>
                                         Excellent price, will definitely return to this application for car rentals
                                     </Typography>
@@ -155,7 +154,7 @@ class CarDetails extends Component {
                                 <Typography variant="body2" color="textPrimary" component="p">March 20, 2019</Typography>
                                 <Typography variant="body2" color="textPrimary" component="p">141, 19 Street, An Phu Wards, Distric 2</Typography>
                             </CardContent>
-                        </Card >
+                        </Card>
                             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
                                 <CardContent>
                                     <Typography variant="h6" >Price summary</Typography>
