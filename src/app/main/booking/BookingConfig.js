@@ -1,6 +1,7 @@
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+import { authRoles } from 'app/auth';
 
-export const LandingConfig = {
+export const BookingConfig = {
     settings: {
         layout: {
             config: {
@@ -24,10 +25,10 @@ export const LandingConfig = {
     },
     routes  : [
         {
-            path     : '/landing',
+            path     : '/booking',
             component: FuseLoadable({
-                loader: () => import('./Landing')
-            })
+                loader: () => import('./Booking')
+            }),
         }
-    ]
+    ],
 };
