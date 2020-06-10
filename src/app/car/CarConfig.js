@@ -27,14 +27,14 @@ export const CarConfig = {
     },
     auth    : authRoles.onlyGuest,
     routes  : [
-        // {
-        //     path     : '/car',
-        //     component: Car
-        // },
         {
-            path     : '/car/details',
-            component: CarDetail
+            path     : '/car',
+            component: Car
         }
+        // {
+        //     path     : '/car/details',
+        //     component: CarDetail
+        // }
     ]
 };
 

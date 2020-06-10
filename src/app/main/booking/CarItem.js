@@ -1,22 +1,13 @@
 import React, { useState } from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Grid, Icon, ListItemIcon, ListItemText } from '@material-ui/core';
-
+import Button from '@material-ui/core/Button';
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 400,
@@ -53,20 +44,6 @@ export default function CarItem() {
 
   return (
     <Card className={classes.card}>
-      <CardHeader
-        avatar={
-          <Avatar aria-label="Recipe" className={classes.avatar}>
-            R
-          </Avatar>
-        }
-        action={
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title="Honda CR-V"
-        subheader="2020"
-      />
       <CardMedia
         className={classes.media}
         image="/static/images/cards/paella.jpg"
@@ -83,38 +60,31 @@ export default function CarItem() {
             </Grid>
           </Grid>
           <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+            <Grid xs={12} item container justify="center">
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid xs={12} item container justify="center">
               <Typography variant="caption">Automatic</Typography>
             </Grid>
           </Grid>
 
           <Grid xs={3} container direction="row" alignItems="center" justify="space-around">
-            <Grid xs={12} item  container justify="center">
+            <Grid xs={12} item container justify="center">
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
-            <Grid xs={12} item  container justify="center">
+            <Grid xs={12} item container justify="center">
               <Typography variant="caption">SUV Car</Typography>
             </Grid>
           </Grid>
-
-          {/* <Grid xs={4}>2</Grid>
-          <Grid xs={4}>3</Grid> */}
         </Grid>
-        {/* <Typography component="p">
-          This impressive paella is a perfect party dish and a fun meal to cook together with your
-          guests. Add 1 cup of frozen peas along with the mussels, if you like.
-        </Typography> */}
       </CardContent>
-      <CardActions className={classes.actions}>
-        <IconButton aria-label="Add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="Share">
-          <ShareIcon />
-        </IconButton>
+      <CardActions>
+        <Button size="small" color="primary">
+          Details
+        </Button>
+        <Button size="small" color="primary">
+          Compare
+        </Button>
       </CardActions>
     </Card>
   );
