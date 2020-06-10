@@ -205,8 +205,8 @@ export default function CarDetails(props) {
                                                 />
                                             </Grid>
 
-                                            <Grid className={classes.review} item xl={12} xs={12} lg={12} justify="center" container>
-                                                <Grid item lg={6} xs={12}>
+                                            <Grid className={classes.review} item xl={12} xs={12} lg={12} justify="flex-end" container>
+                                                <Grid item lg={4} xs={12}>
                                                     <Button fullWidth variant="contained" color="primary">Submit</Button>
                                                 </Grid>
                                             </Grid>
