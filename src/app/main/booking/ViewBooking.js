@@ -126,7 +126,7 @@ export default function ViewBooking() {
                         />
                     </Grid>
                     <Grid item xs={12} lg={6} xl={6} className={classes.paper}>
-                        <Button variant="outlined" fullWidth>Book</Button>
+                        <Button color="primary" variant="contained" fullWidth>Book</Button>
                     </Grid>
                 </Grid>
             </div>
