@@ -15,4 +15,6 @@ export const APP_PATH = {
     CAR_LIST : "/cars",
     CAR_ITEM : "/car",
     VIEW_BOOKING : "/view-booking"
+    
+    
 }
