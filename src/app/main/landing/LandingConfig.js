@@ -1,4 +1,5 @@
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+import { APP_PATH } from '../../../constant';
 
 export const LandingConfig = {
     settings: {
@@ -24,7 +25,7 @@ export const LandingConfig = {
     },
     routes  : [
         {
-            path     : '/landing',
+            path     : APP_PATH.LANDING,
             component: FuseLoadable({
                 loader: () => import('./Landing')
             })

@@ -1,8 +1,9 @@
-import Login from './Login';
+import Car from './Car';
 import {authRoles} from 'app/auth';
-import { APP_PATH } from '../../constant';
+import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+import CarDetail from '../main/booking/CarDetail';
 
-export const LoginConfig = {
+export const CarConfig = {
     settings: {
         layout: {
             config: {
@@ -26,9 +27,13 @@ export const LoginConfig = {
     },
     auth    : authRoles.onlyGuest,
     routes  : [
+        // {
+        //     path     : '/car',
+        //     component: Car
+        // },
         {
-            path     : APP_PATH.LOGIN,
-            component: Login
+            path     : '/car/1',
+            component: CarDetail
         }
     ]
 };

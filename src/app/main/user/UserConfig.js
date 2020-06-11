@@ -1,13 +1,12 @@
-import Login from './Login';
-import {authRoles} from 'app/auth';
-import { APP_PATH } from '../../constant';
+import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+import User from './User';
 
-export const LoginConfig = {
+export const UserConfig = {
     settings: {
         layout: {
             config: {
                 navbar        : {
-                    display: false
+                    display: true
                 },
                 toolbar       : {
                     display: false
@@ -24,12 +23,10 @@ export const LoginConfig = {
             }
         }
     },
-    auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : APP_PATH.LOGIN,
-            component: Login
+            path     : '/user',
+            component: User
         }
     ]
 };
-

@@ -8,3 +8,13 @@ export const APP_ROLE = {
     USER: 'ADMINISTRATOR',
     GUEST: 'GUEST',
 }
+
+export const APP_PATH = {
+    LANDING : "/landing",
+    LOGIN : "/login",
+    CAR_LIST : "/cars",
+    CAR_ITEM : "/car",
+    VIEW_BOOKING : "/view-booking"
+    
+    
+}
