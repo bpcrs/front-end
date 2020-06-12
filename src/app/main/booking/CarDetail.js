@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CarDetails(props) {
+export default function CarDetail(props) {
     const history = useHistory();
 
     const handleChange = (event) => {

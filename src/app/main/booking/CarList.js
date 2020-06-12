@@ -47,22 +47,27 @@ function CarList(props) {
     const history = useHistory();
     const classes = useStyles();
     return (
-        <Layout name="Car Available">
-            <Container >
-                <Grid container spacing={2} className={classes.root}  >
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+        // <Layout name="Car Available">
+        <FusePageSimple
+        
+            content={
+                <Container>
+                    <Grid container spacing={2} className={classes.root}  >
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                        </Grid>
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                        </Grid>
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
+                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                    </Grid>
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                    </Grid>
-                </Grid>
-            </Container>
+                </Container>
+            }
+        />
 
-        </Layout>
+        // </Layout>
     )
 }
 

@@ -5,25 +5,25 @@ import { APP_PATH } from '../../../constant';
 
 export const BookingConfig = {
     settings: {
-        layout: {
-            config: {
-                navbar        : {
-                    display: false
-                },
-                toolbar       : {
-                    display: false
-                },
-                footer        : {
-                    display: false
-                },
-                leftSidePanel : {
-                    display: false
-                },
-                rightSidePanel: {
-                    display: false
-                }
-            }
-        }
+        // layout: {
+        //     config: {
+        //         navbar        : {
+        //             display: false
+        //         },
+        //         toolbar       : {
+        //             display: false
+        //         },
+        //         footer        : {
+        //             display: false
+        //         },
+        //         leftSidePanel : {
+        //             display: false
+        //         },
+        //         rightSidePanel: {
+        //             display: false
+        //         }
+        //     }
+        // }
     },
     routes  : [
         {
