@@ -8,10 +8,8 @@ import { CarConfig } from '../car/CarConfig'
 import { BookingConfig } from '../main/booking/BookingConfig';
 import {CompareCarConfig} from '../main/CompareCar/CompareCarConfig';
 const routeConfigs = [
-<<<<<<< HEAD
-=======
+
     UserConfig,
->>>>>>> eb92ece3744b82c8cdae327e547997f6a3d903d5
     LoginConfig,
     LandingConfig,
     CompareCarConfig,
