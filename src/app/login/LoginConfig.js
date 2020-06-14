@@ -1,6 +1,8 @@
 import Login from './Login';
 import {authRoles} from 'app/auth';
 import { APP_PATH } from '../../constant';
+import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+
 
 export const LoginConfig = {
     settings: {
@@ -29,6 +31,12 @@ export const LoginConfig = {
         {
             path     : APP_PATH.LOGIN,
             component: Login
+        },
+        {
+            path     : "/loginchat",
+            component: FuseLoadable({
+                loader: () => import('./ChatLogin')
+            }),
         }
     ]
 };

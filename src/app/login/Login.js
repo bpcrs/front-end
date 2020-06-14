@@ -5,6 +5,7 @@ import { FuseAnimate } from '@fuse';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import JWTLoginTab from './tabs/JWTLoginTab';
+import { GoogleLogin } from "./tabs/authFirebase";
 
 const styles = theme => ({
     root: {
@@ -14,6 +15,13 @@ const styles = theme => ({
 });
 
 class Login extends Component {
+
+   
+
+    handelGoogleLogin = () => {
+        const { googleLogin } = this.props;
+        googleLogin();
+      };
 
     state = {
         tabValue: 0
@@ -71,7 +79,10 @@ class Login extends Component {
                                 />
                             </Tabs>
 
-                            {tabValue === 0 && <JWTLoginTab />}
+                            {tabValue === 0 && <JWTLoginTab />} <br />
+                            
+
+                           
                         </CardContent>
                     </Card>
                 </FuseAnimate>
@@ -79,5 +90,6 @@ class Login extends Component {
         )
     }
 }
+
 
 export default withStyles(styles, { withTheme: true })(withRouter(Login));

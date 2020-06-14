@@ -8,23 +8,25 @@ import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
 function JWTLoginTab() {
     const dispatch = useDispatch()
-
-    const responseGoogle = (response) => {
+    const responseGoogle = (response, firebase) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
             dispatch(showMessage({
-                message : "Login successfully",
-                variant : "success"
+                message: "Login successfully",
+                variant: "success"
             }));
+           
         } else {
             dispatch(showMessage({
-                message : "Your account not permitted",
-                variant : "error"
+                message: "Your account not permitted",
+                variant: "error"
             }));
         }
     }
     return (
+
         <div className="w-full">
+
             <GoogleLogin
                 clientId={APP_CONST.GOOGLE_CLIENT_ID}
                 onSuccess={responseGoogle}

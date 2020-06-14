@@ -95,9 +95,6 @@ function ChatPanel(params) {
                     }}
                 >
                     <FuseScrollbars className="p-24 sm:p-32">
-
-
-
                         <AppBar position="static" elevation={1}>
                             <Toolbar className="pl-12 pr-8">
                                 <div className="flex flex-1 items-center">
