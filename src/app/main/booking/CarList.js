@@ -15,6 +15,8 @@ import CarItem from './CarItem';
 
 import Layout from '../../layout';
 import { APP_PATH } from '../../../constant';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCarList } from './booking.action';
 
 const useStyles = makeStyles(theme => ({
     layoutRoot: {},
@@ -46,19 +48,20 @@ const useStyles = makeStyles(theme => ({
 function CarList(props) {
     const history = useHistory();
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const cars = useSelector(state => state.booking.cars)
+    useEffect(() => {
+        dispatch(fetchCarList())
+    }, [])
     return (
         <Layout name="Car Available">
             <Container >
                 <Grid container spacing={2} className={classes.root}  >
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                    </Grid>
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                    </Grid>
-                    <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                        <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                    </Grid>
+                    {cars.map((car, index) => (
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper} key={index}>
+                            <CarItem isAction={true} info={car}  onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                        </Grid>)
+                    )}
                 </Grid>
             </Container>
 
