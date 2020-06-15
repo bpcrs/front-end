@@ -51,7 +51,9 @@ function CarList(props) {
     const dispatch = useDispatch();
     const cars = useSelector(state => state.booking.cars)
     useEffect(() => {
-        dispatch(fetchCarList())
+        if (cars.length === 0) {
+            dispatch(fetchCarList())
+        }
     }, [])
     return (
         <Layout name="Car Available">
@@ -59,7 +61,7 @@ function CarList(props) {
                 <Grid container spacing={2} className={classes.root}  >
                     {cars.map((car, index) => (
                         <Grid item xs={12} xl={3} lg={4} className={classes.paper} key={index}>
-                            <CarItem isAction={true} info={car}  onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                            <CarItem isAction={true} info={car} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
                         </Grid>)
                     )}
                 </Grid>
