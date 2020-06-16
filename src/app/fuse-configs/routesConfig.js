@@ -7,13 +7,15 @@ import { LandingConfig } from '../main/landing/LandingConfig';
 import { CarConfig } from '../car/CarConfig'
 import { BookingConfig } from '../main/booking/BookingConfig';
 import {CompareCarConfig} from '../main/CompareCar/CompareCarConfig';
+import {SubmitLicenseConfig} from '../main/submitLicense/submitLicenseConfig';
 const routeConfigs = [
 
     UserConfig,
     LoginConfig,
     LandingConfig,
     CompareCarConfig,
-    BookingConfig
+    BookingConfig,
+    SubmitLicenseConfig,
 ];
 
 const routes = [
