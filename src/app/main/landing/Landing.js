@@ -46,7 +46,7 @@ function Landing(props) {
                     logo={<img width='80px' onClick={() => history.push("/landing")}  src="assets/images/logos/fuse.svg" />}
                     navs={[
                         <Button variant="contained">Features</Button>,
-                        <Button variant="contained">Use Cases</Button>,
+                        <Button variant="contained" onClick={() => history.push("/compareCar")}>Use Cases</Button>,
                         <Button variant="contained">Pricing</Button>,
                         <Button variant="contained">About Us</Button>,
                         <Button variant="contained" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,
