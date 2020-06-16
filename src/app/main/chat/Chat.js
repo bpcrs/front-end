@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import { Avatar, Paper, Typography, withStyles, TextField, IconButton, Icon } from '@material-ui/core';
-import { FuseScrollbars } from '@fuse';
+import React, { useState } from 'react';
+import { Avatar, Paper, Typography, withStyles, TextField, IconButton, Icon, Grid } from '@material-ui/core';
 import classNames from 'classnames';
-import moment from 'moment/moment';
 import _ from '@lodash';
+import { makeStyles } from '@material-ui/styles';
+import { CreateChatRoom, CreateMessage, createRoomChat } from "../../store/actions/chat";
+import firebase from '../../firebase/firebase';
 
-const styles = theme => ({
+
+const useStyles = makeStyles(theme => ({
     messageRow: {
         position: 'relative',
         display: 'flex',
@@ -125,111 +127,87 @@ const styles = theme => ({
     inputWrapper: {
         borderRadius: 24
     }
-});
+}));
 
-class Chat extends Component {
+const Chat = () => {
+    const [message, setMessage] = useState();
+    // firebase.firestore().collection('chatRooms').doc('das').set({
+    //     firstUser: '3',
+    //     secondUser: '4'
+    // });
 
-    state = {
-        messageText: ''
-    };
+    const onMessageSubmit = () => (
+        //const message = this.state;
+        
+        firebase.firestore()
+        .collection('chatRooms')
+        .doc('3v4')
+        .collection('messages')
+        .add({
+            createBy: '4',
+            createAt: new Date().getTime(),
+            message: message
+        })
+        // CreateChatRoom(firebase.firestore, '3', '4').then(id => {
+        //     CreateMessage(id, '3', 'hello');
+        // })
+        //CreateMessage('das', '4', 'hello')
+    )
+const handelChangeMessage = ({ currentTarget }) => {
+    // setMessage(per => ({ ...per, message: currentTarget.value }));
+    setMessage(currentTarget.value);
+    console.log(message);
+    
+};
 
-    // componentDidUpdate(prevProps)
-    // {
-    //     if ( this.props.chat && !_.isEqual(prevProps.chat, this.props.chat) )
-    //     {
-    //         this.scrollToBottom();
-    //     }
-    // }
-
-    // shouldShowContactAvatar = (item, i) => {
-    //     return (
-    //         item.who === this.props.selectedContactId &&
-    //         ((this.props.chat.dialog[i + 1] && this.props.chat.dialog[i + 1].who !== this.props.selectedContactId) || !this.props.chat.dialog[i + 1])
-    //     );
-    // };
-
-    // isFirstMessageOfGroup = (item, i) => {
-    //     return (i === 0 || (this.props.chat.dialog[i - 1] && this.props.chat.dialog[i - 1].who !== item.who));
-    // };
-
-    // isLastMessageOfGroup = (item, i) => {
-    //     return (i === this.props.chat.dialog.length - 1 || (this.props.chat.dialog[i + 1] && this.props.chat.dialog[i + 1].who !== item.who));
-    // };
-
-    // onInputChange = (ev) => {
-    //     this.setState({messageText: ev.target.value});
-    // };
-
-    // onMessageSubmit = (ev) => {
-    //     ev.preventDefault();
-    //     if ( this.state.messageText === '' )
-    //     {
-    //         return;
-    //     }
-    //     this.props.sendMessage(this.state.messageText, this.props.chat.id, this.props.user.id)
-    //         .then(() => {
-    //             this.setState({messageText: ''});
-    //             this.scrollToBottom();
-    //         });
-    // };
-
-    // scrollToBottom = () => {
-    //     this.chatScroll.scrollTop = this.chatScroll.scrollHeight;
-    // };
-
-    render() {
-        const { classes, chat, contacts, user, className } = this.props;
-        const { messageText } = this.state;
-        return (
-            <Paper elevation={3} className={classNames("flex flex-col", className)}>
-                <FuseScrollbars
-                    containerRef={(ref) => {
-                        this.chatScroll = ref
-                    }}
-                    className="flex flex-1 flex-col overflow-y-auto"
-                >
-
-                    <div className="flex flex-col flex-1 items-center justify-center p-24">
-                        <Icon className="text-128" color="disabled">chat</Icon>
-                        <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
-                            Select a contact to start a conversation.
+const classes = useStyles();
+const { chat, contacts, user, className } = {};
+const { messageText } = {};
+return (
+    <Grid
+        container alignItems="stretch" direction="column"
+    >
+        <Grid item style={{ minHeight: "80vh" }}>
+            <div className="flex flex-col flex-1 items-center justify-center p-24">
+                <Icon className="text-128" color="disabled">chat</Icon>
+                <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
+                    Select a contact to start a conversation.
                                 </Typography>
-                    </div>
+            </div>
+        </Grid>
 
-                    <form  className={classNames(classes.bottom, "py-16 px-8")}>
-                        <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
-                            <TextField
-                                autoFocus={false}
-                                id="message-input"
-                                className="flex-1"
-                                InputProps={{
-                                    disableUnderline: true,
-                                    classes: {
-                                        root: "flex flex-grow flex-no-shrink ml-16 mr-48 my-8",
-                                        input: ""
-                                    },
-                                    placeholder: "Type your message"
-                                }}
-                                InputLabelProps={{
-                                    shrink: false,
-                                    className: classes.bootstrapFormLabel
-                                }}
-                               
-                            />
-                            <IconButton className="absolute pin-r pin-t" type="submit">
-                                <Icon className="text-24" color="action">send</Icon>
-                            </IconButton>
-                        </Paper>
-                    </form>
-
-
-
-                </FuseScrollbars>
-
-            </Paper>
-        );
-    }
+        <Grid item style={{ minHeight: "10vh" }}>
+            <form className={classNames(classes.bottom, "py-16 px-8")}>
+                <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
+                    <TextField
+                        autoFocus={false}
+                        // id={message}
+                        onChange={handelChangeMessage}
+                        className="flex-1"
+                        InputProps={{
+                            disableUnderline: true,
+                            classes: {
+                                root: "flex flex-grow flex-no-shrink ml-16 mr-48 my-8",
+                                input: ""
+                            },
+                            placeholder: "Type your message"
+                        }}
+                        InputLabelProps={{
+                            shrink: false,
+                            className: classes.bootstrapFormLabel
+                        }}
+                    />
+                    <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
+                        <Icon className="text-24">send</Icon>
+                    </IconButton>
+                </Paper>
+            </form>
+        </Grid>
+    </Grid>
+    // </Paper>
+);
 }
 
 
-export default withStyles(styles)(Chat);
+
+export default Chat;

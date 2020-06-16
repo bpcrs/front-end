@@ -6,16 +6,16 @@ import { APP_CONST } from '../../../constant';
 import { showMessage } from '../../store/actions/fuse';
 import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
+
 function JWTLoginTab() {
     const dispatch = useDispatch()
-    const responseGoogle = (response, firebase) => {
+    const responseGoogle = (response) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
             dispatch(showMessage({
                 message: "Login successfully",
                 variant: "success"
             }));
-           
         } else {
             dispatch(showMessage({
                 message: "Your account not permitted",
@@ -48,7 +48,6 @@ function JWTLoginTab() {
         </div>
     );
 }
-
 
 // function mapDispatchToProps(dispatch) {
 //     return bindActionCreators({

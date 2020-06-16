@@ -1,146 +1,140 @@
-import React, {Component} from 'react';
-import {withStyles, Button, Avatar, Divider, Tooltip} from '@material-ui/core';
-import {FuseScrollbars, FuseAnimateGroup} from '@fuse';
+import React, { Component, useState, useEffect } from 'react';
+import { withStyles, Button, Avatar, Divider, Tooltip, Grid, makeStyles } from '@material-ui/core';
+import { FuseScrollbars, FuseAnimateGroup } from '@fuse';
+import { compose } from 'redux';
+import { firestoreConnect } from "react-redux-firebase";
+import GetDate from "../../../common/getDate";
+import { ChangeSelectedUser } from "../../store/actions/chat";
+import PropTypes from "prop-types";
+import { connect, useSelector } from "react-redux";
+import firebase from '../../firebase/firebase';
 import classNames from 'classnames';
 
-const styles = theme => ({
-    root         : {
-        background: theme.palette.background.default
-    },
-    contactButton: {
-        width           : 70,
-        minWidth        : 70,
-        flex            : '0 0 auto',
-        '&.active:after': {
-            position              : 'absolute',
-            top                   : 8,
-            right                 : 0,
-            bottom                : 8,
-            content               : "''",
-            width                 : 4,
-            borderTopLeftRadius   : 4,
-            borderBottomLeftRadius: 4,
-            backgroundColor       : theme.palette.primary.main
-        }
-    },
-    unreadBadge  : {
-        position       : 'absolute',
-        minWidth       : 18,
-        height         : 18,
-        top            : 4,
-        left           : 10,
-        borderRadius   : 9,
-        padding        : '0 5px',
-        fontSize       : 11,
-        textAlign      : 'center',
-        display        : 'flex',
-        alignItems     : 'center',
-        justifyContent : 'center',
-        backgroundColor: theme.palette.secondary.main,
-        color          : theme.palette.secondary.contrastText,
-        boxShadow      : '0 2px 2px 0 rgba(0, 0, 0, 0.35)',
-        zIndex         : 10
-    },
-    status       : {
-        position    : 'absolute',
-        width       : 12,
-        height      : 12,
-        bottom      : 4,
-        left        : 44,
-        border      : '2px solid ' + theme.palette.background.default,
-        borderRadius: '50%',
-        zIndex      : 10,
 
-        '&.online': {
-            backgroundColor: '#4CAF50'
-        },
-
-        '&.do-not-disturb': {
-            backgroundColor: '#F44336'
-        },
-
-        '&.away': {
-            backgroundColor: '#FFC107'
-        },
-
-        '&.offline': {
-            backgroundColor: '#646464'
-        }
+const useStyles = makeStyles(theme => ({
+  root: {
+    background: theme.palette.background.default
+  },
+  contactButton: {
+    width: 70,
+    minWidth: 70,
+    flex: '0 0 auto',
+    '&.active:after': {
+      position: 'absolute',
+      top: 8,
+      right: 0,
+      bottom: 8,
+      content: "''",
+      width: 4,
+      borderTopLeftRadius: 4,
+      borderBottomLeftRadius: 4,
+      backgroundColor: theme.palette.primary.main
     }
-});
+  },
+  unreadBadge: {
+    position: 'absolute',
+    minWidth: 18,
+    height: 18,
+    top: 4,
+    left: 10,
+    borderRadius: 9,
+    padding: '0 5px',
+    fontSize: 11,
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.secondary.main,
+    color: theme.palette.secondary.contrastText,
+    boxShadow: '0 2px 2px 0 rgba(0, 0, 0, 0.35)',
+    zIndex: 10
+  },
+  status: {
+    position: 'absolute',
+    width: 12,
+    height: 12,
+    bottom: 4,
+    left: 44,
+    border: '2px solid ' + theme.palette.background.default,
+    borderRadius: '50%',
+    zIndex: 10,
 
-class ContactList extends Component {
+    '&.online': {
+      backgroundColor: '#4CAF50'
+    },
 
-    // handleContactClick = (contactId) => {
-    //     this.props.openChatPanel();
-    //     this.props.getChat(contactId);
-    //     this.scrollToTop();
-    // };
+    '&.do-not-disturb': {
+      backgroundColor: '#F44336'
+    },
 
-    scrollToTop = () => {
-        this.contactListScroll.scrollTop = 0;
-    };
+    '&.away': {
+      backgroundColor: '#FFC107'
+    },
 
-    render()
-    {
-        const {classes, contacts, user} = this.props;
+    '&.offline': {
+      backgroundColor: '#646464'
+    }
+  },
+  avatar: {
+    padding: theme.spacing(2)
+  }
+}));
 
-        const ContactButton = ({contact}) => {
-            return (
-                <Tooltip title={contact.name} placement="left">
-                    <Button
-                        // onClick={() => this.handleContactClick(contact.id)}
-                        className={classNames(classes.contactButton)}
-                    >
-                        {/* {contact.unread && (
-                            <div className={classes.unreadBadge}>{contact.unread}</div>
-                        )} */}
-                        <div className={classNames(contact.status, classes.status)}/>
-                        <Avatar
-                            src={contact.avatar}
-                            alt={contact.name}
-                        >
-                            {!contact.avatar || contact.avatar === '' ? contact.name[0] : ''}
-                        </Avatar>
-                    </Button>
-                </Tooltip>
-            )
-        };
+const ContactList = () => {
+  const classes = useStyles();
+  const [images, setImages] = useState([]);
+  const handelChangeChat = () => {
+    const { user, changeSelectedUser } = this.props;
+    changeSelectedUser(user.uid, null);
+  };
+  
+  const selectedUser = {}
+  const status = false;
+  const user = useSelector(state => state);
 
-
-        return (
-            <FuseScrollbars
-                className={classNames(classes.root, "flex flex-no-shrink flex-col overflow-y-auto py-8")}
-                containerRef={(ref) => {
-                    this.contactListScroll = ref
-                }}
-            >
-                    <React.Fragment>
-                        <FuseAnimateGroup
-                            enter={{
-                                animation: "transition.expandIn"
-                            }}
-                            className="flex flex-col flex-no-shrink"
-                        >
-                            {/* {(user && user.chatList) &&
-                            user.chatList.map(chat => {
-                                const contact = contacts.find((_contact) => _contact.id === chat.contactId);
-                                return (
-                                    <ContactButton key={contact.id} contact={contact}/>
-                                )
-                            })}
-                            <Divider className="mx-24 my-8"/>
-                            {contacts.map(contact => {
-                                const chatContact = user.chatList.find((_chat) => _chat.contactId === contact.id);
-                                return !chatContact ? <ContactButton key={contact.id} contact={contact}/> : '';
-                            })} */}
-                        </FuseAnimateGroup>
-                    </React.Fragment>
-            </FuseScrollbars>
-        );
-    };
-}
+  const handleContactList = () => {
+    const contactId = '3'
+  }
 
 
-export default withStyles(styles)(ContactList);
+  useEffect(() => {
+    const users = firebase.firestore().collection('users');
+    let allUser = users.get().then(res => {
+      res.forEach(user => setImages([...images, user.data().image]))
+      res.forEach(doc => {
+        console.log(doc.id, '=> ', doc.data());
+      });
+    })
+      .catch(err => {
+        console.log('Error getting documents', err);
+      });
+  }, [])
 
+  //console.log(images);
+
+  const ContactButton = () => (
+    <Tooltip title={"AA"} placement="left">
+      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => handleContactList}>
+        <Avatar src={images[0]}></Avatar>
+      </Button>
+    </Tooltip>
+  )
+
+  return (
+    <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
+      <Grid item lg={12}>
+        <ContactButton />
+      </Grid>
+      <Grid item lg={12}>
+        <ContactButton />
+      </Grid>
+      <Grid item lg={12}>
+        <ContactButton />
+      </Grid>
+
+    </Grid>
+    // </FuseScrollbars>
+  )
+};
+
+export default ContactList

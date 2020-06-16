@@ -31,13 +31,8 @@ export const LoginConfig = {
         {
             path     : APP_PATH.LOGIN,
             component: Login
-        },
-        {
-            path     : "/loginchat",
-            component: FuseLoadable({
-                loader: () => import('./ChatLogin')
-            }),
         }
+       
     ]
 };
 

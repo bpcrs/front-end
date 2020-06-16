@@ -23,7 +23,7 @@ const ToolbarLayout3 = ({classes, settings, toolbarTheme}) => {
     const layoutConfig = settings.layout.config;
 
     return (
-        <MuiThemeProvider theme={toolbarTheme}>
+        <MuiThemeProvider theme={toolbarTheme} >
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
                 <Toolbar className="container p-0 lg:px-24">
 

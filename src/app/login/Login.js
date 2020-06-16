@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { withStyles, Card, CardContent, Typography, Tabs, Tab } from '@material-ui/core';
+import { withStyles, Card, CardContent, Typography, Tabs, Tab, Button } from '@material-ui/core';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { FuseAnimate } from '@fuse';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import JWTLoginTab from './tabs/JWTLoginTab';
-import { GoogleLogin } from "./tabs/authFirebase";
+
 
 const styles = theme => ({
     root: {
@@ -79,9 +79,8 @@ class Login extends Component {
                                 />
                             </Tabs>
 
-                            {tabValue === 0 && <JWTLoginTab />} <br />
+                            {tabValue === 0 && <JWTLoginTab />} 
                             
-
                            
                         </CardContent>
                     </Card>

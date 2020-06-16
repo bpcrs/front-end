@@ -1,11 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     AppBar, Toolbar, Button,
     Typography, Dialog, Icon, IconButton,
     Slide, withStyles, makeStyles,
-    Paper
+    Paper, Grid
 } from '@material-ui/core';
-import { FuseScrollbars, FuseSettings } from '@fuse';
 import { red } from '@material-ui/core/colors';
 import { useState } from 'react';
 import Chat from './Chat';
@@ -16,25 +15,16 @@ function Transition(props) {
 }
 
 const useStyles = makeStyles(theme => ({
-    // button: {
-    //     position: 'absolute',
-    //     right: 0,
-    //     top: 160,
-    //     minWidth: 48,
-    //     width: 48,
-    //     height: 48,
-    //     opacity: .9,
-    //     padding: 0,
-    //     borderBottomRightRadius: 0,
-    //     borderTopRightRadius: 0,
-    //     zIndex: 999,
-    //     color: theme.palette.getContrastText(red[500]),
-    //     backgroundColor: red[500],
-    //     '&:hover': {
-    //         backgroundColor: red[500],
-    //         opacity: 1
-    //     }
-    // },
+    root: {
+        width: 70,
+        maxWidth: 70,
+        minWidth: 70,
+        [theme.breakpoints.down('md')]: {
+            width: 0,
+            maxWidth: 0,
+            minWidth: 0
+        }
+    },
     '@keyframes rotating': {
         from: {
             transform: 'rotate(0deg)'
@@ -60,12 +50,44 @@ const useStyles = makeStyles(theme => ({
         margin: 0,
         zIndex: 1000,
         borderRadius: 0
+    },
+    panel: {
+        position: 'absolute',
+        width: 360,
+        backgroundColor: theme.palette.background.paper,
+        boxShadow: theme.shadows[3],
+        top: 0,
+        height: '100%',
+        minHeight: '100%',
+        bottom: 0,
+        right: 0,
+        margin: 0,
+        zIndex: 1000,
+        transform: 'translate3d(290px,0,0)',
+        overflow: 'hidden',
+        [theme.breakpoints.down('md')]: {
+            transform: 'translate3d(360px,0,0)',
+            boxShadow: 'none',
+            '&.opened': {
+                boxShadow: theme.shadows[5]
+            }
+        },
+        transition: theme.transitions.create(['transform'], {
+            easing: theme.transitions.easing.easeInOut,
+            duration: theme.transitions.duration.standard
+        }),
+        '&.opened': {
+            transform: 'translateX(0)'
+        }
+    },
+    contact: {
+        backgroundColor: theme.palette.background.default
     }
 }));
 
-function ChatPanel(params) {
+function ChatPanel(props) {
     {
-        const [open, setOpen] = useState(false);
+        const [open, setOpen] = useState(true);
 
         const handleOpen = () => {
             setOpen(true)
@@ -81,8 +103,8 @@ function ChatPanel(params) {
                 <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
                     <Icon className={classes.buttonIcon}>chat</Icon>
                 </Button>
-
                 <Dialog
+
                     TransitionComponent={Transition}
                     aria-labelledby="settings-panel"
                     aria-describedby="settings"
@@ -94,28 +116,33 @@ function ChatPanel(params) {
                         paper: classes.dialogPaper
                     }}
                 >
-                    <FuseScrollbars className="p-24 sm:p-32">
-                        <AppBar position="static" elevation={1}>
-                            <Toolbar className="pl-12 pr-8">
-                                <div className="flex flex-1 items-center">
-                                    <React.Fragment>
+                    <Grid container>
+                        <Grid item lg={12}>
+                            <AppBar position="static" elevation={1}>
+                                <Toolbar>
+                                    <div className="flex flex-1 items-center">
+                                        <React.Fragment>
 
-                                        <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
+                                            <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
 
-                                    </React.Fragment>
+                                        </React.Fragment>
 
-                                </div>
-                                <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
-                                    <Icon>close</Icon>
-                                </IconButton>
-                            </Toolbar>
-                        </AppBar>
-                        <Paper className="flex flex-1 flex-row min-h-px">
-                            <ContactList className="flex flex-no-shrink" />
-                            <Chat className="flex flex-1 z-10" />
-                        </Paper>
-
-                    </FuseScrollbars>
+                                    </div>
+                                    <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
+                                        <Icon>close</Icon>
+                                    </IconButton>
+                                </Toolbar>
+                            </AppBar>
+                        </Grid>
+                        <Grid container spacing={1} item lg={12} style={{minHeight : "80vh"}}>
+                            <Grid item lg={2}>
+                                <ContactList style={classes.contact}/>
+                            </Grid>
+                            <Grid item lg={10}>
+                                <Chat />
+                            </Grid>
+                        </Grid>                    
+                    </Grid>
                 </Dialog>
             </React.Fragment>
         );
