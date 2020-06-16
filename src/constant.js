@@ -1,5 +1,5 @@
 export const APP_CONST = {
-    API_URL : "http://localhost:5000",
+    API_URL : "http://api.bpcrs.network",
     GOOGLE_CLIENT_ID : "861476715885-0ge3nqdop06mu3qo1u29fubknpgngo1l.apps.googleusercontent.com"
 }
 
@@ -14,7 +14,7 @@ export const APP_PATH = {
     LOGIN : "/login",
     CAR_LIST : "/cars",
     CAR_ITEM : "/car",
-    VIEW_BOOKING : "/view-booking"
-    
-    
+    CAR_SUBMIT: "/submit",
+    CAR_EDIT: "/car-edit",
+    VIEW_BOOKING : "/view-booking"   
 }
