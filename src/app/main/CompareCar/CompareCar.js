@@ -1,35 +1,13 @@
-import React, { Component, useEffect } from 'react';
-// import { withStyles } from '@material-ui/core/styles';
-
-
-// import React from 'react';
+import React, {  } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Layout from '../../layout';
-import { NonceProvider } from 'react-select';
-import { borders } from '@material-ui/system';
-// const styles = theme => ({
-//     layoutRoot: {}
-// });
-
-const StyledTableCell = withStyles((theme) => ({
-    // head: {
-    //     backgroundColor: theme.palette.common.white,
-    //     color: theme.palette.common.white,
-    // },
-    // body: {
-    //     fontSize: 14,
-
-    // },
-
-}))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
     root: {
@@ -56,7 +34,7 @@ const rows = [
 
 ];
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         // flexGrow: 1,
         display: 'flex',
@@ -94,14 +72,14 @@ export default function CompareCar() {
 
                                 <Grid item xs={6} lg={4}>
                                     {/* <StyledTableCell align="right"> */}
-                                    <img style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
+                                    <img alt="" style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
                                         src={'https://www.cstatic-images.com/car-pictures/xl/USD00HOS021A021001.jpg'} />
                                     {/* </StyledTableCell> */}
                                 </Grid>
 
                                 <Grid item xs={6} lg={4}>
                                     {/* <StyledTableCell align="right"> */}
-                                    <img style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
+                                    <img alt="" style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
                                         src={'https://www.cstatic-images.com/car-pictures/xl/USC80GMS281B021001.jpg'} />
                                     {/* </StyledTableCell> */}
                                 </Grid>
@@ -119,7 +97,7 @@ export default function CompareCar() {
                                 <Grid container spacing={0}>
                                     <Grid item xs={12} sm={3} lg={4}>
                                         {/* <StyledTableCell component="th" scope="row"> */}
-                                        <p component="th" scope="row">
+                                        <p>
                                             {row.name}
                                         </p>
 

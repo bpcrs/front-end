@@ -1,16 +1,7 @@
-import React, { Component, useEffect } from 'react';
-import { withStyles, Container, Box, AppBar, Toolbar, IconButton, Fab, makeStyles } from '@material-ui/core';
-import { FusePageSimple, DemoContent } from '@fuse';
-import Formsy from 'formsy-react';
-import { Typography, MenuItem, InputAdornment, Icon, TextField, Button, Grid, Paper, MobileStepper } from '@material-ui/core';
-import {
-    CheckboxFormsy,
-    RadioGroupFormsy,
-    SelectFormsy,
-    TextFieldFormsy
-} from '../../../@fuse/components/formsy';
-import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks } from 'landing-blocks/dist'
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Container, makeStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import CarItem from './CarItem';
 
 import Layout from '../../layout';
@@ -45,16 +36,18 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function CarList(props) {
+function CarList() {
     const history = useHistory();
     const classes = useStyles();
     const dispatch = useDispatch();
     const cars = useSelector(state => state.booking.cars)
+    // const stableDispatch = useCallback(dispatch(fetchCarList(),[]))
     useEffect(() => {
-        if (cars.length === 0) {
+        let ignore = cars.length === 0;
+        if (ignore) {
             dispatch(fetchCarList())
         }
-    }, [])
+    }, [cars.length, dispatch])
     return (
         <Layout name="Car Available">
             <Container >

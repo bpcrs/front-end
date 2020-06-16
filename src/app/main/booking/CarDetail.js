@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
-import { withStyles, CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardMedia, CardActions, Icon, makeStyles, TextField } from '@material-ui/core';
-import { withRouter, useHistory } from 'react-router-dom';
+import React from 'react'
+import { CardHeader, Avatar, Grid, Card, CardContent, Typography, Button, CardMedia, Icon, makeStyles, TextField } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import Layout from '../../layout';
 import { APP_PATH } from '../../../constant';
 import Rating from '@material-ui/lab/Rating';
 import Chip from '@material-ui/core/Chip';
-import { yellow } from '@material-ui/core/colors';
 
 
 const useStyles = makeStyles(theme => ({
@@ -25,12 +24,9 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-export default function CarDetails(props) {
+export default function CarDetails() {
     const history = useHistory();
 
-    const handleChange = (event) => {
-        this.setLocation(event.target.value);
-    };
 
     const classes = useStyles();
     return (

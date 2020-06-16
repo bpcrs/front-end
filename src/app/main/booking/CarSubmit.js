@@ -67,7 +67,7 @@ export default function CarSubmit(props) {
                         <TextField className={classes.textField} label="Identity Card" />
                         <div className="mt-20">
                             <ImageUploading
-                                onChange={classes.onChange}
+                                onChange={onChange}
                                 maxNumber={maxNumber}
                                 multiple
                                 maxFileSize={maxMbFileSize}
@@ -84,7 +84,7 @@ export default function CarSubmit(props) {
                                                     <div key={image.key} className="mt-20">
                                                         <Grid container spacing={1}>
                                                             <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
+                                                                <img src={image.dataURL} className={classes.imageUploading} alt=""/>
                                                             </Grid>
                                                             <Grid item xs={3} sm={3} >
                                                                 <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
@@ -113,19 +113,19 @@ export default function CarSubmit(props) {
                                     onChange={handleChangeBrand}
                                 >
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" alt="" />
                                         <Typography>Honda</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Toyota-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Toyota-Carmudi.jpg" alt="" />
                                         <Typography>Toyota</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Lexus-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Lexus-Carmudi.jpg" alt="" />
                                         <Typography>Lexus</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Mazda-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Mazda-Carmudi.jpg" alt="" />
                                         <Typography>Mazda</Typography>
                                     </MenuItem>
                                 </Select>
@@ -150,7 +150,7 @@ export default function CarSubmit(props) {
                         <TextField className={classes.textField} id="standard-required" label="Odometer" />
                         <div className="mt-20">
                             <ImageUploading
-                                onChange={classes.onChange}
+                                onChange={onChange}
                                 maxNumber={maxNumber}
                                 multiple
                                 maxFileSize={maxMbFileSize}
@@ -167,7 +167,7 @@ export default function CarSubmit(props) {
                                                     <div key={image.key} className="mt-20">
                                                         <Grid container spacing={1}>
                                                             <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
+                                                                <img src={image.dataURL} className={classes.imageUploading} alt=""/>
                                                             </Grid>
                                                             <Grid item xs={3} sm={3} >
                                                                 <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>

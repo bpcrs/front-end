@@ -1,8 +1,7 @@
-import history from 'history.js';
 import { setDefaultSettings, setInitialSettings } from 'app/store/actions/fuse';
-import _ from '@lodash';
-import store from 'app/store';
-import * as Actions from 'app/store/actions';
+// import _ from '@lodash';
+// import store from 'app/store';
+// import * as Actions from 'app/store/actions';
 import jwtService from 'app/services/jwtService';
 import { APP_ROLE } from '../../../../constant';
 
@@ -57,7 +56,9 @@ export function setUserData(user) {
 export function updateUserSettings(settings) {
     return (dispatch, getState) => {
         const oldUser = getState().auth.user;
-        const user = _.merge({}, oldUser, { data: { settings } });
+        console.log(oldUser);
+        
+        const user = {}
 
         updateUserData(user);
 
@@ -107,9 +108,9 @@ export function logoutUser() {
             return null;
         }
 
-        history.push({
-            pathname: '/'
-        });
+        // history.push({
+        //     pathname: '/'
+        // });
 
         jwtService.logout();
 
@@ -130,10 +131,10 @@ function updateUserData(user) {
     }
     jwtService.updateUserData(user)
         .then(() => {
-            store.dispatch(Actions.showMessage({ message: "User data saved with api" }));
+            // store.dispatch(Actions.showMessage({ message: "User data saved with api" }));
         })
         .catch(error => {
-            store.dispatch(Actions.showMessage({ message: error.message }));
+            // store.dispatch(Actions.showMessage({ message: error.message }));
         });
 }
 

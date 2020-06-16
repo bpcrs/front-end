@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import React from 'react';
+import {makeStyles } from '@material-ui/core/styles';
 import { FusePageSimple, DemoContent } from '@fuse';
 
 const useStyles = makeStyles(theme => ({

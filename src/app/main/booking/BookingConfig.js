@@ -1,8 +1,6 @@
 import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
-import { authRoles } from 'app/auth';
 import CarDetail from './CarDetail';
 import { APP_PATH } from '../../../constant';
-import CarEdit from './CarEdit';
 export const BookingConfig = {
     settings: {
         layout: {

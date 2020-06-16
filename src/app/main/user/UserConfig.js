@@ -1,4 +1,4 @@
-import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+// import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 import User from './User';
 
 export const UserConfig = {
