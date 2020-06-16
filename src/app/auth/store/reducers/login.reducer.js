@@ -17,7 +17,6 @@ const login = function (state = initialState, action) {
             {
                 return {
                     success: false,
-                    // error: action.payload
                 };
             }
         default:
