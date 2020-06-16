@@ -7,7 +7,7 @@ const initialState = {
             vertical: 'top',//top bottom
             horizontal: 'right'//left center right
         },
-        autoHideDuration: 3000,
+        autoHideDuration: 2000,
         message: "Hi",
         variant: null
     }

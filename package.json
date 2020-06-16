@@ -19,6 +19,7 @@
         "chart.js": "2.7.3",
         "date-fns": "2.0.0-alpha.27",
         "dokz": "^1.0.30",
+        "dotenv": "^8.2.0",
         "downshift": "3.2.2",
         "emotion-theming": "^10.0.27",
         "firebase": "^7.15.1",
@@ -90,8 +91,9 @@
         "webpack-bundle-analyzer": "^3.8.0"
     },
     "scripts": {
-        "start": "yarn run build-css-helpers && cross-env NODE_PATH=src react-scripts start",
-        "build": "yarn run build-css-helpers && cross-env CI=false NODE_PATH=src GENERATE_SOURCEMAP=false react-scripts build",
+        "start:dev": "yarn run build-css-helpers && cross-env NODE_PATH=src dotenv -e .env.dev react-scripts start",
+        "start:prod": "yarn run build-css-helpers && cross-env NODE_PATH=src dotenv -e .env.prod react-scripts start",
+        "build": "yarn run build-css-helpers && cross-env CI=false NODE_PATH=src GENERATE_SOURCEMAP=false dotenv -e .env.prod react-scripts build",
         "build-css-helpers": "./node_modules/.bin/tailwind build ./src/styles/fuse-helpers.tailwind.css -c ./tailwind.js -o ./src/styles/fuse-helpers.css && postcss --use autoprefixer -o ./src/styles/fuse-helpers.css ./src/styles/fuse-helpers.css",
         "test": "cross-env NODE_PATH=src react-scripts test --env=node",
         "eject": "cross-env NODE_PATH=src react-scripts eject",

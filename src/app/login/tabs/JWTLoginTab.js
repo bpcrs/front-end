@@ -12,13 +12,9 @@ function JWTLoginTab() {
     const responseGoogle = (response) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
-            dispatch(showMessage({
-                message : "Login successfully",
-                variant : "success"
-            }));
         } else {
             dispatch(showMessage({
-                message : "Your account not permitted",
+                message : response.details,
                 variant : "error"
             }));
         }
