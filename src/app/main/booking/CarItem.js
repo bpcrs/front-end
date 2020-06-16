@@ -41,7 +41,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
-
+  const { info } = props;
+    
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -55,8 +56,8 @@ export default function CarItem(props = { isAction: true }) {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Honda CR-V"
-        subheader="2020"
+        title={info.name}
+        subheader={info.model + " 2020"}
       />
       <CardMedia
         className={classes.media}
@@ -70,7 +71,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>airline_seat_recline_normal_outlined</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">4 people</Typography>
+              <Typography variant="caption">{info.seat} people</Typography>
             </Grid>
           </Grid>
           <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
