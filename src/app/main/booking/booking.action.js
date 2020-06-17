@@ -1,10 +1,10 @@
 import Axios from "axios";
-import { APP_CONST } from "../../../constant";
+import { showMessage, showMessageError } from "../../store/actions/fuse";
+import { GET, ENDPOINT } from "../../services/api";
 
 export const FETCH_CAR_LIST = '[CAR] FETCH DATA';
 export const FETCH_CARS_SUCCESS = '[CAR] FETCH DATA SUCCESS';
 export const FETCH_CARS_FAILURE = '[CAR] FETCH DATA FAILURE';
-
 export function fetchCarSuccess(offers) {
 	return {
 		type: FETCH_CARS_SUCCESS,
@@ -21,11 +21,14 @@ export function fetchCarsError(error) {
 
 
 export function fetchCarList() {
-    return (dispatch) => {
-        const request = Axios.get(APP_CONST.API_URL + '/car')
-        request.then(
-            response => dispatch(fetchCarSuccess(response.data.success ? response.data.data : [])),
-            error => dispatch(fetchCarsError(error))
-        );
-    }
+	return (dispatch) => {
+		const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL)
+		request.then(
+			response => dispatch(fetchCarSuccess(response.data.success ? response.data.data : [])),
+			error => {
+				dispatch(fetchCarsError(error))
+				dispatch(showMessageError(error.message))
+			}
+		);
+	}
 }

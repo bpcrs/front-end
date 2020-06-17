@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import { APP_CONST } from '../../../constant';
-import { showMessage } from '../../store/actions/fuse';
+import { showMessageError } from '../../store/actions/fuse';
 import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
 function JWTLoginTab() {
@@ -13,10 +13,7 @@ function JWTLoginTab() {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
         } else {
-            dispatch(showMessage({
-                message : response.details,
-                variant : "error"
-            }));
+            dispatch(showMessageError(response.details));
         }
     }
     return (
@@ -42,19 +39,4 @@ function JWTLoginTab() {
         </div>
     );
 }
-
-
-// function mapDispatchToProps(dispatch) {
-//     return bindActionCreators({
-//         submitLogin: authActions.submitLogin
-//     }, dispatch);
-// }
-
-// function mapStateToProps({ auth }) {
-//     return {
-//         login: auth.login,
-//         user: auth.user
-//     }
-// }
-
 export default withRouter(JWTLoginTab);
