@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     },
     paper: {
         paddingBottom: theme.spacing(1),
-        // textAlign: 'center',
         color: theme.palette.text.secondary,
         width : "100%"
     },
@@ -90,21 +89,8 @@ function Landing(props) {
                                 Book now
                             </Button>
                         </div>
-                        {/* <TextField
-                            id="datetime-local"
-                            label="Pick-up appointment"
-                            type="datetime-local"
-                            defaultValue="2017-05-24T10:30"
-                            InputLabelProps={{
-                                shrink: true
-                            }}
-                            fullWidth
-                            variant="outlined"
-                            className={classes.paper}
-                        /> */}
-
                     </Formsy>}
-                    image={<img width='400px' src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/hero.png' />}
+                    image={<img width='400px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/hero.png' />}
                     // cta={<Button>Book a demo</Button>}
                     floatingElement={<GradientCurtains mt='-600px' />}
                 />
@@ -114,24 +100,24 @@ function Landing(props) {
                     features={[
                         {
                             heading: 'Control',
-                            icon: <img width='200px' src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step1.svg' />,
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step1.svg' />,
                             subheading:
                                 'Multi-level approvals and custom spending limits.',
                         },
                         {
                             heading: 'Pay',
-                            icon: <img width='200px' src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step2.svg' />,
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step2.svg' />,
                             subheading:
                                 'Smart company cards, virtual cards, and invoice tracking.',
                         },
                         {
                             heading: 'Track',
-                            icon: <img width='200px' src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step3.svg' />,
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step3.svg' />,
                             subheading: 'Real-time spending overview and receipt capture.',
                         },
                         {
                             heading: 'Report',
-                            icon: <img width='200px' src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step4.svg' />,
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step4.svg' />,
                             subheading: 'Simplified bookkeeping and budget analysis.',
                         },
                     ]}
@@ -184,100 +170,23 @@ function Landing(props) {
                     businessName='Prismic'
                     columns={{
                         Developers: [
-                            <a>Quickstart</a>,
-                            <a>Documentation</a>,
-                            <a>Samples</a>,
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
                         ],
                         Company: [
-                            <a>Quickstart</a>,
-                            <a>Documentation</a>,
-                            <a>Samples</a>,
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
                         ],
                         Product: [
-                            <a>Quickstart</a>,
-                            <a>Documentation</a>,
-                            <a>Samples</a>,
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
                         ],
                     }}
                 />
             </LandingProvider>
-            {/* <LandingProvider primary='#5D21D2' background='#fff'>
-                <NavBar
-                    logo={<img width='80px' onClick={() => history.push("/landing")} src="assets/images/logos/fuse.svg" />}
-                    navs={[
-                        <Button variant="contained">Features</Button>,
-                        <Button variant="contained">Use Cases</Button>,
-                        <Button variant="contained">Pricing</Button>,
-                        <Button variant="contained">About Us</Button>,
-                        <Button variant="contained" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,
-                    ]}
-                />
-                <SectionTitle
-                    heading={
-                        isMobile ? <></> :
-                            <Heading
-                                fontFamily='tiempos-headline, Georgia'
-                                fontSize='50px'
-                                fontWeight='semibold'
-                            >
-                                Blockchain-based Personal Car Renting System
-                    </Heading>
-                    }
-                // image={}
-                // floatingElement={
-                //     <GradientRect maxW='pageContainer' width='60%' distortion={-0.3} />
-                // }
-                />
-                <Hero
-                    // floatingElement={<GradientCurtains mt='-600px' />}
-                    heading={<Typography variant="h5" >Choose your plan</Typography>}
-                    image={
-                        <Grid item xs={12} xl={12} >
-                            {isMobile ? <></> : <img src={listImage[0]} width="100%" className={classes.imageBg} />}
-                        </Grid>
-                    }
-                    cta={
-                        <Formsy className="flex flex-col justify-center">
-                            <TextField
-                                id="datetime-local"
-                                label="Pick-up appointment"
-                                type="datetime-local"
-                                defaultValue="2017-05-24T10:30"
-                                InputLabelProps={{
-                                    shrink: true
-                                }}
-                                variant="outlined"
-                                className={classes.paper}
-                            />
-                            <TextField
-                                id="datetime-local"
-                                label="Drop-off appointment"
-                                type="datetime-local"
-                                defaultValue="2017-05-24T10:30"
-                                className={classes.paper}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                variant="outlined"
-                            />
-                            <SelectFormsy
-                                name="related-outlined"
-                                label="Pick-up location"
-                                value="sg"
-                                variant="outlined"
-                                className={classes.paper}
-                            >
-                                <MenuItem value="sg">Ho Chi Minh</MenuItem>
-                                <MenuItem value="olivier">Olivier</MenuItem>
-                                <MenuItem value="kevin">Kevin</MenuItem>
-                            </SelectFormsy>
-                            <Button variant="contained" color="primary" onClick={() => history.push(APP_PATH.CAR_LIST)}>
-                                Book now
-                        </Button>
-                        </Formsy>}
-                // fingerprint='Already have account? Sign in'
-                />
-            </LandingProvider> */}
         </>
     )
 }

@@ -13,7 +13,11 @@ function JWTLoginTab() {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
         } else {
-            dispatch(showMessageError(response.details));
+            if (response.details) {
+                dispatch(showMessageError(response.details));
+            } else {
+                dispatch(showMessageError("An error occurred"));
+            }
         }
     }
     return (

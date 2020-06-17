@@ -1,5 +1,4 @@
-import Axios from "axios";
-import { showMessage, showMessageError } from "../../store/actions/fuse";
+import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT } from "../../services/api";
 
 export const FETCH_CAR_LIST = '[CAR] FETCH DATA';
