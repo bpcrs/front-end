@@ -1,21 +1,21 @@
 const config = {
     title   : 'Layout 3 - Horizontal',
     defaults: {
-        mode          : 'container',
+        mode          : 'fullwidth',
         scroll        : 'content',
         navbar        : {
-            display: true
+            display: false
         },
         toolbar       : {
             display : true,
             position: 'above'
         },
         footer        : {
-            display: true,
+            display: false,
             style  : 'fixed'
         },
         leftSidePanel : {
-            display: true
+            display: false
         },
         rightSidePanel: {
             display: true

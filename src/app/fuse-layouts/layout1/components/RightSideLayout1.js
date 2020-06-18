@@ -5,6 +5,7 @@ const RightSideLayout1 = () => {
     return (
         <React.Fragment>
             <QuickPanel/>
+            
         </React.Fragment>
     );
 };

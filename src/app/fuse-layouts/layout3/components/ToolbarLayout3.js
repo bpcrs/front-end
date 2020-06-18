@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import NavbarMobileToggleButton from 'app/fuse-layouts/shared-components/NavbarMobileToggleButton';
 import QuickPanelToggleButton from 'app/fuse-layouts/shared-components/quickPanel/QuickPanelToggleButton';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
+import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel';
+import ChatPanel from 'app/main/chat/ChatPanel';
 
 const styles = theme => ({
     separator: {
@@ -21,7 +23,7 @@ const ToolbarLayout3 = ({classes, settings, toolbarTheme}) => {
     const layoutConfig = settings.layout.config;
 
     return (
-        <MuiThemeProvider theme={toolbarTheme}>
+        <MuiThemeProvider theme={toolbarTheme} >
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
                 <Toolbar className="container p-0 lg:px-24">
 
@@ -52,7 +54,8 @@ const ToolbarLayout3 = ({classes, settings, toolbarTheme}) => {
                         </Hidden>
 
                         <QuickPanelToggleButton/>
-
+                        <SettingsPanel/>
+                        <ChatPanel/>
                         <Hidden mdDown>
                             <div className={classes.separator}/>
                         </Hidden>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {withStyles, MuiThemeProvider, Drawer, Hidden} from '@material-ui/core';
+import {withStyles, MuiThemeProvider, Drawer, Hidden, makeStyles} from '@material-ui/core';
 import classNames from 'classnames';
 import {FuseScrollbars} from '@fuse';
 import PropTypes from 'prop-types';
@@ -25,7 +25,7 @@ const drawerWidth = 240;
 const headerHeight = 120;
 const toolbarHeight = 64;
 
-const styles = theme => ({
+const styles =  makeStyles(theme => ({
     root                          : {
         display        : 'flex',
         flexDirection  : 'column',
@@ -156,7 +156,7 @@ const styles = theme => ({
     backdrop                      : {
         position: 'absolute'
     }
-});
+}));
 
 class FusePageSimple extends React.Component {
 

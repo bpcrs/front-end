@@ -186,7 +186,7 @@ function Landing(props) {
                         ],
                     }}
                 />
-            </LandingProvider>
+            </LandingProvider> */}
         </>
     )
 }

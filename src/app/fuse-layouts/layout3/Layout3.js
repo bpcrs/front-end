@@ -1,9 +1,7 @@
 import React from 'react';
-import {withStyles} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core';
 import {FuseScrollbars, FuseMessage, FuseDialog} from '@fuse';
-import {withRouter} from 'react-router-dom';
 import {renderRoutes} from 'react-router-config'
-import {connect} from 'react-redux';
 import classNames from 'classnames';
 import AppContext from 'app/AppContext';
 import LeftSideLayout3 from './components/LeftSideLayout3';
@@ -11,9 +9,8 @@ import ToolbarLayout3 from './components/ToolbarLayout3';
 import NavbarWrapperLayout3 from './components/NavbarWrapperLayout3';
 import FooterLayout3 from './components/FooterLayout3';
 import RightSideLayout3 from './components/RightSideLayout3';
-import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     root          : {
         position     : 'relative',
         display      : 'flex',
@@ -61,10 +58,10 @@ const styles = theme => ({
         display: 'flex',
         flex   : '1 0 auto'
     }
-});
+}));
 
-const Layout3 = ({classes, settings, children}) => {
-
+const Layout3 = ({ settings, children}) => {
+    const classes = useStyles();
     const layoutConfig = settings.layout.config;
 
     return (
@@ -108,7 +105,7 @@ const Layout3 = ({classes, settings, children}) => {
                             <FooterLayout3/>
                         )}
 
-                        <SettingsPanel/>
+                        {/* <SettingsPanel/> */}
 
                     </div>
 
@@ -122,11 +119,5 @@ const Layout3 = ({classes, settings, children}) => {
     );
 };
 
-function mapStateToProps({fuse})
-{
-    return {
-        settings: fuse.settings.current
-    }
-}
 
-export default withStyles(styles, {withTheme: true})(withRouter(connect(mapStateToProps)(Layout3)));
+export default Layout3;

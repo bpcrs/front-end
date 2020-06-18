@@ -6,9 +6,9 @@ import { APP_CONST } from '../../../constant';
 import { showMessageError } from '../../store/actions/fuse';
 import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
+
 function JWTLoginTab() {
     const dispatch = useDispatch()
-
     const responseGoogle = (response) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
@@ -21,7 +21,9 @@ function JWTLoginTab() {
         }
     }
     return (
+
         <div className="w-full">
+
             <GoogleLogin
                 clientId={APP_CONST.GOOGLE_CLIENT_ID}
                 onSuccess={responseGoogle}

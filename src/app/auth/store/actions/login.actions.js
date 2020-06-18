@@ -9,18 +9,24 @@ export function submitLogin(token) {
         jwtService.signInWithToken(token)
             .then((token) => {
                 const userFromToken = jwtService.getUserDataFromToken();
+                console.log(userFromToken);
+                
                 dispatch(setUserData({
                     role: userFromToken.roleName,
                     data: {
                         displayName: userFromToken.fullName,
                         photoURL: userFromToken.imageUrl,
                         email: userFromToken.email,
-                        shortcuts: []
-                    }
+                        shortcuts: [],
+                        id: userFromToken.id
+                    },
                 }));
+
                 return dispatch({
                     type: LOGIN_SUCCESS
+                    
                 });
+               
             })
             .catch(error => {
                 dispatch(showMessage({

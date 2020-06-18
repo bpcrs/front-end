@@ -4,6 +4,7 @@ import { setDefaultSettings } from 'app/store/actions/fuse';
 // import * as Actions from 'app/store/actions';
 import jwtService from 'app/services/jwtService';
 import { APP_ROLE } from '../../../../constant';
+import firebase from '../../../firebase/firebase';
 
 export const SET_USER_DATA = '[USER] SET DATA';
 export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
@@ -32,7 +33,7 @@ export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
  * Set User Data
  */
 export function setUserData(user) {
-    return (dispatch) => {
+    return async (dispatch) => {
 
         /*
         Set User Settings
@@ -47,6 +48,12 @@ export function setUserData(user) {
             type: SET_USER_DATA,
             payload: user
         })
+        
+        console.log(user.data)
+        await firebase.firestore().collection('users').doc(user.data.id.toString()).set({
+            fullName: user.data.displayName,
+            image: user.data.photoURL
+        });
     }
 }
 
