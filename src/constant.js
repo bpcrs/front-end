@@ -14,6 +14,7 @@ export const APP_ROLE = {
 }
 
 export const APP_PATH = {
+    HOME : "/",
     LANDING: "/landing",
     LOGIN: "/login",
     CAR_LIST: "/cars",

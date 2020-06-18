@@ -1,15 +1,14 @@
 import React from 'react'
-import { Typography, AppBar, Toolbar, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
-import ArrowBackIcon from '@material-ui/icons/ArrowBackIosOutlined';
+import { AppBar, Toolbar, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
 
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
-import { useHistory } from 'react-router-dom';
-import UserMenu from 'app/fuse-layouts/shared-components/UserMenu'
-import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel'
+import ToolbarLayout3 from '../fuse-layouts/layout3/components/ToolbarLayout3';
+import {FuseScrollbars} from '@fuse';
+
 const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
@@ -46,25 +45,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Layout(props) {
     const classes = useStyles();
-    const history = useHistory();
     return (
         <>
-            <AppBar position="fixed" style={{ backgroundColor: 'white' }}>
-                <Toolbar>
-                    <IconButton onClick={() => history.goBack()} edge="start" className={classes.menuButton} color="secondary" aria-label="menu">
-                        <ArrowBackIcon />
-                    </IconButton>
-                    <Typography variant="h6" className={classes.title}>
-                        {props.name}
-                    </Typography>
-                    <UserMenu />
-                    <SettingsPanel />
-                </Toolbar>
-            </AppBar>
-
-            <Container className={classes.spacingCard}>
-                {props.children}
-            </Container>
+            <ToolbarLayout3 />
+            <FuseScrollbars>
+                <Container className={classes.spacingCard}>
+                    {props.children}
+                </Container>
+            </FuseScrollbars>
             {isMobile ? (<AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="open drawer">
@@ -82,6 +70,7 @@ export default function Layout(props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>) : <></>}
+
         </>
     )
 }
