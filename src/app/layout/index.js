@@ -1,6 +1,5 @@
 import React from 'react'
 import { Typography, AppBar, Toolbar, Button, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
-import HomeIcon from '@material-ui/icons/Home';
 import ArrowBackIcon from '@material-ui/icons/ArrowBackIosOutlined';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -10,9 +9,6 @@ import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
 import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-    },
     menuButton: {
         marginRight: theme.spacing(2),
     },

@@ -1,20 +1,13 @@
-import React, { Component, useEffect } from 'react';
-import { withStyles, Container, Box, AppBar, Toolbar, IconButton, Fab, makeStyles } from '@material-ui/core';
-import { FusePageSimple, DemoContent } from '@fuse';
-import Formsy from 'formsy-react';
-import { Typography, MenuItem, InputAdornment, Icon, TextField, Button, Grid, Paper, MobileStepper } from '@material-ui/core';
-import {
-    CheckboxFormsy,
-    RadioGroupFormsy,
-    SelectFormsy,
-    TextFieldFormsy
-} from '../../../@fuse/components/formsy';
-import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks } from 'landing-blocks/dist'
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Container, makeStyles } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
 import CarItem from './CarItem';
 
 import Layout from '../../layout';
 import { APP_PATH } from '../../../constant';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCarList } from './booking.action';
 
 const useStyles = makeStyles(theme => ({
     layoutRoot: {},
@@ -43,29 +36,29 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function CarList(props) {
+function CarList() {
     const history = useHistory();
     const classes = useStyles();
+    const dispatch = useDispatch();
+    const cars = useSelector(state => state.booking.cars)
+    // const stableDispatch = useCallback(dispatch(fetchCarList(),[]))
+    useEffect(() => {
+        let ignore = cars.length === 0;
+        if (ignore) {
+            dispatch(fetchCarList())
+        }
+    }, [cars.length, dispatch])
     return (
-        // <Layout name="Car Available">
-        <FusePageSimple
-        
-            content={
-                <Container>
-                    <Grid container spacing={2} className={classes.root}  >
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                        </Grid>
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                        </Grid>
-                        <Grid item xs={12} xl={3} lg={4} className={classes.paper}>
-                            <CarItem isAction={true} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
-                        </Grid>
-                    </Grid>
-                </Container>
-            }
-        />
+        <Layout name="Car Available">
+            <Container >
+                <Grid container spacing={2} className={classes.root}  >
+                    {cars.map((car, index) => (
+                        <Grid item xs={12} xl={3} lg={4} className={classes.paper} key={index}>
+                            <CarItem isAction={true} info={car} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
+                        </Grid>)
+                    )}
+                </Grid>
+            </Container>
 
         // </Layout>
     )

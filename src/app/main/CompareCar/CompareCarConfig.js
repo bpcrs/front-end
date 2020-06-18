@@ -1,12 +1,12 @@
-// import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
-import User from './User';
+import {authRoles} from 'app/auth';
+import CompareCar from './CompareCar'
 
-export const UserConfig = {
+export const CompareCarConfig = {
     settings: {
         layout: {
             config: {
                 navbar        : {
-                    display: true
+                    display: false
                 },
                 toolbar       : {
                     display: false
@@ -23,10 +23,11 @@ export const UserConfig = {
             }
         }
     },
+    auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : '/user',
-            component: User
+            path     : '/compareCar',
+            component: CompareCar
         }
     ]
 };

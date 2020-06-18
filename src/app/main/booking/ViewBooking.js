@@ -1,9 +1,6 @@
 import React from 'react'
-import { Container, Grid, Breadcrumbs, Chip, withStyles, Typography, AppBar, Toolbar, Button, IconButton, makeStyles, TextField, Icon, Card, CardContent, Box, CardHeader, CardActionArea, CardActions, FormControl, FormControlLabel, Checkbox } from '@material-ui/core'
-import HomeIcon from '@material-ui/icons/Home';
-import ExpandMoreIcon from '@material-ui/icons/';
+import { Grid, Typography, Button, makeStyles, TextField, Card, CardContent, FormControl, FormControlLabel, Checkbox } from '@material-ui/core'
 import CarItem from './CarItem';
-import Formsy from 'formsy-react';
 import { Link } from 'react-router-dom';
 import Layout from '../../layout';
 
@@ -20,9 +17,6 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         padding: theme.spacing(2),
         color: theme.palette.text.secondary,
-    },
-    root: {
-        flexGrow: 1,
     },
     spacingCard: {
         marginTop: theme.spacing(1),

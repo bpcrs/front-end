@@ -7,13 +7,12 @@ import Provider from 'react-redux/es/components/Provider';
 import {Router} from 'react-router-dom';
 import {create} from 'jss';
 import jssExtend from 'jss-extend';
-import history from '../history';
 import {Auth} from './auth';
 import store from './store';
 import AppContext from './AppContext';
 import routes from './fuse-configs/routesConfig';
-import { ReactReduxFirebaseProvider, createFirebaseInstance } from 'react-redux-firebase';
-import firebase from "../app/firebase/firebase";
+import * as history from 'history';
+
 const jss = create({
     ...jssPreset(),
     plugins: [...jssPreset().plugins, jssExtend()]
@@ -21,11 +20,8 @@ const jss = create({
 
 jss.options.insertionPoint = document.getElementById('jss-insertion-point');
 const generateClassName = createGenerateClassName();
-// react-redux-firebase config
-const rrfConfig = {
-    userProfile: 'users',
-    useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
-  }
+const historyObj = history.createBrowserHistory();
+
 const App = () => {
     return (
         <AppContext.Provider
@@ -35,12 +31,9 @@ const App = () => {
         >
             
             <JssProvider jss={jss} generateClassName={generateClassName}>
-            <ReactReduxFirebaseProvider firebase={firebase} config={rrfConfig} dispatch={store.dispatch} createFirestoreInstance={createFirebaseInstance}>
-
-
                 <Provider store={store}>
                     <Auth>
-                        <Router history={history}>
+                        <Router history={historyObj}>
                             <FuseAuthorization>
                                 <FuseTheme>
                                     <FuseLayout/>
@@ -49,7 +42,6 @@ const App = () => {
                         </Router>
                     </Auth>
                 </Provider>
-                </ReactReduxFirebaseProvider>
             </JssProvider>
         </AppContext.Provider>
     );

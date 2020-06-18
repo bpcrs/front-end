@@ -12,14 +12,10 @@ function JWTLoginTab() {
     const responseGoogle = (response) => {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
-            dispatch(showMessage({
-                message: "Login successfully",
-                variant: "success"
-            }));
         } else {
             dispatch(showMessage({
-                message: "Your account not permitted",
-                variant: "error"
+                message : response.details,
+                variant : "error"
             }));
         }
     }
@@ -48,18 +44,5 @@ function JWTLoginTab() {
         </div>
     );
 }
-
-// function mapDispatchToProps(dispatch) {
-//     return bindActionCreators({
-//         submitLogin: authActions.submitLogin
-//     }, dispatch);
-// }
-
-// function mapStateToProps({ auth }) {
-//     return {
-//         login: auth.login,
-//         user: auth.user
-//     }
-// }
 
 export default withRouter(JWTLoginTab);

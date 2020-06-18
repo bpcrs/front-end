@@ -1,19 +1,11 @@
-import React, { Component, useEffect } from 'react';
+import React, {  } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { FusePageSimple, DemoContent } from '@fuse';
 import Formsy from 'formsy-react';
-import { Typography, MenuItem, InputAdornment, Icon, TextField, Button, Grid, Paper, MobileStepper, Input, FormControl, Select, InputLabel, CardMedia, CardContent, Card } from '@material-ui/core';
+import { Typography, MenuItem, TextField, Button, Grid } from '@material-ui/core';
 import {
-    CheckboxFormsy,
-    RadioGroupFormsy,
-    SelectFormsy,
-    TextFieldFormsy
-} from '../../../@fuse/components/formsy';
-import { Hero, NavBar, EmailForm, LandingProvider, TestimonialsLogos, SectionTitle, Heading, Footer, HowItWorks, Faqs, FeaturesList } from 'landing-blocks/dist'
-import { GradientCurtains } from 'landing-blocks/dist/decorations'
-
-import { Box } from '@chakra-ui/core'
-import { Link, useHistory } from 'react-router-dom';
+    SelectFormsy} from '../../../@fuse/components/formsy';
+import { Hero, NavBar, LandingProvider, SectionTitle, Heading } from 'landing-blocks/dist'
+import { useHistory } from 'react-router-dom';
 // import Head from 'next/head'
 // import background from "../../../../public/assets/images/backgrounds/header-bg.png"
 import {
@@ -218,7 +210,7 @@ function Landing(props) {
                     logo={<img width='80px' onClick={() => history.push("/landing")} src="assets/images/logos/fuse.svg" />}
                     navs={[
                         <Button variant="contained">Features</Button>,
-                        <Button variant="contained">Use Cases</Button>,
+                        <Button variant="contained" onClick={() => history.push("/compareCar")}>Use Cases</Button>,
                         <Button variant="contained">Pricing</Button>,
                         <Button variant="contained">About Us</Button>,
                         <Button variant="contained" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,

@@ -5,6 +5,7 @@ import quickPanel from 'app/fuse-layouts/shared-components/quickPanel/store/redu
 import { firestoreReducer } from "react-redux-firebase";
 import chat from '../../main/chat/chat.reducer'
 
+import booking from '../../main/booking/booking.reducer'
 const createReducer = (asyncReducers) =>
     combineReducers({
         auth,
@@ -12,6 +13,7 @@ const createReducer = (asyncReducers) =>
         quickPanel,
         firestoreReducer,
         chat,
+        booking,
         ...asyncReducers
     });
 

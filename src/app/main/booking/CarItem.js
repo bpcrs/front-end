@@ -1,22 +1,17 @@
-import React, { useState } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Grid, Icon, ListItemIcon, ListItemText, Button, Badge, Fab } from '@material-ui/core';
-import LocalOfferOutlinedIcon from '@material-ui/icons/LocalOfferOutlined';
+import { Grid, Icon, Fab } from '@material-ui/core';
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: 400,
@@ -41,7 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
-
+  const { info } = props;
+    
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -55,8 +51,8 @@ export default function CarItem(props = { isAction: true }) {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Honda CR-V"
-        subheader="2020"
+        title={info.name}
+        subheader={info.model + " 2020"}
       />
       <CardMedia
         className={classes.media}
@@ -70,7 +66,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>airline_seat_recline_normal_outlined</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">4 people</Typography>
+              <Typography variant="caption">{info.seat} people</Typography>
             </Grid>
           </Grid>
           <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
