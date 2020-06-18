@@ -86,7 +86,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function ChatPanel() {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const handleOpen = () => {
         setOpen(true)
@@ -98,11 +98,10 @@ function ChatPanel() {
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
+            <Button id="fuse-settings" className={classes.button} variant="text" onClick={handleOpen}>
                 <Icon className={classes.buttonIcon}>chat</Icon>
             </Button>
             <Dialog
-
                 TransitionComponent={Transition}
                 aria-labelledby="settings-panel"
                 aria-describedby="settings"

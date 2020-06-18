@@ -135,10 +135,10 @@ const Chat = () => {
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const userLogged = useSelector(state => state.auth.user.data);
     const [msg, setMsg] = useState([]);
-
     useEffect(() => {
         async function getMsgFromFirebase() {
-            await firebase.firestore().collection('chatRooms').doc(`${userLogged.id}v${selectedUser.id}`).collection('messages').onSnapshot(ns => {
+            const arr = [userLogged.id,selectedUser.id].sort();
+            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
                 setMsg([]);
                 ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
             });
@@ -147,9 +147,10 @@ const Chat = () => {
     }, [selectedUser.id, userLogged.id])
 
     const onMessageSubmit = () => {
+        const arr = [userLogged.id,selectedUser.id].sort();
         firebase.firestore()
             .collection('chatRooms')
-            .doc(`${userLogged.id}v${selectedUser.id}`)
+            .doc(`${arr[0]}v${arr[1]}`)
             .collection('messages')
             .add({
                 send: userLogged.id,
@@ -183,7 +184,7 @@ const Chat = () => {
                 </Grid>
             </FuseScrollbars>
             <Grid item style={{ minHeight: "10vh" }}>
-                <form className={classNames(classes.bottom, "py-16 px-8")}>
+                <div className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
                     <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
                         <TextField
                             value={sendMessage}
@@ -211,7 +212,7 @@ const Chat = () => {
                             <Icon className="text-24">send</Icon>
                         </IconButton>
                     </Paper>
-                </form>
+                </div>
             </Grid>
         </Paper>
     );
