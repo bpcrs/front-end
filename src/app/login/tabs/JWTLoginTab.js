@@ -3,7 +3,7 @@ import { Button } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 import { APP_CONST } from '../../../constant';
-import { showMessage } from '../../store/actions/fuse';
+import { showMessageError } from '../../store/actions/fuse';
 import { useDispatch } from 'react-redux';
 import { submitLogin } from '../../auth/store/actions';
 
@@ -13,10 +13,11 @@ function JWTLoginTab() {
         if (response.tokenId) {
             dispatch(submitLogin(response.tokenId))
         } else {
-            dispatch(showMessage({
-                message : response.details,
-                variant : "error"
-            }));
+            if (response.details) {
+                dispatch(showMessageError(response.details));
+            } else {
+                dispatch(showMessageError("An error occurred"));
+            }
         }
     }
     return (
@@ -44,5 +45,4 @@ function JWTLoginTab() {
         </div>
     );
 }
-
 export default withRouter(JWTLoginTab);

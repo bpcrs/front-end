@@ -1,4 +1,4 @@
-import { setDefaultSettings, setInitialSettings } from 'app/store/actions/fuse';
+import { setDefaultSettings } from 'app/store/actions/fuse';
 // import _ from '@lodash';
 // import store from 'app/store';
 // import * as Actions from 'app/store/actions';
@@ -114,14 +114,9 @@ export function logoutUser() {
         if (user.role === APP_ROLE.GUEST) {
             return null;
         }
-
-        // history.push({
-        //     pathname: '/'
-        // });
-
         jwtService.logout();
 
-        dispatch(setInitialSettings());
+        // dispatch(setInitialSettings());
 
         dispatch({
             type: USER_LOGGED_OUT
