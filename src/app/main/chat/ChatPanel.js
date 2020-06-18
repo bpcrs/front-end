@@ -18,9 +18,6 @@ function Transition(props) {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // width: 70,
-        // maxWidth: 70,
-        // minWidth: 70,
         [theme.breakpoints.down('md')]: {
             width: 0,
             maxWidth: 0,
@@ -131,7 +128,7 @@ function ChatPanel() {
                         </AppBar>
                     {/* </Grid> */}
                     <Paper>
-                        <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
+                        <Grid container spacing={1} item lg={12} style={{ minHeight: "94vh" }}>
                             <Grid item lg={2}>
                                 <ContactList style={classes.contact} />
                             </Grid>

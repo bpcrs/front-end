@@ -136,6 +136,7 @@ const Chat = () => {
     const userLogged = useSelector(state => state.auth.user.data);
     const [msg, setMsg] = useState([]);
     useEffect(() => {
+        setMsg([])
         async function getMsgFromFirebase() {
             const arr = [userLogged.id, selectedUser.id].sort();
             await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
@@ -170,7 +171,7 @@ const Chat = () => {
                 <Grid
                     container alignItems="stretch" direction="column"
                 >
-                    <Grid item style={{ minHeight: "80vh", maxHeight: '80vh' }}>
+                    <Grid item style={{ minHeight: "100vh", maxHeight: '100vh' }}>
                         <div className="flex flex-col flex-1 items-center justify-center pl-12">
                             {/* <Icon className="text-128" color="disabled">chat</Icon> */}
                             <Grid container spacing={1}>
