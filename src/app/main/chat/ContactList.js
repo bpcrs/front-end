@@ -96,7 +96,6 @@ const ContactList = () => {
     const contactId = '3'
   }
 
-
   useEffect(() => {
     const users = firebase.firestore().collection('users');
     let allUser = users.get().then(res => {
@@ -104,13 +103,14 @@ const ContactList = () => {
       res.forEach(doc => {
         console.log(doc.id, '=> ', doc.data());
       });
+      
     })
       .catch(err => {
         console.log('Error getting documents', err);
       });
   }, [])
 
-  //console.log(images);
+  console.log("AAA",images[1]);
 
   const ContactButton = () => (
     <Tooltip title={"AA"} placement="left">

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Avatar, Paper, Typography, withStyles, TextField, IconButton, Icon, Grid } from '@material-ui/core';
 import classNames from 'classnames';
 import _ from '@lodash';
 import { makeStyles } from '@material-ui/styles';
 import { CreateChatRoom, CreateMessage, createRoomChat } from "../../store/actions/chat";
 import firebase from '../../firebase/firebase';
-
+import Message from './Message';
 
 const useStyles = makeStyles(theme => ({
     messageRow: {
@@ -131,83 +131,99 @@ const useStyles = makeStyles(theme => ({
 
 const Chat = () => {
     const [message, setMessage] = useState();
-    // firebase.firestore().collection('chatRooms').doc('das').set({
-    //     firstUser: '3',
-    //     secondUser: '4'
-    // });
+    const [msgs, setMsgs] = useState([]);
+    const classes = useStyles();
+
+    useEffect(() => {
+        getMessage();
+        console.log(msgs)
+    }, [msgs])
+
+    const getMessage = () => {
+        const msgFromFirebase = firebase.firestore().collection('chatRooms').doc('3v4').collection('messages');
+        let allMsg = msgFromFirebase.get().then(snapShot => {
+            snapShot.forEach(doc => {
+                let newMsgs = msgs;
+                newMsgs.push(doc.data().message);
+                setMsgs(newMsgs);
+            })
+            // console.log(msgs)
+        })
+            .catch(err => {
+                console.log('Error getting documents', err);
+            });
+    }
 
     const onMessageSubmit = () => (
         //const message = this.state;
-        
+
         firebase.firestore()
-        .collection('chatRooms')
-        .doc('3v4')
-        .collection('messages')
-        .add({
-            createBy: '4',
-            createAt: new Date().getTime(),
-            message: message
-        })
+            .collection('chatRooms')
+            .doc('3v4')
+            .collection('messages')
+            .add({
+                createBy: '4',
+                createAt: new Date().getTime(),
+                message: message
+            })
         // CreateChatRoom(firebase.firestore, '3', '4').then(id => {
         //     CreateMessage(id, '3', 'hello');
         // })
         //CreateMessage('das', '4', 'hello')
     )
-const handelChangeMessage = ({ currentTarget }) => {
-    // setMessage(per => ({ ...per, message: currentTarget.value }));
-    setMessage(currentTarget.value);
-    console.log(message);
-    
-};
+    const handelChangeMessage = ({ currentTarget }) => {
+        // setMessage(per => ({ ...per, message: currentTarget.value }));
+        setMessage(currentTarget.value);
+        // console.log(message);
+    };
+    return (
+        <Grid
+            container alignItems="stretch" direction="column"
+        >
+            <Grid item style={{ minHeight: "80vh" }}>
+                <div className="flex flex-col flex-1 items-center justify-center p-24">
+                    {/* <Icon className="text-128" color="disabled">chat</Icon> */}
+                    <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
+                        {/* Select a contact to start a conversation. */}
+                        {msgs[2]}
+                    </Typography>
 
-const classes = useStyles();
-const { chat, contacts, user, className } = {};
-const { messageText } = {};
-return (
-    <Grid
-        container alignItems="stretch" direction="column"
-    >
-        <Grid item style={{ minHeight: "80vh" }}>
-            <div className="flex flex-col flex-1 items-center justify-center p-24">
-                <Icon className="text-128" color="disabled">chat</Icon>
-                <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
-                    Select a contact to start a conversation.
-                                </Typography>
-            </div>
-        </Grid>
+                    <Message
+                    //  chat = {msgs[0]}
+                    /><br/>
 
-        <Grid item style={{ minHeight: "10vh" }}>
-            <form className={classNames(classes.bottom, "py-16 px-8")}>
-                <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
-                    <TextField
-                        autoFocus={false}
-                        // id={message}
-                        onChange={handelChangeMessage}
-                        className="flex-1"
-                        InputProps={{
-                            disableUnderline: true,
-                            classes: {
-                                root: "flex flex-grow flex-no-shrink ml-16 mr-48 my-8",
-                                input: ""
-                            },
-                            placeholder: "Type your message"
-                        }}
-                        InputLabelProps={{
-                            shrink: false,
-                            className: classes.bootstrapFormLabel
-                        }}
-                    />
-                    <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
-                        <Icon className="text-24">send</Icon>
-                    </IconButton>
-                </Paper>
-            </form>
+                   
+                </div>
+            </Grid>
+            <Grid item style={{ minHeight: "10vh" }}>
+                <form className={classNames(classes.bottom, "py-16 px-8")}>
+                    <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
+                        <TextField
+                            autoFocus={false}
+                            // id={message}
+                            onChange={handelChangeMessage}
+                            className="flex-1"
+                            InputProps={{
+                                disableUnderline: true,
+                                classes: {
+                                    root: "flex flex-grow flex-no-shrink ml-16 mr-48 my-8",
+                                    input: ""
+                                },
+                                placeholder: "Type your message"
+                            }}
+                            InputLabelProps={{
+                                shrink: false,
+                                className: classes.bootstrapFormLabel
+                            }}
+                        />
+                        <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
+                            <Icon className="text-24">send</Icon>
+                        </IconButton>
+                    </Paper>
+                </form>
+            </Grid>
         </Grid>
-    </Grid>
-    // </Paper>
-);
+        // </Paper>
+    );
 }
-
-
-
 export default Chat;
