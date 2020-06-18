@@ -76,19 +76,28 @@ export default function SubmitLicense(props) {
     // const disableAfterUploadImage = { 
     //     "onClick-events": disableEvents ? "disable" : "disable" 
     // };
+    var firebaseConfig = {
+        apiKey: "AIzaSyBVST1MnPWJDFkO5EgCP-1J9hoBg-RRt-k",
+        authDomain: "bpcrs-24e90.firebaseapp.com",
+        databaseURL: "https://bpcrs-24e90.firebaseio.com",
+        projectId: "bpcrs-24e90",
+        storageBucket: "bpcrs-24e90.appspot.com",
+        messagingSenderId: "1028858504286",
+        appId: "1:1028858504286:web:df0821aecaa56bed06c0cf",
+        measurementId: "G-NDTPLZL46K"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
     return (
 
         <Layout name="License form">
-            {/* <!-- The core Firebase JS SDK is always required and must be listed first --> */}
-            <script src="/__/firebase/7.15.1/firebase-app.js"></script>
 
-            {/* <!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries --> */}
-            <script src="/__/firebase/7.15.1/firebase-analytics.js"></script>
+            <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
 
-            {/* <!-- Initialize Firebase --> */}
-            <script src="/__/firebase/init.js"></script>
-            
+            <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-analytics.js"></script>
+
             <h1 className="text-center">Update your License</h1>
             <Grid container spacing={1} component={Paper}>
                 <Typography>Tell us a bit about yourself</Typography>
