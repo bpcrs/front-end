@@ -1,6 +1,7 @@
 import React from 'react';
 import {Typography, withStyles} from '@material-ui/core';
 import classNames from 'classnames';
+import { isMobile } from 'react-device-detect';
 
 const styles = theme => ({
     root      : {
@@ -24,7 +25,7 @@ function Logo({classes})
     return (
         <div className={classNames(classes.root, "flex items-center")}>
             <img className="logo-icon" src="assets/images/logos/fuse.svg" alt="logo"/>
-            <Typography className="text-16 ml-8 font-light logo-text">Blockchain-based Personal Car Renting System</Typography>
+            {isMobile ? "" : <Typography className="text-16 ml-8 font-light logo-text">Blockchain-based Personal Car Renting System</Typography>}
         </div>
     );
 }
