@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Typography, TextField, IconButton, Icon, Grid } from '@material-ui/core';
+import { Paper, TextField, IconButton, Icon, Grid } from '@material-ui/core';
 import { FuseScrollbars } from '@fuse';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
@@ -137,7 +137,7 @@ const Chat = () => {
     const [msg, setMsg] = useState([]);
     useEffect(() => {
         async function getMsgFromFirebase() {
-            const arr = [userLogged.id,selectedUser.id].sort();
+            const arr = [userLogged.id, selectedUser.id].sort();
             await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
                 setMsg([]);
                 ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
@@ -147,7 +147,7 @@ const Chat = () => {
     }, [selectedUser.id, userLogged.id])
 
     const onMessageSubmit = () => {
-        const arr = [userLogged.id,selectedUser.id].sort();
+        const arr = [userLogged.id, selectedUser.id].sort();
         firebase.firestore()
             .collection('chatRooms')
             .doc(`${arr[0]}v${arr[1]}`)
@@ -161,19 +161,18 @@ const Chat = () => {
         setSendMessage("")
     }
 
+  
 
     return (
         <Paper>
-            <FuseScrollbars>
+            <FuseScrollbars
+            >
                 <Grid
                     container alignItems="stretch" direction="column"
                 >
-                    <Grid item style={{ minHeight: "80vh" }}>
+                    <Grid item style={{ minHeight: "80vh", maxHeight: '80vh' }}>
                         <div className="flex flex-col flex-1 items-center justify-center pl-12">
                             {/* <Icon className="text-128" color="disabled">chat</Icon> */}
-                            <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
-                                {/* Select a contact to start a conversation. */}
-                            </Typography>
                             <Grid container spacing={1}>
                                 {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
                                     <Message  {...message} />
@@ -183,6 +182,7 @@ const Chat = () => {
                     </Grid>
                 </Grid>
             </FuseScrollbars>
+
             <Grid item style={{ minHeight: "10vh" }}>
                 <div className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
                     <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
@@ -214,7 +214,7 @@ const Chat = () => {
                     </Paper>
                 </div>
             </Grid>
-        </Paper>
+        </Paper >
     );
 }
 export default Chat;
