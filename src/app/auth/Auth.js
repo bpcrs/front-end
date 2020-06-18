@@ -1,16 +1,15 @@
 import React from 'react';
-import { connect, useDispatch } from 'react-redux';
-import * as userActions from 'app/auth/store/actions';
-import { bindActionCreators } from 'redux';
-import * as Actions from 'app/store/actions';
+import { useDispatch } from 'react-redux';
+// import * as userActions from 'app/auth/store/actions';
+// import * as Actions from 'app/store/actions';
 import jwtService from 'app/services/jwtService';
 import { useEffect } from 'react';
 import { showMessage } from '../store/actions/fuse';
 import { logoutUser, submitLogin } from './store/actions';
 
 const Auth = (props) => {
-    /*eslint-disable-next-line no-useless-constructor*/
     useEffect(() => {
+        /*eslint-disable*/
         // jwtCheck();
     }, [])
     const dispatch = useDispatch();
@@ -49,15 +48,5 @@ const Auth = (props) => {
     );
 }
 
-// function mapDispatchToProps(dispatch)
-// {
-//     return bindActionCreators({
-//             logout             : userActions.logoutUser,
-//             setUserData        : userActions.setUserData,
-//             showMessage        : Actions.showMessage,
-//             hideMessage        : Actions.hideMessage
-//         },
-//         dispatch);
-// }
 
 export default Auth;

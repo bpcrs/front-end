@@ -32,11 +32,11 @@ const App = () => {
                 <Provider store={store}>
                     <Auth>
                         <Router history={historyObj}>
-                            {/* <FuseAuthorization> */}
-                                {/* <FuseTheme> */}
+                            <FuseAuthorization>
+                                <FuseTheme>
                                     <FuseLayout/>
-                                {/* </FuseTheme> */}
-                            {/* </FuseAuthorization> */}
+                                </FuseTheme>
+                            </FuseAuthorization>
                         </Router>
                     </Auth>
                 </Provider>

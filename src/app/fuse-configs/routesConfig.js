@@ -1,5 +1,4 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 import { FuseUtils } from '@fuse/index';
 import { UserConfig } from 'app/main/user/UserConfig';
 import { LoginConfig } from '../login/LoginConfig';

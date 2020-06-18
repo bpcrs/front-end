@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, AppBar, Toolbar, Button, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
+import { Typography, AppBar, Toolbar, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
 import ArrowBackIcon from '@material-ui/icons/ArrowBackIosOutlined';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -59,8 +59,6 @@ export default function Layout(props) {
                     </Typography>
                     <UserMenu />
                     <SettingsPanel />
-
-                    {/* <Button color="inherit" variant="outlined">Login</Button> */}
                 </Toolbar>
             </AppBar>
 
