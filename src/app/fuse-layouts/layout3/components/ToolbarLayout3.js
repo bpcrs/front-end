@@ -16,8 +16,7 @@ const styles = theme => ({
     }
 });
 
-const ToolbarLayout3 = ({ toolbarTheme }) => {
-    
+const ToolbarLayout3 = ({ toolbarTheme , classes}) => {
     return (
         <MuiThemeProvider theme={toolbarTheme} >
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
@@ -28,13 +27,7 @@ const ToolbarLayout3 = ({ toolbarTheme }) => {
                     {/* </Hidden> */}
 
                     <div className="flex flex-1">
-                        {/* <Hidden xsDown> */}
-                        <Grid container justify="flex-end">
-                            <Grid item lg={6} xs={12}>
-                                <FuseSearch variant="basic" />
-                            </Grid>
-                        </Grid>
-                        {/* </Hidden> */}
+                        
                     </div>
 
                     <div className="flex">
@@ -42,10 +35,12 @@ const ToolbarLayout3 = ({ toolbarTheme }) => {
                             <FuseSearch/>
                             <div className={classes.separator}/>
                         </Hidden> */}
-
+                        <div className={classes.separator} />
                         <UserMenu />
                         <Hidden mdDown>
                             <ChatPanel />
+                              <div className={classes.separator} />
+                            <FuseSearch variant="full" />
                         </Hidden>
                     </div>
                 </Toolbar>

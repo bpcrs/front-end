@@ -93,6 +93,7 @@ const Layout3 = ({ settings, children}) => {
 
                             <div className="flex flex-auto flex-col relative">
                                 {renderRoutes(routes)}
+                                {console.log(routes)}
                                 {children}
                                 {layoutConfig.footer.display && layoutConfig.footer.style === 'static' && (
                                     <FooterLayout3/>

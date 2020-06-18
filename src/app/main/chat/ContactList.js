@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
     background: theme.palette.background.default
   },
   contactButton: {
-    width: 70,
-    minWidth: 70,
+    width: 90,
+    minWidth: 90,
     flex: '0 0 auto',
     '&.active:after': {
       position: 'absolute',
@@ -78,6 +78,7 @@ const useStyles = makeStyles(theme => ({
 const ContactList = () => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
+  const selectedUser = useSelector(state => state.chat.selectedUser);
   const dispatch = useDispatch();
   const userLogged = useSelector(state => state.auth.user.data);
 
@@ -93,21 +94,20 @@ const ContactList = () => {
     }
     getImagesContact();
   }, [])
-  const ContactButton = ({ image, fullName, id }) => (
-    <Tooltip title={fullName} placement="left">
-      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => setSelectedContact(id)}>
+  const ContactButton = ({ image, fullName, id, isActive }) => (
+    <Tooltip title={fullName} placement="left" key={id}>
+      <Button className={classNames(classes.contactButton, { 'active': isActive })} onClick={() => setSelectedContact(id)}>
         <Avatar src={image}></Avatar>
       </Button>
     </Tooltip>
   )
 
   return (
-      <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
-        {users.filter(user => user.id !== userLogged.id).map(user => (<Grid item lg={12}>
-          <ContactButton {...user} />
-        </Grid>))}
-      </Grid>
-
+    <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
+      {users.filter(user => user.id !== userLogged.id).map(user => (<Grid item lg={12}>
+        <ContactButton {...user} isActive={user.id === selectedUser.id} />
+      </Grid>))}
+    </Grid>
   )
 };
 
