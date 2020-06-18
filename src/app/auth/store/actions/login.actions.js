@@ -8,8 +8,6 @@ export function submitLogin(token) {
     return (dispatch) =>
         jwtService.signInWithToken(token)
             .then((token) => {
-                console.log(token);
-
                 const userFromToken = jwtService.getUserDataFromToken();
                 dispatch(setUserData({
                     role: userFromToken.roleName,

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 import { FuseUtils } from '@fuse/index';
 import { UserConfig } from 'app/main/user/UserConfig';
 import { LoginConfig } from '../login/LoginConfig';
@@ -18,10 +17,10 @@ const routeConfigs = [
 
 const routes = [
     ...FuseUtils.generateRoutesFromConfigs(routeConfigs),
-    {
-        path: '/',
-        component: () => <Redirect to="/landing" />
-    }
+    // {
+    //     path: '/',
+    //     component: () => <Redirect to="/landing" />
+    // }
 ];
 
 export default routes;

@@ -1,152 +1,53 @@
-import React, {  } from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Formsy from 'formsy-react';
-import { Typography, MenuItem, TextField, Button, Grid } from '@material-ui/core';
+import { Typography, MenuItem, TextField, Button } from '@material-ui/core';
 import {
     SelectFormsy} from '../../../@fuse/components/formsy';
-import { Hero, NavBar, LandingProvider, SectionTitle, Heading } from 'landing-blocks/dist'
+import { Hero, NavBar, LandingProvider, Footer, Faqs, FeaturesList } from 'landing-blocks/dist'
+import { GradientCurtains } from 'landing-blocks/dist/decorations'
+
+import { Box } from '@chakra-ui/core'
 import { useHistory } from 'react-router-dom';
-// import Head from 'next/head'
-// import background from "../../../../public/assets/images/backgrounds/header-bg.png"
-import {
-    isMobile
-  } from "react-device-detect";
 import { APP_PATH } from '../../../constant';
-const listImage = [
-    "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2989&q=80",
-    "https://images.unsplash.com/photo-1471479917193-f00955256257?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3848&q=80"
-]
-const styles = theme => ({
+import { withTheme } from '@material-ui/styles';
+import Logo from 'app/fuse-layouts/shared-components/Logo';
+
+const useStyles = makeStyles(theme => ({
     layoutRoot: {},
     root: {
         flexGrow: 1,
     },
     paper: {
         paddingBottom: theme.spacing(1),
-        // textAlign: 'center',
         color: theme.palette.text.secondary,
+        width : "100%"
     },
     imageBg: {
         borderRadius: theme.spacing(1)
     }
-});
+}));
 function Landing(props) {
     const history = useHistory();
-    const { classes } = props;
+    const classes  = useStyles();
 
     return (
         <>
-            <LandingProvider primary='#5D21D2' background='#fff'>
+            <LandingProvider primary='#5D21D2'>
                 <NavBar
-                    logo={<img width='80px' alt="" onClick={() => history.push("/landing")}  src="assets/images/logos/fuse.svg" />}
+                    logo={<Logo/>}
                     navs={[
-                        <Button variant="contained">Features</Button>,
-                        <Button variant="contained" onClick={() => history.push("/compareCar")}>Use Cases</Button>,
-                        <Button variant="contained">Pricing</Button>,
-                        <Button variant="contained">About Us</Button>,
-                        <Button variant="contained" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,
+                        <Button variant="text">Features</Button>,
+                        <Button variant="text" onClick={() => history.push("/compareCar")}>Use Cases</Button>,
+                        <Button variant="text">Pricing</Button>,
+                        <Button variant="text">About Us</Button>,
+                        <Button variant="outlined" onClick={() => history.push(APP_PATH.LOGIN)}>Login</Button>,
                     ]}
                 />
-                <SectionTitle
-                    heading={
-                        isMobile ? <></> :
-                            <Heading
-                                fontFamily='tiempos-headline, Georgia'
-                                fontSize='50px'
-                                fontWeight='semibold'
-                            >
-                                Blockchain-based Personal Car Renting System
-                    </Heading>
-                    }
-                // image={}
-                // floatingElement={
-                //     <GradientRect maxW='pageContainer' width='60%' distortion={-0.3} />
-                // }
-                />
-                {/* <Grid container spacing={1} className={classes.root}  >
-                    <Grid item xs={12} xl={3} className={classes.paper}>
-                        <FormControl>
-                            <Formsy>
-                            <Grid item className={classes.paper}>
-                                <TextField
-                                    id="datetime-local"
-                                    label="Pick-up appointment"
-                                    type="datetime-local"
-                                    defaultValue="2017-05-24T10:30"
-                                    className={"mb-16"}
-                                    InputLabelProps={{
-                                        shrink: true
-                                    }}
-                                    style={{ width: "100%" }}
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid item className={classes.paper}>
-                                <TextField
-                                    id="datetime-local"
-                                    label="Drop-off appointment"
-                                    type="datetime-local"
-                                    defaultValue="2017-05-24T10:30"
-                                    className={classes.textField}
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                    style={{ width: "100%" }}
-                                    variant="outlined"
-                                />
-                            </Grid>
-                            <Grid container className={classes.paper} justify="space-between" alignItems="stretch">
-                                <Grid item xs={12}>
-                                    <SelectFormsy
-                                        // className="my-16"
-                                        name="related-outlined"
-                                        label="Pick-up location"
-                                        value="sg"
-                                        variant="outlined"
-    
-                                    >
-                                        <MenuItem value="sg">Da Nang City          </MenuItem>
-                                        <MenuItem value="olivier">Ho Chi Minh City</MenuItem>
-                                        <MenuItem value="kevin">Kevin</MenuItem>
-                                    </SelectFormsy>
-                                </Grid>
-                                <Grid item xs={6} className={classes.paper}>
-                                
-                                    <SelectFormsy
-                                        // className="my-16"
-                                        name="related-outlined"
-                                        label="Seats"
-                                        value="sg"
-                                        variant="outlined"
-                                    >
-                                        <MenuItem value="sg">1-4 people</MenuItem>
-                                        <MenuItem value="olivier">4-7 people</MenuItem>
-                                        <MenuItem value="kevin">7-10 people</MenuItem>
-                                    </SelectFormsy>
-                                </Grid>
-                            </Grid>
-                            <Grid item className={classes.paper}>
-                                <Button variant="contained" style={{ width: "80%" }} color="primary" onClick={() => history.push("/booking")}>
-                                    Book now
-                                 </Button>
-                            </Grid>
-                            </Formsy>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12} xl={3} className={classes.paper}>
-                        <img style={{ borderRadius: "10px" }} width="100%" src={listImage[1]} />
-                    </Grid>
-                </Grid> */}
                 <Hero
-                    // floatingElement={<GradientCurtains mt='-600px' />}
-                    heading={<Typography variant="h5" >Choose your plan</Typography>}
-                    image={
-                        <Grid item xs={12} xl={12} >
-                          {isMobile ? <></> :  <img alt="" src={listImage[0]} width="100%" className={classes.imageBg} />} 
-                        </Grid>
-                    }
-                    cta={
-                        <Formsy className="flex flex-col justify-center">
+                    heading={<Typography variant="h5">Blockchain-based Personal Car Renting System</Typography>}
+                    subheading={<Formsy className="flex flex-col justify-center">
+                        <div>
                             <TextField
                                 id="datetime-local"
                                 label="Pick-up appointment"
@@ -155,6 +56,7 @@ function Landing(props) {
                                 InputLabelProps={{
                                     shrink: true
                                 }}
+                                fullWidth
                                 variant="outlined"
                                 className={classes.paper}
                             />
@@ -167,6 +69,7 @@ function Landing(props) {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                fullWidth
                                 variant="outlined"
                             />
                             <SelectFormsy
@@ -175,20 +78,117 @@ function Landing(props) {
                                 value="sg"
                                 variant="outlined"
                                 className={classes.paper}
+
                             >
-                                <MenuItem value="sg">Ho Chi Minh</MenuItem>
+                                <MenuItem value="sg">Ho Chi Minh City</MenuItem>
                                 <MenuItem value="olivier">Olivier</MenuItem>
                                 <MenuItem value="kevin">Kevin</MenuItem>
                             </SelectFormsy>
-                            <Button variant="contained" color="primary" onClick={() => history.push(APP_PATH.CAR_LIST)}>
+                            <br></br>
+                            <Button variant="contained" color="primary" fullWidth onClick={() => history.push(APP_PATH.CAR_LIST)}>
                                 Book now
-                        </Button>
-                        </Formsy>}
-                // fingerprint='Already have account? Sign in'
+                            </Button>
+                        </div>
+                    </Formsy>}
+                    image={<img width='400px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/hero.png' />}
+                    // cta={<Button>Book a demo</Button>}
+                    floatingElement={<GradientCurtains mt='-600px' />}
+                />
+                <FeaturesList
+                    heading='Take control of company spending'
+                    centerText
+                    features={[
+                        {
+                            heading: 'Control',
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step1.svg' />,
+                            subheading:
+                                'Multi-level approvals and custom spending limits.',
+                        },
+                        {
+                            heading: 'Pay',
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step2.svg' />,
+                            subheading:
+                                'Smart company cards, virtual cards, and invoice tracking.',
+                        },
+                        {
+                            heading: 'Track',
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step3.svg' />,
+                            subheading: 'Real-time spending overview and receipt capture.',
+                        },
+                        {
+                            heading: 'Report',
+                            icon: <img width='200px' alt="" src='https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step4.svg' />,
+                            subheading: 'Simplified bookkeeping and budget analysis.',
+                        },
+                    ]}
+                />
+                {/* <Feature
+            heading='Prismic is a Content Management System, a tool for editing online content'
+            subheading="Also known as a headless CMS, an API CMS, a content platform, a disruptive content-as-a-service digital experience...basically we've built a tool that lets you choose your technology, framework, and language and then easily manage your content."
+            image={<img src='/spendesk/feature1.png' width='500px' />}
+            flip
+        /> */}
+                <Faqs
+                    faqs={[
+                        {
+                            question: 'What is Spendesk',
+                            answer: (
+                                <Box>
+                                    Spendesk is the first spend management platform
+                                    built for both finance teams and employees. It gives
+                                    finance leaders visibility across all company
+                                    spending.
+                                </Box>
+                            ),
+                        },
+                        {
+                            question: 'Should i care?',
+                            answer: (
+                                <Box>
+                                    Spendesk is the first spend management platform
+                                    built for both finance teams and employees. It gives
+                                    finance leaders visibility across all company
+                                    spending.
+                                </Box>
+                            ),
+                        },
+                        {
+                            question: 'Why is this useful',
+                            answer: (
+                                <Box>
+                                    Spendesk is the first spend management platform
+                                    built for both finance teams and employees. It gives
+                                    finance leaders visibility across all company
+                                    spending.
+                                </Box>
+                            ),
+                        },
+                    ]}
+                />
+
+                <Footer
+                    businessName='Prismic'
+                    columns={{
+                        Developers: [
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
+                        ],
+                        Company: [
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
+                        ],
+                        Product: [
+                            <Typography variant="subtitle2">Quickstart</Typography>,
+                            <Typography variant="subtitle2">Documentation</Typography>,
+                            <Typography variant="subtitle2">Samples</Typography>,
+                        ],
+                    }}
                 />
             </LandingProvider>
         </>
     )
 }
 
-export default withStyles(styles, { withTheme: true })(Landing);
+export default withTheme(Landing);
