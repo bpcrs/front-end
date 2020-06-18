@@ -13,7 +13,8 @@ const initialState = {
             'mail',
             'contacts',
             'todo'
-        ]
+        ],
+        id : 0
     }
 };
 
@@ -47,7 +48,8 @@ const user = function (state = initialState, action) {
                                 displayName: userFromToken.fullName,
                                 photoURL: userFromToken.imageUrl,
                                 email: userFromToken.email,
-                                shortcuts: []
+                                shortcuts: [],
+                                id : userFromToken.id
                             }
                         }
                     }
