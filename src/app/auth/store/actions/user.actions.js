@@ -107,14 +107,9 @@ export function logoutUser() {
         if (user.role === APP_ROLE.GUEST) {
             return null;
         }
-
-        // history.push({
-        //     pathname: '/'
-        // });
-
         jwtService.logout();
 
-        dispatch(setInitialSettings());
+        // dispatch(setInitialSettings());
 
         dispatch({
             type: USER_LOGGED_OUT

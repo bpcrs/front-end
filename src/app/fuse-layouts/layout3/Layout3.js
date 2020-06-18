@@ -71,7 +71,7 @@ const Layout3 = ({classes, settings, children}) => {
         <AppContext.Consumer>
             {({routes}) => (
                 <div id="fuse-layout" className={classNames(classes.root, layoutConfig.mode)}>
-
+{/* 
                     {layoutConfig.leftSidePanel.display && (
                         <LeftSideLayout3/>
                     )}
@@ -116,7 +116,7 @@ const Layout3 = ({classes, settings, children}) => {
                         <RightSideLayout3/>
                     )}
 
-                    <FuseMessage/>
+                    <FuseMessage/> */}
                 </div>)}
         </AppContext.Consumer>
     );

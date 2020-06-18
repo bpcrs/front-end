@@ -8,6 +8,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
 import { useHistory } from 'react-router-dom';
+import UserMenu from 'app/fuse-layouts/shared-components/UserMenu'
+import SettingsPanel from 'app/fuse-layouts/shared-components/SettingsPanel'
 const useStyles = makeStyles((theme) => ({
     menuButton: {
         marginRight: theme.spacing(2),
@@ -47,17 +49,21 @@ export default function Layout(props) {
     const history = useHistory();
     return (
         <>
-            <AppBar position="fixed">
+            <AppBar position="fixed" style={{ backgroundColor: 'white' }}>
                 <Toolbar>
-                    <IconButton onClick={() => history.goBack()} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                    <IconButton onClick={() => history.goBack()} edge="start" className={classes.menuButton} color="secondary" aria-label="menu">
                         <ArrowBackIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
                         {props.name}
                     </Typography>
-                    <Button color="inherit" variant="outlined">Login</Button>
+                    <UserMenu />
+                    <SettingsPanel />
+
+                    {/* <Button color="inherit" variant="outlined">Login</Button> */}
                 </Toolbar>
             </AppBar>
+
             <Container className={classes.spacingCard}>
                 {props.children}
             </Container>
