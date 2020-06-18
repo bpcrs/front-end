@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Avatar, Tooltip, Grid, makeStyles } from '@material-ui/core';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import firebase from '../../firebase/firebase';
 import classNames from 'classnames';
 import { setSelectedUser } from './chat.action';
@@ -79,13 +79,10 @@ const ContactList = () => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
+  const userLogged = useSelector(state => state.auth.user.data);
 
-  // const handelChangeChat = () => {
-  //   const { user, changeSelectedUser } = this.props;
-  //   changeSelectedUser(user.uid, null);
-  // };
   const setSelectedContact = (id) => {
-    dispatch(setSelectedUser(id))
+    dispatch(setSelectedUser(users.filter(u => u.id === id).length !== 0 ? users.filter(u => u.id === id)[0] : {}))
   }
 
   useEffect(() => {
@@ -98,7 +95,7 @@ const ContactList = () => {
   }, [])
   const ContactButton = ({ image, fullName, id }) => (
     <Tooltip title={fullName} placement="left">
-      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => setSelectedContact({ id })}>
+      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => setSelectedContact(id)}>
         <Avatar src={image}></Avatar>
       </Button>
     </Tooltip>
@@ -106,7 +103,7 @@ const ContactList = () => {
 
   return (
     <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
-      {users.map(user => (<Grid item lg={12}>
+      {users.filter(user => user.id !== userLogged.id).map(user => (<Grid item lg={12}>
         <ContactButton {...user} />
       </Grid>))}
     </Grid>

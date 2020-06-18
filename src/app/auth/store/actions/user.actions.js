@@ -48,9 +48,9 @@ export function setUserData(user) {
             type: SET_USER_DATA,
             payload: user
         })
-        
-        console.log(user.data)
+
         await firebase.firestore().collection('users').doc(user.data.id.toString()).set({
+            id: user.data.id.toString(),
             fullName: user.data.displayName,
             image: user.data.photoURL
         });

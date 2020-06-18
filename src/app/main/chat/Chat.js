@@ -132,29 +132,29 @@ const Chat = () => {
     const [sendMessage, setSendMessage] = useState();
     const classes = useStyles();
     const selectedUser = useSelector(state => state.chat.selectedUser);
-
+    const userLogged = useSelector(state => state.auth.user.data);  
     const [msg, setMsg] = useState([]);
 
     useEffect(() => {
         async function getMsgFromFirebase() {
-            await firebase.firestore().collection('chatRooms').doc(`3v${selectedUser.id}`).collection('messages').onSnapshot(ns => {
+            await firebase.firestore().collection('chatRooms').doc(`${userLogged.id}v${selectedUser.id}`).collection('messages').onSnapshot(ns => {
                 setMsg([]);
                 ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
             });
         }
         getMsgFromFirebase();
-    }, [selectedUser.id])
+    }, [selectedUser.id,userLogged.id])
 
     const onMessageSubmit = () => {
         firebase.firestore()
             .collection('chatRooms')
-            .doc(`3v${selectedUser.id}`)
+            .doc(`${userLogged.id}v${selectedUser.id}`)
             .collection('messages')
             .add({
-                send: '3',
+                send: userLogged.id,
                 createAt: new Date().getTime(),
                 message: sendMessage,
-                receive: '4'
+                receive: selectedUser.id
             })
         setSendMessage("")
     }
@@ -165,13 +165,15 @@ const Chat = () => {
             container alignItems="stretch" direction="column"
         >
             <Grid item style={{ minHeight: "80vh" }}>
-                <div className="flex flex-col flex-1 items-center justify-center p-24">
+                <div className="flex flex-col flex-1 items-center justify-center pl-12">
                     {/* <Icon className="text-128" color="disabled">chat</Icon> */}
                     <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
                         {/* Select a contact to start a conversation. */}
                     </Typography>
                     <Grid container spacing={1}>
-                        {msg.sort((first, second) => first.createAt - second.createAt).map(message => <Grid item lg={12}><Message {...message} /></Grid>)}
+                        {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
+                                <Message  {...message} />
+                        )}
                     </Grid>
                 </div>
             </Grid>
@@ -197,6 +199,9 @@ const Chat = () => {
                                 className: classes.bootstrapFormLabel
                             }}
                         />
+                        <IconButton className="absolute pin-r pin-t">
+                            <Icon className="text-24">attach_file</Icon>
+                        </IconButton>
                         <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
                             <Icon className="text-24">send</Icon>
                         </IconButton>

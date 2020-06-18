@@ -8,6 +8,7 @@ import {
 import { useState } from 'react';
 import Chat from './Chat';
 import ContactList from './ContactList';
+import { useSelector } from 'react-redux';
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
@@ -86,11 +87,10 @@ const useStyles = makeStyles(theme => ({
 
 function ChatPanel() {
     const [open, setOpen] = useState(false);
-
+    const selectedUser = useSelector(state => state.chat.selectedUser);
     const handleOpen = () => {
         setOpen(true)
     };
-
     const handleClose = () => {
         setOpen(false)
     };
@@ -120,9 +120,7 @@ function ChatPanel() {
                             <Toolbar>
                                 <div className="flex flex-1 items-center">
                                     <React.Fragment>
-
-                                        <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
-
+                                        <Typography className="ml-16 text-16" color="inherit">{selectedUser.id ? selectedUser.fullName : "Chat"}</Typography>
                                     </React.Fragment>
 
                                 </div>
