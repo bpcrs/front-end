@@ -178,7 +178,7 @@ const Chat = () => {
                 </div>
             </Grid>
             <Grid item style={{ minHeight: "10vh" }}>
-                <form className={classNames(classes.bottom, "py-16 px-8")}>
+                <div className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
                     <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
                         <TextField
                             value={sendMessage}
@@ -206,7 +206,7 @@ const Chat = () => {
                             <Icon className="text-24">send</Icon>
                         </IconButton>
                     </Paper>
-                </form>
+                </div>
             </Grid>
         </Grid>
         // </Paper>
