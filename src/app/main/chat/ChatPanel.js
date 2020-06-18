@@ -3,12 +3,14 @@ import {
     AppBar, Toolbar, Button,
     Typography, Dialog, Icon, IconButton,
     Slide, makeStyles,
-    Grid
+    Grid,
+    Paper, Avatar
 } from '@material-ui/core';
 import { useState } from 'react';
 import Chat from './Chat';
 import ContactList from './ContactList';
 import { useSelector } from 'react-redux';
+
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
@@ -38,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     },
     dialogPaper: {
         position: 'fixed',
-        width: 380,
+        width: 600,
         maxWidth: '90vw',
         backgroundColor: theme.palette.background.paper,
         boxShadow: theme.shadows[5],
@@ -63,33 +65,19 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         margin: 0,
         zIndex: 1000,
-        transform: 'translate3d(290px,0,0)',
-        overflow: 'hidden',
-        [theme.breakpoints.down('md')]: {
-            transform: 'translate3d(360px,0,0)',
-            boxShadow: 'none',
-            '&.opened': {
-                boxShadow: theme.shadows[5]
-            }
-        },
-        transition: theme.transitions.create(['transform'], {
-            easing: theme.transitions.easing.easeInOut,
-            duration: theme.transitions.duration.standard
-        }),
-        '&.opened': {
-            transform: 'translateX(0)'
-        }
-    },
-    contact: {
-        backgroundColor: theme.palette.background.default
+        borderRadius: 0,
+        // transform: 'translate3d(360px,0,0)',
+        // easing: theme.transitions.easing.easeInOut,
+        // duration: theme.transitions.duration.standard
     }
+
 }));
 
 function ChatPanel() {
     const [open, setOpen] = useState(false);
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const handleOpen = () => {
-        setOpen(true)
+        setOpen(true);
     };
     const handleClose = () => {
         setOpen(false)
@@ -101,26 +89,36 @@ function ChatPanel() {
             <Button id="fuse-settings" className={classes.button} variant="text" onClick={handleOpen}>
                 <Icon className={classes.buttonIcon}>chat</Icon>
             </Button>
-            <Dialog
-                TransitionComponent={Transition}
-                aria-labelledby="settings-panel"
-                aria-describedby="settings"
-                open={open}
-                keepMounted
-                onClose={handleClose}
-                BackdropProps={{ invisible: true }}
-                classes={{
-                    paper: classes.dialogPaper
-                }}
-            >
-                <Grid container>
+            <Grid className={classes.root}>
+                <Dialog
+                    TransitionComponent={Transition}
+                    aria-labelledby="settings-panel"
+                    aria-describedby="settings"
+                    open={open}
+                    keepMounted
+                    scroll="paper"
+                    onClose={handleClose}
+                    BackdropProps={{ invisible: true }}
+                    classes={{
+                        paper: classes.dialogPaper
+                    }}
+                >
                     <Grid item lg={12}>
                         <AppBar position="static" elevation={1}>
                             <Toolbar>
                                 <div className="flex flex-1 items-center">
-                                    <React.Fragment>
-                                        <Typography className="ml-16 text-16" color="inherit">{selectedUser.id ? selectedUser.fullName : "Chat"}</Typography>
-                                    </React.Fragment>
+                                    {(!selectedUser.id) && (
+                                        <React.Fragment>
+                                            <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
+                                        </React.Fragment>
+                                    )}
+                                    {selectedUser.id &&(
+                                        <React.Fragment>
+                                            <Avatar src={selectedUser.image}></Avatar>
+                                            <Typography className="ml-16 text-16" color="inherit">{selectedUser.id ? selectedUser.fullName : ""}</Typography>
+                                        </React.Fragment>
+                                    )}
+
 
                                 </div>
                                 <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
@@ -129,16 +127,19 @@ function ChatPanel() {
                             </Toolbar>
                         </AppBar>
                     </Grid>
-                    <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
-                        <Grid item lg={2}>
-                            <ContactList style={classes.contact} />
+                    <Paper>
+                        <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
+                            <Grid item lg={2}>
+                                <ContactList style={classes.contact} />
+                            </Grid>
+                            <Grid item lg={10}>
+                                <Chat />
+                            </Grid>
                         </Grid>
-                        <Grid item lg={10}>
-                            <Chat />
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Dialog>
+                    </Paper>
+                </Dialog>
+            </Grid>
+
         </React.Fragment>
     );
 }
