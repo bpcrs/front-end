@@ -50,7 +50,7 @@ export function setUserData(user) {
         })
 
         await firebase.firestore().collection('users').doc(user.data.id.toString()).set({
-            id: user.data.id.toString(),
+            id: user.data.id,
             fullName: user.data.displayName,
             image: user.data.photoURL
         });

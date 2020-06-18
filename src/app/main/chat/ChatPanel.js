@@ -102,7 +102,6 @@ function ChatPanel() {
                 <Icon className={classes.buttonIcon}>chat</Icon>
             </Button>
             <Dialog
-
                 TransitionComponent={Transition}
                 aria-labelledby="settings-panel"
                 aria-describedby="settings"

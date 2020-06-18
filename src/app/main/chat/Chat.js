@@ -134,10 +134,10 @@ const Chat = () => {
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const userLogged = useSelector(state => state.auth.user.data);  
     const [msg, setMsg] = useState([]);
-
+    const arr = [userLogged.id,selectedUser.id].sort();
     useEffect(() => {
         async function getMsgFromFirebase() {
-            await firebase.firestore().collection('chatRooms').doc(`${userLogged.id}v${selectedUser.id}`).collection('messages').onSnapshot(ns => {
+            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
                 setMsg([]);
                 ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
             });
@@ -148,7 +148,7 @@ const Chat = () => {
     const onMessageSubmit = () => {
         firebase.firestore()
             .collection('chatRooms')
-            .doc(`${userLogged.id}v${selectedUser.id}`)
+            .doc(`${arr[0]}v${arr[1]}`)
             .collection('messages')
             .add({
                 send: userLogged.id,
