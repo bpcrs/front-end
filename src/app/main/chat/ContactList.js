@@ -1,12 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
-import { withStyles, Button, Avatar, Divider, Tooltip, Grid, makeStyles } from '@material-ui/core';
-import { FuseScrollbars, FuseAnimateGroup } from '@fuse';
-import { compose } from 'redux';
-import { firestoreConnect } from "react-redux-firebase";
-import GetDate from "../../../common/getDate";
-import { ChangeSelectedUser } from "../../store/actions/chat";
-import PropTypes from "prop-types";
-import { connect, useSelector, useDispatch } from "react-redux";
+import React, { useState, useEffect } from 'react';
+import { Button, Avatar, Tooltip, Grid, makeStyles } from '@material-ui/core';
+import { useDispatch } from "react-redux";
 import firebase from '../../firebase/firebase';
 import classNames from 'classnames';
 import { setSelectedUser } from './chat.action';

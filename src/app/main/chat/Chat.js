@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Paper, Typography, withStyles, TextField, IconButton, Icon, Grid } from '@material-ui/core';
+import { Paper, Typography, TextField, IconButton, Icon, Grid } from '@material-ui/core';
 import classNames from 'classnames';
-import _ from '@lodash';
 import { makeStyles } from '@material-ui/styles';
-import { CreateChatRoom, CreateMessage, createRoomChat } from "../../store/actions/chat";
 import firebase from '../../firebase/firebase';
 import Message from './Message';
 import { useSelector } from 'react-redux';

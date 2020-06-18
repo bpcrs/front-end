@@ -1,5 +1,5 @@
-import Axios from "axios";
-import { APP_CONST } from "../../../constant";
+// import Axios from "axios";
+// import { APP_CONST } from "../../../constant";
 
 export const SET_SELECTED_USER = '[CHAT] SET SELECTED USER';
 

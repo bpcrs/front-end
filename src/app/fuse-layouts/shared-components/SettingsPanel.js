@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { Button, Typography, Dialog, Icon, IconButton, Slide, withStyles, makeStyles } from '@material-ui/core';
+import React from 'react';
+import { Button, Typography, Dialog, Icon, IconButton, Slide, makeStyles } from '@material-ui/core';
 import { FuseScrollbars, FuseSettings } from '@fuse';
-import { red } from '@material-ui/core/colors';
 import { useState } from 'react';
 
 function Transition(props) {
@@ -56,52 +55,49 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function SettingsPanel(params) {
-    {
-        const [open, setOpen] = useState(false);
+function SettingsPanel() {
+    const [open, setOpen] = useState(false);
 
-        const handleOpen = () => {
-            setOpen(true)
-        };
+    const handleOpen = () => {
+        setOpen(true)
+    };
 
-        const handleClose = () => {
-            setOpen(false)
-        };
+    const handleClose = () => {
+        setOpen(false)
+    };
 
-        const classes = useStyles();
-        return (
-            <React.Fragment>
-                <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
-                    <Icon className={classes.buttonIcon}>settings</Icon>
-                </Button>
+    const classes = useStyles();
+    return (
+        <React.Fragment>
+            <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
+                <Icon className={classes.buttonIcon}>settings</Icon>
+            </Button>
 
-                <Dialog
-                    TransitionComponent={Transition}
-                    aria-labelledby="settings-panel"
-                    aria-describedby="settings"
-                    open={open}
-                    keepMounted
-                    onClose={handleClose}
-                    BackdropProps={{ invisible: true }}
-                    classes={{
-                        paper: classes.dialogPaper
-                    }}
-                >
-                    <FuseScrollbars className="p-24 sm:p-32">
-                        <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
-                            <Icon>close</Icon>
-                        </IconButton>
+            <Dialog
+                TransitionComponent={Transition}
+                aria-labelledby="settings-panel"
+                aria-describedby="settings"
+                open={open}
+                keepMounted
+                onClose={handleClose}
+                BackdropProps={{ invisible: true }}
+                classes={{
+                    paper: classes.dialogPaper
+                }}
+            >
+                <FuseScrollbars className="p-24 sm:p-32">
+                    <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
+                        <Icon>close</Icon>
+                    </IconButton>
 
-                        <Typography className="mb-32" variant="h6">Theme Settings</Typography>
+                    <Typography className="mb-32" variant="h6">Theme Settings</Typography>
 
-                        <FuseSettings />
+                    <FuseSettings />
 
-                    </FuseScrollbars>
-                </Dialog>
-            </React.Fragment>
-        );
-
-    }
+                </FuseScrollbars>
+            </Dialog>
+        </React.Fragment>
+    );
 }
 
 export default SettingsPanel;

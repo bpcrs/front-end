@@ -41,7 +41,6 @@ function CarList() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const cars = useSelector(state => state.booking.cars)
-    // const stableDispatch = useCallback(dispatch(fetchCarList(),[]))
     useEffect(() => {
         let ignore = cars.length === 0;
         if (ignore) {
@@ -59,8 +58,7 @@ function CarList() {
                     )}
                 </Grid>
             </Container>
-
-        // </Layout>
+        </Layout>
     )
 }
 

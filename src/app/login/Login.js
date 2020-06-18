@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles, Card, CardContent, Typography, Tabs, Tab, Button } from '@material-ui/core';
+import { withStyles, Card, CardContent, Typography, Tabs, Tab } from '@material-ui/core';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import { FuseAnimate } from '@fuse';
 import { withRouter } from 'react-router-dom';

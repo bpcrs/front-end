@@ -2,10 +2,9 @@ import React from 'react';
 import {
     AppBar, Toolbar, Button,
     Typography, Dialog, Icon, IconButton,
-    Slide, withStyles, makeStyles,
-    Paper, Grid
+    Slide, makeStyles,
+    Grid
 } from '@material-ui/core';
-import { red } from '@material-ui/core/colors';
 import { useState } from 'react';
 import Chat from './Chat';
 import ContactList from './ContactList';
@@ -85,69 +84,66 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function ChatPanel(props) {
-    {
-        const [open, setOpen] = useState(true);
+function ChatPanel() {
+    const [open, setOpen] = useState(true);
 
-        const handleOpen = () => {
-            setOpen(true)
-        };
+    const handleOpen = () => {
+        setOpen(true)
+    };
 
-        const handleClose = () => {
-            setOpen(false)
-        };
+    const handleClose = () => {
+        setOpen(false)
+    };
 
-        const classes = useStyles();
-        return (
-            <React.Fragment>
-                <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
-                    <Icon className={classes.buttonIcon}>chat</Icon>
-                </Button>
-                <Dialog
+    const classes = useStyles();
+    return (
+        <React.Fragment>
+            <Button id="fuse-settings" className={classes.button} variant="contained" onClick={handleOpen}>
+                <Icon className={classes.buttonIcon}>chat</Icon>
+            </Button>
+            <Dialog
 
-                    TransitionComponent={Transition}
-                    aria-labelledby="settings-panel"
-                    aria-describedby="settings"
-                    open={open}
-                    keepMounted
-                    onClose={handleClose}
-                    BackdropProps={{ invisible: true }}
-                    classes={{
-                        paper: classes.dialogPaper
-                    }}
-                >
-                    <Grid container>
-                        <Grid item lg={12}>
-                            <AppBar position="static" elevation={1}>
-                                <Toolbar>
-                                    <div className="flex flex-1 items-center">
-                                        <React.Fragment>
+                TransitionComponent={Transition}
+                aria-labelledby="settings-panel"
+                aria-describedby="settings"
+                open={open}
+                keepMounted
+                onClose={handleClose}
+                BackdropProps={{ invisible: true }}
+                classes={{
+                    paper: classes.dialogPaper
+                }}
+            >
+                <Grid container>
+                    <Grid item lg={12}>
+                        <AppBar position="static" elevation={1}>
+                            <Toolbar>
+                                <div className="flex flex-1 items-center">
+                                    <React.Fragment>
 
-                                            <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
+                                        <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
 
-                                        </React.Fragment>
+                                    </React.Fragment>
 
-                                    </div>
-                                    <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
-                                        <Icon>close</Icon>
-                                    </IconButton>
-                                </Toolbar>
-                            </AppBar>
-                        </Grid>
-                        <Grid container spacing={1} item lg={12} style={{minHeight : "80vh"}}>
-                            <Grid item lg={2}>
-                                <ContactList style={classes.contact}/>
-                            </Grid>
-                            <Grid item lg={10}>
-                                <Chat />
-                            </Grid>
-                        </Grid>                    
+                                </div>
+                                <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
+                                    <Icon>close</Icon>
+                                </IconButton>
+                            </Toolbar>
+                        </AppBar>
                     </Grid>
-                </Dialog>
-            </React.Fragment>
-        );
-
-    }
+                    <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
+                        <Grid item lg={2}>
+                            <ContactList style={classes.contact} />
+                        </Grid>
+                        <Grid item lg={10}>
+                            <Chat />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Dialog>
+        </React.Fragment>
+    );
 }
 
 export default ChatPanel;
