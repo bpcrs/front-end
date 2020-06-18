@@ -6,9 +6,10 @@ import { firestoreConnect } from "react-redux-firebase";
 import GetDate from "../../../common/getDate";
 import { ChangeSelectedUser } from "../../store/actions/chat";
 import PropTypes from "prop-types";
-import { connect, useSelector } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import firebase from '../../firebase/firebase';
 import classNames from 'classnames';
+import { setSelectedUser } from './chat.action';
 
 
 const useStyles = makeStyles(theme => ({
@@ -82,58 +83,39 @@ const useStyles = makeStyles(theme => ({
 
 const ContactList = () => {
   const classes = useStyles();
-  const [images, setImages] = useState([]);
-  const handelChangeChat = () => {
-    const { user, changeSelectedUser } = this.props;
-    changeSelectedUser(user.uid, null);
-  };
-  
-  const selectedUser = {}
-  const status = false;
-  const user = useSelector(state => state);
+  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
 
-  const handleContactList = () => {
-    const contactId = '3'
+  // const handelChangeChat = () => {
+  //   const { user, changeSelectedUser } = this.props;
+  //   changeSelectedUser(user.uid, null);
+  // };
+  const setSelectedContact = (id) => {
+    dispatch(setSelectedUser(id))
   }
 
   useEffect(() => {
-    const users = firebase.firestore().collection('users');
-    let allUser = users.get().then(res => {
-      res.forEach(user => setImages([...images, user.data().image]))
-      res.forEach(doc => {
-        console.log(doc.id, '=> ', doc.data());
-      });
-      
-    })
-      .catch(err => {
-        console.log('Error getting documents', err);
-      });
+    const usersFirebase = firebase.firestore().collection('users');
+    async function getImagesContact() {
+      const usersInfo = await usersFirebase.get();
+      usersInfo.docs.map(doc => setUsers(users => [...users, doc.data()]))
+    }
+    getImagesContact();
   }, [])
-
-  console.log("AAA",images[1]);
-
-  const ContactButton = () => (
-    <Tooltip title={"AA"} placement="left">
-      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => handleContactList}>
-        <Avatar src={images[0]}></Avatar>
+  const ContactButton = ({ image, fullName, id }) => (
+    <Tooltip title={fullName} placement="left">
+      <Button className={classNames(classes.contactButton, { 'active': true })} onClick={() => setSelectedContact({ id })}>
+        <Avatar src={image}></Avatar>
       </Button>
     </Tooltip>
   )
 
   return (
     <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
-      <Grid item lg={12}>
-        <ContactButton />
-      </Grid>
-      <Grid item lg={12}>
-        <ContactButton />
-      </Grid>
-      <Grid item lg={12}>
-        <ContactButton />
-      </Grid>
-
+      {users.map(user => (<Grid item lg={12}>
+        <ContactButton {...user} />
+      </Grid>))}
     </Grid>
-    // </FuseScrollbars>
   )
 };
 

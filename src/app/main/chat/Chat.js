@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import { CreateChatRoom, CreateMessage, createRoomChat } from "../../store/actions/chat";
 import firebase from '../../firebase/firebase';
 import Message from './Message';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
     messageRow: {
@@ -130,52 +131,37 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Chat = () => {
-    const [message, setMessage] = useState();
-    const [msgs, setMsgs] = useState([]);
+    const [sendMessage, setSendMessage] = useState();
     const classes = useStyles();
+    const selectedUser = useSelector(state => state.chat.selectedUser);
+
+    const [msg, setMsg] = useState([]);
 
     useEffect(() => {
-        getMessage();
-        console.log(msgs)
-    }, [msgs])
-
-    const getMessage = () => {
-        const msgFromFirebase = firebase.firestore().collection('chatRooms').doc('3v4').collection('messages');
-        let allMsg = msgFromFirebase.get().then(snapShot => {
-            snapShot.forEach(doc => {
-                let newMsgs = msgs;
-                newMsgs.push(doc.data().message);
-                setMsgs(newMsgs);
-            })
-            // console.log(msgs)
-        })
-            .catch(err => {
-                console.log('Error getting documents', err);
+        async function getMsgFromFirebase() {
+            await firebase.firestore().collection('chatRooms').doc(`3v${selectedUser.id}`).collection('messages').onSnapshot(ns => {
+                setMsg([]);
+                ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
             });
-    }
+        }
+        getMsgFromFirebase();
+    }, [selectedUser.id])
 
-    const onMessageSubmit = () => (
-        //const message = this.state;
-
+    const onMessageSubmit = () => {
         firebase.firestore()
             .collection('chatRooms')
-            .doc('3v4')
+            .doc(`3v${selectedUser.id}`)
             .collection('messages')
             .add({
-                createBy: '4',
+                send: '3',
                 createAt: new Date().getTime(),
-                message: message
+                message: sendMessage,
+                receive: '4'
             })
-        // CreateChatRoom(firebase.firestore, '3', '4').then(id => {
-        //     CreateMessage(id, '3', 'hello');
-        // })
-        //CreateMessage('das', '4', 'hello')
-    )
-    const handelChangeMessage = ({ currentTarget }) => {
-        // setMessage(per => ({ ...per, message: currentTarget.value }));
-        setMessage(currentTarget.value);
-        // console.log(message);
-    };
+        setSendMessage("")
+    }
+
+
     return (
         <Grid
             container alignItems="stretch" direction="column"
@@ -185,23 +171,20 @@ const Chat = () => {
                     {/* <Icon className="text-128" color="disabled">chat</Icon> */}
                     <Typography className="px-16 pb-24 mt-24 text-center" color="textSecondary">
                         {/* Select a contact to start a conversation. */}
-                        {msgs[2]}
                     </Typography>
-
-                    <Message
-                    //  chat = {msgs[0]}
-                    /><br/>
-
-                   
+                    <Grid container spacing={1}>
+                        {msg.sort((first, second) => first.createAt - second.createAt).map(message => <Grid item lg={12}><Message {...message} /></Grid>)}
+                    </Grid>
                 </div>
             </Grid>
             <Grid item style={{ minHeight: "10vh" }}>
                 <form className={classNames(classes.bottom, "py-16 px-8")}>
                     <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
                         <TextField
+                            value={sendMessage}
                             autoFocus={false}
                             // id={message}
-                            onChange={handelChangeMessage}
+                            onChange={(e) => setSendMessage(e.currentTarget.value)}
                             className="flex-1"
                             InputProps={{
                                 disableUnderline: true,
