@@ -1,23 +1,24 @@
 import React from 'react';
-import { AppBar, Hidden, MuiThemeProvider, Toolbar, withStyles, Grid } from '@material-ui/core';
+import { AppBar, Hidden, MuiThemeProvider, Toolbar, makeStyles } from '@material-ui/core';
 import { FuseSearch } from '@fuse';
-import connect from 'react-redux/es/connect/connect';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import ChatPanel from 'app/main/chat/ChatPanel';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu'
+import { useSelector } from 'react-redux';
 
-const styles = theme => ({
+const useStyles =  makeStyles(theme => ({
     separator: {
         width: 1,
         height: 64,
         backgroundColor: theme.palette.divider
     }
-});
+}));
 
-const ToolbarLayout3 = ({ toolbarTheme }) => {
-    
+const ToolbarLayout3 = () => {
+    const classes = useStyles();
+    const toolbarTheme = useSelector(state => state.fuse.settings.toolbarTheme);
     return (
         <MuiThemeProvider theme={toolbarTheme} >
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
@@ -28,13 +29,7 @@ const ToolbarLayout3 = ({ toolbarTheme }) => {
                     {/* </Hidden> */}
 
                     <div className="flex flex-1">
-                        {/* <Hidden xsDown> */}
-                        <Grid container justify="flex-end">
-                            <Grid item lg={6} xs={12}>
-                                <FuseSearch variant="basic" />
-                            </Grid>
-                        </Grid>
-                        {/* </Hidden> */}
+                        
                     </div>
 
                     <div className="flex">
@@ -42,10 +37,12 @@ const ToolbarLayout3 = ({ toolbarTheme }) => {
                             <FuseSearch/>
                             <div className={classes.separator}/>
                         </Hidden> */}
-
+                        <div className={classes.separator} />
                         <UserMenu />
                         <Hidden mdDown>
                             <ChatPanel />
+                              <div className={classes.separator} />
+                            <FuseSearch variant="full" />
                         </Hidden>
                     </div>
                 </Toolbar>
@@ -54,11 +51,5 @@ const ToolbarLayout3 = ({ toolbarTheme }) => {
     );
 };
 
-function mapStateToProps({ fuse }) {
-    return {
-        settings: fuse.settings.current,
-        toolbarTheme: fuse.settings.toolbarTheme
-    }
-}
 
-export default withStyles(styles, { withTheme: true })(withRouter(connect(mapStateToProps)(ToolbarLayout3)));
+export default (withRouter(ToolbarLayout3));

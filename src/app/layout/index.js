@@ -7,7 +7,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
 import ToolbarLayout3 from '../fuse-layouts/layout3/components/ToolbarLayout3';
-import {FuseScrollbars} from '@fuse';
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {
@@ -48,11 +47,9 @@ export default function Layout(props) {
     return (
         <>
             <ToolbarLayout3 />
-            <FuseScrollbars>
-                <Container className={classes.spacingCard}>
-                    {props.children}
-                </Container>
-            </FuseScrollbars>
+            <Container className={classes.spacingCard}>
+                {props.children}
+            </Container>
             {isMobile ? (<AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
                     <IconButton edge="start" color="inherit" aria-label="open drawer">
