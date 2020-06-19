@@ -1,4 +1,4 @@
-import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
+// import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 import { APP_PATH } from '../../../constant';
 import { ChatArea } from './ChatArea';
 export const ChatConfig = {

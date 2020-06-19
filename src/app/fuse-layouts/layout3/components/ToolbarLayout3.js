@@ -1,22 +1,24 @@
 import React from 'react';
-import { AppBar, Hidden, MuiThemeProvider, Toolbar, withStyles, Grid } from '@material-ui/core';
+import { AppBar, Hidden, MuiThemeProvider, Toolbar, makeStyles } from '@material-ui/core';
 import { FuseSearch } from '@fuse';
-import connect from 'react-redux/es/connect/connect';
 import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import Logo from 'app/fuse-layouts/shared-components/Logo';
 import ChatPanel from 'app/main/chat/ChatPanel';
 import UserMenu from 'app/fuse-layouts/shared-components/UserMenu'
+import { useSelector } from 'react-redux';
 
-const styles = theme => ({
+const useStyles =  makeStyles(theme => ({
     separator: {
         width: 1,
         height: 64,
         backgroundColor: theme.palette.divider
     }
-});
+}));
 
-const ToolbarLayout3 = ({ toolbarTheme , classes}) => {
+const ToolbarLayout3 = () => {
+    const classes = useStyles();
+    const toolbarTheme = useSelector(state => state.fuse.settings.toolbarTheme);
     return (
         <MuiThemeProvider theme={toolbarTheme} >
             <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
@@ -49,11 +51,5 @@ const ToolbarLayout3 = ({ toolbarTheme , classes}) => {
     );
 };
 
-function mapStateToProps({ fuse }) {
-    return {
-        settings: fuse.settings.current,
-        toolbarTheme: fuse.settings.toolbarTheme
-    }
-}
 
-export default withStyles(styles, { withTheme: true })(withRouter(connect(mapStateToProps)(ToolbarLayout3)));
+export default (withRouter(ToolbarLayout3));

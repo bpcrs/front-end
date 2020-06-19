@@ -12,9 +12,7 @@ import ContactList from './ContactList';
 import { useSelector } from 'react-redux';
 
 
-function Transition(props) {
-    return <Slide direction="left" {...props} />;
-}
+const Transition = React.forwardRef((props, ref) => (<Slide direction="left" {...props} ref={ref} />))
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -48,7 +46,8 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         margin: 0,
         zIndex: 1000,
-        borderRadius: 0
+        borderRadius: 0,
+        overflowY: 'hidden'
     },
     panel: {
         position: 'absolute',
@@ -66,8 +65,13 @@ const useStyles = makeStyles(theme => ({
         // transform: 'translate3d(360px,0,0)',
         // easing: theme.transitions.easing.easeInOut,
         // duration: theme.transitions.duration.standard
+    },
+    fullHeight: {
+        height: "100%"
+    },
+    chat : {
+        paddingBottom : theme.spacing(6)
     }
-
 }));
 
 function ChatPanel() {
@@ -86,7 +90,7 @@ function ChatPanel() {
             <Button id="fuse-settings" className={classes.button} variant="text" onClick={handleOpen}>
                 <Icon className={classes.buttonIcon}>chat</Icon>
             </Button>
-            <Grid className={classes.root}>
+            <Grid className={classes.root} >
                 <Dialog
                     TransitionComponent={Transition}
                     aria-labelledby="settings-panel"
@@ -100,47 +104,41 @@ function ChatPanel() {
                         paper: classes.dialogPaper
                     }}
                 >
-                    {/* <Grid item lg={12}> */}
-                        <AppBar position="static" elevation={1}>
-                            <Toolbar>
-                                <div className="flex flex-1 items-center">
-                                    {(!selectedUser.id) && (
-                                        <React.Fragment>
-                                            <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
-                                        </React.Fragment>
-                                    )}
-                                    {selectedUser.id && (
-                                        <React.Fragment>
-                                            <Avatar src={selectedUser.image} />
-                                            <div className="hidden md:flex flex-col ml-12 items-start">
-                                                <Typography component="span" className="normal-case font-600 flex">
-                                                    {selectedUser.fullName}
-                                                </Typography>
-                                            </div>
+                    <AppBar position="static" elevation={1}>
+                        <Toolbar>
+                            <div className="flex flex-1 items-center">
+                                {(!selectedUser.id) && (
+                                    <React.Fragment>
+                                        <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
+                                    </React.Fragment>
+                                )}
+                                {selectedUser.id && (
+                                    <React.Fragment>
+                                        <Avatar src={selectedUser.image} />
+                                        <div className="hidden md:flex flex-col ml-12 items-start">
+                                            <Typography component="span" className="normal-case font-600 flex">
+                                                {selectedUser.fullName}
+                                            </Typography>
+                                        </div>
 
-                                        </React.Fragment>
-                                    )}
-                                </div>
-                                <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
-                                    <Icon>close</Icon>
-                                </IconButton>
-                            </Toolbar>
-                        </AppBar>
-                    {/* </Grid> */}
-                    <Paper>
-                        <Grid container spacing={1} item lg={12} style={{ minHeight: "94vh" }}>
-                            <Grid item lg={2}>
-                                <ContactList style={classes.contact} />
-                            </Grid>
-                            <Grid item lg={10}>
-                                <Chat />
-                            </Grid>
+                                    </React.Fragment>
+                                )}
+                            </div>
+                            <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
+                                <Icon>close</Icon>
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+                    <Paper className={classes.fullHeight}>
+                        <Grid container direction="row" alignItems="stretch" style={{ height: 'inherit' }}>
+                            <Grid item container lg={2} direction="column" justify="flex-start"> <ContactList style={classes.contact} /></Grid>
+                            <Grid item container lg={10} direction="column" justify="space-between"> <Chat /></Grid>
                         </Grid>
                     </Paper>
                 </Dialog>
             </Grid>
 
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 

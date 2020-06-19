@@ -104,7 +104,7 @@ const ContactList = () => {
 
   return (
     <Grid container spacing={1} justify="center" alignItems="center" alignContent="center">
-      {users.filter(user => user.id !== userLogged.id).map(user => (<Grid item lg={12}>
+      {users.filter(user => user.id !== userLogged.id).map(user => (<Grid  key={user.id} item lg={12}>
         <ContactButton {...user} isActive={user.id === selectedUser.id} />
       </Grid>))}
     </Grid>

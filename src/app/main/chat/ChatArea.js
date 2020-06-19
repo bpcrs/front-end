@@ -1,12 +1,12 @@
 import React from 'react'
-import { Grid, makeStyles } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import Chat from './Chat';
 
-const useStyles = makeStyles(theme => ({
-    contact: {
-        backgroundColor: theme.palette.background.default
-    }
-}));
+// const useStyles = makeStyles(theme => ({
+//     contact: {
+//         backgroundColor: theme.palette.background.default
+//     }
+// }));
 
 export const ChatArea = () => {
     return (

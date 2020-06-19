@@ -7,7 +7,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/More';
 import { isMobile } from 'react-device-detect';
 import ToolbarLayout3 from '../fuse-layouts/layout3/components/ToolbarLayout3';
-import { FuseScrollbars } from '@fuse';
 
 const useStyles = makeStyles((theme) => ({
     menuButton: {

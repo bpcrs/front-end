@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Popper, ClickAwayListener, MenuItem, Icon, IconButton, ListItemIcon, ListItemText, Paper, TextField, Tooltip, Typography, InputAdornment } from '@material-ui/core';
+import { withStyles, Popper, ClickAwayListener, MenuItem, Icon, IconButton, ListItemIcon, ListItemText, Paper, TextField, Tooltip, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { FuseUtils } from '@fuse';
 import classNames from 'classnames';
@@ -328,7 +328,7 @@ class FuseSearch extends Component {
                     return (
                         <div className={classNames(classes.root, "flex", className)}>
 
-                            <Tooltip hidden={this.state.search == true} title="Click to search" placement="bottom">
+                            <Tooltip hidden={this.state.search === true} title="Click to search" placement="bottom">
                                 <div onClick={this.showSearch}>
                                     {this.props.trigger}
                                 </div>

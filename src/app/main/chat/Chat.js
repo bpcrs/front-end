@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, TextField, IconButton, Icon, Grid, AppBar } from '@material-ui/core';
-import { FuseScrollbars } from '@fuse';
+import { Paper, TextField, IconButton, Icon, Grid } from '@material-ui/core';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
 import firebase from '../../firebase/firebase';
 import Message from './Message';
 import { useSelector } from 'react-redux';
-
+import ScrollToBottom from 'react-scroll-to-bottom';
 const useStyles = makeStyles(theme => ({
     messageRow: {
         position: 'relative',
@@ -129,6 +128,23 @@ const useStyles = makeStyles(theme => ({
     inputWrapper: {
         borderRadius: 24
     },
+    fullHeight: {
+        height: "100%",
+        minHeight: "100vh",
+        maxHeight: "100vh"
+    },
+    fullWidth: {
+        maxWidth: "100%"
+    },
+    overlay: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        left: 0
+    },
+    chat: {
+        paddingBottom: theme.spacing(16)
+    }
 }));
 
 const Chat = () => {
@@ -137,14 +153,19 @@ const Chat = () => {
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const userLogged = useSelector(state => state.auth.user.data);
     const [msg, setMsg] = useState([]);
+    const [sizeMsg, setSizeMsg] = useState(20);
+
     useEffect(() => {
         setMsg([])
         async function getMsgFromFirebase() {
             const arr = [userLogged.id, selectedUser.id].sort();
-            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
+            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').orderBy('createAt', 'asc').limitToLast(20).onSnapshot(ns => {
                 setMsg([]);
-                ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
+                ns.docs.map(message => setMsg(msg => [...msg, message.data()]));
+                console.log('Size', ns.docs.length);
             });
+
+
         }
         getMsgFromFirebase();
     }, [selectedUser.id, userLogged.id])
@@ -162,62 +183,61 @@ const Chat = () => {
                 receive: selectedUser.id
             })
         setSendMessage("")
+        setSizeMsg(sizeMsg + 1)
     }
 
-
-
     return (
-        <Paper>
-            <Grid container>
-                <FuseScrollbars
-                >
-                    <Grid
-                        container alignItems="stretch" direction="column"
-                    >
-                        <Grid item style={{ minHeight: "100vh", maxHeight: '100vh' }}>
-                            <div className="flex flex-col flex-1 items-center justify-center pl-12">
-                                {/* <Icon className="text-128" color="disabled">chat</Icon> */}
-                                <Grid container spacing={1}>
-                                    {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
-                                        <Message  {...message} />
-                                    )}
-                                </Grid>
-                            </div>
+        <Paper className={classes.fullHeight}>
+
+            <Grid container direction="row" alignItems="stretch" className={classes.fullHeight}>
+                <Grid item lg className={classes.fullWidth} style={{ paddingBottom: "100px" }}>
+                    <ScrollToBottom>
+                        <Grid>
+                            <Grid item className={classes.fullHeight}>
+                                <div className="flex flex-col flex-1 items-center justify-center pl-12">
+                                    {/* <Icon className="text-128" color="disabled">chat</Icon> */}
+                                    <Grid container spacing={1} className={classes.chat}>
+                                        {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
+                                            <Message  {...message} />
+                                        )}
+                                    </Grid>
+                                </div>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </FuseScrollbars>
-                <Grid item lg={12} className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
-                    <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
-                        <TextField
-                            value={sendMessage}
-                            autoFocus={false}
-                            // id={message}
-                            onChange={(e) => setSendMessage(e.currentTarget.value)}
-                            className="flex-1"
-                            InputProps={{
-                                disableUnderline: true,
-                                classes: {
-                                    root: "flex flex-grow flex-no-shrink ml-16 mr-48 my-8",
-                                    input: ""
-                                },
-                                placeholder: "Type your message"
-                            }}
-                            InputLabelProps={{
-                                shrink: false,
-                                className: classes.bootstrapFormLabel
-                            }}
-                        />
-                        <IconButton className="absolute pin-r pin-t">
-                            <Icon className="text-24">attach_file</Icon>
-                        </IconButton>
-                        <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
-                            <Icon className="text-24">send</Icon>
-                        </IconButton>
-                    </Paper>
+                    </ScrollToBottom>
+                </Grid>
+                <Grid item lg={12} >
+                    <div className={classNames(classes.bottom, "py-8 px-8", classes.overlay, classes.fullWidth)} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
+                        <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
+                            <TextField
+                                value={sendMessage}
+                                autoFocus={false}
+                                // id={message}
+                                onChange={(e) => setSendMessage(e.currentTarget.value)}
+                                className="flex-1"
+                                InputProps={{
+                                    disableUnderline: true,
+                                    classes: {
+                                        root: "ml-16 mr-48 my-8",
+                                        input: ""
+                                    },
+                                    placeholder: "Type your message"
+                                }}
+                                InputLabelProps={{
+                                    shrink: false,
+                                    className: classes.bootstrapFormLabel
+                                }}
+                            />
+                            <IconButton className="absolute pin-r pin-t">
+                                <Icon className="text-24">attach_file</Icon>
+                            </IconButton>
+                            <IconButton className="absolute pin-r pin-t" onClick={() => onMessageSubmit()} >
+                                <Icon className="text-24">send</Icon>
+                            </IconButton>
+                        </Paper>
+                    </div>
                 </Grid>
             </Grid>
-
-
         </Paper >
     );
 }
