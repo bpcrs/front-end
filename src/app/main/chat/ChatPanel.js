@@ -90,7 +90,7 @@ function ChatPanel() {
             <Button id="fuse-settings" className={classes.button} variant="text" onClick={handleOpen}>
                 <Icon className={classes.buttonIcon}>chat</Icon>
             </Button>
-            <Grid className={classes.root}>
+            <Grid className={classes.root} >
                 <Dialog
                     TransitionComponent={Transition}
                     aria-labelledby="settings-panel"
@@ -104,7 +104,7 @@ function ChatPanel() {
                         paper: classes.dialogPaper
                     }}
                 >
-                    <Grid item lg={12}>
+                    <Grid item lg={12} style={{ backgroundColor: 'red' }}>
                         <AppBar position="static" elevation={1}>
                             <Toolbar>
                                 <div className="flex flex-1 items-center">
@@ -113,7 +113,7 @@ function ChatPanel() {
                                             <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
                                         </React.Fragment>
                                     )}
-                                    {selectedUser.id &&(
+                                    {selectedUser.id && (
                                         <React.Fragment>
                                             <Avatar src={selectedUser.image}></Avatar>
                                             <Typography className="ml-16 text-16" color="inherit">{selectedUser.id ? selectedUser.fullName : ""}</Typography>
@@ -127,17 +127,18 @@ function ChatPanel() {
                                 </IconButton>
                             </Toolbar>
                         </AppBar>
+                        <Paper style={{maxHeight: '100%', minHeight: '100%', height: '100%'}}>
+                            <Grid container spacing={1} item lg={12} >
+                                <Grid item lg={2}>
+                                    <ContactList style={classes.contact} />
+                                </Grid>
+                                <Grid item lg={10}>
+                                    <Chat />
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </Grid>
-                    <Paper>
-                        <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
-                            <Grid item lg={2}>
-                                <ContactList style={classes.contact} />
-                            </Grid>
-                            <Grid item lg={10}>
-                                <Chat />
-                            </Grid>
-                        </Grid>
-                    </Paper>
+
                 </Dialog>
             </Grid>
 
