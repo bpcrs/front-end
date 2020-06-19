@@ -51,7 +51,8 @@ const useStyles = makeStyles(theme => ({
         right: 0,
         margin: 0,
         zIndex: 1000,
-        borderRadius: 0
+        borderRadius: 0,
+        overflowY: 'hidden'
     },
     panel: {
         position: 'absolute',

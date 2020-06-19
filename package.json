@@ -66,6 +66,7 @@
         "react-router-config": "4.4.0-beta.6",
         "react-router-dom": "^5.2.0",
         "react-scripts": "^3.4.1",
+        "react-scroll-to-bottom": "^2.0.0",
         "react-select": "2.3.0",
         "react-swipeable-views": "0.13.1",
         "react-table": "6.9.0",

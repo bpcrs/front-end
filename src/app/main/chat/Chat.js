@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, TextField, IconButton, Icon, Grid } from '@material-ui/core';
-import { FuseScrollbars } from '@fuse';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
 import firebase from '../../firebase/firebase';
 import Message from './Message';
 import { useSelector } from 'react-redux';
+import ScrollToBottom from 'react-scroll-to-bottom';
 
 const useStyles = makeStyles(theme => ({
     messageRow: {
@@ -135,13 +135,27 @@ const Chat = () => {
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const userLogged = useSelector(state => state.auth.user.data);
     const [msg, setMsg] = useState([]);
+    const [sizeMsg, setSizeMsg] = useState(10);
+
+    // const scrollToBottom = (ref) => {
+    //     console.dir(ref.scrollHeight);
+    //     ref.scrollIntoView({behavior: 'smooth', block : 'end'});
+    //     console.log(ref.scrollIntoView);
+
+    // };
+
+    // useEffect(scrollToBottom, [sendMessage]);
+
     useEffect(() => {
         async function getMsgFromFirebase() {
             const arr = [userLogged.id, selectedUser.id].sort();
-            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').onSnapshot(ns => {
+            await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').orderBy('createAt','asc').limitToLast(20).onSnapshot(ns => {
                 setMsg([]);
-                ns.docs.map(message => setMsg(msg => [...msg, message.data()]))
+                ns.docs.map(message => setMsg(msg => [...msg, message.data()]));
+                console.log('Size', ns.docs.length);
             });
+            
+            
         }
         getMsgFromFirebase();
     }, [selectedUser.id, userLogged.id])
@@ -159,29 +173,31 @@ const Chat = () => {
                 receive: selectedUser.id
             })
         setSendMessage("")
+        setSizeMsg(sizeMsg + 1)
     }
-
-  
 
     return (
         <Paper>
-            <FuseScrollbars
-            >
+            <ScrollToBottom>
+                {/* <FuseScrollbars> */}
                 <Grid
                     container alignItems="stretch" direction="column"
                 >
-                    <Grid item style={{ minHeight: "80vh", maxHeight: '80vh' }}>
+                    <Grid item style={{ minHeight: "80vh", maxHeight: '80vh', overflowX: 'hidden' }}>
                         <div className="flex flex-col flex-1 items-center justify-center pl-12">
                             {/* <Icon className="text-128" color="disabled">chat</Icon> */}
                             <Grid container spacing={1}>
                                 {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
                                     <Message  {...message} />
                                 )}
+                                {/* <div ref = {messagesEndRef} /> */}
                             </Grid>
                         </div>
+
                     </Grid>
                 </Grid>
-            </FuseScrollbars>
+                {/* </FuseScrollbars> */}
+            </ScrollToBottom>
 
             <Grid item style={{ minHeight: "10vh" }}>
                 <div className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
