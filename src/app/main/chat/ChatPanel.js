@@ -12,15 +12,10 @@ import ContactList from './ContactList';
 import { useSelector } from 'react-redux';
 
 
-function Transition(props) {
-    return <Slide direction="left" {...props} />;
-}
+const Transition = React.forwardRef((props,ref) => (<Slide direction="left" {...props} ref={ref} />))
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: 70,
-        maxWidth: 70,
-        minWidth: 70,
         [theme.breakpoints.down('md')]: {
             width: 0,
             maxWidth: 0,
@@ -104,7 +99,7 @@ function ChatPanel() {
                         paper: classes.dialogPaper
                     }}
                 >
-                    <Grid item lg={12}>
+                    {/* <Grid item lg={12}> */}
                         <AppBar position="static" elevation={1}>
                             <Toolbar>
                                 <div className="flex flex-1 items-center">
@@ -113,23 +108,26 @@ function ChatPanel() {
                                             <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
                                         </React.Fragment>
                                     )}
-                                    {selectedUser.id &&(
+                                    {selectedUser.id && (
                                         <React.Fragment>
-                                            <Avatar src={selectedUser.image}></Avatar>
-                                            <Typography className="ml-16 text-16" color="inherit">{selectedUser.id ? selectedUser.fullName : ""}</Typography>
+                                            <Avatar src={selectedUser.image} />
+                                            <div className="hidden md:flex flex-col ml-12 items-start">
+                                                <Typography component="span" className="normal-case font-600 flex">
+                                                    {selectedUser.fullName}
+                                                </Typography>
+                                            </div>
+
                                         </React.Fragment>
                                     )}
-
-
                                 </div>
                                 <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
                                     <Icon>close</Icon>
                                 </IconButton>
                             </Toolbar>
                         </AppBar>
-                    </Grid>
+                    {/* </Grid> */}
                     <Paper>
-                        <Grid container spacing={1} item lg={12} style={{ minHeight: "80vh" }}>
+                        <Grid container spacing={1} item lg={12} style={{ minHeight: "94vh" }}>
                             <Grid item lg={2}>
                                 <ContactList style={classes.contact} />
                             </Grid>

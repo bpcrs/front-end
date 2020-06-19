@@ -26,7 +26,7 @@ function renderInputComponent(inputProps) {
     } = inputProps;
     return (
         <div className="w-full relative">
-            {variant === "basic" ? (
+            {variant === "full" ? (
                 // Outlined
                 <React.Fragment>
                     <TextField
@@ -328,7 +328,7 @@ class FuseSearch extends Component {
                     return (
                         <div className={classNames(classes.root, "flex", className)}>
 
-                            <Tooltip title="Click to search" placement="bottom">
+                            <Tooltip hidden={this.state.search === true} title="Click to search" placement="bottom">
                                 <div onClick={this.showSearch}>
                                     {this.props.trigger}
                                 </div>
@@ -336,16 +336,17 @@ class FuseSearch extends Component {
 
                             {this.state.search && (
                                 <ClickAwayListener onClickAway={this.handleClickAway}>
-                                    <Paper
+                                    {/* <Paper
                                         ref={(node) => this.paper = node}
                                         className="absolute pin-l pin-r h-full z-9999"
                                         square={true}
-                                    >
+                                    > */}
                                         <div className="flex items-center w-full" ref={this.handleRef}>
                                             <Autosuggest
                                                 {...autosuggestProps}
                                                 inputProps={{
                                                     classes,
+                                                    variant,
                                                     placeholder: 'Search',
                                                     value: this.state.popper,
                                                     onChange: this.handleChange('popper'),
@@ -388,7 +389,7 @@ class FuseSearch extends Component {
                                                 <Icon>close</Icon>
                                             </IconButton>
                                         </div>
-                                    </Paper>
+                                    {/* </Paper> */}
                                 </ClickAwayListener>
                             )}
                         </div>

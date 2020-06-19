@@ -122,11 +122,13 @@ const useStyles = makeStyles(theme => ({
     },
     bottom: {
         background: theme.palette.background.default,
-        borderTop: '1px solid rgba(0, 0, 0, 0.13)'
+        borderTop: '1px solid rgba(0, 0, 0, 0.13)',
+        position: 'relative',
+        bottom: 0,
     },
     inputWrapper: {
         borderRadius: 24
-    }
+    },
 }));
 
 const Chat = () => {
@@ -147,6 +149,7 @@ const Chat = () => {
     // useEffect(scrollToBottom, [sendMessage]);
 
     useEffect(() => {
+        setMsg([])
         async function getMsgFromFirebase() {
             const arr = [userLogged.id, selectedUser.id].sort();
             await firebase.firestore().collection('chatRooms').doc(`${arr[0]}v${arr[1]}`).collection('messages').orderBy('createAt','asc').limitToLast(20).onSnapshot(ns => {
@@ -188,7 +191,7 @@ const Chat = () => {
                             {/* <Icon className="text-128" color="disabled">chat</Icon> */}
                             <Grid container spacing={1}>
                                 {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
-                                    <Message  {...message} />
+                                    <Message key={message.createAt} {...message} />
                                 )}
                                 {/* <div ref = {messagesEndRef} /> */}
                             </Grid>
@@ -230,6 +233,8 @@ const Chat = () => {
                     </Paper>
                 </div>
             </Grid>
+
+
         </Paper >
     );
 }
