@@ -17,7 +17,6 @@ const useStyles = makeStyles(theme => ({
         '&.send': {
             backgroundColor: theme.palette.grey[300],
             color: theme.palette.getContrastText(theme.palette.grey[300]),
-            marginRight : theme.spacing(2)
         }
     }
 }));

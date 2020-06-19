@@ -12,7 +12,7 @@ import ContactList from './ContactList';
 import { useSelector } from 'react-redux';
 
 
-const Transition = React.forwardRef((props,ref) => (<Slide direction="left" {...props} ref={ref} />))
+const Transition = React.forwardRef((props, ref) => (<Slide direction="left" {...props} ref={ref} />))
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -65,8 +65,13 @@ const useStyles = makeStyles(theme => ({
         // transform: 'translate3d(360px,0,0)',
         // easing: theme.transitions.easing.easeInOut,
         // duration: theme.transitions.duration.standard
+    },
+    fullHeight: {
+        height: "100%"
+    },
+    chat : {
+        paddingBottom : theme.spacing(6)
     }
-
 }));
 
 function ChatPanel() {
@@ -99,63 +104,41 @@ function ChatPanel() {
                         paper: classes.dialogPaper
                     }}
                 >
-<<<<<<< HEAD
-                    <Grid item lg={12} style={{ backgroundColor: 'red' }}>
-=======
-                    {/* <Grid item lg={12}> */}
->>>>>>> 28cf5411315271a40f9a6e8dfe55c0bb757573c5
-                        <AppBar position="static" elevation={1}>
-                            <Toolbar>
-                                <div className="flex flex-1 items-center">
-                                    {(!selectedUser.id) && (
-                                        <React.Fragment>
-                                            <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
-                                        </React.Fragment>
-                                    )}
-                                    {selectedUser.id && (
-                                        <React.Fragment>
-                                            <Avatar src={selectedUser.image} />
-                                            <div className="hidden md:flex flex-col ml-12 items-start">
-                                                <Typography component="span" className="normal-case font-600 flex">
-                                                    {selectedUser.fullName}
-                                                </Typography>
-                                            </div>
+                    <AppBar position="static" elevation={1}>
+                        <Toolbar>
+                            <div className="flex flex-1 items-center">
+                                {(!selectedUser.id) && (
+                                    <React.Fragment>
+                                        <Typography className="ml-16 text-16" color="inherit">Chat</Typography>
+                                    </React.Fragment>
+                                )}
+                                {selectedUser.id && (
+                                    <React.Fragment>
+                                        <Avatar src={selectedUser.image} />
+                                        <div className="hidden md:flex flex-col ml-12 items-start">
+                                            <Typography component="span" className="normal-case font-600 flex">
+                                                {selectedUser.fullName}
+                                            </Typography>
+                                        </div>
 
-                                        </React.Fragment>
-                                    )}
-                                </div>
-                                <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
-                                    <Icon>close</Icon>
-                                </IconButton>
-                            </Toolbar>
-                        </AppBar>
-<<<<<<< HEAD
-                        <Paper style={{maxHeight: '100%', minHeight: '100%', height: '100%'}}>
-                            <Grid container spacing={1} item lg={12} >
-                                <Grid item lg={2}>
-                                    <ContactList style={classes.contact} />
-                                </Grid>
-                                <Grid item lg={10}>
-                                    <Chat />
-                                </Grid>
-=======
-                    {/* </Grid> */}
-                    <Paper>
-                        <Grid container spacing={1} item lg={12} style={{ minHeight: "94vh" }}>
-                            <Grid item lg={2}>
-                                <ContactList style={classes.contact} />
-                            </Grid>
-                            <Grid item lg={10}>
-                                <Chat />
->>>>>>> 28cf5411315271a40f9a6e8dfe55c0bb757573c5
-                            </Grid>
-                        </Paper>
-                    </Grid>
-
+                                    </React.Fragment>
+                                )}
+                            </div>
+                            <IconButton className="fixed pin-t pin-r z-10" onClick={handleClose}>
+                                <Icon>close</Icon>
+                            </IconButton>
+                        </Toolbar>
+                    </AppBar>
+                    <Paper className={classes.fullHeight}>
+                        <Grid container direction="row" alignItems="stretch" style={{ height: 'inherit' }}>
+                            <Grid item container lg={2} direction="column" justify="flex-start"> <ContactList style={classes.contact} /></Grid>
+                            <Grid item container lg={10} direction="column" justify="space-between"> <Chat /></Grid>
+                        </Grid>
+                    </Paper>
                 </Dialog>
             </Grid>
 
-        </React.Fragment>
+        </React.Fragment >
     );
 }
 
