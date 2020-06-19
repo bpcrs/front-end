@@ -148,7 +148,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Chat = () => {
-    const [sendMessage, setSendMessage] = useState();
+    const [sendMessage, setSendMessage] = useState("");
     const classes = useStyles();
     const selectedUser = useSelector(state => state.chat.selectedUser);
     const userLogged = useSelector(state => state.auth.user.data);
@@ -171,6 +171,9 @@ const Chat = () => {
     }, [selectedUser.id, userLogged.id])
 
     const onMessageSubmit = () => {
+        if (sendMessage.length === 0) {
+            return;
+        }
         const arr = [userLogged.id, selectedUser.id].sort();
         firebase.firestore()
             .collection('chatRooms')
