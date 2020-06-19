@@ -29,6 +29,12 @@ export const LandingConfig = {
             component: FuseLoadable({
                 loader: () => import('./Landing')
             })
+        },
+        {
+            path     : APP_PATH.LANDING_MOBILE,
+            component: FuseLoadable({
+                loader: () => import('./LandingMobile')
+            })
         }
     ]
 };

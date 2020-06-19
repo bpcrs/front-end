@@ -193,7 +193,7 @@ const Chat = () => {
         <Paper className={classes.fullHeight}>
 
             <Grid container direction="row" alignItems="stretch" className={classes.fullHeight}>
-                <Grid item lg className={classes.fullWidth} style={{ paddingBottom: "100px" }}>
+                <Grid item lg className={classes.fullWidth}>
                     <ScrollToBottom>
                         <Grid>
                             <Grid item className={classes.fullHeight}>
