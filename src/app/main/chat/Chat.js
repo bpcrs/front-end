@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, TextField, IconButton, Icon, Grid } from '@material-ui/core';
+import { Paper, TextField, IconButton, Icon, Grid, AppBar } from '@material-ui/core';
 import { FuseScrollbars } from '@fuse';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/styles';
@@ -122,11 +122,13 @@ const useStyles = makeStyles(theme => ({
     },
     bottom: {
         background: theme.palette.background.default,
-        borderTop: '1px solid rgba(0, 0, 0, 0.13)'
+        borderTop: '1px solid rgba(0, 0, 0, 0.13)',
+        position: 'relative',
+        bottom: 0,
     },
     inputWrapper: {
         borderRadius: 24
-    }
+    },
 }));
 
 const Chat = () => {
@@ -162,30 +164,29 @@ const Chat = () => {
         setSendMessage("")
     }
 
-  
+
 
     return (
         <Paper>
-            <FuseScrollbars
-            >
-                <Grid
-                    container alignItems="stretch" direction="column"
+            <Grid container>
+                <FuseScrollbars
                 >
-                    <Grid item style={{ minHeight: "100vh", maxHeight: '100vh' }}>
-                        <div className="flex flex-col flex-1 items-center justify-center pl-12">
-                            {/* <Icon className="text-128" color="disabled">chat</Icon> */}
-                            <Grid container spacing={1}>
-                                {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
-                                    <Message  {...message} />
-                                )}
-                            </Grid>
-                        </div>
+                    <Grid
+                        container alignItems="stretch" direction="column"
+                    >
+                        <Grid item style={{ minHeight: "100vh", maxHeight: '100vh' }}>
+                            <div className="flex flex-col flex-1 items-center justify-center pl-12">
+                                {/* <Icon className="text-128" color="disabled">chat</Icon> */}
+                                <Grid container spacing={1}>
+                                    {msg.sort((first, second) => first.createAt - second.createAt).map(message =>
+                                        <Message  {...message} />
+                                    )}
+                                </Grid>
+                            </div>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </FuseScrollbars>
-
-            <Grid item style={{ minHeight: "10vh" }}>
-                <div className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
+                </FuseScrollbars>
+                <Grid item lg={12} className={classNames(classes.bottom, "py-16 px-8")} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
                     <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
                         <TextField
                             value={sendMessage}
@@ -213,8 +214,10 @@ const Chat = () => {
                             <Icon className="text-24">send</Icon>
                         </IconButton>
                     </Paper>
-                </div>
+                </Grid>
             </Grid>
+
+
         </Paper >
     );
 }
