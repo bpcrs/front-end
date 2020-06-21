@@ -210,7 +210,7 @@ const Chat = () => {
                     </ScrollToBottom>
                 </Grid>
                 <Grid item lg={12} >
-                    <div className={classNames(classes.bottom, "py-8 px-8", classes.overlay, classes.fullWidth)} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
+                    <div className={classNames(classes.bottom, "py-4 px-8", classes.overlay, classes.fullWidth)} onKeyDown={(e) => e.key === 'Enter' ? onMessageSubmit() : ""}>
                         <Paper className={classNames(classes.inputWrapper, "flex items-center relative")}>
                             <TextField
                                 value={sendMessage}
