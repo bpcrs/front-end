@@ -60,12 +60,12 @@ export default function CarSubmit(props) {
             <Grid container>
                 <Grid item xs={12} sm={6} >
                     <Card className={classes.card}>
-                        <Typography>Tell us a bit about car owner</Typography>
+                        <Typography>Tell us a bit about you</Typography>
                         <TextField className={classes.textField} label="Full name" />
                         <TextField className={classes.textField} label="Mobile number" />
                         <TextField className={classes.textField} label="Email" />
                         <TextField className={classes.textField} label="Identity Card" />
-                        <div className="mt-20">
+                        <div className="mt-20" item lg={12} xs={12} sm={6}>
                             <ImageUploading
                                 onChange={onChange}
                                 maxNumber={maxNumber}
@@ -82,13 +82,13 @@ export default function CarSubmit(props) {
                                             {
                                                 imageList.map((image) => (
                                                     <div key={image.key} className="mt-20">
-                                                        <Grid container spacing={1}>
-                                                            <Grid item xs={9} sm={9} >
+                                                        <Grid container spacing={1}>        
+                                                            <Grid item lg={10} xs={9} sm={9}>
                                                                 <img src={image.dataURL} className={classes.imageUploading} alt=""/>
                                                             </Grid>
-                                                            <Grid item xs={3} sm={3} >
-                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
+                                                            <Grid item lg={2} xs={3} sm={3}>
+                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}></Button>
+                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}></Button>
                                                             </Grid>
                                                         </Grid>
                                                     </div>
@@ -170,8 +170,8 @@ export default function CarSubmit(props) {
                                                                 <img src={image.dataURL} className={classes.imageUploading} alt=""/>
                                                             </Grid>
                                                             <Grid item xs={3} sm={3} >
-                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
+                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}></Button>
+                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}></Button>
                                                             </Grid>
                                                         </Grid>
                                                     </div>
