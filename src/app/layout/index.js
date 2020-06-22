@@ -1,10 +1,7 @@
 import React from 'react'
-import { AppBar, Toolbar, IconButton, makeStyles, Fab, Container } from '@material-ui/core'
+import { AppBar, Toolbar, IconButton, makeStyles, Fab, Container, Icon } from '@material-ui/core'
 
-import MenuIcon from '@material-ui/icons/Menu';
-import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/More';
+
 import { isMobile } from 'react-device-detect';
 import ToolbarLayout3 from '../fuse-layouts/layout3/components/ToolbarLayout3';
 
@@ -52,18 +49,21 @@ export default function Layout(props) {
             </Container>
             {isMobile ? (<AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="open drawer">
-                        <MenuIcon />
+                    <IconButton edge="start" color="inherit" title="Profile">
+                        <Icon title="Profile">person</Icon>
                     </IconButton>
-                    <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-                        <AddIcon />
+                    <IconButton color="inherit">
+                        <Icon>location_searching</Icon>
+                    </IconButton>
+                    <Fab color="secondary" aria-label="add" className={classes.fabButton} title="Book">
+                        <Icon>time_to_leave</Icon>
                     </Fab>
                     <div className={classes.grow} />
                     <IconButton color="inherit">
-                        <SearchIcon />
+                        <Icon>library_books</Icon>
                     </IconButton>
                     <IconButton edge="end" color="inherit">
-                        <MoreIcon />
+                        <Icon>more_horiz</Icon>
                     </IconButton>
                 </Toolbar>
             </AppBar>) : <></>}
