@@ -12,13 +12,13 @@ console.log(process.env);
 
 export const APP_ROLE = {
   ADMINISTRATOR: "ADMINISTRATOR",
-  USER: "ADMINISTRATOR",
+  USER: "USER",
   GUEST: "GUEST",
 };
 
 export const APP_PATH = {
   HOME: "/",
-  LANDING: "/landing",
+  ADMIN: "/admin",
   LOGIN: "/login",
   CAR_LIST: "/cars",
   CAR_ITEM: "/car",
