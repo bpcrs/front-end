@@ -1,33 +1,33 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import red from '@material-ui/core/colors/red';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Grid, Icon, Fab } from '@material-ui/core';
-const useStyles = makeStyles(theme => ({
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Avatar from "@material-ui/core/Avatar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import red from "@material-ui/core/colors/red";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { Grid, Icon, Fab } from "@material-ui/core";
+const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 400,
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    paddingTop: "56.25%", // 16:9
   },
   actions: {
-    display: 'flex',
+    display: "flex",
   },
   avatar: {
     backgroundColor: red[500],
   },
   alignRight: {
-    textAlign: "right"
+    textAlign: "right",
   },
   margin: {
     margin: theme.spacing(1),
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
   const { info } = props;
-    
+
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -60,16 +60,37 @@ export default function CarItem(props = { isAction: true }) {
         title="Paella dish"
       />
       <CardContent>
-        <Grid spacing={1} container justify="space-between" alignItems="baseline">
-          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+        <Grid
+          spacing={1}
+          container
+          justify="space-between"
+          alignItems="baseline"
+        >
+          <Grid
+            xs={3}
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-around"
+          >
             <Grid justify="center" container>
-              <Icon fontSize={"default"}>airline_seat_recline_normal_outlined</Icon>
+              <Icon fontSize={"default"}>
+                airline_seat_recline_normal_outlined
+              </Icon>
             </Grid>
             <Grid item container justify="center">
               <Typography variant="caption">{info.seat} people</Typography>
             </Grid>
           </Grid>
-          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+          <Grid
+            xs={3}
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-around"
+          >
             <Grid item container justify="center">
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
@@ -78,7 +99,14 @@ export default function CarItem(props = { isAction: true }) {
             </Grid>
           </Grid>
 
-          <Grid xs={3} item container direction="row" alignItems="center" justify="space-around">
+          <Grid
+            xs={3}
+            item
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-around"
+          >
             <Grid item container justify="center">
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
@@ -89,11 +117,23 @@ export default function CarItem(props = { isAction: true }) {
         </Grid>
       </CardContent>
       {props.isAction ? (
-        <CardActions className={classes.actions} >
-          <Grid container alignContent="flex-end" spacing={1} alignItems="center">
+        <CardActions className={classes.actions}>
+          <Grid
+            container
+            alignContent="flex-end"
+            spacing={1}
+            alignItems="center"
+          >
             <Grid item xs={6}>
-              <Fab size="small" color="inherit" aria-label="add" className={classes.margin} variant="extended" onClick={props.onBooking}>
-                <FavoriteIcon /> 
+              <Fab
+                size="small"
+                color="inherit"
+                aria-label="add"
+                className={classes.margin}
+                variant="extended"
+                onClick={props.onBooking}
+              >
+                <FavoriteIcon />
                 <span className={classes.margin}>View</span>
               </Fab>
             </Grid>
