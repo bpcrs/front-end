@@ -1,15 +1,27 @@
 
 import React from 'react'
-import { FormControl, Button, InputLabel, MenuItem, TextField, Card, Select, Typography, Grid, makeStyles } from '@material-ui/core';
-import PublishIcon from '@material-ui/icons/Publish';
-import ImageUploading from "react-images-uploading";
-import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import {
+    //FormControl,
+    Button,
+    // InputLabel,
+    // MenuItem,
+    TextField,
+   // Card, Select,
+    Typography,
+    Grid,
+    makeStyles
+} from '@material-ui/core';
+
+// import ImageUploading from "react-images-uploading";
+
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+// import EditIcon from '@material-ui/icons/Edit';
+// import DeleteIcon from '@material-ui/icons/Delete';
 import Layout from '../../layout';
 import Paper from '@material-ui/core/Paper';
-import AiOutlineSolution from 'react-icons/ai';
+
+import firebase from './firebase';
+// import event from '';
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles(theme => ({
     root: {
@@ -41,62 +53,115 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-// const handleUpload = async e => {
-//     e.preventDefault();
-//     const formData = new FormData();
-//     formData.append("image", image.raw);
 
-//     await fetch("YOUR_URL", {
-//         method: "POST",
-//         headers: {
-//             "Content-Type": "multipart/form-data"
-//         },
-//         body: formData
-//     });
-// };
+
 
 export default function SubmitLicense(props) {
-    // const [brand, setBrand] = React.useState('');
-    // const [model, setModel] = React.useState('');
-    const maxNumber = 10;
-    const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
-    // const handleChangeBrand = (event) => {
-    //     setBrand(event.target.value);
-    // };
-    // const handleChangeModel = (event) => {
-    //     setModel(event.target.value);
-    // };
+
+    // const maxNumber = 10;
+    // const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
+
     const classes = useStyles();
-    const onChange = imageList => {
-        // data for submit
-        console.log(imageList);
-    };
 
-    // const disableEvents = true;
-    // const disableAfterUploadImage = { 
-    //     "onClick-events": disableEvents ? "disable" : "disable" 
+    // const onChange = imageList => {
+    //     // data for submit
+    //     console.log(imageList);
     // };
-    var firebaseConfig = {
-        apiKey: "AIzaSyBVST1MnPWJDFkO5EgCP-1J9hoBg-RRt-k",
-        authDomain: "bpcrs-24e90.firebaseapp.com",
-        databaseURL: "https://bpcrs-24e90.firebaseio.com",
-        projectId: "bpcrs-24e90",
-        storageBucket: "bpcrs-24e90.appspot.com",
-        messagingSenderId: "1028858504286",
-        appId: "1:1028858504286:web:df0821aecaa56bed06c0cf",
-        measurementId: "G-NDTPLZL46K"
+
+    var fileArr = new Array();
+    let uploadFile = () => {
+        if (fileArr.length > 0) {
+            // Create the file metadata
+            var metadata = {
+                contentType: 'image/jpeg',
+            };
+
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+            for (let i = 0; i < fileArr.length; i++) {
+                var uploadTask = firebase.storage().ref('img/' + date).child(fileArr[i].name).put(fileArr[i], metadata);
+
+                uploadTask.on(
+                    firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                    function (snapshot) {
+
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                console.log('Upload is paused');
+                                break;
+                            case firebase.storage.TaskState.RUNNING: // or 'running'
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    function (error) {
+                        // Errors list: https://firebase.google.com/docs/storage/web/handle-errors
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                // User doesn't have permission to access the object
+                                break;
+
+                            case 'storage/canceled':
+                                // User canceled the upload
+                                break;
+
+                            case 'storage/unknown':
+                                // Unknown error occurred, inspect error.serverResponse
+                                break;
+                        }
+                    }
+                );
+            }
+
+        } else {
+            console.log("Khong co file")
+            return;
+        }
+
+    }
+    var loadFile = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            if (fileArr.length > 0) {
+                fileArr[0] = event.target.files[0];
+            } else {
+                fileArr.push(event.target.files[0]);
+            }
+        }
     };
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
+    var loadFile2 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output2');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            //fileArr.push(event.target.files[0]);
+            fileArr[1] = event.target.files[0];
+        }
+    };
+
+    var loadFile3 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output3');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            // fileArr.push(event.target.files[0]);
+            fileArr[2] = event.target.files[0];
+        }
+    };
+
+    var loadFile4 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output4');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            // fileArr.push(event.target.files[0]);
+            fileArr[3] = event.target.files[0];
+        }
+    };
+
     return (
 
         <Layout name="License form">
-
-            <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
-
-            <script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-analytics.js"></script>
 
             <h1 className="text-center">Update your License</h1>
             <Grid container spacing={1} component={Paper}>
@@ -107,230 +172,61 @@ export default function SubmitLicense(props) {
                 <TextField className={classes.textField} label="Identity Card Number" />
 
                 <Grid item xs={12} lg={6}>
-                    <ImageUploading
-                        onChange={classes.onChange}
-                        maxNumber={maxNumber}
-                        multiple
-                        maxFileSize={maxMbFileSize}
-                        acceptType={["jpg", "gif", "png"]}
-                    >
-                        {
-                            ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                <div>
-                                    <Button variant="contained" color="primary"
-                                        onClick={onImageUpload} component="span"
-                                        startIcon={<AccountBoxIcon />}>
-                                        Click here to Upload your front citizen identification
-                                                </Button>
-                                    {
-                                        imageList.map((image) => (
-                                            <div key={image.key} className="mt-20" border="1">
-                                                <Grid container spacing={1}>
-                                                    <Grid item xs={4} sm={4} lg={4}>
-                                                        <img src={image.dataURL} className={classes.imageUploading} />
-                                                    </Grid>
-                                                    <Grid item xs={8} sm={8} lg={8}>
-                                                        <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                        <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            )}
-                    </ImageUploading>
+
+
+                    <p><label htmlFor="file" >
+                        <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
+                            Click here to Upload your front citizen identification
+                        </Button>
+                    </label></p>
+                    <p><input type="file" accept="image/*" name="image" id="file" onChange={loadFile} style={{ display: "none" }} /></p>
+                    <p><img id="output" width="200" height="200" /></p>
+
                 </Grid>
 
                 <Grid item xs={12} lg={6}>
-                    <ImageUploading
-                        onChange={classes.onChange}
-                        maxNumber={maxNumber}
-                        multiple
-                        maxFileSize={maxMbFileSize}
-                        acceptType={["jpg", "gif", "png"]}
-                    >
-                        {
-                            ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                <div>
-                                    <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<AccountBoxIcon />}>
-                                        Click here to Upload your backside citizen identification
-                                                </Button>
-                                    {
-                                        imageList.map((image) => (
-                                            <div key={image.key} className="mt-20">
-                                                <Grid container spacing={1}>
-                                                    <Grid item xs={4} sm={4} lg={4}>
-                                                        <img src={image.dataURL} className={classes.imageUploading} />
-                                                    </Grid>
-                                                    <Grid item xs={8} sm={8} lg={8}>
-                                                        <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                        <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            )}
-                    </ImageUploading>
+
+                    <p><label htmlFor="file2" >
+                        <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
+                            Click here to Upload your backside citizen identification
+                        </Button>
+                    </label></p>
+                    <p><input type="file" accept="image/*" name="image" id="file2" onChange={loadFile2} style={{ display: "none" }} /></p>
+                    <p><img id="output2" width="200" height="200" /></p>
+
+
                 </Grid>
 
                 <Grid item xs={12} lg={6}>
-                    <ImageUploading
-                        onChange={classes.onChange}
-                        maxNumber={maxNumber}
-                        multiple
-                        maxFileSize={maxMbFileSize}
-                        acceptType={["jpg", "gif", "png"]}
-                    >
-                        {
-                            ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                <div>
-                                    <Button variant="contained" color="primary"
-                                        onClick={onImageUpload} component="span"
-                                        startIcon={<AccountBoxIcon />}>
-                                        Click here to Upload your front citizen identification with your face
-                                                </Button>
-                                    {
-                                        imageList.map((image) => (
-                                            <div key={image.key} className="mt-20" border="1">
-                                                <Grid container spacing={1}>
-                                                    <Grid item xs={4} sm={4} lg={4}>
-                                                        <img src={image.dataURL} className={classes.imageUploading} />
-                                                    </Grid>
-                                                    <Grid item xs={8} sm={8} lg={8}>
-                                                        <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                        <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            )}
-                    </ImageUploading>
+
+                    <p><label htmlFor="file3" >
+                        <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
+                            Click here to Upload your front citizen identification with your face
+                        </Button>
+                    </label></p>
+                    <p><input type="file" accept="image/*" name="image" id="file3" onChange={loadFile3} style={{ display: "none" }} /></p>
+                    <p><img id="output3" width="200" height="200" /></p>
+
                 </Grid>
 
                 <Grid item xs={12} lg={6}>
-                    <ImageUploading
-                        onChange={classes.onChange}
-                        maxNumber={maxNumber}
-                        multiple
-                        maxFileSize={maxMbFileSize}
-                        acceptType={["jpg", "gif", "png"]}
-                    >
-                        {
-                            ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                <div>
-                                    <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<AccountBoxIcon />}>
-                                        Click here to Upload your License
-                                                </Button>
-                                    {
-                                        imageList.map((image) => (
-                                            <div key={image.key} className="mt-20">
-                                                <Grid container spacing={1}>
-                                                    <Grid item xs={4} sm={4} lg={4}>
-                                                        <img src={image.dataURL} className={classes.imageUploading} />
-                                                    </Grid>
-                                                    <Grid item xs={8} sm={8} lg={8}>
-                                                        <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                        <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                    </Grid>
-                                                </Grid>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            )}
-                    </ImageUploading>
+
+                    <p><label htmlFor="file4" >
+                        <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
+                            Click here to Upload your License
+                        </Button>
+                    </label></p>
+                    <p><input type="file" accept="image/*" name="image" id="file4" onChange={loadFile4} style={{ display: "none" }} /></p>
+                    <p><img id="output4" width="200" height="200" /></p>
+
+
                 </Grid>
 
                 <Grid item xs={12} lg={12}>
-                    <Button variant="contained" color="secondary">
-                        Submit
-                </Button>
+                    <Button id="submitButton" variant="contained" color="secondary" onClick={uploadFile}>Submit</Button>
                 </Grid>
             </Grid>
 
         </Layout>
     )
 }
-// import React, { useState } from "react";
-// import Grid from '@material-ui/core/Grid';
-// import Layout from "../../layout";
-// import { withStyles, makeStyles } from '@material-ui/core/styles';
-// import TableCell from '@material-ui/core/TableCell';
-
-// export default function UploadLicense() {
-//     const [image, setImage] = useState({ preview: "", raw: "" });
-
-//     const handleChange = e => {
-//         if (e.target.files.length) {
-//             setImage({
-//                 preview: URL.createObjectURL(e.target.files[0]),
-//                 raw: e.target.files[0]
-//             });
-//         }
-//     };
-
-//     const handleUpload = async e => {
-//         e.preventDefault();
-//         const formData = new FormData();
-//         formData.append("image", image.raw);
-
-//         await fetch("YOUR_URL", {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "multipart/form-data"
-//             },
-//             body: formData
-//         });
-//     };
-
-//     const StyledTableCell = withStyles((theme) => ({
-//         // head: {
-//         //     backgroundColor: theme.palette.common.white,
-//         //     color: theme.palette.common.white,
-//         // },
-//         // body: {
-//         //     fontSize: 14,
-
-//         // },
-
-//     }))(TableCell);
-
-//     return (
-//         <Layout>
-//             <div>
-//                 <label htmlFor="upload-button">
-//                     {image.preview ? (
-//                         <img src={image.preview} alt="dummy" width="300" height="300" className="text-center"/>
-//                     ) : (
-
-//                             <h5 className="text-center">Upload your photo</h5>
-
-//                         )}
-//                 </label>
-//                 <input
-//                     type="file"
-//                     id="upload-button"
-//                     style={{ display: "none" }}
-//                     onChange={handleChange}
-//                 />
-//                 <br />
-//                 <button onClick={handleUpload}>Upload</button>
-//             </div>
-
-//             <div>
-//                 <Grid container spacing={1}>
-//                     <Grid item xs={12} lg={12} border={1} >                    
-//                             <h1 className="text-center">License</h1>                       
-//                     </Grid>
-
-//                 </Grid>
-//             </div>
-//         </Layout>
-
-//     );
-// }
