@@ -1,6 +1,7 @@
 import * as Actions from "./booking.action";
 const initialState = {
   cars: [],
+  reviews: [],
   loading: true,
 };
 
@@ -18,6 +19,19 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...initialState,
         loading: true,
+      };
+    }
+    case Actions.FETCH_REVIEW_LIST: {
+      return {
+        ...initialState,
+        loading: true,
+      };
+    }
+    case Actions.FETCH_REVIEW_SUCCESS: {
+      return {
+        state,
+        loading: false,
+        reviews: payload,
       };
     }
     default: {

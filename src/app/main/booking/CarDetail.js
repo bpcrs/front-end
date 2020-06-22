@@ -16,6 +16,9 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReviewList } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,11 +35,53 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
 }));
+const Review = ({ comment, rating }) => {
+  const classes = useStyles();
+  return (
+    <Card className={classes.review} elevation={20}>
+      <CardContent>
+        <Grid container spacing={1}>
+          <Grid
+            spacing={1}
+            item
+            xs={12}
+            xl={4}
+            container
+            justify="space-between"
+            alignItems="baseline"
+          >
+            <CardHeader
+              avatar={
+                <Avatar aria-label="recipe" className={classes.avatar}>
+                  R
+                </Avatar>
+              }
+              title="Trần Đức Thái"
+              subheader="May 14, 2020"
+            />
+            <Rating name="read-only" value={rating} readOnly size="small" />
+          </Grid>
+          <Grid spacing={1} item xs={12} xl={4} container alignContent="center">
+            <Grid item lg={12} xs={12}>
+              <Typography variant="subtitle2">{comment}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+};
 
 export default function CarDetails() {
   const history = useHistory();
-
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const reviews = useSelector((state) => state.booking.reviews);
+  useEffect(() => {
+    dispatch(fetchReviewList(1, 10, 45));
+  }, [dispatch]);
+  console.log(reviews);
+
   return (
     <Grid container spacing={3}>
       <Grid item xl={8} lg={8}>
@@ -161,104 +206,10 @@ export default function CarDetails() {
                     Customer reviews
                   </Typography>
                 </Grid>
-                <Card className={classes.review} elevation={20}>
-                  <CardContent>
-                    <Grid container spacing={1}>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        justify="space-between"
-                        alignItems="baseline"
-                      >
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            >
-                              R
-                            </Avatar>
-                          }
-                          title="Trần Đức Thái"
-                          subheader="May 14, 2020"
-                        />
-                        <Rating
-                          name="read-only"
-                          value={4}
-                          readOnly
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        alignContent="center"
-                      >
-                        <Grid item lg={12} xs={12}>
-                          <Typography variant="subtitle2">
-                            Excellent price, will definitely return to this
-                            application for car rentals
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card className={classes.review} elevation={20}>
-                  <CardContent>
-                    <Grid container spacing={1}>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        justify="space-between"
-                        alignItems="baseline"
-                      >
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            >
-                              R
-                            </Avatar>
-                          }
-                          title="Trần Đức Thái"
-                          subheader="May 14, 2020"
-                        />
-                        <Rating
-                          name="read-only"
-                          value={4}
-                          readOnly
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        alignContent="center"
-                      >
-                        <Grid item lg={12} xs={12}>
-                          <Typography variant="subtitle2">
-                            Excellent price, will definitely return to this
-                            application for car rentals
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                {reviews &&
+                  reviews.map((review) => (
+                    <Review key={review.id} {...review} />
+                  ))}
                 <Card className={classes.review} elevation={20}>
                   <CardContent>
                     <Grid container spacing={1}>
