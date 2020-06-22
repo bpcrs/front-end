@@ -1,14 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core";
-import { FuseScrollbars, FuseMessage, FuseDialog } from "@fuse";
+import { FuseMessage, FuseDialog } from "@fuse";
 import { renderRoutes } from "react-router-config";
 import classNames from "classnames";
 import AppContext from "app/AppContext";
-import LeftSideLayout3 from "./components/LeftSideLayout3";
+// import LeftSideLayout3 from "./components/LeftSideLayout3";
 import ToolbarLayout3 from "./components/ToolbarLayout3";
-import NavbarWrapperLayout3 from "./components/NavbarWrapperLayout3";
+// import NavbarWrapperLayout3 from "./components/NavbarWrapperLayout3";
 import FooterLayout3 from "./components/FooterLayout3";
-import RightSideLayout3 from "./components/RightSideLayout3";
+// import RightSideLayout3 from "./components/RightSideLayout3";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,8 +34,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     display: "flex",
-    overflow: "auto",
+    overflow: "hidden",
     flex: "1 1 auto",
+    padding: theme.spacing(1),
     flexDirection: "column",
     width: "100%",
     "-webkit-overflow-scrolling": "touch",
@@ -72,7 +73,7 @@ const Layout3 = ({ settings, children }) => {
           id="fuse-layout"
           className={classNames(classes.root, layoutConfig.mode)}
         >
-          <FuseScrollbars className={classNames(classes.content, "container")}>
+          <div className={classNames(classes.content, "container")}>
             {layoutConfig.toolbar.display &&
               layoutConfig.toolbar.position === "above" && <ToolbarLayout3 />}
 
@@ -90,7 +91,7 @@ const Layout3 = ({ settings, children }) => {
 
             {/* </div> */}
             {layoutConfig.toolbar.footer && <FooterLayout3 />}
-          </FuseScrollbars>
+          </div>
 
           {/* {layoutConfig.rightSidePanel.display && <RightSideLayout3 />} */}
           <FuseMessage />

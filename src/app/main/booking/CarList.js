@@ -48,11 +48,10 @@ function CarList() {
     }
   }, [cars.length, dispatch]);
   return (
-    // <Layout name="Car Available">
-    // <Container >
     <Grid container className={classes.root}>
       {cars.map((car, index) => (
         <Grid item xs={12} xl={3} lg={4} className={classes.paper} key={index}>
+          {console.log(car)}
           <CarItem
             isAction={true}
             info={car}
@@ -61,8 +60,6 @@ function CarList() {
         </Grid>
       ))}
     </Grid>
-    // </Container>
-    // </Layout>
   );
 }
 
