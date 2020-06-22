@@ -1,7 +1,7 @@
 import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 import { APP_PATH } from "../../../constant";
 
-export const LandingConfig = {
+export const ErrorConfig = {
   settings: {
     layout: {
       config: {
@@ -25,11 +25,9 @@ export const LandingConfig = {
   },
   routes: [
     {
-      path: APP_PATH.HOME,
-      exact: true,
-      auth: null,
+      path: APP_PATH.ERORR_404,
       component: FuseLoadable({
-        loader: () => import("./Landing"),
+        loader: () => import("./Error404Page"),
       }),
     },
   ],
