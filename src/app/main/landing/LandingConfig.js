@@ -1,5 +1,6 @@
 import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 import { APP_PATH } from "../../../constant";
+import { authRoles } from "app/auth";
 
 export const LandingConfig = {
   settings: {
@@ -27,7 +28,7 @@ export const LandingConfig = {
     {
       path: APP_PATH.HOME,
       exact: true,
-      auth: null,
+      auth: authRoles.userAndGuest,
       component: FuseLoadable({
         loader: () => import("./Landing"),
       }),

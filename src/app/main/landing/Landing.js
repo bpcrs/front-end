@@ -17,6 +17,7 @@ import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -35,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
 function Landing() {
   const history = useHistory();
   const classes = useStyles();
-
+  const userLogged = useSelector((state) => state.auth.user);
+  console.log(userLogged);
   return (
     <div className={classes.paper}>
       <LandingProvider primary="#5D21D2">
@@ -50,9 +52,11 @@ function Landing() {
             <Button variant="text">About Us</Button>,
             <Button
               variant="outlined"
-              onClick={() => history.push(APP_PATH.LOGIN)}
+              onClick={() =>
+                userLogged.id === 0 ? history.push(APP_PATH.LOGIN) : null
+              }
             >
-              Login
+              {userLogged.id === 0 ? "Login" : userLogged.displayName}
             </Button>,
           ]}
         />

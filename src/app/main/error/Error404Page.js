@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, Input, Paper, Typography, Button } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import { FuseAnimate } from "@fuse";
 import { Link } from "react-router-dom";
 
