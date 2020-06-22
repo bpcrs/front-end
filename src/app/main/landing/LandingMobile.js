@@ -36,7 +36,8 @@ function LandingMobile(props) {
                 <LandingProvider primary='#5D21D2'>
                    
                     <Hero
-                        heading={<Typography variant="h5" >Hello, Nguyen !<br /> <h6>It's amazing to have you onboard</h6></Typography>}
+                        heading={<div><Typography variant="h5" >Hello, Nguyen !</Typography>
+                        <Typography variant="h6" >It's amazing to have you onboard</Typography></div>}
                         subheading={<Formsy className="flex flex-col justify-center">
                             <div>
                                 <TextField

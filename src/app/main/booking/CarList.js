@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
@@ -49,15 +49,15 @@ function CarList() {
     }, [cars.length, dispatch])
     return (
         <Layout name="Car Available">
-            <Container >
-                <Grid container spacing={2} className={classes.root}  >
+            {/* <Container > */}
+                <Grid container spacing={1} className={classes.root}  >
                     {cars.map((car, index) => (
                         <Grid item xs={12} xl={3} lg={4} className={classes.paper} key={index}>
                             <CarItem isAction={true} info={car} onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)} />
                         </Grid>)
                     )}
                 </Grid>
-            </Container>
+            {/* </Container> */}
         </Layout>
     )
 }
