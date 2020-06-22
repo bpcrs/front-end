@@ -22,6 +22,6 @@ export const APP_PATH = {
     CAR_SUBMIT: "/submit",
     CAR_EDIT: "/car-edit",
     VIEW_BOOKING: "/view-booking",
-
-    CHAT: "/chat"
+    CHAT: "/chat",
+    LANDING_MOBILE: "/landing-mobile"
 }
