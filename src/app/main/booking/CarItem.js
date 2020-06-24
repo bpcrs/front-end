@@ -11,7 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid, Icon, Fab } from "@material-ui/core";
+import { Grid, Icon, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 400,
@@ -42,8 +44,12 @@ export default function CarItem(props = { isAction: true }) {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-          <Avatar aria-label="Recipe" className={classes.avatar}>
-            R
+          <Avatar
+            aria-label="Owner"
+            className={classes.avatar}
+            src={info.owner.imageUrl}
+          >
+            {info.owner.fullName[0]}
           </Avatar>
         }
         action={
@@ -57,7 +63,7 @@ export default function CarItem(props = { isAction: true }) {
       <CardMedia
         className={classes.media}
         image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-        title="Paella dish"
+        title="Car thumnail"
       />
       <CardContent>
         <Grid
@@ -95,7 +101,9 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">Automatic</Typography>
+              <Typography variant="caption">
+                {info.autoDriver ? "Automatic" : "Manual"}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -111,7 +119,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">SUV Car</Typography>
+              <Typography variant="caption">{info.model}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -125,17 +133,14 @@ export default function CarItem(props = { isAction: true }) {
             alignItems="center"
           >
             <Grid item xs={6}>
-              <Fab
-                size="small"
-                color="inherit"
-                aria-label="add"
-                className={classes.margin}
-                variant="extended"
-                onClick={props.onBooking}
+              <Button
+                component={Link}
+                variant="contained"
+                startIcon={<FavoriteIcon />}
+                to={`${APP_PATH.CAR_ITEM}/${info.id}`}
               >
-                <FavoriteIcon />
-                <span className={classes.margin}>View</span>
-              </Fab>
+                View
+              </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
               <Typography>3.000.000 VND</Typography>

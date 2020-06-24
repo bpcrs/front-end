@@ -16,6 +16,9 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReviewList, fetchCarDetail } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,11 +35,55 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
 }));
-
-export default function CarDetails() {
-  const history = useHistory();
-
+const Review = ({ comment, rating }) => {
   const classes = useStyles();
+  return (
+    <Card className={classes.review} elevation={20}>
+      <CardContent>
+        <Grid container spacing={1}>
+          <Grid
+            spacing={1}
+            item
+            xs={12}
+            xl={4}
+            container
+            justify="space-between"
+            alignItems="baseline"
+          >
+            <CardHeader
+              avatar={
+                <Avatar aria-label="recipe" className={classes.avatar}>
+                  R
+                </Avatar>
+              }
+              title="Trần Đức Thái"
+              subheader="May 14, 2020"
+            />
+            <Rating name="read-only" value={rating} readOnly size="small" />
+          </Grid>
+          <Grid spacing={1} item xs={12} xl={4} container alignContent="center">
+            <Grid item lg={12} xs={12}>
+              <Typography variant="subtitle2">{comment}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function CarDetails(props) {
+  const history = useHistory();
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const reviews = useSelector((state) => state.booking.reviews);
+  const carDetail = useSelector((state) => state.booking.carDetail);
+
+  useEffect(() => {
+    dispatch(fetchReviewList(1, 10, 45));
+    dispatch(fetchCarDetail(props.match.params.id));
+  }, [dispatch, props]);
+
   return (
     <Grid container spacing={3}>
       <Grid item xl={8} lg={8}>
@@ -63,7 +110,7 @@ export default function CarDetails() {
                       component="h2"
                       align="center"
                     >
-                      VINFAST LUX SA 2.0
+                      {carDetail.name}
                     </Typography>
                     <CardContent>
                       <Grid
@@ -86,7 +133,9 @@ export default function CarDetails() {
                             </Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">4 people</Typography>
+                            <Typography variant="caption">
+                              {carDetail.seat} people
+                            </Typography>
                           </Grid>
                         </Grid>
                         <Grid
@@ -101,7 +150,9 @@ export default function CarDetails() {
                             <Icon fontSize={"default"}>gamepad</Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">Automatic</Typography>
+                            <Typography variant="caption">
+                              {carDetail.autoDriver ? "Automatic" : "Manual"}
+                            </Typography>
                           </Grid>
                         </Grid>
 
@@ -117,7 +168,9 @@ export default function CarDetails() {
                             <Icon fontSize={"default"}>directions_car</Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">SUV Car</Typography>
+                            <Typography variant="caption">
+                              {carDetail.model}
+                            </Typography>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -145,7 +198,7 @@ export default function CarDetails() {
                         color="textPrimary"
                         component="p"
                       >
-                        75A-145.19
+                        {carDetail.plateNum}
                       </Typography>
                     </CardContent>
                   </Grid>
@@ -161,104 +214,10 @@ export default function CarDetails() {
                     Customer reviews
                   </Typography>
                 </Grid>
-                <Card className={classes.review} elevation={20}>
-                  <CardContent>
-                    <Grid container spacing={1}>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        justify="space-between"
-                        alignItems="baseline"
-                      >
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            >
-                              R
-                            </Avatar>
-                          }
-                          title="Trần Đức Thái"
-                          subheader="May 14, 2020"
-                        />
-                        <Rating
-                          name="read-only"
-                          value={4}
-                          readOnly
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        alignContent="center"
-                      >
-                        <Grid item lg={12} xs={12}>
-                          <Typography variant="subtitle2">
-                            Excellent price, will definitely return to this
-                            application for car rentals
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
-                <Card className={classes.review} elevation={20}>
-                  <CardContent>
-                    <Grid container spacing={1}>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        justify="space-between"
-                        alignItems="baseline"
-                      >
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            >
-                              R
-                            </Avatar>
-                          }
-                          title="Trần Đức Thái"
-                          subheader="May 14, 2020"
-                        />
-                        <Rating
-                          name="read-only"
-                          value={4}
-                          readOnly
-                          size="small"
-                        />
-                      </Grid>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        alignContent="center"
-                      >
-                        <Grid item lg={12} xs={12}>
-                          <Typography variant="subtitle2">
-                            Excellent price, will definitely return to this
-                            application for car rentals
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                {reviews &&
+                  reviews.map((review) => (
+                    <Review key={review.id} {...review} />
+                  ))}
                 <Card className={classes.review} elevation={20}>
                   <CardContent>
                     <Grid container spacing={1}>
