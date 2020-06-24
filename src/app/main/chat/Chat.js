@@ -169,7 +169,6 @@ const Chat = () => {
         .onSnapshot((ns) => {
           setMsg([]);
           ns.docs.map((message) => setMsg((msg) => [...msg, message.data()]));
-          console.log("Size", ns.docs.length);
         });
     }
     getMsgFromFirebase();

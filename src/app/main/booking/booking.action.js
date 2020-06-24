@@ -36,9 +36,9 @@ export function fetchReviewError(error) {
 }
 export function fetchCarList(page, size) {
   return (dispatch) => {
-    dispatch({
-      type: FETCH_CAR_LIST,
-    });
+    // dispatch({
+    //   type: FETCH_CAR_LIST,
+    // });
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
       page,
       size,

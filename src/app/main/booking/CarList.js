@@ -51,6 +51,7 @@ function CarList() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.booking.cars);
+  useSelector((state) => console.log(state));
   const loading = useSelector((state) => state.booking.loading);
   useEffect(() => {
     // setOpen(true);
@@ -59,7 +60,7 @@ function CarList() {
     // if (ignore) {
     // }
   }, [currentPage, dispatch]);
-
+  console.log("STATE", cars);
   return (
     <Grid container className={classes.root}>
       <Backdrop className={classes.backdrop} open={loading}>

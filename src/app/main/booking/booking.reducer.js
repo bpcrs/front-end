@@ -10,14 +10,14 @@ const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case Actions.FETCH_CARS_SUCCESS: {
       return {
-        ...initialState,
+        ...state,
         cars: payload,
         loading: false,
       };
     }
     case Actions.FETCH_CAR_LIST: {
       return {
-        ...initialState,
+        ...state,
         loading: true,
       };
     }
@@ -29,7 +29,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
     }
     case Actions.FETCH_REVIEW_SUCCESS: {
       return {
-        state,
+        ...state,
         loading: false,
         reviews: payload,
       };

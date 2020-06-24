@@ -80,7 +80,6 @@ export default function CarDetails() {
   useEffect(() => {
     dispatch(fetchReviewList(1, 10, 45));
   }, [dispatch]);
-  console.log(reviews);
 
   return (
     <Grid container spacing={3}>

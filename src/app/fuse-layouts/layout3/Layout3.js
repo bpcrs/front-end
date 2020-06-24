@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 const Layout3 = ({ settings, children }) => {
   const classes = useStyles();
   const layoutConfig = settings.layout.config;
-  console.log("layout cofig", layoutConfig);
   return (
     <AppContext.Consumer>
       {({ routes }) => (
@@ -86,7 +85,6 @@ const Layout3 = ({ settings, children }) => {
 
             {/* <div className="flex flex-auto flex-col relative"> */}
             {renderRoutes(routes)}
-            {console.log(routes)}
             {children}
 
             {/* </div> */}

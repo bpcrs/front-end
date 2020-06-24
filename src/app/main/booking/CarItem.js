@@ -42,8 +42,12 @@ export default function CarItem(props = { isAction: true }) {
     <Card className={classes.card}>
       <CardHeader
         avatar={
-          <Avatar aria-label="Recipe" className={classes.avatar}>
-            R
+          <Avatar
+            aria-label="Owner"
+            className={classes.avatar}
+            src={info.owner.imageUrl}
+          >
+            {info.owner.fullName[0]}
           </Avatar>
         }
         action={
@@ -57,7 +61,7 @@ export default function CarItem(props = { isAction: true }) {
       <CardMedia
         className={classes.media}
         image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-        title="Paella dish"
+        title="Car thumnail"
       />
       <CardContent>
         <Grid
@@ -95,7 +99,9 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">Automatic</Typography>
+              <Typography variant="caption">
+                {info.autoDriver ? "Automatic" : "Manual"}
+              </Typography>
             </Grid>
           </Grid>
 
@@ -111,7 +117,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">SUV Car</Typography>
+              <Typography variant="caption">{info.model}</Typography>
             </Grid>
           </Grid>
         </Grid>
