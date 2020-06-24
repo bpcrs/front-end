@@ -76,7 +76,6 @@ function CarList() {
             className={classes.paper}
             key={index}
           >
-            {console.log(cars)}
             <CarItem
               isAction={true}
               info={car}

@@ -3,10 +3,13 @@ import jwtService from "../jwtService";
 import { APP_CONST } from "../../../constant";
 
 const getHeaders = () => {
-  return {
+  const header = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${jwtService.getAccessToken()}`,
   };
+  if (jwtService.getAccessToken()) {
+    header.Authorization = `Bearer ${jwtService.getAccessToken()}`;
+  }
+  return header;
 };
 export const GET = (endpoint, params = {}) => {
   return request(endpoint, "GET", params);
