@@ -130,7 +130,10 @@ export default function ViewBooking() {
       <div className={classes.spacingCard}>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
-            <CarItem isAction={false} info={{ name: "A" }} />
+            <CarItem
+              isAction={false}
+              info={{ name: "A", owner: { fullName: "H" } }}
+            />
           </Grid>
           <Grid item xs={12} lg={8} xl={8} className={classes.paper}>
             <Card>

@@ -1,12 +1,9 @@
 import React, { useEffect } from "react";
 import { makeStyles, Backdrop } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
 import CarItem from "./CarItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-// import Layout from "../../layout";
-import { APP_PATH } from "../../../constant";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCarList } from "./booking.action";
 import Pagination from "@material-ui/lab/Pagination";
@@ -47,7 +44,6 @@ function CarList() {
   const size = 8;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.booking.cars);
@@ -76,11 +72,7 @@ function CarList() {
             className={classes.paper}
             key={index}
           >
-            <CarItem
-              isAction={true}
-              info={car}
-              onBooking={() => history.push(`${APP_PATH.CAR_ITEM}/1`)}
-            />
+            <CarItem isAction={true} info={car} />
           </Grid>
         ))}
       <Grid xs={12} lg={12} item container justify="flex-end">

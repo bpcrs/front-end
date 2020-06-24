@@ -18,7 +18,7 @@ import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewList } from "./booking.action";
+import { fetchReviewList, fetchCarDetail } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,14 +72,17 @@ const Review = ({ comment, rating }) => {
   );
 };
 
-export default function CarDetails() {
+export default function CarDetails(props) {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
+  const carDetail = useSelector((state) => state.booking.carDetail);
+
   useEffect(() => {
     dispatch(fetchReviewList(1, 10, 45));
-  }, [dispatch]);
+    dispatch(fetchCarDetail(props.match.params.id));
+  }, [dispatch, props]);
 
   return (
     <Grid container spacing={3}>
@@ -107,7 +110,7 @@ export default function CarDetails() {
                       component="h2"
                       align="center"
                     >
-                      VINFAST LUX SA 2.0
+                      {carDetail.name}
                     </Typography>
                     <CardContent>
                       <Grid
@@ -130,7 +133,9 @@ export default function CarDetails() {
                             </Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">4 people</Typography>
+                            <Typography variant="caption">
+                              {carDetail.seat} people
+                            </Typography>
                           </Grid>
                         </Grid>
                         <Grid
@@ -145,7 +150,9 @@ export default function CarDetails() {
                             <Icon fontSize={"default"}>gamepad</Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">Automatic</Typography>
+                            <Typography variant="caption">
+                              {carDetail.autoDriver ? "Automatic" : "Manual"}
+                            </Typography>
                           </Grid>
                         </Grid>
 
@@ -161,7 +168,9 @@ export default function CarDetails() {
                             <Icon fontSize={"default"}>directions_car</Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">SUV Car</Typography>
+                            <Typography variant="caption">
+                              {carDetail.model}
+                            </Typography>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -189,7 +198,7 @@ export default function CarDetails() {
                         color="textPrimary"
                         component="p"
                       >
-                        75A-145.19
+                        {carDetail.plateNum}
                       </Typography>
                     </CardContent>
                   </Grid>

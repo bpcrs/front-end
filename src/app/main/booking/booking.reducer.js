@@ -3,6 +3,7 @@ const initialState = {
   cars: [],
   reviews: [],
   loading: true,
+  carDetail: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -15,23 +16,18 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         loading: false,
       };
     }
-    case Actions.FETCH_CAR_LIST: {
-      return {
-        ...state,
-        loading: true,
-      };
-    }
-    case Actions.FETCH_REVIEW_LIST: {
-      return {
-        ...initialState,
-        loading: true,
-      };
-    }
     case Actions.FETCH_REVIEW_SUCCESS: {
       return {
         ...state,
         loading: false,
         reviews: payload,
+      };
+    }
+    case Actions.FETCH_CAR_DETAIL_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        carDetail: payload,
       };
     }
     default: {

@@ -11,7 +11,9 @@ import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Grid, Icon, Fab } from "@material-ui/core";
+import { Grid, Icon, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 400,
@@ -131,17 +133,14 @@ export default function CarItem(props = { isAction: true }) {
             alignItems="center"
           >
             <Grid item xs={6}>
-              <Fab
-                size="small"
-                color="inherit"
-                aria-label="add"
-                className={classes.margin}
-                variant="extended"
-                onClick={props.onBooking}
+              <Button
+                component={Link}
+                variant="contained"
+                startIcon={<FavoriteIcon />}
+                to={`${APP_PATH.CAR_ITEM}/${info.id}`}
               >
-                <FavoriteIcon />
-                <span className={classes.margin}>View</span>
-              </Fab>
+                View
+              </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
               <Typography>3.000.000 VND</Typography>
