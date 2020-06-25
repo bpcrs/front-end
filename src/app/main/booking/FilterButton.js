@@ -18,7 +18,6 @@ export const FilterButton = (props) => {
   const [filter, setFilter] = useState({ model: [] });
   const [model, setModel] = useState(data);
   const [input, setInput] = useState("");
-
   const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {

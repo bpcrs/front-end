@@ -5,13 +5,6 @@ import {
   Paper,
   Chip,
   Typography,
-  Checkbox,
-  TextField,
-  Button,
-  Popover,
-  FormControlLabel,
-  FormGroup,
-  Badge,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
@@ -20,7 +13,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchCarList } from "./booking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { FilterButton } from "./FilterButton";
 
 const useStyles = makeStyles((theme) => ({
