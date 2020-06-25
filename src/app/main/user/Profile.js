@@ -7,6 +7,8 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import HistoryIcon from '@material-ui/icons/History';
 import UpdateIcon from '@material-ui/icons/Update';
 import PropTypes from 'prop-types';
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -61,7 +63,7 @@ const useStyles = makeStyles(theme => ({
         width: '100%'
     },
     textField: {
-        width: '90%'
+        width: '80%'
     },
     card: {
         padding: 20
@@ -71,6 +73,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function Profile(props) {
     const classes = useStyles();
+    const history = useHistory();
+    const userLogged = useSelector((state) => state.auth.user);
+    console.log(userLogged);
     const [tab, setTab] = React.useState(0);
 
     const handleSetTab = (event, newTab) => {
@@ -103,18 +108,17 @@ export default function Profile(props) {
                             <h2>Account Information</h2>
                             <CardHeader
                                 avatar={
-                                    <Avatar aria-label="recipe" className={classes.avatar}>
-                                        R
-                                    </Avatar>
+                                    <Avatar aria-label="recipe" className={classes.avatar} src={userLogged.photoURL} />
+
                                 }
-                                title="Shrimp and Chorizo Paella" />
+                            />
                             <Grid container>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         id="standard-read-only-input"
-                                        label="First Name"
+                                        label="Full Name"
                                         className={classes.textField}
-                                        defaultValue=""
+                                        defaultValue={userLogged.displayName}
                                         InputProps={{
                                             readOnly: true,
                                         }}
@@ -123,8 +127,8 @@ export default function Profile(props) {
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         id="standard-read-only-input"
-                                        label="Last Name"
-                                        defaultValue=""
+                                        label="Email"
+                                        defaultValue={userLogged.email}
                                         className={classes.textField}
                                         InputProps={{
                                             readOnly: true,
@@ -178,7 +182,7 @@ export default function Profile(props) {
                                         }}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={9}>
+                                <Grid item xs={12} sm={12}>
                                     <TextField
                                         id="standard-read-only-input"
                                         label="Address"
@@ -190,7 +194,7 @@ export default function Profile(props) {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={3}>
-                                    
+
                                 </Grid>
                             </Grid>
                         </TabPanel>
