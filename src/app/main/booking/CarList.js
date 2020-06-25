@@ -21,6 +21,7 @@ import { fetchCarList } from "./booking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { FilterButton } from "./FilterButton";
 
 const useStyles = makeStyles((theme) => ({
   rootChip: {
@@ -100,13 +101,11 @@ function CarList() {
   const size = 8;
   const [currentPage, setCurrentPage] = useState(1);
   const [chipData, setChipData] = useState([]);
-  const [model, setModel] = useState(data);
   const classes = useStyles();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
   const [filter, setFilter] = useState({ model: [] });
-  const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
     dispatch(fetchCarList(currentPage, size));
@@ -124,125 +123,47 @@ function CarList() {
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
   };
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   return (
     <Grid container className={classes.root}>
       <Grid lg={12} item container alignItems="center" justify="flex-start">
         <Grid item lg={12} container>
           <Grid item lg={12}>
-            <Button
-              aria-describedby={id}
-              variant="text"
-              endIcon={<ExpandMoreIcon />}
-              onClick={(event) => setAnchorEl(event.currentTarget)}
-            >
-              <Badge badgeContent={filter["model"].length} color="error">
-                Model
-              </Badge>
-            </Button>
-            <Popover
-              open={open}
-              anchorEl={anchorEl}
-              onClose={() => setAnchorEl(null)}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-            >
-              <Paper
-                style={{
-                  width: "300px",
-                  padding: "1rem",
-                  height: "280px",
-                  overflow: "scroll",
-                }}
-              >
-                <TextField
-                  id="outlined-number"
-                  placeholder="Find your model"
-                  type="text"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => {
-                    let result = data.filter(
-                      (item) => item.title.indexOf(e.target.value) !== -1
-                    );
-                    if (result.length !== 0) {
-                      setModel(result);
-                    } else {
-                      setModel([]);
-                    }
-                  }}
-                />
-                <FormGroup>
-                  {model.map(({ title, year }) => (
-                    <FormControlLabel
-                      key={title}
-                      control={
-                        <Checkbox
-                          color={"primary"}
-                          checked={
-                            filter["model"].filter(
-                              (item) => item.title === title
-                            ).length !== 0
-                          }
-                          onChange={() => {
-                            if (
-                              filter["model"].filter(
-                                (item) => item.title === title
-                              ).length !== 0
-                            ) {
-                              setFilter({
-                                model: filter["model"].filter(
-                                  (item) => item.title !== title
-                                ),
-                              });
-                            } else {
-                              setFilter({
-                                model: [...filter["model"], { title, year }],
-                              });
-                            }
-                          }}
-                        />
-                      }
-                      label={title}
-                    />
-                  ))}
-                </FormGroup>
-              </Paper>
-            </Popover>
+            <FilterButton
+              name="Brand"
+              data={data}
+              onFilter={(value) => setFilter(value)}
+            />
+            {/* <FilterButton name="Model" data={data} /> */}
+            {/* <FilterButton name="Seat" data={data} /> */}
+            {/* <FilterButton name="Location" data={data} /> */}
           </Grid>
         </Grid>
         <Grid item lg={12}>
-          <Paper component="ul" className={classes.rootChip}>
-            <li>
-              <Typography variant="subtitle2">Filter:</Typography>
-            </li>
-            {chipData.map((data) => {
-              // if (data.label === "React") {
-              //   icon = <TagFacesIcon />;
-              // }
-              return (
-                <li key={data.key}>
-                  <Chip
-                    // icon={icon}
-                    label={data.label}
-                    onDelete={handleDelete(data)}
-                    className={classes.chip}
-                  />
-                </li>
-              );
-            })}
-          </Paper>
+          {chipData.length !== 0 ? (
+            <Paper component="ul" className={classes.rootChip}>
+              <li>
+                <Typography variant="subtitle2">Filter:</Typography>
+              </li>
+              {chipData.map((data) => {
+                // if (data.label === "React") {
+                //   icon = <TagFacesIcon />;
+                // }
+                return (
+                  <li key={data.key}>
+                    <Chip
+                      // icon={icon}
+                      label={data.label}
+                      onDelete={handleDelete(data)}
+                      className={classes.chip}
+                    />
+                  </li>
+                );
+              })}
+            </Paper>
+          ) : (
+            <></>
+          )}
         </Grid>
       </Grid>
       <Backdrop className={classes.backdrop} open={loading}>
