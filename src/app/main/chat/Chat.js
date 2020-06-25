@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Paper, TextField, IconButton, Icon, Grid } from "@material-ui/core";
+import {
+  Paper,
+  TextField,
+  IconButton,
+  Icon,
+  Grid,
+  Fab,
+} from "@material-ui/core";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/styles";
 import firebase from "../../firebase/firebase";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
+import AddIcon from "@material-ui/icons/Add";
+
 const useStyles = makeStyles((theme) => ({
   messageRow: {
     position: "relative",
@@ -203,6 +212,12 @@ const Chat = () => {
         className={classes.fullHeight}
       >
         <Grid item lg className={classes.fullWidth}>
+          <Grid>
+            <Fab color="primary" aria-label="add">
+              <AddIcon />
+              Add
+            </Fab>
+          </Grid>
           <ScrollToBottom>
             <Grid>
               <Grid item className={classes.fullHeight}>
