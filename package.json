@@ -69,6 +69,7 @@
         "react-scroll-to-bottom": "^2.0.0",
         "react-select": "2.3.0",
         "react-swipeable-views": "0.13.1",
+        "react-switch": "^5.0.1",
         "react-table": "6.9.0",
         "react-text-mask": "5.4.3",
         "react-virtualized": "9.21.0",
