@@ -80,8 +80,9 @@ export default function CarDetails(props) {
   const carDetail = useSelector((state) => state.booking.carDetail);
 
   useEffect(() => {
-    dispatch(fetchReviewList(1, 10, 45));
-    dispatch(fetchCarDetail(props.match.params.id));
+    const carId = props.match.params.id;
+    dispatch(fetchReviewList(1, 10, carId));
+    dispatch(fetchCarDetail(carId));
   }, [dispatch, props]);
 
   return (
