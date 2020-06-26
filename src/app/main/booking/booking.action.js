@@ -10,6 +10,9 @@ export const FETCH_REVIEW_FAILURE = "[REVIEW] FETCH DATA FAILURE";
 export const FETCH_CAR_DETAIL_SUCCESS = "[CAR_DETAIL] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_ERROR = "[CAR_DETAIL] FETCH DATA ERROR";
 
+export const POST_CAR_EDIT_SUCCESS = "[CAR_EDIT] POST DATA SUCCESS";
+export const POST_CAR_EDIT_FAILURE = "[CAR_EDIT] POST DATA FAILURE";
+
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -45,6 +48,18 @@ export function fetchCarDetailSuccess(car) {
 export function fetchCarDetailError(error) {
   return {
     type: FETCH_CAR_DETAIL_ERROR,
+    payload: error,
+  };
+}
+export function postCarEditSuccess(car) {
+  return {
+    type: POST_CAR_EDIT_SUCCESS,
+    payload: car,
+  };
+}
+export function postCarEditFailure(error) {
+  return {
+    type: POST_CAR_EDIT_FAILURE,
     payload: error,
   };
 }
@@ -104,4 +119,8 @@ export function fetchCarDetail(id) {
       }
     );
   };
+}
+
+export function postCarUpdate(car) {
+  return (dispatch) => {};
 }

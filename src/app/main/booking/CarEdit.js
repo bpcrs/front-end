@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   TextField,
   Card,
-  Typography,
   Grid,
   makeStyles,
   Switch,
+  Typography,
+  IconButton,
+  Icon,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import ImageUploading from "react-images-uploading";
 import DriveEtaIcon from "@material-ui/icons/DriveEta";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import Layout from "../../layout";
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+// import { useDispatch, useSelector } from "react-redux";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: ITEM_HEIGHT * 4.5,
   },
   textField: {
-    width: "100%",
+    width: "85%",
     margin: theme.spacing(1),
   },
   card: {
@@ -64,12 +66,21 @@ export default function CarEdits(props) {
     checkedAvailable: true,
   });
 
+  const [btnNameState, setBtnNameState] = useState(true);
+  const [btnVinState, setBtnVinState] = useState(true);
+  const [btnSeatState, setBtnSeatState] = useState(true);
+  const [btnSoundState, setBtnSoundState] = useState(true);
+  const [btnPriceState, setBtnPriceState] = useState(true);
+  const [btnPlateState, setBtnPlateState] = useState(true);
+
   const handleChange = (event) => {
     setState({
       state,
       [event.target.name]: event.target.checked,
     });
   };
+
+  useEffect(() => {});
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -129,53 +140,88 @@ export default function CarEdits(props) {
       <Grid container justify="center">
         <Grid item xs={12} sm={6} lg={10}>
           <Card className={classes.card}>
-            <TextField
-              id="input-with-icon-textfield"
-              label="Brand"
-              className={classes.textField}
-              value="Vinfast"
-              disabled
-              variant="outlined"
-              InputProps={{
-                startAdornment: (
-                  <img
-                    alt=""
-                    className={classes.icon}
-                    src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                id="input-with-icon-textfield"
+                label="Brand"
+                className={classes.textField}
+                value="Vinfast"
+                disabled
+                variant="outlined"
+                InputProps={{
+                  startAdornment: (
+                    <img
+                      alt=""
+                      className={classes.icon}
+                      src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
+                    />
+                  ),
+                }}
+              />
+            </Grid>
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                id="input-with-icon-textfield"
+                label="Model"
+                variant="outlined"
+                value="Lux SA 2.0"
+                className={classes.textField}
+                disabled
+              />
+            </Grid>
+
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Name"
+                variant="outlined"
+                disabled={btnNameState}
+              />
+              <IconButton onClick={() => setBtnNameState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnNameState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
+
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <Typography variant="h6"></Typography>
+              <FormControlLabel
+                classes={classes.switchButton}
+                control={
+                  <IOSSwitch
+                    checked={state.checkedAvailable}
+                    onChange={handleChange}
+                    name="checkedAvailable"
                   />
-                ),
-              }}
-            />
+                }
+                label="Available"
+              />
+            </Grid>
 
-            <TextField
-              id="input-with-icon-textfield"
-              label="Model"
-              variant="outlined"
-              value="Lux SA 2.0"
-              className={classes.textField}
-              disabled
-            />
-
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Name"
-              variant="outlined"
-              disabled
-            />
-
-            <FormControlLabel
-              classes={classes.switchButton}
-              control={
-                <IOSSwitch
-                  checked={state.checkedAvailable}
-                  onChange={handleChange}
-                  name="checkedAvailable"
-                />
-              }
-              label="Available"
-            />
             <div className="mt-20">
               <ImageUploading
                 onChange={classes.onChange}
@@ -231,44 +277,115 @@ export default function CarEdits(props) {
 
         <Grid item xs={12} sm={6} lg={10}>
           <Card className={classes.card}>
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Vin"
-              variant="outlined"
-            />
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Vin number"
+                variant="outlined"
+                disabled={btnVinState}
+              />
+              <IconButton onClick={() => setBtnVinState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnVinState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
 
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Seat"
-              variant="outlined"
-            />
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Seat"
+                variant="outlined"
+                disabled={btnSeatState}
+              />
+              <IconButton onClick={() => setBtnSeatState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnSeatState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
 
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Sound"
-              variant="outlined"
-            />
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Sound"
+                variant="outlined"
+                disabled={btnSoundState}
+              />
+              <IconButton onClick={() => setBtnSoundState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnSoundState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
 
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Price"
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              id="standard-required"
-              value="60B2-02914"
-              label="Plate number"
-              variant="outlined"
-            />
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Price (per day)"
+                variant="outlined"
+                disabled={btnPriceState}
+              />
+              <IconButton onClick={() => setBtnPriceState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnPriceState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
+
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <TextField
+                className={classes.textField}
+                id="standard-required"
+                value="60B2-02914"
+                label="Plate number"
+                variant="outlined"
+                disabled={btnPlateState}
+              />
+              <IconButton onClick={() => setBtnPlateState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setBtnPlateState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
           </Card>
         </Grid>
         <Grid container justify="center">
