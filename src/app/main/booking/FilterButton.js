@@ -14,21 +14,20 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 export const FilterButton = (props) => {
-  const { name, data } = props;
-  const [filter, setFilter] = useState({ model: [] });
-  const [model, setModel] = useState(data);
+  const { name, data, onFilter, filterInChip } = props;
+  const [filter, setFilter] = useState(filterInChip);
+  const [value, setValue] = useState(data);
   const [input, setInput] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
-
   useEffect(() => {
     let result = data.filter((item) => item.title.indexOf(input) !== -1);
     if (result.length !== 0) {
-      setModel(result);
+      setValue(result);
     } else {
-      setModel([]);
+      setValue([]);
     }
-    props.onFilter(filter);
-  }, [data, filter, input, props]);
+    setFilter(filterInChip);
+  }, [data, filter, filterInChip, input]);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -40,7 +39,7 @@ export const FilterButton = (props) => {
         endIcon={<ExpandMoreIcon />}
         onClick={(event) => setAnchorEl(event.currentTarget)}
       >
-        <Badge badgeContent={filter["model"].length} color="error">
+        <Badge badgeContent={filter.length} color="error">
           {name}
         </Badge>
       </Button>
@@ -80,31 +79,23 @@ export const FilterButton = (props) => {
             onChange={(e) => setInput(e.target.value)}
           />
           <FormGroup>
-            {model.map(({ title, year }) => (
+            {value.map(({ title, value }) => (
               <FormControlLabel
                 key={title}
                 control={
                   <Checkbox
                     color={"primary"}
                     checked={
-                      filter["model"].filter((item) => item.title === title)
-                        .length !== 0
+                      filter.find((item) => item.title === title) !== undefined
                     }
                     onChange={() => {
-                      if (
-                        filter["model"].filter((item) => item.title === title)
-                          .length !== 0
-                      ) {
-                        setFilter({
-                          model: filter["model"].filter(
-                            (item) => item.title !== title
-                          ),
-                        });
-                        props.onFilter(filter);
+                      const isChecked = filter.find(
+                        (item) => item.title === title
+                      );
+                      if (isChecked) {
+                        onFilter(filter.filter((item) => item.title !== title));
                       } else {
-                        setFilter({
-                          model: [...filter["model"], { title, year }],
-                        });
+                        onFilter([...filter, { title, value }]);
                       }
                     }}
                   />

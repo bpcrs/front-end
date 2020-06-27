@@ -56,64 +56,72 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const data = [
-  { title: "The Shawshank Redemption", year: 1994 },
-  { title: "The Godfather", year: 1972 },
-  { title: "The Godfather: Part II", year: 1974 },
-  { title: "The Dark Knight", year: 2008 },
-  { title: "12 Angry Men", year: 1957 },
-  { title: "Schindler's List", year: 1993 },
-  { title: "Pulp Fiction", year: 1994 },
-  { title: "The Lord of the Rings: The Return of the King", year: 2003 },
-  { title: "The Good, the Bad and the Ugly", year: 1966 },
-  { title: "Fight Club", year: 1999 },
-  { title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001 },
-  { title: "Star Wars: Episode V - The Empire Strikes Back", year: 1980 },
-  { title: "Forrest Gump", year: 1994 },
-  { title: "Inception", year: 2010 },
-  { title: "The Lord of the Rings: The Two Towers", year: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", year: 1975 },
-  { title: "Goodfellas", year: 1990 },
-  { title: "The Matrix", year: 1999 },
-  { title: "Seven Samurai", year: 1954 },
-  { title: "Star Wars: Episode IV - A New Hope", year: 1977 },
-  { title: "City of God", year: 2002 },
-  { title: "Se7en", year: 1995 },
-  { title: "The Silence of the Lambs", year: 1991 },
-  { title: "It's a Wonderful Life", year: 1946 },
-  { title: "Life Is Beautiful", year: 1997 },
-  { title: "The Usual Suspects", year: 1995 },
-  { title: "Léon: The Professional", year: 1994 },
-  { title: "Spirited Away", year: 2001 },
-  { title: "Saving Private Ryan", year: 1998 },
-  { title: "Once Upon a Time in the West", year: 1968 },
-  { title: "American History X", year: 1998 },
-  { title: "Interstellar", year: 2014 },
+  { title: "The Shawshank Redemption", value: 1994 },
+  { title: "The Godfather", value: 1972 },
+  { title: "The Godfather: Part II", value: 1974 },
+  { title: "The Dark Knight", value: 2008 },
+  { title: "12 Angry Men", value: 1957 },
+  { title: "Schindler's List", value: 1993 },
+  { title: "Pulp Fiction", value: 1994 },
+  { title: "The Lord of the Rings: The Return of the King", value: 2003 },
+  { title: "The Good, the Bad and the Ugly", value: 1966 },
+  { title: "Fight Club", value: 1999 },
+  { title: "The Lord of the Rings: The Fellowship of the Ring", value: 2001 },
+  { title: "Star Wars: Episode V - The Empire Strikes Back", value: 1980 },
+  { title: "Forrest Gump", value: 1994 },
+  { title: "Inception", value: 2010 },
+  { title: "The Lord of the Rings: The Two Towers", value: 2002 },
+  { title: "One Flew Over the Cuckoo's Nest", value: 1975 },
+  { title: "Goodfellas", value: 1990 },
+  { title: "The Matrix", value: 1999 },
+  { title: "Seven Samurai", value: 1954 },
+  { title: "Star Wars: Episode IV - A New Hope", value: 1977 },
+  { title: "City of God", value: 2002 },
+  { title: "Se7en", value: 1995 },
+  { title: "The Silence of the Lambs", value: 1991 },
+  { title: "It's a Wonderful Life", value: 1946 },
+  { title: "Life Is Beautiful", value: 1997 },
+  { title: "The Usual Suspects", value: 1995 },
+  { title: "Léon: The Professional", value: 1994 },
+  { title: "Spirited Away", value: 2001 },
+  { title: "Saving Private Ryan", value: 1998 },
+  { title: "Once Upon a Time in the West", value: 1968 },
+  { title: "American History X", value: 1998 },
+  { title: "Interstellar", value: 2014 },
 ];
 function CarList() {
   const size = 8;
   const [currentPage, setCurrentPage] = useState(1);
-  const [chipData, setChipData] = useState([]);
   const classes = useStyles();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
-  const [filter, setFilter] = useState({ model: [] });
+  const [filter, setFilter] = useState({
+    brand: [],
+    model: [],
+  });
+  const [chipData, setChipData] = useState([]);
 
   useEffect(() => {
     dispatch(fetchCarList(currentPage, size));
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
-        filter[key].map((item, index) => ({ label: item.title, key: index }))
+        filter[key].map((item, index) => ({ item, key: index, type: key }))
       );
-      console.log(tags[0]);
-      setChipData(tags[0]);
+      setChipData(tags.flat());
     };
     filterToChip();
   }, [currentPage, dispatch, filter]);
+
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) =>
       chips.filter((chip) => chip.key !== chipToDelete.key)
     );
+    setFilter({
+      [chipToDelete.type]: filter[chipToDelete.type].filter(
+        (item) => item.value !== chipToDelete.item.value
+      ),
+    });
   };
 
   return (
@@ -124,7 +132,8 @@ function CarList() {
             <FilterButton
               name="Brand"
               data={data}
-              onFilter={(value) => setFilter(value)}
+              onFilter={(value) => setFilter({ brand: value })}
+              filterInChip={filter.brand}
             />
             {/* <FilterButton name="Model" data={data} /> */}
             {/* <FilterButton name="Seat" data={data} /> */}
@@ -145,7 +154,7 @@ function CarList() {
                   <li key={data.key}>
                     <Chip
                       // icon={icon}
-                      label={data.label}
+                      label={data.item.title}
                       onDelete={handleDelete(data)}
                       className={classes.chip}
                     />
