@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Card, CardHeader, Avatar, Tabs, Tab, Typography, Box } from '@material-ui/core';
+import { Grid, TextField, Card, CardHeader, Avatar, Tabs, Tab, Typography, Box, Button } from '@material-ui/core';
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PaymentIcon from '@material-ui/icons/Payment';
@@ -9,6 +9,8 @@ import UpdateIcon from '@material-ui/icons/Update';
 import PropTypes from 'prop-types';
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Layout from "../../layout";
+import SaveIcon from '@material-ui/icons/Save';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -45,7 +47,7 @@ function a11yProps(index) {
 
 const useStyles = makeStyles(theme => ({
     root: {
-        color: theme.palette.primary.contrastText
+        flexGrow: 1,
     },
     media: {
         height: 140,
@@ -63,12 +65,15 @@ const useStyles = makeStyles(theme => ({
         width: '100%'
     },
     textField: {
-        width: '80%'
+        width: '90%'
     },
-    card: {
-        padding: 20
+    avatar: {
+        width: theme.spacing(10),
+        height: theme.spacing(10),
+    },
+    button: {
+        marginTop: theme.spacing(3)
     }
-
 }));
 
 export default function Profile(props) {
@@ -83,18 +88,16 @@ export default function Profile(props) {
     };
 
     return (
-        <div className={classes.root}>
-            <Card className={classes.card}>
+        <Layout name="Profile">
+            <div className={classes.root}>
                 <Grid container >
                     <Grid item xs={3} sm={3}>
-                        <h2>Profile</h2>
                         <Tabs
                             orientation="vertical"
                             variant="scrollable"
                             value={tab}
                             onChange={handleSetTab}
                             aria-label="Vertical tabs example"
-                            className={classes.tabs}
                         >
                             <Tab icon={<AccountCircleIcon />} label="Personal Information" {...a11yProps(0)} />
                             <Tab icon={<DriveEtaIcon />} label="Car Information" {...a11yProps(1)} />
@@ -105,17 +108,12 @@ export default function Profile(props) {
                     </Grid>
                     <Grid item xs={9} sm={9}>
                         <TabPanel value={tab} index={0}>
-                            <h2>Account Information</h2>
-                            <CardHeader
-                                avatar={
-                                    <Avatar aria-label="recipe" className={classes.avatar} src={userLogged.photoURL} />
-
-                                }
-                            />
+                            <h2>Personal Information</h2>
+                            <Avatar aria-label="recipe" className={classes.avatar} src={userLogged.photoURL} />
                             <Grid container>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
+                                        id="standard-helperText"
                                         label="Full Name"
                                         className={classes.textField}
                                         defaultValue={userLogged.displayName}
@@ -126,7 +124,7 @@ export default function Profile(props) {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
+                                        id="standard-helperText"
                                         label="Email"
                                         defaultValue={userLogged.email}
                                         className={classes.textField}
@@ -140,63 +138,46 @@ export default function Profile(props) {
                             <Grid container>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
-                                        label="Country"
-                                        className={classes.textField}
-                                        defaultValue=""
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        id="standard-read-only-input"
+                                        id="standard"
                                         label="City"
                                         defaultValue=""
                                         className={classes.textField}
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
+                                        id="standard"
                                         label="District"
                                         className={classes.textField}
                                         defaultValue=""
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
+                                        id="standard"
                                         label="Ward"
                                         defaultValue=""
                                         className={classes.textField}
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={12}>
+                                <Grid item xs={12} sm={6}>
                                     <TextField
-                                        id="standard-read-only-input"
+                                        id="standard"
                                         label="Address"
                                         defaultValue=""
                                         className={classes.textField}
-                                        InputProps={{
-                                            readOnly: true,
-                                        }}
                                     />
                                 </Grid>
-                                <Grid item xs={12} sm={3}>
-
-                                </Grid>
                             </Grid>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className={classes.button}
+                                startIcon={<SaveIcon />}
+                            >
+                                Save
+                            </Button>
                         </TabPanel>
                         <TabPanel value={tab} index={1}>
                             <h2>Car Information</h2>
@@ -212,8 +193,8 @@ export default function Profile(props) {
                         </TabPanel>
                     </Grid>
                 </Grid>
-            </Card>
-        </div >
+            </div >
+        </Layout>
     )
 }
 
