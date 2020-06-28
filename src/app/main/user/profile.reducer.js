@@ -10,7 +10,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
         case Actions.FETCH_ADDRESS_SUCCESS: {
             return {
                 ...state,
-                account: payload,
+                address: payload,
                 loading: false
             }
         }

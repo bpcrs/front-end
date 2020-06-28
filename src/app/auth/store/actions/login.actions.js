@@ -17,8 +17,12 @@ export function submitLogin(token) {
               displayName: userFromToken.fullName,
               photoURL: userFromToken.imageUrl,
               email: userFromToken.email,
-              shortcuts: [],
               id: userFromToken.id,
+              city: userFromToken.city,
+              district: userFromToken.district,
+              ward: userFromToken.ward,
+              street: userFromToken.street,
+              shortcuts: []
             },
           })
         );

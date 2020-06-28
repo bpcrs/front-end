@@ -78,15 +78,15 @@ const useStyles = makeStyles(theme => ({
 
 export default function Profile(props) {
     const classes = useStyles();
-    const history = useHistory();
     const userLogged = useSelector((state) => state.auth.user);
-    console.log(userLogged);
     const [tab, setTab] = React.useState(0);
 
     const handleSetTab = (event, newTab) => {
         setTab(newTab);
     };
+    const onAddressUpdate = () => {
 
+    }
     return (
         <Layout name="Profile">
             <div className={classes.root}>
@@ -140,7 +140,7 @@ export default function Profile(props) {
                                     <TextField
                                         id="standard"
                                         label="City"
-                                        defaultValue=""
+                                        defaultValue={userLogged.city}
                                         className={classes.textField}
                                     />
                                 </Grid>
@@ -149,14 +149,14 @@ export default function Profile(props) {
                                         id="standard"
                                         label="District"
                                         className={classes.textField}
-                                        defaultValue=""
+                                        defaultValue={userLogged.district}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <TextField
                                         id="standard"
                                         label="Ward"
-                                        defaultValue=""
+                                        defaultValue={userLogged.ward}
                                         className={classes.textField}
                                     />
                                 </Grid>
@@ -164,7 +164,7 @@ export default function Profile(props) {
                                     <TextField
                                         id="standard"
                                         label="Address"
-                                        defaultValue=""
+                                        defaultValue={userLogged.street}
                                         className={classes.textField}
                                     />
                                 </Grid>
@@ -173,6 +173,7 @@ export default function Profile(props) {
                                 variant="contained"
                                 color="primary"
                                 size="large"
+                                onClick={() => onAddressUpdate()}
                                 className={classes.button}
                                 startIcon={<SaveIcon />}
                             >
