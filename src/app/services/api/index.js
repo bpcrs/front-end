@@ -40,4 +40,5 @@ export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   REVIEW_CONTROLLER_GETALL: "/review",
+  ACCOUNT_ADDRESS_GETBYID:(id)=> `/account/address/${id}`
 };

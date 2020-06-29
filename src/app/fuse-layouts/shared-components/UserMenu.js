@@ -94,7 +94,7 @@ class UserMenu extends Component {
             <React.Fragment>
               <MenuItem
                 component={Link}
-                to="/pages/profile"
+                to="/profile"
                 onClick={this.userMenuClose}
               >
                 <ListItemIcon>
