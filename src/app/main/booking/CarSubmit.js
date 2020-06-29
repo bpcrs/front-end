@@ -7,6 +7,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Layout from '../../layout';
+import firebase from '../submitLicense/firebase';
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles(theme => ({
@@ -51,52 +52,160 @@ export default function CarSubmit(props) {
         setModel(event.target.value);
     };
     const classes = useStyles();
+
     const onChange = imageList => {
         // data for submit
         console.log(imageList);
+
     };
+
+    var fileArr = new Array();
+    var fileArr2 = new Array();
+    var count = 0;
+
+    let storeImageToFireBase = (imageArr, identityCard, sizeOfImageArr) => {
+        if (imageArr.length > 0) {
+            var metadata = {
+                contentType: 'image/jpeg',
+            };
+
+            var today = new Date();
+            var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+
+            for (let i = 0; i < imageArr.length; i++) {
+                var uploadTask = firebase.storage().ref('Car/' + date + "/" + identityCard).child(imageArr[i].name).put(imageArr[i], metadata);
+                uploadTask.on(
+                    firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+                    function (snapshot) {
+                        var progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+
+                        switch (snapshot.state) {
+                            case firebase.storage.TaskState.PAUSED: // or 'paused'
+                                console.log('Upload is paused');
+                                break;
+                            case firebase.storage.TaskState.RUNNING: // or 'running'
+                                console.log('Upload is running');
+                                break;
+
+                        }
+                        if (progress == 100) {
+                            console.log("count: " + count);
+                            count = count + 1;
+                        }
+
+                        if (count == sizeOfImageArr) {
+                            count = 0;
+                            refreshPage();
+                        }
+                    },
+                    function (error) {
+                        // Errors list: https://firebase.google.com/docs/storage/web/handle-errors
+                        switch (error.code) {
+                            case 'storage/unauthorized':
+                                // User doesn't have permission to access the object
+                                break;
+
+                            case 'storage/canceled':
+                                // User canceled the upload
+                                break;
+
+                            case 'storage/unknown':
+                                // Unknown error occurred, inspect error.serverResponse
+                                break;
+                        }
+                    }
+                );
+            }
+        } else {
+            console.log("khong co file");
+            return;
+        }
+    };
+
+    let upLoadFile = () => {
+        var identityCard = document.getElementById("txtIdentityCard").value;
+        var sizeOfImageArr = fileArr.length + fileArr2.length;
+        storeImageToFireBase(fileArr, identityCard, sizeOfImageArr);
+        storeImageToFireBase(fileArr2, identityCard, sizeOfImageArr);
+    };
+    var refreshPage = function () {
+        // if (flag) {
+        window.alert("UpLoad file succcess");
+        window.location.reload();
+        // flag = false;
+        //}
+    };
+
+    var loadFile = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            if (fileArr.length > 0) {
+                fileArr[0] = event.target.files[0];
+            } else {
+                fileArr.push(event.target.files[0]);
+            }
+        }
+    };
+
+    var loadFile2 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output2');
+            image.src = URL.createObjectURL(event.target.files[0]);
+
+            fileArr[1] = event.target.files[0];
+        }
+    };
+
+    var loadFile3 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output3');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            if (fileArr2.length > 0) {
+                fileArr2[0] = event.target.files[0];
+            } else {
+                fileArr2.push(event.target.files[0]);
+            }
+
+        }
+    };
+
+    var loadFile4 = function (event) {
+        if (event.target.files[0]) {
+            var image = document.getElementById('output4');
+            image.src = URL.createObjectURL(event.target.files[0]);
+
+            fileArr2[1] = event.target.files[0];
+        }
+    };
+
     return (
         <Layout name="Car renting form">
             <Grid container>
                 <Grid item xs={12} sm={6} >
                     <Card className={classes.card}>
                         <Typography>Tell us a bit about car owner</Typography>
-                        <TextField className={classes.textField} label="Full name" />
+                        <TextField className={classes.textField} label="Full name" id="txtFullName" />
                         <TextField className={classes.textField} label="Mobile number" />
                         <TextField className={classes.textField} label="Email" />
-                        <TextField className={classes.textField} label="Identity Card" />
+                        <TextField className={classes.textField} label="Identity Card" id="txtIdentityCard" />
                         <div className="mt-20">
-                            <ImageUploading
-                                onChange={classes.onChange}
-                                maxNumber={maxNumber}
-                                multiple
-                                maxFileSize={maxMbFileSize}
-                                acceptType={["jpg", "gif", "png"]}
-                            >
-                                {
-                                    ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                        <div>
-                                            <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<AccountBoxIcon />}>
-                                                Upload Image
-                                                </Button>
-                                            {
-                                                imageList.map((image) => (
-                                                    <div key={image.key} className="mt-20">
-                                                        <Grid container spacing={1}>
-                                                            <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
-                                                            </Grid>
-                                                            <Grid item xs={3} sm={3} >
-                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    )}
-                            </ImageUploading>
+                            <p><label>
+                                <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
+                                    Upload Image
+                        </Button>
+                            </label></p>
+
+                            <p>Picture 1</p>
+                            <p><input type="file" accept="image/*" name="image" id="file" onChange={loadFile} /></p>
+                            <p><img id="output" width="200" height="200" /></p>
+
+                            <p>Picture 2</p>
+                            <p><input type="file" accept="image/*" name="image" id="file2" onChange={loadFile2} /></p>
+                            <p><img id="output2" width="200" height="200" /></p>
+
+
                         </div>
                     </Card>
                 </Grid>
@@ -149,42 +258,24 @@ export default function CarSubmit(props) {
                         <TextField className={classes.textField} id="standard-required" label="Car Registration number" />
                         <TextField className={classes.textField} id="standard-required" label="Odometer" />
                         <div className="mt-20">
-                            <ImageUploading
-                                onChange={classes.onChange}
-                                maxNumber={maxNumber}
-                                multiple
-                                maxFileSize={maxMbFileSize}
-                                acceptType={["jpg", "gif", "png"]}
-                            >
-                                {
-                                    ({ imageList, onImageUpload, onImageRemoveAll }) => (
-                                        <div>
-                                            <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<DriveEtaIcon />}>
-                                                Upload Image
-                                                </Button>
-                                            {
-                                                imageList.map((image) => (
-                                                    <div key={image.key} className="mt-20">
-                                                        <Grid container spacing={1}>
-                                                            <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
-                                                            </Grid>
-                                                            <Grid item xs={3} sm={3} >
-                                                                <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
-                                                                <Button startIcon={<DeleteIcon />} onClick={image.onRemove}>Delete</Button>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    )}
-                            </ImageUploading>
+                            <p><label>
+                                <Button variant="contained" color="primary" component="span" startIcon={<DriveEtaIcon />}>
+                                    Upload Image
+                        </Button>
+                            </label></p>
+                            <p>Picture 1</p>
+                            <p><input type="file" accept="image/*" name="image" id="file3" onChange={loadFile3} /></p>
+                            <p><img id="output3" width="200" height="200" /></p>
+
+                            <p>Picture 2</p>
+                            <p><input type="file" accept="image/*" name="image" id="file4" onChange={loadFile4} /></p>
+                            <p><img id="output4" width="200" height="200" /></p>
+
                         </div>
                     </Card>
                 </Grid>
                 <Grid container justify="center" >
-                    <Button variant="contained" color="primary" startIcon={<PublishIcon />}>
+                    <Button variant="contained" color="primary" startIcon={<PublishIcon />} onClick={upLoadFile}>
                         Finish
                     </Button>
                 </Grid>

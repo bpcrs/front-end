@@ -6,7 +6,7 @@ import {
     // InputLabel,
     // MenuItem,
     TextField,
-   // Card, Select,
+    // Card, Select,
     Typography,
     Grid,
     makeStyles
@@ -19,7 +19,12 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 // import DeleteIcon from '@material-ui/icons/Delete';
 import Layout from '../../layout';
 import Paper from '@material-ui/core/Paper';
-
+import ProgressBar from 'react-customizable-progressbar'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from './firebase';
 // import event from '';
 const ITEM_HEIGHT = 48;
@@ -69,6 +74,7 @@ export default function SubmitLicense(props) {
     // };
 
     var fileArr = new Array();
+   
     let uploadFile = () => {
         if (fileArr.length > 0) {
             // Create the file metadata
@@ -78,13 +84,17 @@ export default function SubmitLicense(props) {
 
             var today = new Date();
             var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+            var count = 0;
+            var nameUser = document.getElementById("txtFullName").value;
+            var identityCard = document.getElementById("txtIdentityCard").value;
 
             for (let i = 0; i < fileArr.length; i++) {
-                var uploadTask = firebase.storage().ref('img/' + date).child(fileArr[i].name).put(fileArr[i], metadata);
+                var uploadTask = firebase.storage().ref('License/' + date + "/" + identityCard).child(fileArr[i].name).put(fileArr[i], metadata);
 
                 uploadTask.on(
                     firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
                     function (snapshot) {
+                        var progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
 
                         switch (snapshot.state) {
                             case firebase.storage.TaskState.PAUSED: // or 'paused'
@@ -93,6 +103,18 @@ export default function SubmitLicense(props) {
                             case firebase.storage.TaskState.RUNNING: // or 'running'
                                 console.log('Upload is running');
                                 break;
+
+                        }
+
+
+                        if (progress == 100) {
+                            console.log("count: " + count);
+                            count = count + 1;
+                        }
+                        if (count == fileArr.length) {
+                            count = 0;
+                            refreshPage();
+
                         }
                     },
                     function (error) {
@@ -118,8 +140,15 @@ export default function SubmitLicense(props) {
             console.log("Khong co file")
             return;
         }
-
     }
+
+    var refreshPage = function () {
+        // if (flag) {
+        window.alert("UpLoad file succcess");
+        window.location.reload();
+        // flag = false;
+        //}
+    };
     var loadFile = function (event) {
         if (event.target.files[0]) {
             var image = document.getElementById('output');
@@ -165,33 +194,33 @@ export default function SubmitLicense(props) {
 
             <h1 className="text-center">Update your License</h1>
             <Grid container spacing={1} component={Paper}>
-                <Typography>Tell us a bit about yourself</Typography>
-                <TextField className={classes.textField} label="Full name" />
-                <TextField className={classes.textField} label="Mobile number" />
-                <TextField className={classes.textField} label="Email" />
-                <TextField className={classes.textField} label="Identity Card Number" />
+
+                <TextField className={classes.textField} label="Full name" id="txtFullName" />
+                <TextField className={classes.textField} label="Mobile number" id="txtPhone" />
+                <TextField className={classes.textField} label="Email" id="txtEmail" />
+                <TextField className={classes.textField} label="Identity Card Number" id="txtIdentityCard" />
 
                 <Grid item xs={12} lg={6}>
 
 
-                    <p><label htmlFor="file" >
+                    <p><label>
                         <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
-                            Click here to Upload your front citizen identification
+                            Front citizen identification
                         </Button>
                     </label></p>
-                    <p><input type="file" accept="image/*" name="image" id="file" onChange={loadFile} style={{ display: "none" }} /></p>
+                    <p><input type="file" accept="image/*" name="image" id="file" onChange={loadFile} /></p>
                     <p><img id="output" width="200" height="200" /></p>
 
                 </Grid>
 
                 <Grid item xs={12} lg={6}>
 
-                    <p><label htmlFor="file2" >
+                    <p><label>
                         <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
-                            Click here to Upload your backside citizen identification
+                            Backside citizen identification
                         </Button>
                     </label></p>
-                    <p><input type="file" accept="image/*" name="image" id="file2" onChange={loadFile2} style={{ display: "none" }} /></p>
+                    <p><input type="file" accept="image/*" name="image" id="file2" onChange={loadFile2} /></p>
                     <p><img id="output2" width="200" height="200" /></p>
 
 
@@ -199,30 +228,28 @@ export default function SubmitLicense(props) {
 
                 <Grid item xs={12} lg={6}>
 
-                    <p><label htmlFor="file3" >
+                    <p><label>
                         <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
-                            Click here to Upload your front citizen identification with your face
+                            Front citizen identification with your face
                         </Button>
                     </label></p>
-                    <p><input type="file" accept="image/*" name="image" id="file3" onChange={loadFile3} style={{ display: "none" }} /></p>
+                    <p><input type="file" accept="image/*" name="image" id="file3" onChange={loadFile3} /></p>
                     <p><img id="output3" width="200" height="200" /></p>
 
                 </Grid>
 
                 <Grid item xs={12} lg={6}>
 
-                    <p><label htmlFor="file4" >
+                    <p><label>
                         <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
-                            Click here to Upload your License
+                            License
                         </Button>
                     </label></p>
-                    <p><input type="file" accept="image/*" name="image" id="file4" onChange={loadFile4} style={{ display: "none" }} /></p>
+                    <p><input type="file" accept="image/*" name="image" id="file4" onChange={loadFile4} /></p>
                     <p><img id="output4" width="200" height="200" /></p>
-
-
                 </Grid>
 
-                <Grid item xs={12} lg={12}>
+                <Grid item xs={12} lg={12}>                  
                     <Button id="submitButton" variant="contained" color="secondary" onClick={uploadFile}>Submit</Button>
                 </Grid>
             </Grid>
