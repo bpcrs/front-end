@@ -81,6 +81,7 @@ export default function CarDetails(props) {
 
   useEffect(() => {
     dispatch(fetchReviewList(1, 10, 45));
+    //props.match.params.id
     dispatch(fetchCarDetail(props.match.params.id));
   }, [dispatch, props]);
 

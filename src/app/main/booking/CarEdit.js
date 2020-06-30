@@ -18,6 +18,8 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Layout from "../../layout";
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCarDetail } from "./booking.action";
 // import { useDispatch, useSelector } from "react-redux";
 
 const ITEM_HEIGHT = 48;
@@ -60,11 +62,15 @@ export default function CarEdits(props) {
   const maxNumber = 10;
   const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
 
+  const dispatch = useDispatch();
+
   const classes = useStyles();
 
   const [state, setState] = useState({
     checkedAvailable: true,
   });
+
+  const carDetail = useSelector((state) => state.booking.carDetail);
 
   const [btnNameState, setBtnNameState] = useState(true);
   const [btnVinState, setBtnVinState] = useState(true);
@@ -80,7 +86,9 @@ export default function CarEdits(props) {
     });
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+    dispatch(fetchCarDetail(props.match.params.id));
+  }, [dispatch, props]);
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -150,7 +158,7 @@ export default function CarEdits(props) {
                 id="input-with-icon-textfield"
                 label="Brand"
                 className={classes.textField}
-                value="Vinfast"
+                value={carDetail.branch}
                 disabled
                 variant="outlined"
                 InputProps={{
@@ -174,7 +182,7 @@ export default function CarEdits(props) {
                 id="input-with-icon-textfield"
                 label="Model"
                 variant="outlined"
-                value="Lux SA 2.0"
+                value={carDetail.model}
                 className={classes.textField}
                 disabled
               />
@@ -189,7 +197,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.name}
                 label="Name"
                 variant="outlined"
                 disabled={btnNameState}
@@ -286,7 +294,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.vin}
                 label="Vin number"
                 variant="outlined"
                 disabled={btnVinState}
@@ -308,7 +316,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.seat}
                 label="Seat"
                 variant="outlined"
                 disabled={btnSeatState}
@@ -330,7 +338,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.sound}
                 label="Sound"
                 variant="outlined"
                 disabled={btnSoundState}
@@ -352,7 +360,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.price}
                 label="Price (per day)"
                 variant="outlined"
                 disabled={btnPriceState}
@@ -374,7 +382,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value="60B2-02914"
+                value={carDetail.plateNum}
                 label="Plate number"
                 variant="outlined"
                 disabled={btnPlateState}

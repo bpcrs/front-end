@@ -1,5 +1,5 @@
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT } from "../../services/api";
+import { GET, ENDPOINT, POST } from "../../services/api";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CARS_FAILURE = "[CAR] FETCH DATA FAILURE";
@@ -121,6 +121,22 @@ export function fetchCarDetail(id) {
   };
 }
 
-export function postCarUpdate(car) {
-  return (dispatch) => {};
+export function postCarUpdate(id, car) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.CAR_CONTROLLER_GETBYID(id), car);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postCarEditSuccess(response.data));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        console.log(error);
+        dispatch(postCarEditFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }
