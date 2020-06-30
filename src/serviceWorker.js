@@ -133,6 +133,7 @@ export function unregister() {
     });
   }
 }
+
 window.self.addEventListener("notificationclick", function (event) {
   var notification = event.notification;
   var action = event.action;
