@@ -1,30 +1,22 @@
 
 import React from 'react'
 import {
-    //FormControl,
     Button,
-    // InputLabel,
-    // MenuItem,
     TextField,
-    // Card, Select,
-    Typography,
     Grid,
     makeStyles
 } from '@material-ui/core';
 
-// import ImageUploading from "react-images-uploading";
-
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-// import EditIcon from '@material-ui/icons/Edit';
-// import DeleteIcon from '@material-ui/icons/Delete';
 import Layout from '../../layout';
 import Paper from '@material-ui/core/Paper';
-import ProgressBar from 'react-customizable-progressbar'
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+// import ProgressBar from 'react-customizable-progressbar'
+// import Dialog from '@material-ui/core/Dialog';
+// import DialogActions from '@material-ui/core/DialogActions';
+// import DialogContent from '@material-ui/core/DialogContent';
+// import DialogContentText from '@material-ui/core/DialogContentText';
+// import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from './firebase';
 // import event from '';
 const ITEM_HEIGHT = 48;
@@ -54,27 +46,21 @@ const useStyles = makeStyles(theme => ({
     card: {
         margin: 20,
         padding: 20
+    },
+    progressBar: {
+        display: 'flex',
+        '& > * + *': {
+            marginLeft: theme.spacing(2),
+        },
     }
 
 }));
 
-
-
-
 export default function SubmitLicense(props) {
-
-    // const maxNumber = 10;
-    // const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
 
     const classes = useStyles();
 
-    // const onChange = imageList => {
-    //     // data for submit
-    //     console.log(imageList);
-    // };
-
     var fileArr = new Array();
-   
     let uploadFile = () => {
         if (fileArr.length > 0) {
             // Create the file metadata
@@ -85,11 +71,11 @@ export default function SubmitLicense(props) {
             var today = new Date();
             var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
             var count = 0;
-            var nameUser = document.getElementById("txtFullName").value;
+            var flag = false;
             var identityCard = document.getElementById("txtIdentityCard").value;
 
             for (let i = 0; i < fileArr.length; i++) {
-                var uploadTask = firebase.storage().ref('License/' + date + "/" + identityCard).child(fileArr[i].name).put(fileArr[i], metadata);
+                var uploadTask = firebase.storage().ref('License/' + date + "/" + identityCard).child("Picture " + (i + 1)).put(fileArr[i], metadata);
 
                 uploadTask.on(
                     firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -105,16 +91,13 @@ export default function SubmitLicense(props) {
                                 break;
 
                         }
-
-
                         if (progress == 100) {
                             console.log("count: " + count);
                             count = count + 1;
                         }
                         if (count == fileArr.length) {
                             count = 0;
-                            refreshPage();
-
+                            flag = true;
                         }
                     },
                     function (error) {
@@ -132,16 +115,63 @@ export default function SubmitLicense(props) {
                                 // Unknown error occurred, inspect error.serverResponse
                                 break;
                         }
+                    },
+                    function () {
+                        if (flag) {
+                            flag = false;
+                            if (count == 0) {
+                                console.log("start get link download!!!")
+                                downloadFile(date, identityCard);
+                            } else {
+                                console.log("check lai cho nay");
+                            }
+                        }
                     }
                 );
             }
-
         } else {
             console.log("Khong co file")
             return;
         }
     }
 
+    var downloadFile = (date, identityCard) => {
+        var storage = firebase.storage();
+        var storageRef = storage.ref('License');
+
+        for (let i = 0; i < fileArr.length; i++) {
+
+            // Create a reference to the file we want to download       
+            var starsRef = storageRef.child(date + "/" + identityCard + "/" + "Picture " + (i + 1));
+
+            // Get the download URL
+            starsRef.getDownloadURL().then(function (url) {
+                // Insert url into an <img> tag to "download"
+                console.log("test vi tri: " + (i + 1) + "-" + url);
+            }).catch(function (error) {
+
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case 'storage/object-not-found':
+                        // File doesn't exist
+                        console.log("File doesn't exist vi tri: " + (i + 1))
+                        break;
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        console.log("User doesn't have permission to access the object")
+                        break;
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect the server response
+                        break;
+                }
+            });
+        }
+
+    };
     var refreshPage = function () {
         // if (flag) {
         window.alert("UpLoad file succcess");
@@ -191,8 +221,11 @@ export default function SubmitLicense(props) {
     return (
 
         <Layout name="License form">
-
             <h1 className="text-center">Update your License</h1>
+            {/* <div className={classes.progressBar}>
+                <CircularProgress />
+                <CircularProgress color="secondary" />
+            </div> */}
             <Grid container spacing={1} component={Paper}>
 
                 <TextField className={classes.textField} label="Full name" id="txtFullName" />
@@ -201,7 +234,6 @@ export default function SubmitLicense(props) {
                 <TextField className={classes.textField} label="Identity Card Number" id="txtIdentityCard" />
 
                 <Grid item xs={12} lg={6}>
-
 
                     <p><label>
                         <Button variant="contained" color="primary" component="span" startIcon={<AccountBoxIcon />}>
@@ -249,7 +281,7 @@ export default function SubmitLicense(props) {
                     <p><img id="output4" width="200" height="200" /></p>
                 </Grid>
 
-                <Grid item xs={12} lg={12}>                  
+                <Grid container justify="center">
                     <Button id="submitButton" variant="contained" color="secondary" onClick={uploadFile}>Submit</Button>
                 </Grid>
             </Grid>

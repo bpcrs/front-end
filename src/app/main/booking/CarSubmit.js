@@ -71,7 +71,7 @@ export default function CarSubmit(props) {
 
             var today = new Date();
             var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-
+            var flag = false;
 
             for (let i = 0; i < imageArr.length; i++) {
                 var uploadTask = firebase.storage().ref('Car/' + date + "/" + identityCard).child(imageArr[i].name).put(imageArr[i], metadata);
@@ -96,7 +96,8 @@ export default function CarSubmit(props) {
 
                         if (count == sizeOfImageArr) {
                             count = 0;
-                            refreshPage();
+                            flag = true;
+                            //refreshPage();
                         }
                     },
                     function (error) {
@@ -114,6 +115,15 @@ export default function CarSubmit(props) {
                                 // Unknown error occurred, inspect error.serverResponse
                                 break;
                         }
+                    },
+                    function () {
+                        if (flag) {
+                            flag = false;
+                            if (count == 0) {
+                                console.log("start get link download");
+                                downloadFile(date, identityCard, imageArr);
+                            }
+                        }
                     }
                 );
             }
@@ -123,12 +133,56 @@ export default function CarSubmit(props) {
         }
     };
 
+
     let upLoadFile = () => {
         var identityCard = document.getElementById("txtIdentityCard").value;
-        var sizeOfImageArr = fileArr.length + fileArr2.length;
-        storeImageToFireBase(fileArr, identityCard, sizeOfImageArr);
-        storeImageToFireBase(fileArr2, identityCard, sizeOfImageArr);
+        // var sizeOfImageArr = fileArr.length + fileArr2.length;
+        // storeImageToFireBase(fileArr, identityCard, sizeOfImageArr);
+        // storeImageToFireBase(fileArr2, identityCard, sizeOfImageArr);
+       ;
+        storeImageToFireBase(fileArr, identityCard, fileArr.length);
+        storeImageToFireBase(fileArr2, identityCard, fileArr2.length);
     };
+
+    
+    var downloadFile = (date, identityCard, file) => {
+        var storage = firebase.storage();
+        var storageRef = storage.ref('Car');
+
+        for (let i = 0; i < file.length; i++) {
+
+            // Create a reference to the file we want to download       
+            var starsRef = storageRef.child(date + "/" + identityCard + "/" + file[i].name);
+
+            // Get the download URL
+            starsRef.getDownloadURL().then(function (url) {
+                // Insert url into an <img> tag to "download"
+                console.log("test vi tri: " + (i + 1) + "-" + url);
+            }).catch(function (error) {
+
+                // A full list of error codes is available at
+                // https://firebase.google.com/docs/storage/web/handle-errors
+                switch (error.code) {
+                    case 'storage/object-not-found':
+                        // File doesn't exist
+                        console.log("File doesn't exist vi tri: " + (i + 1))
+                        break;
+                    case 'storage/unauthorized':
+                        // User doesn't have permission to access the object
+                        console.log("User doesn't have permission to access the object")
+                        break;
+                    case 'storage/canceled':
+                        // User canceled the upload
+                        break;
+                    case 'storage/unknown':
+                        // Unknown error occurred, inspect the server response
+                        break;
+                }
+            });
+        }
+
+    };
+
     var refreshPage = function () {
         // if (flag) {
         window.alert("UpLoad file succcess");
