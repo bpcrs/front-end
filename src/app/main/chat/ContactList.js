@@ -22,14 +22,11 @@ const useStyles = makeStyles((theme) => ({
   },
   contactButton: {
     position: "absolute",
-    top: 8,
+    top: 0,
     right: 0,
     bottom: 8,
     content: "''",
     width: 4,
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    backgroundColor: theme.palette.primary.main,
   },
 
   unreadBadge: {
@@ -170,7 +167,7 @@ const ContactList = () => {
   );
 
   return (
-    <Grid container item lg={12}>
+    <div style={{ width: "100%" }}>
       {users
         .filter((user) => user.id !== userLogged.id)
         .map((user, index) => (
@@ -186,7 +183,7 @@ const ContactList = () => {
             <ContactButton {...user} isActive={user.id === selectedUser.id} />
           </Grid>
         ))}
-    </Grid>
+    </div>
   );
 };
 

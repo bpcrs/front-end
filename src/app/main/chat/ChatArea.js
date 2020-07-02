@@ -13,6 +13,7 @@ import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
 import ContactList from "./ContactList";
 import { useSelector } from "react-redux";
+import Chat from "./Chat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,7 +85,7 @@ export const ChatArea = () => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   console.log(selectedUser);
   return (
-    <Grid container className="rounded-8">
+    <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>
         <Grid
           container
@@ -128,7 +129,7 @@ export const ChatArea = () => {
             lg={4}
             direction="column"
             // className="px-8 py-8"
-            justify="center"
+            justify="flex-start"
             alignContent="flex-start"
           >
             <ContactList />
@@ -138,40 +139,12 @@ export const ChatArea = () => {
             container
             lg={8}
             direction="column"
-            className="px-16 py-16"
-            justify="center"
+            className="px-8 py-8"
+            justify="flex-start"
             alignContent="flex-start"
             style={{ backgroundColor: "#F2F2F2" }}
           >
-            <Grid item lg>
-              <div className={classes.root}>
-                <StyledBadge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  variant="dot"
-                >
-                  <Avatar src="" />
-                </StyledBadge>
-              </div>
-            </Grid>
-            <Grid lg={10} item>
-              <Typography
-                component="span"
-                className="normal-case font-600 flex"
-              >
-                Thanh Hung
-              </Typography>
-              <Typography
-                className="text-11"
-                color="textSecondary"
-                variant="caption"
-              >
-                hungpt.se@gmail.com
-              </Typography>
-            </Grid>
+            <Chat />
           </Grid>
         </Grid>
       </Paper>
