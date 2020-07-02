@@ -128,19 +128,11 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     whiteSpace: "nowrap",
   },
-  bottom: {
-    background: theme.palette.background.default,
-    borderTop: "1px solid rgba(0, 0, 0, 0.13)",
-    position: "relative",
-    bottom: 0,
-  },
-  inputWrapper: {
-    borderRadius: 24,
-  },
   fullHeight: {
     height: "100%",
-    minHeight: "100vh",
-    maxHeight: "100vh",
+    minHeight: "80vh",
+    maxHeight: "80vh",
+    position: "relative",
   },
   fullWidth: {
     maxWidth: "100%",
@@ -152,7 +144,7 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
   },
   chat: {
-    paddingBottom: theme.spacing(16),
+    paddingBottom: theme.spacing(8),
   },
 }));
 
@@ -204,86 +196,74 @@ const Chat = () => {
   };
 
   return (
-    <Paper className={classes.fullHeight}>
-      <Grid
-        container
-        direction="row"
-        alignItems="stretch"
-        className={classes.fullHeight}
-      >
-        <Grid item lg className={classes.fullWidth}>
-          <Grid>
-            <Fab color="primary" aria-label="add">
-              <AddIcon />
-              Add
-            </Fab>
-          </Grid>
-          <ScrollToBottom>
-            <Grid>
-              <Grid item className={classes.fullHeight}>
-                <div className="flex flex-col flex-1 items-center justify-center pl-12">
-                  {/* <Icon className="text-128" color="disabled">chat</Icon> */}
-                  <Grid container spacing={1} className={classes.chat}>
-                    {msg
-                      .sort((first, second) => first.createAt - second.createAt)
-                      .map((message) => (
-                        <Message {...message} />
-                      ))}
-                  </Grid>
-                </div>
-              </Grid>
+    <Grid
+      container
+      direction="row"
+      alignItems="stretch"
+      className={classes.fullHeight}
+    >
+      <Grid item lg className={classes.fullWidth}>
+        {/* <Grid>
+          <Fab variant="extended" size="medium">
+            <Icon>attach_money_sharp</Icon>
+            Pricing
+          </Fab>
+          <Fab variant="extended" size="medium">
+            <Icon>attach_money_sharp</Icon>
+            Pricing
+          </Fab>
+        </Grid> */}
+        <ScrollToBottom>
+          <Grid item className={classes.fullHeight}>
+            <Grid container className={classes.chat}>
+              {msg
+                .sort((first, second) => first.createAt - second.createAt)
+                .map((message) => (
+                  <Message {...message} />
+                ))}
             </Grid>
-          </ScrollToBottom>
-        </Grid>
-        <Grid item lg={12}>
-          <div
-            className={classNames(
-              classes.bottom,
-              "py-4 px-8",
-              classes.overlay,
-              classes.fullWidth
-            )}
-            onKeyDown={(e) => (e.key === "Enter" ? onMessageSubmit() : "")}
-          >
-            <Paper
-              className={classNames(
-                classes.inputWrapper,
-                "flex items-center relative"
-              )}
-            >
-              <TextField
-                value={sendMessage}
-                autoFocus={false}
-                // id={message}
-                onChange={(e) => setSendMessage(e.currentTarget.value)}
-                className="flex-1"
-                InputProps={{
-                  disableUnderline: true,
-                  classes: {
-                    root: "ml-16 mr-48 my-8",
-                    input: "",
-                  },
-                  placeholder: "Type your message",
-                }}
-                InputLabelProps={{
-                  shrink: false,
-                  className: classes.bootstrapFormLabel,
-                }}
-              />
-              <IconButton className="absolute pin-r pin-t">
-                <Icon className="text-24">attach_file</Icon>
-              </IconButton>
-              <IconButton
-                className="absolute pin-r pin-t"
-                onClick={() => onMessageSubmit()}
-              >
-                <Icon className="text-24">send</Icon>
-              </IconButton>
-            </Paper>
-          </div>
-        </Grid>
+          </Grid>
+        </ScrollToBottom>
       </Grid>
-    </Paper>
+      <Grid item lg={12}>
+        <div
+          className={classNames(classes.bottom, "py-4 px-8", classes.overlay)}
+          onKeyDown={(e) => (e.key === "Enter" ? onMessageSubmit() : "")}
+        >
+          <Paper className={classNames("flex items-center relative")}>
+            <TextField
+              value={sendMessage}
+              autoFocus={false}
+              // id={message}
+              onChange={(e) => setSendMessage(e.currentTarget.value)}
+              // className="flex-1"
+              style={{ width: "100%" }}
+              InputProps={{
+                disableUnderline: true,
+                classes: {
+                  root: "ml-16 mr-8 my-8",
+                  input: "",
+                },
+                placeholder: "Type your message",
+              }}
+              InputLabelProps={{
+                shrink: false,
+                className: classes.bootstrapFormLabel,
+              }}
+            />
+            {/* <IconButton className="absolute pin-r pin-t">
+              <Icon className="text-24">attach_file</Icon>
+            </IconButton> */}
+            <IconButton
+              className="absolute pin-r pin-t"
+              onClick={() => onMessageSubmit()}
+            >
+              <Icon className="text-24">send</Icon>
+            </IconButton>
+          </Paper>
+        </div>
+      </Grid>
+    </Grid>
   );
 };
 export default Chat;

@@ -104,7 +104,7 @@ class UserMenu extends Component {
               </MenuItem>
               <MenuItem
                 component={Link}
-                to="/apps/mail"
+                to="/chat"
                 onClick={this.userMenuClose}
               >
                 <ListItemIcon>
