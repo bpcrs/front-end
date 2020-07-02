@@ -6,8 +6,13 @@ import {
   Badge,
   makeStyles,
   Paper,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
+import { useState } from "react";
+import ContactList from "./ContactList";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,9 +52,37 @@ const StyledBadge = withStyles((theme) => ({
     },
   },
 }))(Badge);
-
+const User = ({ displayName, email, photoURL }) => {
+  return (
+    <Grid container className="px-8 py-8">
+      <Grid item lg>
+        <StyledBadge
+          overlap="circle"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          variant="dot"
+        >
+          <Avatar src={photoURL} />
+        </StyledBadge>
+      </Grid>
+      <Grid lg={10} item>
+        <Typography component="span" className="normal-case font-600 flex">
+          {displayName}
+        </Typography>
+        <Typography className="text-11" color="textSecondary" variant="caption">
+          {email}
+        </Typography>
+      </Grid>
+    </Grid>
+  );
+};
 export const ChatArea = () => {
   const classes = useStyles();
+  const userLogged = useSelector((state) => state.auth.user);
+  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  console.log(selectedUser);
   return (
     <Grid container className="rounded-8">
       <Paper elevation={5} style={{ width: "100%" }}>
@@ -67,37 +100,8 @@ export const ChatArea = () => {
             className="px-16 py-16"
             justify="center"
             alignContent="flex-start"
-            style={{ backgroundColor: "#EFF1F6" }}
           >
-            <Grid item lg>
-              <div className={classes.root}>
-                <StyledBadge
-                  overlap="circle"
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  variant="dot"
-                >
-                  <Avatar src="" />
-                </StyledBadge>
-              </div>
-            </Grid>
-            <Grid lg={10} item>
-              <Typography
-                component="span"
-                className="normal-case font-600 flex"
-              >
-                Thanh Hung
-              </Typography>
-              <Typography
-                className="text-11"
-                color="textSecondary"
-                variant="caption"
-              >
-                hungpt.se@gmail.com
-              </Typography>
-            </Grid>
+            <User {...userLogged} />
           </Grid>
           <Grid
             item
@@ -107,7 +111,37 @@ export const ChatArea = () => {
             className="px-16 py-16"
             justify="center"
             alignContent="flex-start"
-            style={{ backgroundColor: "#A4AFC2" }}
+            style={{ backgroundColor: "#E6E6E6" }}
+          >
+            <User {...selectedUser} />
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          alignItems="stretch"
+          style={{ height: "inherit", backgroundColor: "#F6F6F6" }}
+        >
+          <Grid
+            item
+            container
+            lg={4}
+            direction="column"
+            // className="px-8 py-8"
+            justify="center"
+            alignContent="flex-start"
+          >
+            <ContactList />
+          </Grid>
+          <Grid
+            item
+            container
+            lg={8}
+            direction="column"
+            className="px-16 py-16"
+            justify="center"
+            alignContent="flex-start"
+            style={{ backgroundColor: "#F2F2F2" }}
           >
             <Grid item lg>
               <div className={classes.root}>
