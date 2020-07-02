@@ -132,7 +132,7 @@ const ContactList = () => {
     }
     getImagesContact();
   }, []);
-  const ContactButton = ({ image, fullName, id, isActive }) => (
+  const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
     <Box
       onClick={() => setSelectedContact(id)}
       className={isActive ? classes.contactButton : ""}
@@ -147,19 +147,19 @@ const ContactList = () => {
             }}
             variant="dot"
           >
-            <Avatar src={image} />
+            <Avatar src={photoURL} />
           </StyledBadge>
         </Grid>
         <Grid lg={10} item>
           <Typography component="span" className="normal-case font-600 flex">
-            {fullName}
+            {displayName}
           </Typography>
           <Typography
             className="text-11"
             color="textSecondary"
             variant="caption"
           >
-            hungpt.se@gmail.com
+            {email}
           </Typography>
         </Grid>
       </Grid>
