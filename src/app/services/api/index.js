@@ -36,6 +36,10 @@ export const request = (endpoint, method, params = {}, body = {}) => {
   });
 };
 
+export const PUT = (endpoint, params = {}, body = {}) => {
+  return request(endpoint, "PUT", params, body);
+};
+
 export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,

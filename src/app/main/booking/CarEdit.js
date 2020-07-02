@@ -19,7 +19,7 @@ import Layout from "../../layout";
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCarDetail } from "./booking.action";
+import { fetchCarDetail, putCarUpdate } from "./booking.action";
 // import { useDispatch, useSelector } from "react-redux";
 
 const ITEM_HEIGHT = 48;
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: ITEM_HEIGHT * 4.5,
   },
   textField: {
-    width: "85%",
+    width: "100%",
     margin: theme.spacing(1),
   },
   card: {
@@ -57,8 +57,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CarEdits(props) {
-  // const [brand, setBrand] = React.useState('');
-  // const [model, setModel] = React.useState('');
   const maxNumber = 10;
   const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
 
@@ -66,29 +64,32 @@ export default function CarEdits(props) {
 
   const classes = useStyles();
 
-  const [state, setState] = useState({
-    checkedAvailable: true,
-  });
-
   const carDetail = useSelector((state) => state.booking.carDetail);
 
-  const [btnNameState, setBtnNameState] = useState(true);
-  const [btnVinState, setBtnVinState] = useState(true);
-  const [btnSeatState, setBtnSeatState] = useState(true);
-  const [btnSoundState, setBtnSoundState] = useState(true);
-  const [btnPriceState, setBtnPriceState] = useState(true);
-  const [btnPlateState, setBtnPlateState] = useState(true);
+  const [editState, setEditState] = useState(false);
 
-  const handleChange = (event) => {
-    setState({
-      state,
-      [event.target.name]: event.target.checked,
-    });
+  const [currentCar, setCurrentCar] = useState({});
+
+  const handleInputChange = (event) => {
+    setCurrentCar({ ...currentCar, [event.target.name]: event.target.value });
+  };
+
+  const handleAvailable = (event) => {
+    setCurrentCar({ currentCar, available: event.target.checked });
+  };
+
+  const updateCar = () => {
+    dispatch(putCarUpdate(currentCar.id, currentCar));
   };
 
   useEffect(() => {
-    dispatch(fetchCarDetail(props.match.params.id));
-  }, [dispatch, props]);
+    const fetchCar = () => {
+      dispatch(fetchCarDetail(props.match.params.id));
+      setCurrentCar(carDetail);
+    };
+    fetchCar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carDetail.id]);
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -151,6 +152,20 @@ export default function CarEdits(props) {
             <Grid
               spacing={1}
               container
+              justify="flex-end"
+              alignItems="flex-end"
+            >
+              <IconButton onClick={() => setEditState(false)}>
+                <Icon>edit</Icon>
+              </IconButton>
+              <IconButton onClick={() => setEditState(true)}>
+                <Icon>done</Icon>
+              </IconButton>
+            </Grid>
+
+            <Grid
+              spacing={1}
+              container
               justify="space-between"
               alignItems="baseline"
             >
@@ -196,18 +211,14 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={carDetail.name}
+                id="name"
+                value={currentCar.name}
                 label="Name"
+                name="name"
                 variant="outlined"
-                disabled={btnNameState}
+                onChange={handleInputChange}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnNameState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnNameState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
 
             <Grid
@@ -221,9 +232,10 @@ export default function CarEdits(props) {
                 classes={classes.switchButton}
                 control={
                   <IOSSwitch
-                    checked={state.checkedAvailable}
-                    onChange={handleChange}
-                    name="checkedAvailable"
+                    id="isAvailable"
+                    checked={currentCar.available}
+                    onChange={handleAvailable}
+                    name="isAvailable"
                   />
                 }
                 label="Available"
@@ -294,17 +306,12 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value={carDetail.vin}
+                value={currentCar.vin}
                 label="Vin number"
                 variant="outlined"
-                disabled={btnVinState}
+                onChange={handleInputChange}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnVinState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnVinState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
 
             <Grid
@@ -316,17 +323,11 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value={carDetail.seat}
+                value={currentCar.seat}
                 label="Seat"
                 variant="outlined"
-                disabled={btnSeatState}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnSeatState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnSeatState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
 
             <Grid
@@ -338,17 +339,11 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value={carDetail.sound}
+                value={currentCar.sound}
                 label="Sound"
                 variant="outlined"
-                disabled={btnSoundState}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnSoundState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnSoundState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
 
             <Grid
@@ -360,17 +355,11 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value={carDetail.price}
+                value={currentCar.price}
                 label="Price (per day)"
                 variant="outlined"
-                disabled={btnPriceState}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnPriceState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnPriceState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
 
             <Grid
@@ -382,17 +371,11 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="standard-required"
-                value={carDetail.plateNum}
+                value={currentCar.plateNum}
                 label="Plate number"
                 variant="outlined"
-                disabled={btnPlateState}
+                disabled={editState}
               />
-              <IconButton onClick={() => setBtnPlateState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setBtnPlateState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
             </Grid>
           </Card>
         </Grid>
@@ -400,6 +383,7 @@ export default function CarEdits(props) {
           <Button
             variant="contained"
             color="primary"
+            onClick={updateCar}
             startIcon={<PublishIcon />}
           >
             Update
