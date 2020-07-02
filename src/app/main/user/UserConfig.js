@@ -1,20 +1,21 @@
 // import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 import User from './User';
+import Profile from './Profile';
 
 export const UserConfig = {
     settings: {
         layout: {
             config: {
-                navbar        : {
+                navbar: {
                     display: true
                 },
-                toolbar       : {
+                toolbar: {
                     display: false
                 },
-                footer        : {
+                footer: {
                     display: false
                 },
-                leftSidePanel : {
+                leftSidePanel: {
                     display: false
                 },
                 rightSidePanel: {
@@ -23,10 +24,14 @@ export const UserConfig = {
             }
         }
     },
-    routes  : [
+    routes: [
         {
-            path     : '/user',
+            path: '/user',
             component: User
+        },
+        {
+            path: '/profile',
+            component: Profile
         }
     ]
 };
