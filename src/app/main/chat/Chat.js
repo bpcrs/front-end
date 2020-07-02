@@ -213,9 +213,13 @@ const Chat = () => {
       >
         <Grid item lg className={classes.fullWidth}>
           <Grid>
-            <Fab color="primary" aria-label="add">
-              <AddIcon />
-              Add
+            <Fab variant="extended" size="medium">
+              <Icon>attach_money_sharp</Icon>
+              Pricing
+            </Fab>
+            <Fab variant="extended" size="medium">
+              <Icon>attach_money_sharp</Icon>
+              Pricing
             </Fab>
           </Grid>
           <ScrollToBottom>
