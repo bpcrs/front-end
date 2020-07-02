@@ -237,6 +237,7 @@ const Chat = () => {
               // id={message}
               onChange={(e) => setSendMessage(e.currentTarget.value)}
               // className="flex-1"
+              disabled={!selectedUser}
               style={{ width: "100%" }}
               InputProps={{
                 disableUnderline: true,
@@ -244,7 +245,11 @@ const Chat = () => {
                   root: "ml-16 mr-8 my-8",
                   input: "",
                 },
-                placeholder: "Type your message",
+                placeholder: `${
+                  selectedUser.displayName
+                    ? "Type your message to " + selectedUser.displayName
+                    : "Select person to get started"
+                }`,
               }}
               InputLabelProps={{
                 shrink: false,

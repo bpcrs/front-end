@@ -8,16 +8,16 @@ import {
   Paper,
   Tabs,
   Tab,
+  Chip,
+  Icon,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import { useState } from "react";
 import ContactList from "./ContactList";
 import { useSelector } from "react-redux";
 import Chat from "./Chat";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
     "& > *": {
       margin: theme.spacing(1),
     },
@@ -107,14 +107,59 @@ export const ChatArea = () => {
           <Grid
             item
             container
-            lg={8}
+            lg={4}
             direction="column"
             className="px-16 py-16"
             justify="center"
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            <User {...selectedUser} />
+            {selectedUser.id && <User {...selectedUser} />}
+          </Grid>
+          <Grid
+            item
+            container
+            lg={4}
+            direction="column"
+            className="px-16 py-16"
+            justify="center"
+            alignContent="flex-start"
+            style={{ backgroundColor: "#E6E6E6" }}
+          >
+            <div className={classes.root}>
+              <Chip
+                icon={<Icon>done</Icon>}
+                label="Scope"
+                clickable
+                color="secondary"
+                // onClick={handleClick}
+                // onDelete={handleDelete}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Extra"
+                clickable
+                color="primary"
+                // onClick={handleClick}
+                // onDelete={handleDelete}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Insurance"
+                clickable
+                color="primary"
+                // onClick={handleClick}
+                // onDelete={handleDelete}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Warranties"
+                clickable
+                color="primary"
+                // onClick={handleClick}
+                // onDelete={handleDelete}
+              />
+            </div>
           </Grid>
         </Grid>
         <Grid
