@@ -37,7 +37,16 @@ export const request = (endpoint, method, params = {}, body = {}) => {
 };
 
 export const PUT = (endpoint, params = {}, body = {}) => {
-  return request(endpoint, "PUT", params, body);
+  return request(endpoint, "PUT", params, body)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errResponse =
+        (error && error.response && error.response.data) ||
+        (error && error.message);
+      return errResponse;
+    });
 };
 
 export const ENDPOINT = {

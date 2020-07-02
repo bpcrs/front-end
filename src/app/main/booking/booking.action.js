@@ -124,12 +124,14 @@ export function fetchCarDetail(id) {
 
 export function putCarUpdate(id, car) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), car);
+    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), { car });
     request.then(
       (response) => {
         if (response.success) {
           dispatch(postCarEditSuccess(response.data));
+          console.log("Success update car ", response.data);
         } else {
+          console.log("Fail update car");
           dispatch(showMessageError(response.message));
         }
       },
