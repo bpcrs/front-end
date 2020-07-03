@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Paper,
-  TextField,
-  IconButton,
-  Icon,
-  Grid,
-  Fab,
-} from "@material-ui/core";
+import { Paper, TextField, IconButton, Icon, Grid } from "@material-ui/core";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/styles";
 import firebase from "../../firebase/firebase";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
-import AddIcon from "@material-ui/icons/Add";
-import Agreement from "./Agreement";
+// import Agreement from "./Agreement";
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {

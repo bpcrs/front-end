@@ -1,14 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Formsy from "formsy-react";
-import {
-  Typography,
-  MenuItem,
-  TextField,
-  Button,
-  Icon,
-} from "@material-ui/core";
-import { SelectFormsy } from "../../../@fuse/components/formsy";
+import { Typography, TextField, Button } from "@material-ui/core";
 import {
   Hero,
   NavBar,
@@ -21,13 +14,12 @@ import { GradientCurtains } from "landing-blocks/dist/decorations";
 
 import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
-import { APP_PATH, APP_CONST } from "../../../constant";
+import { APP_PATH } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import GoogleMaps from "./GoogleMaps";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
-import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},

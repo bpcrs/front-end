@@ -6,8 +6,6 @@ import {
   Badge,
   makeStyles,
   Paper,
-  Tabs,
-  Tab,
   Chip,
   Icon,
 } from "@material-ui/core";

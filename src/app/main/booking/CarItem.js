@@ -147,7 +147,7 @@ export default function CarItem(props = { isAction: true }) {
               </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
-              <Typography>3.000.000 VND</Typography>
+              <Typography variant="subtitle2">3.000.000 VND</Typography>
             </Grid>
           </Grid>
         </CardActions>

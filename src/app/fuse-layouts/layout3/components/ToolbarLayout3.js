@@ -1,16 +1,13 @@
 import React from "react";
 import {
   AppBar,
-  Hidden,
   MuiThemeProvider,
   Toolbar,
   makeStyles,
 } from "@material-ui/core";
-import { FuseSearch } from "@fuse";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import Logo from "app/fuse-layouts/shared-components/Logo";
-import ChatPanel from "app/main/chat/ChatPanel";
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 import { useSelector } from "react-redux";
 
