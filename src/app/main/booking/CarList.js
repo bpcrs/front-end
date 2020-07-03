@@ -89,7 +89,7 @@ const data = [
   { title: "American History X", value: 1998 },
   { title: "Interstellar", value: 2014 },
 ];
-function CarList() {
+function CarList(props) {
   const size = 8;
   const [currentPage, setCurrentPage] = useState(1);
   const classes = useStyles();
@@ -101,7 +101,7 @@ function CarList() {
     model: [],
   });
   const [chipData, setChipData] = useState([]);
-
+  console.log(props);
   useEffect(() => {
     dispatch(fetchCarList(currentPage, size));
     const filterToChip = () => {
@@ -176,7 +176,7 @@ function CarList() {
             item
             xs={12}
             xl={3}
-            lg={4}
+            lg={3}
             className={classes.paper}
             key={index}
           >

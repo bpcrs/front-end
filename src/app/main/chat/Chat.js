@@ -14,6 +14,7 @@ import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
 import AddIcon from "@material-ui/icons/Add";
+import Agreement from "./Agreement";
 
 const useStyles = makeStyles((theme) => ({
   messageRow: {
@@ -143,6 +144,12 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     left: 0,
   },
+  overlayAgreement: {
+    position: "absolute",
+    bottom: 100,
+    right: 0,
+    left: 0,
+  },
   chat: {
     paddingBottom: theme.spacing(8),
   },
@@ -225,6 +232,11 @@ const Chat = () => {
           </Grid>
         </ScrollToBottom>
       </Grid>
+      {/* <Grid item lg={12}>
+        <div className={classNames("py-4 px-8", classes.overlayAgreement)}>
+          <Agreement />
+        </div>
+      </Grid> */}
       <Grid item lg={12}>
         <div
           className={classNames(classes.bottom, "py-4 px-8", classes.overlay)}

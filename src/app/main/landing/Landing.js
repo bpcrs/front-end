@@ -1,7 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Formsy from "formsy-react";
-import { Typography, MenuItem, TextField, Button } from "@material-ui/core";
+import {
+  Typography,
+  MenuItem,
+  TextField,
+  Button,
+  Icon,
+} from "@material-ui/core";
 import { SelectFormsy } from "../../../@fuse/components/formsy";
 import {
   Hero,
@@ -15,9 +21,13 @@ import { GradientCurtains } from "landing-blocks/dist/decorations";
 
 import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, APP_CONST } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import { useSelector } from "react-redux";
+import { useState } from "react";
+import GoogleMaps from "./GoogleMaps";
+import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -37,7 +47,20 @@ function Landing() {
   const history = useHistory();
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
-  console.log(userLogged);
+  const [location, setLocation] = useState();
+  const [destination, setDestination] = useState();
+  const [selectedDate, handleDateChange] = useState([null, null]);
+  const handleBooking = () => {
+    history.push({
+      pathname: APP_PATH.CAR_LIST,
+      state: {
+        location,
+        destination,
+        fromDate: selectedDate[0],
+        toDate: selectedDate[1],
+      },
+    });
+  };
   return (
     <div className={classes.paper}>
       <LandingProvider primary="#5D21D2">
@@ -69,47 +92,43 @@ function Landing() {
           subheading={
             <Formsy className="flex flex-col justify-center">
               <div>
-                <TextField
-                  id="datetime-local"
-                  label="Pick-up appointment"
-                  type="datetime-local"
-                  defaultValue="2017-05-24T10:30"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  fullWidth
-                  variant="outlined"
-                  className={classes.paper}
-                />
-                <TextField
-                  id="datetime-local"
-                  label="Drop-off appointment"
-                  type="datetime-local"
-                  defaultValue="2017-05-24T10:30"
-                  className={classes.paper}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  fullWidth
-                  variant="outlined"
-                />
-                <SelectFormsy
-                  name="related-outlined"
+                <div className={classes.paper}>
+                  <DateRangePicker
+                    startText="Pick-up appointment"
+                    endText="Drop-off appointment"
+                    value={selectedDate}
+                    onChange={(date) => handleDateChange(date)}
+                    disablePast
+                    showTodayButton
+                    inputFormat="dd/MM/yyyy"
+                    renderInput={(startProps, endProps) => (
+                      <React.Fragment>
+                        <TextField {...startProps} helperText="" />
+                        <DateRangeDelimiter> to </DateRangeDelimiter>
+                        <TextField {...endProps} helperText="" />
+                      </React.Fragment>
+                    )}
+                  />
+                </div>
+                <GoogleMaps
                   label="Pick-up location"
-                  value="sg"
-                  variant="outlined"
-                  className={classes.paper}
-                >
-                  <MenuItem value="sg">Ho Chi Minh City</MenuItem>
-                  <MenuItem value="olivier">Olivier</MenuItem>
-                  <MenuItem value="kevin">Kevin</MenuItem>
-                </SelectFormsy>
-                <br></br>
+                  onChange={(value) => setLocation(value)}
+                />
+                <GoogleMaps
+                  label="Destination"
+                  onChange={(value) => setDestination(value)}
+                />
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
-                  onClick={() => history.push(APP_PATH.CAR_LIST)}
+                  onClick={handleBooking}
+                  disabled={
+                    !location ||
+                    !destination ||
+                    !selectedDate[0] ||
+                    !selectedDate[1]
+                  }
                 >
                   Book now
                 </Button>

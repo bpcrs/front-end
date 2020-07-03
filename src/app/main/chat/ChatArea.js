@@ -83,7 +83,6 @@ export const ChatArea = () => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  console.log(selectedUser);
   return (
     <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>
@@ -115,6 +114,7 @@ export const ChatArea = () => {
             style={{ backgroundColor: "#E6E6E6" }}
           >
             {selectedUser.id && <User {...selectedUser} />}
+            Status: Dealing
           </Grid>
           <Grid
             item
