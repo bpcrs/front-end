@@ -1,99 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Paper, TextField, IconButton, Icon, Grid } from "@material-ui/core";
+import {
+  Paper,
+  TextField,
+  IconButton,
+  Icon,
+  Grid,
+  Collapse,
+} from "@material-ui/core";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/styles";
 import firebase from "../../firebase/firebase";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
-// import Agreement from "./Agreement";
+import Agreement from "./Agreement";
 
 const useStyles = makeStyles((theme) => ({
-  messageRow: {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "flex-end",
-    padding: "0 16px 4px 16px",
-    flex: "0 0 auto",
-    "&.contact": {
-      "& $bubble": {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-        "& $time": {
-          marginLeft: 12,
-        },
-      },
-      "&.first-of-group": {
-        "& $bubble": {
-          borderTopLeftRadius: 20,
-        },
-      },
-      "&.last-of-group": {
-        "& $bubble": {
-          borderBottomLeftRadius: 20,
-        },
-      },
-    },
-    "&.me": {
-      paddingLeft: 40,
-
-      "& $avatar": {
-        order: 2,
-        margin: "0 0 0 16px",
-      },
-
-      "& $bubble": {
-        marginLeft: "auto",
-        backgroundColor: theme.palette.grey[300],
-        color: theme.palette.getContrastText(theme.palette.grey[300]),
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderTopRightRadius: 5,
-        borderBottomRightRadius: 5,
-        "& $time": {
-          justifyContent: "flex-end",
-          right: 0,
-          marginRight: 12,
-        },
-      },
-      "&.first-of-group": {
-        "& $bubble": {
-          borderTopRightRadius: 20,
-        },
-      },
-
-      "&.last-of-group": {
-        "& $bubble": {
-          borderBottomRightRadius: 20,
-        },
-      },
-    },
-    "&.contact + .me, &.me + .contact": {
-      paddingTop: 20,
-      marginTop: 20,
-    },
-    "&.first-of-group": {
-      "& $bubble": {
-        borderTopLeftRadius: 20,
-        paddingTop: 13,
-      },
-    },
-    "&.last-of-group": {
-      "& $bubble": {
-        borderBottomLeftRadius: 20,
-        paddingBottom: 13,
-        "& $time": {
-          display: "flex",
-        },
-      },
-    },
-  },
   avatar: {
     position: "absolute",
     left: -32,
@@ -136,12 +58,6 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     left: 0,
   },
-  overlayAgreement: {
-    position: "absolute",
-    bottom: 100,
-    right: 0,
-    left: 0,
-  },
   chat: {
     paddingBottom: theme.spacing(8),
   },
@@ -154,7 +70,7 @@ const Chat = () => {
   const userLogged = useSelector((state) => state.auth.user);
   const [msg, setMsg] = useState([]);
   const [sizeMsg, setSizeMsg] = useState(20);
-
+  const agreement = useSelector((state) => state.chat.agreement);
   useEffect(() => {
     setMsg([]);
     async function getMsgFromFirebase() {
@@ -218,59 +134,60 @@ const Chat = () => {
               {msg
                 .sort((first, second) => first.createAt - second.createAt)
                 .map((message) => (
-                  <Message {...message} />
+                  <Message key={message.createAt} {...message} />
                 ))}
             </Grid>
           </Grid>
         </ScrollToBottom>
       </Grid>
-      {/* <Grid item lg={12}>
-        <div className={classNames("py-4 px-8", classes.overlayAgreement)}>
+      <Grid item lg={12}>
+        <div className={classNames("py-4 px-8", classes.overlay)}>
           <Agreement />
         </div>
-      </Grid> */}
+      </Grid>
       <Grid item lg={12}>
-        <div
-          className={classNames(classes.bottom, "py-4 px-8", classes.overlay)}
-          onKeyDown={(e) => (e.key === "Enter" ? onMessageSubmit() : "")}
-        >
-          <Paper className={classNames("flex items-center relative")}>
-            <TextField
-              value={sendMessage}
-              autoFocus={false}
-              // id={message}
-              onChange={(e) => setSendMessage(e.currentTarget.value)}
-              // className="flex-1"
-              disabled={!selectedUser}
-              style={{ width: "100%" }}
-              InputProps={{
-                disableUnderline: true,
-                classes: {
-                  root: "ml-16 mr-8 my-8",
-                  input: "",
-                },
-                placeholder: `${
-                  selectedUser.displayName
-                    ? "Type your message to " + selectedUser.displayName
-                    : "Select person to get started"
-                }`,
-              }}
-              InputLabelProps={{
-                shrink: false,
-                className: classes.bootstrapFormLabel,
-              }}
-            />
-            {/* <IconButton className="absolute pin-r pin-t">
+        <Collapse in={!agreement.isOpen}>
+          <div
+            className={classNames(classes.bottom, "py-4 px-8", classes.overlay)}
+            onKeyDown={(e) => (e.key === "Enter" ? onMessageSubmit() : "")}
+          >
+            <Paper className={classNames("flex items-center relative")}>
+              <TextField
+                value={sendMessage}
+                autoFocus={false}
+                // id={message}
+                onChange={(e) => setSendMessage(e.currentTarget.value)}
+                disabled={!selectedUser}
+                style={{ width: "100%" }}
+                InputProps={{
+                  disableUnderline: true,
+                  classes: {
+                    root: "ml-16 mr-8 my-8",
+                    input: "",
+                  },
+                  placeholder: `${
+                    selectedUser.displayName
+                      ? "Type your message to " + selectedUser.displayName
+                      : "Select person to get started"
+                  }`,
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                  className: classes.bootstrapFormLabel,
+                }}
+              />
+              {/* <IconButton className="absolute pin-r pin-t">
               <Icon className="text-24">attach_file</Icon>
             </IconButton> */}
-            <IconButton
-              className="absolute pin-r pin-t"
-              onClick={() => onMessageSubmit()}
-            >
-              <Icon className="text-24">send</Icon>
-            </IconButton>
-          </Paper>
-        </div>
+              <IconButton
+                className="absolute pin-r pin-t"
+                onClick={() => onMessageSubmit()}
+              >
+                <Icon className="text-24">send</Icon>
+              </IconButton>
+            </Paper>
+          </div>
+        </Collapse>
       </Grid>
     </Grid>
   );

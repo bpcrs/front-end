@@ -11,8 +11,9 @@ import {
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
+import { openAgreement } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,6 +82,10 @@ export const ChatArea = () => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const dispatch = useDispatch();
+  const handleOpenAgreement = (type) => {
+    dispatch(openAgreement(type));
+  };
   return (
     <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>
@@ -130,32 +135,28 @@ export const ChatArea = () => {
                 label="Scope"
                 clickable
                 color="secondary"
-                // onClick={handleClick}
-                // onDelete={handleDelete}
+                onClick={() => handleOpenAgreement("SCOPE")}
               />
               <Chip
                 icon={<Icon>error</Icon>}
                 label="Extra"
                 clickable
                 color="primary"
-                // onClick={handleClick}
-                // onDelete={handleDelete}
+                onClick={() => handleOpenAgreement("SCOPE")}
               />
               <Chip
                 icon={<Icon>error</Icon>}
                 label="Insurance"
                 clickable
                 color="primary"
-                // onClick={handleClick}
-                // onDelete={handleDelete}
+                onClick={() => handleOpenAgreement("SCOPE")}
               />
               <Chip
                 icon={<Icon>error</Icon>}
                 label="Warranties"
                 clickable
                 color="primary"
-                // onClick={handleClick}
-                // onDelete={handleDelete}
+                onClick={() => handleOpenAgreement("SCOPE")}
               />
             </div>
           </Grid>

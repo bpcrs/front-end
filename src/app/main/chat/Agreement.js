@@ -8,52 +8,89 @@ import {
   DialogActions,
   DialogContentText,
   Paper,
+  Collapse,
+  Box,
+  Slider,
+  Typography,
 } from "@material-ui/core";
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
+import { useSelector, useDispatch } from "react-redux";
+import { closeAgreement } from "./chat.action";
+import { withStyles } from "@material-ui/styles";
+import { useState } from "react";
+const PrettoSlider = withStyles({
+  root: {
+    height: 6,
+  },
+  thumb: {
+    height: 24,
+    width: 24,
+    backgroundColor: "#fff",
+    border: "2px solid currentColor",
+    marginTop: -8,
+    marginLeft: -12,
+    "&:focus, &:hover, &$active": {
+      boxShadow: "inherit",
+    },
+  },
+  active: {},
+  valueLabel: {
+    left: "calc(-50% + 4px)",
+  },
+  track: {
+    height: 8,
+    borderRadius: 4,
+  },
+  rail: {
+    height: 8,
+    borderRadius: 4,
+  },
+})(Slider);
 export default function Agreement() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
+  const agreement = useSelector((state) => state.chat.agreement);
+  const dispatch = useDispatch();
+  const [scope, setScope] = useState(20);
+  const AgreementByType = () => {
+    switch (agreement.type) {
+      case "SCOPE":
+        return (
+          <Box className="px-4 py-4">
+            <PrettoSlider
+              valueLabelDisplay="on"
+              aria-label="pretto slider"
+              defaultValue={20}
+              onChange={(e, newValue) => {
+                setScope(newValue);
+              }}
+            />
+            <Typography>
+              You offer 60 km not exceeded destination registered.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={() => dispatch(closeAgreement())}
+            >
+              Send
+            </Button>
+          </Box>
+        );
+      default:
+        return <Box>Error</Box>;
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
-    <Paper elevation={5}>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Ok
-      </Button>
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Paper>
+    <Collapse in={agreement.isOpen}>
+      <Paper elevation={5}>
+        <AgreementByType />
+        <Button
+          variant="outlined"
+          color="default"
+          onClick={() => dispatch(closeAgreement())}
+        >
+          Close
+        </Button>
+      </Paper>
+    </Collapse>
   );
 }
