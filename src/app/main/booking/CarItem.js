@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
   const { info } = props;
-
+  console.log(props);
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -137,7 +137,11 @@ export default function CarItem(props = { isAction: true }) {
                 component={Link}
                 variant="contained"
                 startIcon={<FavoriteIcon />}
-                to={`${APP_PATH.CAR_ITEM}/${info.id}`}
+                to={(location) => ({
+                  ...location,
+                  pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
+                  state: { booking: props.booking },
+                })}
               >
                 View
               </Button>

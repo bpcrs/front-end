@@ -180,7 +180,11 @@ function CarList(props) {
             className={classes.paper}
             key={index}
           >
-            <CarItem isAction={true} info={car} />
+            <CarItem
+              isAction={true}
+              info={car}
+              booking={props.location.state}
+            />
           </Grid>
         ))}
       <Grid xs={12} lg={12} item container justify="flex-end">

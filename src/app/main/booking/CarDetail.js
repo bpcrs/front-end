@@ -78,7 +78,8 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-
+  const { booking } = props.location.state;
+  console.log(booking);
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
@@ -305,24 +306,22 @@ export default function CarDetails(props) {
                   <Icon>gps_fixed</Icon>
                   <Typography variant="h6">Pick-up</Typography>
                 </Grid>
-
                 <Typography variant="body2" color="textPrimary" component="p">
-                  March 11, 2019
+                  {new Date(booking.fromDate).toDateString()}
                 </Typography>
                 <Typography variant="body2" color="textPrimary" component="p">
-                  141, 19 Street, An Phu Wards, Distric 2
+                  {booking.location.description}
                 </Typography>
                 <br />
                 <Grid spacing={1} container alignItems="baseline">
                   <Icon>gps_fixed</Icon>
                   <Typography variant="h6">Drop-off</Typography>
                 </Grid>
-
                 <Typography variant="body2" color="textPrimary" component="p">
-                  March 20, 2019
+                  {new Date(booking.toDate).toDateString()}
                 </Typography>
                 <Typography variant="body2" color="textPrimary" component="p">
-                  141, 19 Street, An Phu Wards, Distric 2
+                  {booking.destination.description}
                 </Typography>
               </CardContent>
             </Card>
