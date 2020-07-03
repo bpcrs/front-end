@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Avatar,
-  Tooltip,
   Grid,
   makeStyles,
   Badge,
   Typography,
-  Divider,
   Box,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
-import classNames from "classnames";
 import { setSelectedUser } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 

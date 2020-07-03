@@ -7,7 +7,6 @@ const initialState = {
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
-  console.log(type);
   switch (type) {
     case Actions.FETCH_CARS_SUCCESS: {
       return {

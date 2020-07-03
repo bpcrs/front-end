@@ -101,7 +101,6 @@ function CarList(props) {
     model: [],
   });
   const [chipData, setChipData] = useState([]);
-  console.log(props);
   useEffect(() => {
     dispatch(fetchCarList(currentPage, size));
     const filterToChip = () => {

@@ -85,7 +85,14 @@ export default function CarDetails(props) {
     dispatch(fetchReviewList(1, 10, carId));
     dispatch(fetchCarDetail(carId));
   }, [dispatch, props]);
-
+  const handleBooking = () => {
+    history.push({
+      pathname: APP_PATH.VIEW_BOOKING,
+      state: {
+        booking,
+      },
+    });
+  };
   return (
     <Grid container spacing={3}>
       <Grid item xl={8} lg={8}>
@@ -341,7 +348,7 @@ export default function CarDetails(props) {
                     variant="contained"
                     color="primary"
                     className="w-full mt-20"
-                    onClick={() => history.push(APP_PATH.VIEW_BOOKING)}
+                    onClick={handleBooking}
                   >
                     Book Now
                   </Button>
