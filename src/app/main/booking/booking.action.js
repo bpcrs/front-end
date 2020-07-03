@@ -10,8 +10,11 @@ export const FETCH_REVIEW_FAILURE = "[REVIEW] FETCH DATA FAILURE";
 export const FETCH_CAR_DETAIL_SUCCESS = "[CAR_DETAIL] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_ERROR = "[CAR_DETAIL] FETCH DATA ERROR";
 
-export const POST_CAR_EDIT_SUCCESS = "[CAR_EDIT] POST DATA SUCCESS";
-export const POST_CAR_EDIT_FAILURE = "[CAR_EDIT] POST DATA FAILURE";
+export const PUT_CAR_EDIT_SUCCESS = "[CAR_EDIT] PUT DATA SUCCESS";
+export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
+
+export const FETCH_IMAGE_CAR_SUCCESS = "[IMAGE] FETCH IMAGE SUCCESS";
+export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
 
 export function fetchCarSuccess(cars) {
   return {
@@ -51,15 +54,27 @@ export function fetchCarDetailError(error) {
     payload: error,
   };
 }
-export function postCarEditSuccess(car) {
+export function putCarEditSuccess(car) {
   return {
-    type: POST_CAR_EDIT_SUCCESS,
+    type: PUT_CAR_EDIT_SUCCESS,
     payload: car,
   };
 }
-export function postCarEditFailure(error) {
+export function putCarEditFailure(error) {
   return {
-    type: POST_CAR_EDIT_FAILURE,
+    type: PUT_CAR_EDIT_FAILURE,
+    payload: error,
+  };
+}
+export function fetchImageSuccess(images) {
+  return {
+    type: FETCH_IMAGE_CAR_SUCCESS,
+    payload: images,
+  };
+}
+export function fetchImageFailure(error) {
+  return {
+    type: FETCH_IMAGE_CAR_FAILURE,
     payload: error,
   };
 }
@@ -124,20 +139,40 @@ export function fetchCarDetail(id) {
 
 export function putCarUpdate(id, car) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), { car });
+    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
     request.then(
       (response) => {
         if (response.success) {
-          dispatch(postCarEditSuccess(response.data));
-          console.log("Success update car ", response.data);
+          dispatch(putCarEditSuccess(response.data));
+          // console.log("Success update car ", response.data);
         } else {
-          console.log("Fail update car");
+          // console.log("Fail update car");
           dispatch(showMessageError(response.message));
         }
       },
       (error) => {
         console.log(error);
-        dispatch(postCarEditFailure(error));
+        dispatch(putCarEditFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchImageList(page, size, carId) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.IMAGE_CONTROLLER_GETALL, {
+      page,
+      size,
+      carId,
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchImageSuccess(response.success ? response.data : []));
+        console.log("Images", response.data);
+      },
+      (error) => {
+        dispatch(fetchImageFailure(error));
         dispatch(showMessageError(error.message));
       }
     );

@@ -9,6 +9,7 @@ import {
   Typography,
   IconButton,
   Icon,
+  CardMedia,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import ImageUploading from "react-images-uploading";
@@ -19,7 +20,7 @@ import Layout from "../../layout";
 import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCarDetail, putCarUpdate } from "./booking.action";
+import { fetchCarDetail, putCarUpdate, fetchImageList } from "./booking.action";
 // import { useDispatch, useSelector } from "react-redux";
 
 const ITEM_HEIGHT = 48;
@@ -28,8 +29,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   media: {
-    height: 140,
-    width: "100%",
+    height: 240,
+    width: "50%",
   },
   imageUploading: {
     height: 100,
@@ -66,16 +67,23 @@ export default function CarEdits(props) {
 
   const carDetail = useSelector((state) => state.booking.carDetail);
 
+  // const imageList = useSelector((state) => state.booking.images);
+
+  // console.log(imageList[0]);
+
   const [editState, setEditState] = useState(false);
 
   const [currentCar, setCurrentCar] = useState({});
 
   const handleInputChange = (event) => {
-    setCurrentCar({ ...currentCar, [event.target.name]: event.target.value });
+    setCurrentCar({
+      ...currentCar,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleAvailable = (event) => {
-    setCurrentCar({ currentCar, available: event.target.checked });
+    setCurrentCar({ ...currentCar, available: event.target.checked });
   };
 
   const updateCar = () => {
@@ -90,6 +98,7 @@ export default function CarEdits(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
+    dispatch(fetchImageList(1, 10, props.match.params.id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carDetail.id]);
 
@@ -150,6 +159,13 @@ export default function CarEdits(props) {
     <Layout name="Vinfast SA 2.0">
       <Grid container justify="center">
         <Grid item xs={12} sm={6} lg={10}>
+          <Grid spacing={1} container justify="center" alignItems="center">
+            <CardMedia
+              className={classes.media}
+              image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
+            />
+          </Grid>
+
           <Card className={classes.card}>
             <Grid
               spacing={1}
@@ -175,7 +191,7 @@ export default function CarEdits(props) {
                 id="input-with-icon-textfield"
                 label="Brand"
                 className={classes.textField}
-                value={carDetail.branch}
+                value={currentCar.branch ? currentCar.branch : ""}
                 disabled
                 variant="outlined"
                 InputProps={{
@@ -199,7 +215,7 @@ export default function CarEdits(props) {
                 id="input-with-icon-textfield"
                 label="Model"
                 variant="outlined"
-                value={carDetail.model}
+                value={currentCar.model ? currentCar.model : ""}
                 className={classes.textField}
                 disabled
               />
@@ -214,7 +230,7 @@ export default function CarEdits(props) {
               <TextField
                 className={classes.textField}
                 id="name"
-                value={currentCar.name}
+                value={currentCar.name ? currentCar.name : ""}
                 label="Name"
                 name="name"
                 variant="outlined"
@@ -307,8 +323,9 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={currentCar.vin}
+                id="vin"
+                name="vin"
+                value={currentCar.vin ? currentCar.vin : ""}
                 label="Vin number"
                 variant="outlined"
                 onChange={handleInputChange}
@@ -324,11 +341,13 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={currentCar.seat}
+                id="seat"
+                name="seat"
+                value={currentCar.seat ? currentCar.seat : 0}
                 label="Seat"
                 variant="outlined"
                 disabled={editState}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -340,11 +359,13 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={currentCar.sound}
+                id="sound"
+                name="sound"
+                value={currentCar.sound ? currentCar.sound : ""}
                 label="Sound"
                 variant="outlined"
                 disabled={editState}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -356,11 +377,13 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={currentCar.price}
+                id="price"
+                name="price"
+                value={currentCar.price ? currentCar.price : 0}
                 label="Price (per day)"
                 variant="outlined"
                 disabled={editState}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -372,11 +395,13 @@ export default function CarEdits(props) {
             >
               <TextField
                 className={classes.textField}
-                id="standard-required"
-                value={currentCar.plateNum}
+                id="plateNum"
+                name="plateNum"
+                value={currentCar.plateNum ? currentCar.plateNum : ""}
                 label="Plate number"
                 variant="outlined"
                 disabled={editState}
+                onChange={handleInputChange}
               />
             </Grid>
           </Card>
