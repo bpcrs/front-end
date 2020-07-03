@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
   const { info } = props;
-  console.log(props);
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -58,7 +57,7 @@ export default function CarItem(props = { isAction: true }) {
           </IconButton>
         }
         title={info.name}
-        subheader={info.model + " 2020"}
+        subheader={info.model + " " + info.year}
       />
       <CardMedia
         className={classes.media}

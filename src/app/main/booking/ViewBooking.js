@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ViewBooking(props) {
-  const { booking } = props.location.state;
+  const { booking, carDetail } = props.location.state;
   const classes = useStyles();
   return (
     <Layout name="Review Plan">
@@ -140,7 +140,7 @@ export default function ViewBooking(props) {
                       booking.toDate
                     ).getFullYear()}`}</Typography>
                     <Typography variant="caption" component="p">
-                      07:00 PM
+                      7:00 PM
                     </Typography>
                   </Grid>
                 </Grid>
@@ -152,10 +152,7 @@ export default function ViewBooking(props) {
       <div className={classes.spacingCard}>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
-            <CarItem
-              isAction={false}
-              info={{ name: "A", owner: { fullName: "H" } }}
-            />
+            <CarItem isAction={false} info={carDetail} />
           </Grid>
           <Grid item xs={12} lg={8} xl={8} className={classes.paper}>
             <Card>

@@ -79,7 +79,6 @@ export default function CarDetails(props) {
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
   const { booking } = props.location.state;
-  console.log(booking);
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
@@ -90,6 +89,7 @@ export default function CarDetails(props) {
       pathname: APP_PATH.VIEW_BOOKING,
       state: {
         booking,
+        carDetail,
       },
     });
   };
