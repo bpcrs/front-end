@@ -40,7 +40,7 @@ export default function GoogleMaps(props) {
   if (typeof window !== "undefined" && !loaded.current) {
     if (!document.querySelector("#google-maps")) {
       loadScript(
-        `https://maps.googleapis.com/maps/api/js?key=${APP_CONST.GOOGE_MAP_KEY}&libraries=places`,
+        `https://maps.googleapis.com/maps/api/js?key=${APP_CONST.GOOGE_MAP_KEY}&libraries=places&region=VN`,
         document.querySelector("head"),
         "google-maps"
       );

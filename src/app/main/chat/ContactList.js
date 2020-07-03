@@ -165,7 +165,7 @@ const ContactList = () => {
   return (
     <div style={{ width: "100%" }}>
       {users
-        .filter((user) => user.id !== userLogged.id)
+        .filter((user) => user.email !== userLogged.email)
         .map((user, index) => (
           <Grid
             key={user.id}
