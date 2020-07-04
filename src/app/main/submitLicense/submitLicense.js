@@ -11,15 +11,20 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Layout from '../../layout';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-// import ProgressBar from 'react-customizable-progressbar'
-// import Dialog from '@material-ui/core/Dialog';
-// import DialogActions from '@material-ui/core/DialogActions';
-// import DialogContent from '@material-ui/core/DialogContent';
-// import DialogContentText from '@material-ui/core/DialogContentText';
-// import DialogTitle from '@material-ui/core/DialogTitle';
+import ProgressBar from 'react-customizable-progressbar'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from './firebase';
+import Slide from '@material-ui/core/Slide'
 // import event from '';
 const ITEM_HEIGHT = 48;
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const useStyles = makeStyles(theme => ({
     root: {
         color: theme.palette.primary.contrastText
@@ -59,10 +64,20 @@ const useStyles = makeStyles(theme => ({
 export default function SubmitLicense(props) {
 
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     var fileArr = new Array();
     let uploadFile = () => {
         if (fileArr.length > 0) {
+            handleClickOpen();
             // Create the file metadata
             var metadata = {
                 contentType: 'image/jpeg',
@@ -97,6 +112,7 @@ export default function SubmitLicense(props) {
                         }
                         if (count == fileArr.length) {
                             count = 0;
+                            handleClose();
                             flag = true;
                         }
                     },
@@ -145,6 +161,7 @@ export default function SubmitLicense(props) {
             var starsRef = storageRef.child(date + "/" + identityCard + "/" + "Picture " + (i + 1));
 
             // Get the download URL
+            console.log("state download: " + starsRef.state);
             starsRef.getDownloadURL().then(function (url) {
                 // Insert url into an <img> tag to "download"
                 console.log("test vi tri: " + (i + 1) + "-" + url);
@@ -222,10 +239,24 @@ export default function SubmitLicense(props) {
 
         <Layout name="License form">
             <h1 className="text-center">Update your License</h1>
-            {/* <div className={classes.progressBar}>
-                <CircularProgress />
-                <CircularProgress color="secondary" />
-            </div> */}
+
+            <div>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-slide-title"
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <DialogTitle id="alert-dialog-slide-title">{"Progressing...."}</DialogTitle>
+                    <DialogContent>
+                        <div align="center" className={classes.progressBar}>
+                            <CircularProgress color="secondary"/>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </div>
             <Grid container spacing={1} component={Paper}>
 
                 <TextField className={classes.textField} label="Full name" id="txtFullName" />
