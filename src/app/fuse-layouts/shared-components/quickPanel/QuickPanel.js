@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {withStyles, Drawer, Typography} from '@material-ui/core/';
+import {withStyles, Drawer} from '@material-ui/core/';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as Actions from './store/actions/index'
-
 const styles = theme => ({
     root: {
         width  : 280,
@@ -23,7 +22,7 @@ class QuickPanel extends Component {
                 anchor="right"
                 onClose={() => toggleQuickPanel(false)}
             >
-                <Typography>Quick Panel</Typography>
+                
             </Drawer>
         );
     }

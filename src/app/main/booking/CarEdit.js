@@ -1,12 +1,11 @@
 import React from 'react'
-import { FormControl, Button, InputLabel, MenuItem, TextField, Card, Select, Typography, Grid, makeStyles } from '@material-ui/core';
+import { Button, TextField, Card, Typography, Grid, makeStyles } from '@material-ui/core';
 import PublishIcon from '@material-ui/icons/Publish';
 import ImageUploading from "react-images-uploading";
 import DriveEtaIcon from '@material-ui/icons/DriveEta';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { withRouter, useHistory } from 'react-router-dom';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Layout from '../../layout';
 
@@ -43,25 +42,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function CarEdits(props) {
-    const [brand, setBrand] = React.useState('');
-    const [model, setModel] = React.useState('');
+    // const [brand, setBrand] = React.useState('');
+    // const [model, setModel] = React.useState('');
     const maxNumber = 10;
     const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
-    const handleChangeBrand = (event) => {
-        setBrand(event.target.value);
-    };
-    const handleChangeModel = (event) => {
-        setModel(event.target.value);
-    };
-    const history = useHistory();
 
-    const handleChange = (event) => {
-        this.setLocation(event.target.value);
-    };
     const classes = useStyles();
-    const onChange = imageList => {
-        console.log(imageList);
-    };
     return (
         <Layout name="Vinfast SA 2.0">
             <Grid container>
@@ -81,7 +67,7 @@ export default function CarEdits(props) {
                                 acceptType={["jpg", "gif", "png"]}
                             >
                                 {
-                                    ({ imageList, onImageUpload, onImageRemoveAll }) => (
+                                    ({ imageList, onImageUpload }) => (
                                         <div>
                                             <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<AccountBoxIcon />}>
                                                 Upload Image
@@ -91,7 +77,7 @@ export default function CarEdits(props) {
                                                     <div key={image.key} className="mt-20">
                                                         <Grid container spacing={1}>
                                                             <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
+                                                                <img alt="" src={image.dataURL} className={classes.imageUploading} />
                                                             </Grid>
                                                             <Grid item xs={3} sm={3} >
                                                                 <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>
@@ -118,7 +104,7 @@ export default function CarEdits(props) {
                             disabled
                             InputProps={{
                                 startAdornment: (
-                                    <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" />
+                                    <img alt="" className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" />
                                 ),
                             }}
                         />
@@ -143,7 +129,7 @@ export default function CarEdits(props) {
                                 acceptType={["jpg", "gif", "png"]}
                             >
                                 {
-                                    ({ imageList, onImageUpload, onImageRemoveAll }) => (
+                                    ({ imageList, onImageUpload }) => (
                                         <div>
                                             <Button variant="contained" color="primary" onClick={onImageUpload} component="span" startIcon={<DriveEtaIcon />}>
                                                 Upload Image
@@ -153,7 +139,7 @@ export default function CarEdits(props) {
                                                     <div key={image.key} className="mt-20">
                                                         <Grid container spacing={1}>
                                                             <Grid item xs={9} sm={9} >
-                                                                <img src={image.dataURL} className={classes.imageUploading} />
+                                                                <img alt="" src={image.dataURL} className={classes.imageUploading} />
                                                             </Grid>
                                                             <Grid item xs={3} sm={3} >
                                                                 <Button startIcon={<EditIcon />} onClick={image.onUpdate}>Update</Button>

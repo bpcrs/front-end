@@ -68,25 +68,6 @@ class jwtService extends FuseUtils.EventEmitter {
         });
     };
 
-    // signInWithEmailAndPassword = (email, password) => {
-    //     return new Promise((resolve, reject) => {
-    //         axios.get('/api/auth', {
-    //             data: {
-    //                 email,
-    //                 password
-    //             }
-    //         }).then(response => {
-    //             if (response.data.user) {
-    //                 this.setSession(response.data.access_token);
-    //                 resolve(response.data.user);
-    //             }
-    //             else {
-    //                 reject(response.data.error);
-    //             }
-    //         });
-    //     });
-    // };
-
     signInWithToken = (token) => {
         return new Promise((resolve, reject) => {
             axios.post(APP_CONST.API_URL + '/account/google/login', {
@@ -94,11 +75,18 @@ class jwtService extends FuseUtils.EventEmitter {
             })
                 .then(response => {
                     if (response.data.success) {
-                        this.setSession(response.data.data.accessToken);
-                        resolve(response.data.data.accessToken);
+                        let accessToken = response.data.data;
+                        this.setSession(accessToken);
+                        resolve(accessToken);
                     }
                     else {
                         reject(response.data.message);
+                    }
+                }).catch(err => {
+                    if (err.response) {
+                        reject(err.response.status === 400 ? err.response.data : err)
+                    } else {
+                        reject(err)
                     }
                 });
         });

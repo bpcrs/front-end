@@ -249,10 +249,11 @@ export default function SubmitLicense(props) {
                     aria-labelledby="alert-dialog-slide-title"
                     aria-describedby="alert-dialog-slide-description"
                 >
-                    <DialogTitle id="alert-dialog-slide-title">{"Progressing...."}</DialogTitle>
+                    <DialogTitle id="alert-dialog-slide-title">{"We are updating your profile"}</DialogTitle>
                     <DialogContent>
                         <div align="center" className={classes.progressBar}>
                             <CircularProgress color="secondary"/>
+                            <p>Processing...</p>
                         </div>
                     </DialogContent>
                 </Dialog>

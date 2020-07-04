@@ -1,14 +1,14 @@
-import history from 'history.js';
-import { setDefaultSettings, setInitialSettings } from 'app/store/actions/fuse';
-import _ from '@lodash';
-import store from 'app/store';
-import * as Actions from 'app/store/actions';
-import jwtService from 'app/services/jwtService';
-import { APP_ROLE } from '../../../../constant';
+import { setDefaultSettings } from "app/store/actions/fuse";
+// import _ from '@lodash';
+// import store from 'app/store';
+// import * as Actions from 'app/store/actions';
+import jwtService from "app/services/jwtService";
+import { APP_ROLE } from "../../../../constant";
+import firebase from "../../../firebase/firebase";
 
-export const SET_USER_DATA = '[USER] SET DATA';
-export const REMOVE_USER_DATA = '[USER] REMOVE DATA';
-export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
+export const SET_USER_DATA = "[USER] SET DATA";
+export const REMOVE_USER_DATA = "[USER] REMOVE DATA";
+export const USER_LOGGED_OUT = "[USER] LOGGED OUT";
 
 // /**
 //  * Set user data from Auth0 token data
@@ -33,107 +33,108 @@ export const USER_LOGGED_OUT = '[USER] LOGGED OUT';
  * Set User Data
  */
 export function setUserData(user) {
-    return (dispatch) => {
-
-        /*
+  return async (dispatch) => {
+    /*
         Set User Settings
          */
-        dispatch(setDefaultSettings(user.data.settings));
+    dispatch(setDefaultSettings(user.data.settings));
 
-        /*
+    /*
         Set User Data
          */
-        
-        dispatch({
-            type: SET_USER_DATA,
-            payload: user
-        })
-    }
+
+    dispatch({
+      type: SET_USER_DATA,
+      payload: user,
+    });
+    console.log(user);
+
+    await firebase
+      .firestore()
+      .collection("users")
+      .doc(user.data.id.toString())
+      .set(user.data);
+  };
 }
 
 /**
  * Update User Settings
  */
 export function updateUserSettings(settings) {
-    return (dispatch, getState) => {
-        const oldUser = getState().auth.user;
-        const user = _.merge({}, oldUser, { data: { settings } });
+  return (dispatch, getState) => {
+    const oldUser = getState().auth.user;
+    console.log(oldUser);
 
-        updateUserData(user);
+    const user = {};
 
-        return dispatch(setUserData(user));
-    }
+    updateUserData(user);
+
+    return dispatch(setUserData(user));
+  };
 }
 
 /**
  * Update User Shortcuts
  */
 export function updateUserShortcuts(shortcuts) {
-    return (dispatch, getState) => {
-        const user = getState().auth.user;
-        const newUser = {
-            ...user,
-            data: {
-                ...user.data,
-                shortcuts
-            }
-        };
+  return (dispatch, getState) => {
+    const user = getState().auth.user;
+    const newUser = {
+      ...user,
+      data: {
+        ...user.data,
+        shortcuts,
+      },
+    };
 
-        updateUserData(newUser);
+    updateUserData(newUser);
 
-        return dispatch(setUserData(newUser));
-    }
+    return dispatch(setUserData(newUser));
+  };
 }
 
 /**
  * Remove User Data
  */
 export function removeUserData() {
-    return {
-        type: REMOVE_USER_DATA
-    }
+  return {
+    type: REMOVE_USER_DATA,
+  };
 }
 
 /**
  * Logout
  */
 export function logoutUser() {
+  return (dispatch, getState) => {
+    const user = getState().auth.user;
 
-    return (dispatch, getState) => {
-
-        const user = getState().auth.user;
-
-        if (user.role === APP_ROLE.GUEST) {
-            return null;
-        }
-
-        history.push({
-            pathname: '/'
-        });
-
-        jwtService.logout();
-
-        dispatch(setInitialSettings());
-
-        dispatch({
-            type: USER_LOGGED_OUT
-        })
+    if (user.role === APP_ROLE.GUEST) {
+      return null;
     }
+    jwtService.logout();
+
+    // dispatch(setInitialSettings());
+
+    dispatch({
+      type: USER_LOGGED_OUT,
+    });
+  };
 }
 
 /**
  * Update User Data
  */
 function updateUserData(user) {
-    if (user.role === APP_ROLE.GUEST) {
-        return;
-    }
-    jwtService.updateUserData(user)
-        .then(() => {
-            store.dispatch(Actions.showMessage({ message: "User data saved with api" }));
-        })
-        .catch(error => {
-            store.dispatch(Actions.showMessage({ message: error.message }));
-        });
+  if (user.role === APP_ROLE.GUEST) {
+    return;
+  }
+  jwtService
+    .updateUserData(user)
+    .then(() => {
+      // store.dispatch(Actions.showMessage({ message: "User data saved with api" }));
+    })
+    .catch((error) => {
+      // store.dispatch(Actions.showMessage({ message: error.message }));
+    });
 }
-

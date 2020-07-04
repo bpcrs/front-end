@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import classNames from 'classnames';
 import JWTLoginTab from './tabs/JWTLoginTab';
 
+
 const styles = theme => ({
     root: {
         background: 'linear-gradient(to right, ' + theme.palette.primary.dark + ' 0%, ' + darken(theme.palette.primary.dark, 0.5) + ' 100%)',
@@ -14,6 +15,13 @@ const styles = theme => ({
 });
 
 class Login extends Component {
+
+   
+
+    handelGoogleLogin = () => {
+        const { googleLogin } = this.props;
+        googleLogin();
+      };
 
     state = {
         tabValue: 0
@@ -71,7 +79,9 @@ class Login extends Component {
                                 />
                             </Tabs>
 
-                            {tabValue === 0 && <JWTLoginTab />}
+                            {tabValue === 0 && <JWTLoginTab />} 
+                            
+                           
                         </CardContent>
                     </Card>
                 </FuseAnimate>
@@ -79,5 +89,6 @@ class Login extends Component {
         )
     }
 }
+
 
 export default withStyles(styles, { withTheme: true })(withRouter(Login));

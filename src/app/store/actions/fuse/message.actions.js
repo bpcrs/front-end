@@ -15,4 +15,15 @@ export function showMessage(options)
         options
     }
 }
+export function showMessageError(message)
+{
+    const options = {
+        variant : 'error',
+        message : message
+    }
+    return {
+        type: SHOW_MESSAGE,
+        options
+    }
+}
 

@@ -2,10 +2,6 @@ import * as Actions from '../actions';
 import jwtService from '../../../services/jwtService'
 const initialState = {
     success: jwtService.getAccessToken() != null,
-    error: {
-        username: null,
-        password: null
-    }
 };
 
 const login = function (state = initialState, action) {
@@ -21,7 +17,6 @@ const login = function (state = initialState, action) {
             {
                 return {
                     success: false,
-                    error: action.payload
                 };
             }
         default:

@@ -14,6 +14,9 @@ const useStyles = makeStyles(theme => ({
     root: {
         color: theme.palette.primary.contrastText
     },
+    container: {
+        padding: theme.spacing(1)
+    },
     media: {
         height: 140,
         width: '100%'
@@ -28,16 +31,21 @@ const useStyles = makeStyles(theme => ({
     },
     formControl: {
         width: '100%',
-        maxHeight: ITEM_HEIGHT * 4.5,
+        maxHeight: ITEM_HEIGHT * 5.5,
+        marginTop: theme.spacing(3)
     },
     textField: {
-        width: '100%'
+        width: '100%',
+        marginTop: theme.spacing(2)
     },
     card: {
-        margin: 20,
-        padding: 20
+        margin: theme.spacing(2),
+        padding: theme.spacing(2)
+    },
+    button: {
+        marginLeft: theme.spacing(7),
+        padding: theme.spacing(2)
     }
-
 }));
 
 export default function CarSubmit(props) {
@@ -139,12 +147,12 @@ export default function CarSubmit(props) {
         // var sizeOfImageArr = fileArr.length + fileArr2.length;
         // storeImageToFireBase(fileArr, identityCard, sizeOfImageArr);
         // storeImageToFireBase(fileArr2, identityCard, sizeOfImageArr);
-       ;
+        ;
         storeImageToFireBase(fileArr, identityCard, fileArr.length);
         storeImageToFireBase(fileArr2, identityCard, fileArr2.length);
     };
 
-    
+
     var downloadFile = (date, identityCard, file) => {
         var storage = firebase.storage();
         var storageRef = storage.ref('Car');
@@ -237,7 +245,7 @@ export default function CarSubmit(props) {
     return (
         <Layout name="Car renting form">
             <Grid container>
-                <Grid item xs={12} sm={6} >
+                <Grid item xs={12} sm={6}>
                     <Card className={classes.card}>
                         <Typography>Tell us a bit about car owner</Typography>
                         <TextField className={classes.textField} label="Full name" id="txtFullName" />
@@ -268,7 +276,7 @@ export default function CarSubmit(props) {
                         <Typography>Tell us a bit about your car</Typography>
                         <div>
                             <FormControl className={classes.formControl}>
-                                <InputLabel id="demo-simple-select-required-label">Brand</InputLabel>
+                                <InputLabel id="demo-simple-select-required-label" variant="outlined">Brand</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-required-label"
                                     id="demo-simple-select-required"
@@ -276,19 +284,19 @@ export default function CarSubmit(props) {
                                     onChange={handleChangeBrand}
                                 >
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg" alt="" />
                                         <Typography>Honda</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Toyota-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Toyota-Carmudi.jpg" alt="" />
                                         <Typography>Toyota</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Lexus-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Lexus-Carmudi.jpg" alt="" />
                                         <Typography>Lexus</Typography>
                                     </MenuItem>
                                     <MenuItem>
-                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Mazda-Carmudi.jpg" />
+                                        <img className={classes.icon} src="https://static.carmudi.vn/wp-content/uploads/2016/04/Mazda-Carmudi.jpg" alt="" />
                                         <Typography>Mazda</Typography>
                                     </MenuItem>
                                 </Select>
@@ -296,7 +304,7 @@ export default function CarSubmit(props) {
                         </div>
                         <div>
                             <FormControl className={classes.formControl}>
-                                <InputLabel id="demo-simple-select-required-label">Model</InputLabel>
+                                <InputLabel id="demo-simple-select-required-label" variant="outlined">Model</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-required-label"
                                     id="demo-simple-select-required"
@@ -309,6 +317,7 @@ export default function CarSubmit(props) {
                                 </Select>
                             </FormControl>
                         </div>
+
                         <TextField className={classes.textField} id="standard-required" label="Car Registration number" />
                         <TextField className={classes.textField} id="standard-required" label="Odometer" />
                         <div className="mt-20">
