@@ -2,12 +2,12 @@ import * as Actions from "./booking.action";
 const initialState = {
   cars: [],
   reviews: [],
+  images: [],
   loading: true,
   carDetail: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
-  console.log(type);
   switch (type) {
     case Actions.FETCH_CARS_SUCCESS: {
       return {
@@ -28,6 +28,13 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         carDetail: payload,
+      };
+    }
+    case Actions.FETCH_IMAGE_CAR_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        images: payload,
       };
     }
     default: {

@@ -1,6 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
-import { Grid, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardActions,
+  Button,
+} from "@material-ui/core";
 // import GetDate from '../../../common/getDate';
 import { useSelector } from "react-redux";
 import classNames from "classnames";
@@ -21,27 +29,63 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = ({ message, receive }) => {
+const Message = ({ message, receive, type = "SCOPE" }) => {
   const classes = useStyles();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const userLogged = useSelector((state) => state.auth.user);
+  const isRevice = userLogged.id !== receive;
+  const MessageByType = () => {
+    switch (type) {
+      case "SCOPE":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Scope offering
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {isRevice
+                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            {!isRevice ? (
+              <CardActions>
+                <Button size="small" color="default" variant="outlined">
+                  Agree
+                </Button>
+                <Button size="small" color="primary">
+                  Let't me think
+                </Button>
+              </CardActions>
+            ) : null}
+          </Card>
+        );
+      default:
+        return (
+          <Grid
+            item
+            className={classNames(classes.messageBody, isRevice ? "send" : "")}
+            style={{
+              textAlign: isRevice ? "left" : "right",
+            }}
+          >
+            <Typography>{message}</Typography>
+          </Grid>
+        );
+    }
+  };
   return (
     <Grid
       container
-      justify={selectedUser.id === receive ? "flex-end" : "flex-start"}
+      justify={isRevice ? "flex-end" : "flex-start"}
       className="py-4"
       item
       lg={12}
     >
-      <Grid
-        item
-        className={classNames(
-          classes.messageBody,
-          selectedUser.id === receive ? "send" : ""
-        )}
-        style={{ textAlign: selectedUser.id === receive ? "left" : "right" }}
-      >
-        <Typography>{message}</Typography>
-      </Grid>
+      <MessageByType />
     </Grid>
   );
 };

@@ -1,5 +1,6 @@
 import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 import CarDetail from "./CarDetail";
+import CarEdit from "./CarEdit";
 import { APP_PATH } from "../../../constant";
 export const BookingConfig = {
   settings: {
@@ -47,10 +48,8 @@ export const BookingConfig = {
       }),
     },
     {
-      path: APP_PATH.CAR_EDIT,
-      component: FuseLoadable({
-        loader: () => import("./CarEdit"),
-      }),
+      path: APP_PATH.CAR_EDIT + "/:id",
+      component: CarEdit,
     },
     {
       path: APP_PATH.CAR_COMPARE,

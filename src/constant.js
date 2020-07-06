@@ -1,11 +1,8 @@
 require("dotenv").config();
 export const APP_CONST = {
-  API_URL: process.env.REACT_APP_API_URL
-    ? process.env.REACT_APP_API_URL
-    : "http://localhost:5000",
-  GOOGLE_CLIENT_ID: process.env.REACT_APP_GOOGLE_CLIENT_ID
-    ? process.env.REACT_APP_GOOGLE_CLIENT_ID
-    : "861476715885-0ge3nqdop06mu3qo1u29fubknpgngo1l.apps.googleusercontent.com",
+  API_URL: process.env.REACT_APP_API_URL,
+  GOOGLE_CLIENT_ID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+  GOOGE_MAP_KEY: process.env.REACT_APP_GOOGE_MAP_KEY,
 };
 console.log(APP_CONST);
 console.log(process.env);

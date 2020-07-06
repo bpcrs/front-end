@@ -6,18 +6,17 @@ import {
   Badge,
   makeStyles,
   Paper,
-  Tabs,
-  Tab,
+  Chip,
+  Icon,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
-import { useState } from "react";
 import ContactList from "./ContactList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
+import { openAgreement } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
     "& > *": {
       margin: theme.spacing(1),
     },
@@ -83,7 +82,10 @@ export const ChatArea = () => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  console.log(selectedUser);
+  const dispatch = useDispatch();
+  const handleOpenAgreement = (type) => {
+    dispatch(openAgreement(type));
+  };
   return (
     <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>
@@ -107,14 +109,56 @@ export const ChatArea = () => {
           <Grid
             item
             container
-            lg={8}
+            lg={4}
             direction="column"
             className="px-16 py-16"
             justify="center"
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            <User {...selectedUser} />
+            {selectedUser.id && <User {...selectedUser} />}
+            Status: Dealing
+          </Grid>
+          <Grid
+            item
+            container
+            lg={4}
+            direction="column"
+            className="px-16 py-16"
+            justify="center"
+            alignContent="flex-start"
+            style={{ backgroundColor: "#E6E6E6" }}
+          >
+            <div className={classes.root}>
+              <Chip
+                icon={<Icon>done</Icon>}
+                label="Scope"
+                clickable
+                color="secondary"
+                onClick={() => handleOpenAgreement("SCOPE")}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Extra"
+                clickable
+                color="primary"
+                onClick={() => handleOpenAgreement("SCOPE")}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Insurance"
+                clickable
+                color="primary"
+                onClick={() => handleOpenAgreement("SCOPE")}
+              />
+              <Chip
+                icon={<Icon>error</Icon>}
+                label="Warranties"
+                clickable
+                color="primary"
+                onClick={() => handleOpenAgreement("SCOPE")}
+              />
+            </div>
           </Grid>
         </Grid>
         <Grid
