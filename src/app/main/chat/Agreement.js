@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import { closeAgreement } from "./chat.action";
+import { closeAgreement, submitMessage, getUser } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
 const PrettoSlider = withStyles({
@@ -61,10 +61,16 @@ const PrettoSlider = withStyles({
 })(Slider);
 export default function Agreement() {
   const agreement = useSelector((state) => state.chat.agreement);
+  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const userLogged = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
   const handleChange = (event, newValue) => {
     setScope(newValue);
+  };
+  const handleSubmitScope = () => {
+    dispatch(closeAgreement());
+    submitMessage(scope, userLogged.id, selectedUser.id, "SCOPE");
   };
   const AgreementByType = () => {
     switch (agreement.type) {
@@ -91,7 +97,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={() => dispatch(closeAgreement())}
+              onClick={handleSubmitScope}
             >
               Send
             </Button>

@@ -14,6 +14,7 @@ import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
 import Agreement from "./Agreement";
+import { submitMessage } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -94,18 +95,7 @@ const Chat = () => {
     if (sendMessage.length === 0) {
       return;
     }
-    const arr = [userLogged.id, selectedUser.id].sort();
-    firebase
-      .firestore()
-      .collection("chatRooms")
-      .doc(`${arr[0]}v${arr[1]}`)
-      .collection("messages")
-      .add({
-        send: userLogged.id,
-        createAt: new Date().getTime(),
-        message: sendMessage,
-        receive: selectedUser.id,
-      });
+    submitMessage(sendMessage, userLogged.id, selectedUser.id, "MSG");
     setSendMessage("");
     setSizeMsg(sizeMsg + 1);
   };
@@ -118,16 +108,6 @@ const Chat = () => {
       className={classes.fullHeight}
     >
       <Grid item lg className={classes.fullWidth}>
-        {/* <Grid>
-          <Fab variant="extended" size="medium">
-            <Icon>attach_money_sharp</Icon>
-            Pricing
-          </Fab>
-          <Fab variant="extended" size="medium">
-            <Icon>attach_money_sharp</Icon>
-            Pricing
-          </Fab>
-        </Grid> */}
         <ScrollToBottom>
           <Grid item className={classes.fullHeight}>
             <Grid container className={classes.chat}>
