@@ -1,12 +1,6 @@
 import React from "react";
 import {
-  Slide,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  DialogContentText,
   Paper,
   Collapse,
   Box,
@@ -14,7 +8,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import { closeAgreement, submitMessage, getUser } from "./chat.action";
+import { closeAgreement, submitMessage } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
 const PrettoSlider = withStyles({

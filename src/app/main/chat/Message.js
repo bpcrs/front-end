@@ -3,8 +3,6 @@ import { makeStyles } from "@material-ui/styles";
 import {
   Grid,
   Typography,
-  Paper,
-  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -14,9 +12,6 @@ import {
 // import GetDate from '../../../common/getDate';
 import { useSelector } from "react-redux";
 import classNames from "classnames";
-import { getUser } from "./chat.action";
-import { useState } from "react";
-import { useEffect } from "react";
 const useStyles = makeStyles((theme) => ({
   messageBody: {
     width: "fit-content",
@@ -43,7 +38,7 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
     switch (type) {
       case "SCOPE":
         return (
-          <Card>
+          <Card className="w-1/2">
             <CardActionArea>
               <CardContent>
                 <Typography gutterBottom variant="subtitle1">
