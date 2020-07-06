@@ -1,8 +1,16 @@
-import React from 'react'
-import { AppBar, Toolbar, IconButton, makeStyles, Fab, Container, Icon } from '@material-ui/core'
-import { isMobile } from 'react-device-detect';
-import ToolbarLayout3 from '../fuse-layouts/layout3/components/ToolbarLayout3';
-
+import React from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  makeStyles,
+  Fab,
+  Container,
+  Icon,
+} from "@material-ui/core";
+import { isMobile } from "react-device-detect";
+import ToolbarLayout3 from "../fuse-layouts/layout3/components/ToolbarLayout3";
+import * as serviceWorker from "../../serviceWorker";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -39,33 +47,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Layout(props) {
-    const classes = useStyles();
-    return (
-        <>
-            <ToolbarLayout3 />
-            <Container className={classes.spacingCard}>
-                {props.children}
-            </Container>
-            {isMobile ? (<AppBar position="fixed" color="primary" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton edge="start" color="inherit" title="Profile">
-                        <Icon title="Profile">person</Icon>
-                    </IconButton>
-                    <IconButton color="inherit">
-                        <Icon>location_searching</Icon>
-                    </IconButton>
-                    <Fab color="secondary" aria-label="add" className={classes.fabButton} title="Book">
-                        <Icon>time_to_leave</Icon>
-                    </Fab>
-                    <div className={classes.grow} />
-                    <IconButton color="inherit">
-                        <Icon>library_books</Icon>
-                    </IconButton>
-                    <IconButton edge="end" color="inherit">
-                        <Icon>more_horiz</Icon>
-                    </IconButton>
-                </Toolbar>
-            </AppBar>) : <></>}
-        </>
-    )
+  const classes = useStyles();
+  return (
+    <>
+      <ToolbarLayout3 />
+      <Container className={classes.spacingCard}>{props.children}</Container>
+      {isMobile ? (
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" title="Profile">
+              <Icon title="Profile">person</Icon>
+            </IconButton>
+            <IconButton color="inherit">
+              <Icon>location_searching</Icon>
+            </IconButton>
+            <Fab
+              color="secondary"
+              aria-label="add"
+              className={classes.fabButton}
+              title="Book"
+            >
+              <Icon>time_to_leave</Icon>
+            </Fab>
+            <div className={classes.grow} />
+            <IconButton color="inherit">
+              <Icon>library_books</Icon>
+            </IconButton>
+            <IconButton edge="end" color="inherit">
+              <Icon>more_horiz</Icon>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      ) : (
+        <></>
+      )}
+      serviceWorker.register();
+    </>
+  );
 }
+serviceWorker.register();

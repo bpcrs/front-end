@@ -18,6 +18,7 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import { useSelector } from "react-redux";
+import * as serviceWorker from "../../../serviceWorker";
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -242,5 +243,6 @@ function Landing() {
     </div>
   );
 }
+serviceWorker.register();
 
 export default Landing;

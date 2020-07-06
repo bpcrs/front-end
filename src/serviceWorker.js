@@ -9,6 +9,8 @@
 
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read http://bit.ly/CRA-PWA
+var CACHE_STATIC_NAME = "static-v24";
+var CACHE_DYNAMIC_NAME = "dynamic-v2";
 
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
@@ -126,7 +128,15 @@ function checkValidServiceWorker(swUrl, config) {
     });
 }
 
-export function unregister() {
+function registerServiceWorker() {
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("/service-worker.js");
+    });
+  }
+}
+
+function unregister() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready.then((registration) => {
       registration.unregister();
@@ -171,4 +181,31 @@ window.self.addEventListener("push", function (event) {
   event.waitUntil(
     window.self.registration.showNotification(data.title, options)
   );
+});
+
+window.self.addEventListener("install", function (event) {
+  console.log("[Service Worker] Installing Service Worker ...", event);
+  event.waitUntil(
+    caches.open(CACHE_STATIC_NAME).then(function (cache) {
+      console.log("[Service Worker] Precaching App Shell");
+      // cache.addAll(STATIC_FILES);
+    })
+  );
+});
+
+window.self.addEventListener("activate", function (event) {
+  console.log("[Service Worker] Activating Service Worker ....", event);
+  event.waitUntil(
+    caches.keys().then(function (keyList) {
+      return Promise.all(
+        keyList.map(function (key) {
+          if (key !== CACHE_STATIC_NAME && key !== CACHE_DYNAMIC_NAME) {
+            console.log("[Service Worker] Removing old cache.", key);
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+  return window.self.clients.claim();
 });
