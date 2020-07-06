@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  Button,
   Avatar,
-  Tooltip,
   Grid,
   makeStyles,
   Badge,
   Typography,
-  Divider,
   Box,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
-import classNames from "classnames";
 import { setSelectedUser } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 
@@ -132,7 +128,7 @@ const ContactList = () => {
     }
     getImagesContact();
   }, []);
-  const ContactButton = ({ image, fullName, id, isActive }) => (
+  const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
     <Box
       onClick={() => setSelectedContact(id)}
       className={isActive ? classes.contactButton : ""}
@@ -147,19 +143,19 @@ const ContactList = () => {
             }}
             variant="dot"
           >
-            <Avatar src={image} />
+            <Avatar src={photoURL} />
           </StyledBadge>
         </Grid>
         <Grid lg={10} item>
           <Typography component="span" className="normal-case font-600 flex">
-            {fullName}
+            {displayName}
           </Typography>
           <Typography
             className="text-11"
             color="textSecondary"
             variant="caption"
           >
-            hungpt.se@gmail.com
+            {email}
           </Typography>
         </Grid>
       </Grid>
@@ -169,7 +165,7 @@ const ContactList = () => {
   return (
     <div style={{ width: "100%" }}>
       {users
-        .filter((user) => user.id !== userLogged.id)
+        .filter((user) => user.email !== userLogged.email)
         .map((user, index) => (
           <Grid
             key={user.id}
