@@ -20,6 +20,7 @@ import { useState } from "react";
 const PrettoSlider = withStyles({
   root: {
     height: 6,
+    marginLeft: "8px",
   },
   thumb: {
     height: 24,
@@ -33,9 +34,6 @@ const PrettoSlider = withStyles({
     },
   },
   active: {},
-  valueLabel: {
-    left: "calc(-50% + 4px)",
-  },
   track: {
     height: 8,
     borderRadius: 4,
@@ -44,26 +42,52 @@ const PrettoSlider = withStyles({
     height: 8,
     borderRadius: 4,
   },
+  valueLabel: {
+    left: "calc(-50%)",
+    top: 22,
+    "& *": {
+      background: "transparent",
+      color: "#000",
+    },
+  },
+  mark: {
+    backgroundColor: "#f1f1f1",
+    height: 8,
+    width: 1,
+  },
+  markActive: {
+    opacity: 1,
+    backgroundColor: "currentColor",
+  },
 })(Slider);
 export default function Agreement() {
   const agreement = useSelector((state) => state.chat.agreement);
   const dispatch = useDispatch();
-  const [scope, setScope] = useState(20);
+  const [scope, setScope] = useState(15);
+  const handleChange = (event, newValue) => {
+    setScope(newValue);
+  };
   const AgreementByType = () => {
     switch (agreement.type) {
       case "SCOPE":
         return (
-          <Box className="px-4 py-4">
+          <Box className="px-4 py-4 w-3/4">
             <PrettoSlider
               valueLabelDisplay="on"
-              aria-label="pretto slider"
-              defaultValue={20}
-              onChange={(e, newValue) => {
-                setScope(newValue);
-              }}
+              aria-labelledby="continuous-slider"
+              value={scope}
+              marks={true}
+              onChange={handleChange}
+              onDragStop={(e) => console.log(e)}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
             />
             <Typography>
-              You offer 60 km not exceeded destination registered.
+              You will offer {scope === 100 ? "unlimited" : scope + " km"} not
+              exceeded destination registered.
             </Typography>
             <Button
               variant="outlined"
@@ -82,6 +106,7 @@ export default function Agreement() {
   return (
     <Collapse in={agreement.isOpen}>
       <Paper elevation={5}>
+        <Typography>Decide your offer</Typography>
         <AgreementByType />
         <Button
           variant="outlined"
