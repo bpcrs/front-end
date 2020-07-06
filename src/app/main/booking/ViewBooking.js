@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ViewBooking() {
+export default function ViewBooking(props) {
+  const { booking, carDetail } = props.location.state;
   const classes = useStyles();
   return (
     <Layout name="Review Plan">
@@ -56,7 +57,8 @@ export default function ViewBooking() {
                     label="Pickup"
                     variant="outlined"
                     fullWidth
-                    value="FPT University, District 9, Ho Chi Minh City"
+                    disabled
+                    value={booking.location.description}
                   />
                 </FormControl>
                 <FormControl fullWidth className={classes.spacingCard}>
@@ -65,7 +67,8 @@ export default function ViewBooking() {
                     label="Destinaion"
                     variant="outlined"
                     fullWidth
-                    value="Vung Tau City"
+                    disabled
+                    value={booking.destination.description}
                   />
                 </FormControl>
               </Grid>
@@ -78,18 +81,31 @@ export default function ViewBooking() {
           <CardContent>
             <Grid container>
               <Grid item xs={12}>
-                <Typography variant="subtitle1">TRIP DURATION</Typography>
+                <Typography variant="subtitle1">
+                  TRIP DURATION{" ("}
+                  {Math.round(
+                    (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                      (1000 * 60 * 60 * 24)
+                  ) + 1}{" "}
+                  days)
+                </Typography>
               </Grid>
 
               <Grid item xl={5} lg={5} container direction="row" spacing={1}>
                 <Grid item xs={6} xl={6} lg={6} style={{ textAlign: "right" }}>
-                  <Typography variant="h4">09</Typography>
+                  <Typography variant="h4">
+                    {new Date(booking.fromDate).getDate()}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6} xl={6} lg={6}>
                   <Grid>
-                    <Typography variant="caption">Jun-2020</Typography>
+                    <Typography variant="caption">
+                      {`${new Date(booking.fromDate).toLocaleString("default", {
+                        month: "short",
+                      })}-${new Date(booking.fromDate).getFullYear()}`}
+                    </Typography>
                     <Typography variant="caption" component="p">
-                      09:30 PM
+                      7:00 AM
                     </Typography>
                   </Grid>
                 </Grid>
@@ -111,14 +127,20 @@ export default function ViewBooking() {
               </Grid>
               <Grid item xl={5} lg={5} container direction="row" spacing={1}>
                 <Grid item xs={6} xl={6} lg={6} style={{ textAlign: "right" }}>
-                  <Typography variant="h4">10</Typography>
+                  <Typography variant="h4">
+                    {new Date(booking.toDate).getDate()}
+                  </Typography>
                   {/* <p className="text-base sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl">09</p> */}
                 </Grid>
                 <Grid item xs={6} xl={6} lg={6}>
                   <Grid>
-                    <Typography variant="caption">Jun-2020</Typography>
+                    <Typography variant="caption">{`${new Date(
+                      booking.toDate
+                    ).toLocaleString("default", { month: "short" })}-${new Date(
+                      booking.toDate
+                    ).getFullYear()}`}</Typography>
                     <Typography variant="caption" component="p">
-                      09:30 PM
+                      7:00 PM
                     </Typography>
                   </Grid>
                 </Grid>
@@ -130,10 +152,7 @@ export default function ViewBooking() {
       <div className={classes.spacingCard}>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
-            <CarItem
-              isAction={false}
-              info={{ name: "A", owner: { fullName: "H" } }}
-            />
+            <CarItem isAction={false} info={carDetail} />
           </Grid>
           <Grid item xs={12} lg={8} xl={8} className={classes.paper}>
             <Card>

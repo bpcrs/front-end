@@ -1,30 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { Button, Avatar, Tooltip, Grid, makeStyles } from "@material-ui/core";
+import {
+  Avatar,
+  Grid,
+  makeStyles,
+  Badge,
+  Typography,
+  Box,
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
-import classNames from "classnames";
 import { setSelectedUser } from "./chat.action";
+import { withStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
   },
   contactButton: {
-    width: 90,
-    minWidth: 90,
-    flex: "0 0 auto",
-    "&.active:after": {
-      position: "absolute",
-      top: 8,
-      right: 0,
-      bottom: 8,
-      content: "''",
-      width: 4,
-      borderTopLeftRadius: 4,
-      borderBottomLeftRadius: 4,
-      backgroundColor: theme.palette.primary.main,
-    },
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 8,
+    content: "''",
+    width: 4,
   },
+
   unreadBadge: {
     position: "absolute",
     minWidth: 18,
@@ -72,8 +72,43 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     padding: theme.spacing(2),
   },
+  rootAvt: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+    float: "right",
+    paddingRight: theme.spacing(1),
+  },
 }));
-
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "$ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}))(Badge);
 const ContactList = () => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
@@ -82,13 +117,7 @@ const ContactList = () => {
   const userLogged = useSelector((state) => state.auth.user);
 
   const setSelectedContact = (id) => {
-    dispatch(
-      setSelectedUser(
-        users.filter((u) => u.id === id).length !== 0
-          ? users.filter((u) => u.id === id)[0]
-          : {}
-      )
-    );
+    dispatch(setSelectedUser(users.find((u) => u.id === id)));
   };
 
   useEffect(() => {
@@ -99,33 +128,58 @@ const ContactList = () => {
     }
     getImagesContact();
   }, []);
-  const ContactButton = ({ image, fullName, id, isActive }) => (
-    <Tooltip title={fullName} placement="left" key={id}>
-      <Button
-        className={classNames(classes.contactButton, { active: isActive })}
-        onClick={() => setSelectedContact(id)}
-      >
-        <Avatar src={image}></Avatar>
-      </Button>
-    </Tooltip>
+  const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
+    <Box
+      onClick={() => setSelectedContact(id)}
+      className={isActive ? classes.contactButton : ""}
+    >
+      <Grid container className="px-8 py-8">
+        <Grid item lg>
+          <StyledBadge
+            overlap="circle"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            variant="dot"
+          >
+            <Avatar src={photoURL} />
+          </StyledBadge>
+        </Grid>
+        <Grid lg={10} item>
+          <Typography component="span" className="normal-case font-600 flex">
+            {displayName}
+          </Typography>
+          <Typography
+            className="text-11"
+            color="textSecondary"
+            variant="caption"
+          >
+            {email}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Box>
   );
 
   return (
-    <Grid
-      container
-      spacing={1}
-      justify="center"
-      alignItems="center"
-      alignContent="center"
-    >
+    <div style={{ width: "100%" }}>
       {users
-        .filter((user) => user.id !== userLogged.id)
-        .map((user) => (
-          <Grid key={user.id} item lg={12}>
+        .filter((user) => user.email !== userLogged.email)
+        .map((user, index) => (
+          <Grid
+            key={user.id}
+            item
+            lg={12}
+            className="py-8"
+            style={{
+              backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+            }}
+          >
             <ContactButton {...user} isActive={user.id === selectedUser.id} />
           </Grid>
         ))}
-    </Grid>
+    </div>
   );
 };
 
