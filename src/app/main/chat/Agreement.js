@@ -20,7 +20,6 @@ import { useState } from "react";
 const PrettoSlider = withStyles({
   root: {
     height: 6,
-    marginLeft: "8px",
   },
   thumb: {
     height: 24,
@@ -71,7 +70,7 @@ export default function Agreement() {
     switch (agreement.type) {
       case "SCOPE":
         return (
-          <Box className="px-4 py-4 w-3/4">
+          <Box className="px-24 py-24">
             <PrettoSlider
               valueLabelDisplay="on"
               aria-labelledby="continuous-slider"
