@@ -18,7 +18,11 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import { useSelector } from "react-redux";
-import * as serviceWorker from "../../../serviceWorker";
+import {
+  askUserPermission,
+  registerServiceWorker,
+  sendNotification,
+} from "../../../notification";
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -34,11 +38,13 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.spacing(1),
   },
 }));
+
 function Landing() {
   const history = useHistory();
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
-  console.log(userLogged);
+
+  // console.log(userLogged);
   return (
     <div className={classes.paper}>
       <LandingProvider primary="#5D21D2">
@@ -49,8 +55,12 @@ function Landing() {
             <Button variant="text" onClick={() => history.push("/compareCar")}>
               Use Cases
             </Button>,
-            <Button variant="text">Pricing</Button>,
-            <Button variant="text">About Us</Button>,
+            <Button variant="text" onClick={askUserPermission}>
+              Pricing
+            </Button>,
+            <Button variant="text" onClick={sendNotification}>
+              About Us
+            </Button>,
             <Button
               variant="outlined"
               onClick={() =>
@@ -243,6 +253,5 @@ function Landing() {
     </div>
   );
 }
-serviceWorker.register();
-
+registerServiceWorker();
 export default Landing;
