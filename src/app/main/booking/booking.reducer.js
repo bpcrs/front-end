@@ -5,6 +5,8 @@ const initialState = {
   images: [],
   loading: true,
   carDetail: {},
+  brands: [],
+  filterCars: [],
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -35,6 +37,20 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         images: payload,
+      };
+    }
+    case Actions.FETCH_BRAND_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        brands: payload,
+      };
+    }
+    case Actions.FETCH_FILTER_CARS_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        filterCars: payload,
       };
     }
     default: {

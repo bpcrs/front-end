@@ -10,7 +10,7 @@ import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCarList } from "./booking.action";
+import { fetchCarList, fetchBrandList, fetchCarFilter } from "./booking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { FilterButton } from "./FilterButton";
@@ -55,40 +55,40 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-const data = [
-  { title: "The Shawshank Redemption", value: 1994 },
-  { title: "The Godfather", value: 1972 },
-  { title: "The Godfather: Part II", value: 1974 },
-  { title: "The Dark Knight", value: 2008 },
-  { title: "12 Angry Men", value: 1957 },
-  { title: "Schindler's List", value: 1993 },
-  { title: "Pulp Fiction", value: 1994 },
-  { title: "The Lord of the Rings: The Return of the King", value: 2003 },
-  { title: "The Good, the Bad and the Ugly", value: 1966 },
-  { title: "Fight Club", value: 1999 },
-  { title: "The Lord of the Rings: The Fellowship of the Ring", value: 2001 },
-  { title: "Star Wars: Episode V - The Empire Strikes Back", value: 1980 },
-  { title: "Forrest Gump", value: 1994 },
-  { title: "Inception", value: 2010 },
-  { title: "The Lord of the Rings: The Two Towers", value: 2002 },
-  { title: "One Flew Over the Cuckoo's Nest", value: 1975 },
-  { title: "Goodfellas", value: 1990 },
-  { title: "The Matrix", value: 1999 },
-  { title: "Seven Samurai", value: 1954 },
-  { title: "Star Wars: Episode IV - A New Hope", value: 1977 },
-  { title: "City of God", value: 2002 },
-  { title: "Se7en", value: 1995 },
-  { title: "The Silence of the Lambs", value: 1991 },
-  { title: "It's a Wonderful Life", value: 1946 },
-  { title: "Life Is Beautiful", value: 1997 },
-  { title: "The Usual Suspects", value: 1995 },
-  { title: "Léon: The Professional", value: 1994 },
-  { title: "Spirited Away", value: 2001 },
-  { title: "Saving Private Ryan", value: 1998 },
-  { title: "Once Upon a Time in the West", value: 1968 },
-  { title: "American History X", value: 1998 },
-  { title: "Interstellar", value: 2014 },
-];
+// const data = [
+//   { title: "The Shawshank Redemption", value: 1994 },
+//   { title: "The Godfather", value: 1972 },
+//   { title: "The Godfather: Part II", value: 1974 },
+//   { title: "The Dark Knight", value: 2008 },
+//   { title: "12 Angry Men", value: 1957 },
+//   { title: "Schindler's List", value: 1993 },
+//   { title: "Pulp Fiction", value: 1994 },
+//   { title: "The Lord of the Rings: The Return of the King", value: 2003 },
+//   { title: "The Good, the Bad and the Ugly", value: 1966 },
+//   { title: "Fight Club", value: 1999 },
+//   { title: "The Lord of the Rings: The Fellowship of the Ring", value: 2001 },
+//   { title: "Star Wars: Episode V - The Empire Strikes Back", value: 1980 },
+//   { title: "Forrest Gump", value: 1994 },
+//   { title: "Inception", value: 2010 },
+//   { title: "The Lord of the Rings: The Two Towers", value: 2002 },
+//   { title: "One Flew Over the Cuckoo's Nest", value: 1975 },
+//   { title: "Goodfellas", value: 1990 },
+//   { title: "The Matrix", value: 1999 },
+//   { title: "Seven Samurai", value: 1954 },
+//   { title: "Star Wars: Episode IV - A New Hope", value: 1977 },
+//   { title: "City of God", value: 2002 },
+//   { title: "Se7en", value: 1995 },
+//   { title: "The Silence of the Lambs", value: 1991 },
+//   { title: "It's a Wonderful Life", value: 1946 },
+//   { title: "Life Is Beautiful", value: 1997 },
+//   { title: "The Usual Suspects", value: 1995 },
+//   { title: "Léon: The Professional", value: 1994 },
+//   { title: "Spirited Away", value: 2001 },
+//   { title: "Saving Private Ryan", value: 1998 },
+//   { title: "Once Upon a Time in the West", value: 1968 },
+//   { title: "American History X", value: 1998 },
+//   { title: "Interstellar", value: 2014 },
+// ];
 function CarList(props) {
   const size = 8;
   const [currentPage, setCurrentPage] = useState(1);
@@ -96,13 +96,32 @@ function CarList(props) {
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
+  const brands = useSelector((state) => state.booking.brands);
+  const filterCars = useSelector((state) => state.booking.filterCars);
+  console.log("Filter Cars", filterCars);
+  // console.log(
+  //   "Brand list",
+  //   brands.map((brand) => ({ ...brand, title: brand.name, value: brand.id }))
+  // );
+
   const [filter, setFilter] = useState({
     brand: [],
     model: [],
   });
   const [chipData, setChipData] = useState([]);
+
+  const filterCar = (page, size, brandId, fromPrice, models, seat, toPrice) => {
+    dispatch(
+      fetchCarFilter(page, size, brandId, fromPrice, models, seat, toPrice)
+    );
+  };
+
   useEffect(() => {
     dispatch(fetchCarList(currentPage, size));
+    dispatch(fetchBrandList());
+    console.log(filter.brand[0]);
+
+    dispatch(fetchCarFilter(currentPage, size, filter.brand));
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
         filter[key].map((item, index) => ({ item, key: index, type: key }))
@@ -130,8 +149,15 @@ function CarList(props) {
           <Grid item lg={12}>
             <FilterButton
               name="Brand"
-              data={data}
-              onFilter={(value) => setFilter({ brand: value })}
+              data={brands.map((brand) => ({
+                ...brand,
+                title: brand.name,
+                value: brand.id,
+              }))}
+              onFilter={(value) => {
+                setFilter({ brand: value });
+                // filterCar(1, 10, 1);
+              }}
               filterInChip={filter.brand}
             />
             {/* <FilterButton name="Model" data={data} /> */}
@@ -169,8 +195,8 @@ function CarList(props) {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {cars.data &&
-        cars.data.map((car, index) => (
+      {filterCars.data &&
+        filterCars.data.map((car, index) => (
           <Grid
             item
             xs={12}
@@ -189,9 +215,9 @@ function CarList(props) {
       <Grid xs={12} lg={12} item container justify="flex-end">
         <Pagination
           count={
-            cars.count !== 0 && cars.count % size === 0
-              ? Math.floor(cars.count / size)
-              : Math.floor(cars.count / size) + 1
+            filterCars.count !== 0 && cars.count % size === 0
+              ? Math.floor(filterCars.count / size)
+              : Math.floor(filterCars.count / size) + 1
           }
           color="primary"
           onChange={(e, page) => setCurrentPage(page)}
