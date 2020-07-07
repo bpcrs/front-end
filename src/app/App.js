@@ -11,6 +11,8 @@ import store from "./store";
 import AppContext from "./AppContext";
 import routes from "./fuse-configs/routesConfig";
 import * as history from "history";
+import { LocalizationProvider } from "@material-ui/pickers/LocalizationProvider";
+import DateFnsUtils from "@material-ui/pickers/adapter/date-fns";
 
 const jss = create({
   ...jssPreset(),
@@ -28,19 +30,21 @@ const App = () => {
         routes,
       }}
     >
-      <JssProvider jss={jss} generateClassName={generateClassName}>
-        <Provider store={store}>
-          <Auth>
-            <Router history={historyObj}>
-              <FuseAuthorization>
-                <FuseTheme>
-                  <FuseLayout />
-                </FuseTheme>
-              </FuseAuthorization>
-            </Router>
-          </Auth>
-        </Provider>
-      </JssProvider>
+      <LocalizationProvider dateAdapter={DateFnsUtils}>
+        <JssProvider jss={jss} generateClassName={generateClassName}>
+          <Provider store={store}>
+            <Auth>
+              <Router history={historyObj}>
+                <FuseAuthorization>
+                  <FuseTheme>
+                    <FuseLayout />
+                  </FuseTheme>
+                </FuseAuthorization>
+              </Router>
+            </Auth>
+          </Provider>
+        </JssProvider>
+      </LocalizationProvider>
     </AppContext.Provider>
   );
 };
