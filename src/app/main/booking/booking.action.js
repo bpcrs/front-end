@@ -20,6 +20,9 @@ export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
 export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
 export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 
+export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
+export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
+
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -100,6 +103,18 @@ export function fetchBrandsFailure(error) {
     payload: error,
   };
 }
+export function fetchModelsSuccess(models) {
+  return {
+    type: FETCH_MODEL_SUCCESS,
+    payload: models,
+  };
+}
+export function fetchModelsFailure(error) {
+  return {
+    type: FETCH_MODEL_FAILURE,
+    payload: error,
+  };
+}
 
 export function fetchCarList(page, size) {
   return (dispatch) => {
@@ -125,18 +140,14 @@ export function fetchCarFilter(
   page,
   size,
   brandId = [],
+  modelId = [],
   fromPrice,
-  models,
-  seat,
-  toPrice
+  toPrice,
+  seat
 ) {
   return (dispatch) => {
-    // dispatch({
-    //   type: FETCH_CAR_LIST,
-    // });
-    console.log(brandId);
-
     const params = { page, size };
+    console.log(modelId);
 
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
       ...params,
@@ -145,7 +156,7 @@ export function fetchCarFilter(
         .join(",")
         .toString(),
       fromPrice: fromPrice,
-      models: models,
+      models: modelId,
       seat: seat,
       toPrice: toPrice,
     });
@@ -259,6 +270,21 @@ export function fetchBrandList(page, size) {
       },
       (error) => {
         dispatch(fetchBrandsFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchModelList() {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.MODEL_CONTROLLER_GETALL);
+    request.then(
+      (response) => {
+        dispatch(fetchModelsSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchModelsFailure(error));
         dispatch(showMessageError(error.message));
       }
     );

@@ -10,7 +10,11 @@ import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCarList, fetchBrandList, fetchCarFilter } from "./booking.action";
+import {
+  fetchModelList,
+  fetchBrandList,
+  fetchCarFilter,
+} from "./booking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { FilterButton } from "./FilterButton";
@@ -94,15 +98,13 @@ function CarList(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const cars = useSelector((state) => state.booking.cars);
+  // const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
   const brands = useSelector((state) => state.booking.brands);
   const filterCars = useSelector((state) => state.booking.filterCars);
+  const models = useSelector((state) => state.booking.models);
   console.log("Filter Cars", filterCars);
-  // console.log(
-  //   "Brand list",
-  //   brands.map((brand) => ({ ...brand, title: brand.name, value: brand.id }))
-  // );
+  // console.log("Models ", models);
 
   const [filter, setFilter] = useState({
     brand: [],
@@ -110,18 +112,13 @@ function CarList(props) {
   });
   const [chipData, setChipData] = useState([]);
 
-  const filterCar = (page, size, brandId, fromPrice, models, seat, toPrice) => {
-    dispatch(
-      fetchCarFilter(page, size, brandId, fromPrice, models, seat, toPrice)
-    );
-  };
-
   useEffect(() => {
-    dispatch(fetchCarList(currentPage, size));
+    // dispatch(fetchCarList(currentPage, size));
     dispatch(fetchBrandList());
-    console.log(filter.brand[0]);
+    dispatch(fetchModelList());
+    dispatch(fetchCarFilter(currentPage, size, filter.brand, filter.model));
+    console.log(filter.model);
 
-    dispatch(fetchCarFilter(currentPage, size, filter.brand));
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
         filter[key].map((item, index) => ({ item, key: index, type: key }))
@@ -156,13 +153,22 @@ function CarList(props) {
               }))}
               onFilter={(value) => {
                 setFilter({ brand: value });
-                // filterCar(1, 10, 1);
+                setFilter({ model: value });
               }}
               filterInChip={filter.brand}
             />
-            {/* <FilterButton name="Model" data={data} /> */}
-            {/* <FilterButton name="Seat" data={data} /> */}
-            {/* <FilterButton name="Location" data={data} /> */}
+            <FilterButton
+              name="Model"
+              data={models.map((model) => ({
+                ...model,
+                title: model.name,
+                value: model.id,
+              }))}
+              onFilter={(value) => {
+                // setFilter({ model: value });
+              }}
+              filterInChip={filter.brand}
+            />
           </Grid>
         </Grid>
         <Grid item lg={12}>
@@ -215,7 +221,7 @@ function CarList(props) {
       <Grid xs={12} lg={12} item container justify="flex-end">
         <Pagination
           count={
-            filterCars.count !== 0 && cars.count % size === 0
+            filterCars.count !== 0 && filterCars.count % size === 0
               ? Math.floor(filterCars.count / size)
               : Math.floor(filterCars.count / size) + 1
           }

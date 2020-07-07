@@ -7,6 +7,7 @@ const initialState = {
   carDetail: {},
   brands: [],
   filterCars: [],
+  models: [],
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -51,6 +52,13 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         filterCars: payload,
+      };
+    }
+    case Actions.FETCH_MODEL_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        models: payload,
       };
     }
     default: {
