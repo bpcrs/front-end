@@ -54,7 +54,7 @@ class FuseAuthorization extends Component {
         User is guest
         Redirect to Login Page
         */
-    console.log(user);
+    // console.log(user);
 
     if (user.role === APP_ROLE.GUEST) {
       history.push({
