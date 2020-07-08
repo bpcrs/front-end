@@ -8,6 +8,10 @@
 // import DeleteIcon from '@material-ui/icons/Delete';
 import React, { useState, useEffect } from "react";
 import {
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
     Button,
     TextField,
     Card,
@@ -75,7 +79,8 @@ export default function CarSubmit(props) {
 
     const dispatch = useDispatch();
     const [currentCar, setCurrentCar] = useState({});
-    const [imageList, setImageList] = useState([]);
+    var linkImageArr = new Array();
+    var [imageCarArr, setImageCarArr] = useState([]);
 
     const handleInputChange = (event) => {
         setCurrentCar({
@@ -85,12 +90,20 @@ export default function CarSubmit(props) {
 
     };
 
-    // const [brand, setBrand] = React.useState('');
-    // const [model, setModel] = React.useState('');
+    const [brand, setBrand] = React.useState('');
+    const [model, setModel] = React.useState('');
+
+    const handleChangeBrand = (event) => {
+        setBrand(event.target.value);
+    };
+    const handleChangeModel = (event) => {
+        setModel(event.target.value)
+    };
     // const maxNumber = 10;
     // const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
-    var linkImageArr = new Array();
-    var imageCarArr = new Array();
+
+
+
 
     var count = 0;
 
@@ -170,7 +183,7 @@ export default function CarSubmit(props) {
     var flag2 = false;
     let submitCarInfor = () => {
         console.log("length file image: " + imageCarArr.length);
-        storeImageToFireBase();
+        //storeImageToFireBase();
         // console.log("lenth link image: " + linkImageArr.length);
         // if (linkImageArr.length > 0) {
         //     submitCar();
@@ -255,10 +268,10 @@ export default function CarSubmit(props) {
         if (event.target.files[0]) {
             var image = document.getElementById('output');
             image.src = URL.createObjectURL(event.target.files[0]);
-            if (imageCarArr.length > 0) {                
+            if (imageCarArr.length > 0) {
                 imageCarArr[0] = event.target.files[0];
-            } else {             
-                imageCarArr.push(event.target.files[0]);             
+            } else {
+                setImageCarArr([...imageCarArr, event.target.files[0]])
             }
         }
     };
@@ -269,6 +282,7 @@ export default function CarSubmit(props) {
             image.src = URL.createObjectURL(event.target.files[0]);
             //fileArr.push(event.target.files[0]);
             imageCarArr[1] = event.target.files[0];
+            console.log("test file image: " + event.target.files[0].name);
         }
     };
 
@@ -302,8 +316,20 @@ export default function CarSubmit(props) {
                     </Grid>
 
                     <Card className={classes.card}>
-
-                        <Grid
+                    <div>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="demo-simple-select-required-label" variant="outlined">Brand</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={brand}
+                                    onChange={handleChangeBrand}
+                                >
+                                    
+                                </Select>
+                            </FormControl>
+                        </div>
+                        {/* <Grid
                             spacing={1}
                             container
                             justify="space-between"
@@ -327,8 +353,26 @@ export default function CarSubmit(props) {
                             //     ),
                             // }}
                             />
-                        </Grid>
-                        <Grid
+                        </Grid> */}
+
+                        <div>
+                            <FormControl className={classes.formControl}>
+                                <InputLabel id="demo-simple-select-required-label" variant="outlined">Model</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={model}
+                                    name="model"
+                                    onChange={handleChangeModel}
+                                    className={classes.selectEmpty}>
+                                    <MenuItem>
+                                        <em>None</em>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        {/* <Grid
                             spacing={1}
                             container
                             justify="space-between"
@@ -343,7 +387,7 @@ export default function CarSubmit(props) {
                                 onChange={handleInputChange}
                                 className={classes.textField}
                             />
-                        </Grid>
+                        </Grid> */}
 
                         <Grid
                             spacing={1}
@@ -533,7 +577,7 @@ export default function CarSubmit(props) {
                                             startIcon={<CloudUploadIcon />}
                                         >
                                             <label htmlFor="file2">Choose File</label></Button>
-                                        <p><img id="output2" width="200" height="200" /></p>
+                                        <p><img id="output2" width="200" height="200" onChange={handleInputChange} /></p>
                                     </div>
                                 </Grid>
 
