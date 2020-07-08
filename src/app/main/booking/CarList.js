@@ -5,6 +5,7 @@ import {
   Paper,
   Chip,
   Typography,
+  Slider,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
@@ -18,6 +19,7 @@ import {
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { FilterButton } from "./FilterButton";
+// import { SliderFilterButton } from "./SliderFilterButton";
 
 const useStyles = makeStyles((theme) => ({
   rootChip: {
@@ -33,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     flexGrow: 1,
+  },
+  slider: {
+    width: 300,
   },
   paper: {
     padding: theme.spacing(2),
@@ -59,6 +64,13 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
+const seatData = [
+  { title: "4", value: 4 },
+  { title: "7", value: 7 },
+];
+function valuetext(value) {
+  return `${value}°C`;
+}
 // const data = [
 //   { title: "The Shawshank Redemption", value: 1994 },
 //   { title: "The Godfather", value: 1972 },
@@ -95,7 +107,10 @@ const useStyles = makeStyles((theme) => ({
 // ];
 function CarList(props) {
   const size = 8;
+  const minPrice = 100000;
+  const maxPrice = 5000000;
   const [currentPage, setCurrentPage] = useState(1);
+  const [valueSlider, setValueSlider] = useState([minPrice, maxPrice]);
   const classes = useStyles();
   const dispatch = useDispatch();
   // const cars = useSelector((state) => state.booking.cars);
@@ -109,15 +124,21 @@ function CarList(props) {
   const [filter, setFilter] = useState({
     brand: [],
     model: [],
+    seat: [],
   });
   const [chipData, setChipData] = useState([]);
+
+  const handleChangeSlider = (event, newValue) => {
+    setValueSlider(newValue);
+  };
 
   useEffect(() => {
     // dispatch(fetchCarList(currentPage, size));
     dispatch(fetchBrandList());
     dispatch(fetchModelList());
-    dispatch(fetchCarFilter(currentPage, size, filter.brand, filter.model));
-    console.log(filter.model);
+    dispatch(
+      fetchCarFilter(currentPage, size, filter.brand, filter.model, filter.seat)
+    );
 
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
@@ -129,10 +150,17 @@ function CarList(props) {
   }, [currentPage, dispatch, filter]);
 
   const handleDelete = (chipToDelete) => () => {
+    // console.log(chipToDelete);
+    // console.log(chipData);
+
     setChipData((chips) =>
-      chips.filter((chip) => chip.key !== chipToDelete.key)
+      chips.filter(
+        (chip) =>
+          chip.key !== chipToDelete.key && chip.type === chipToDelete.type
+      )
     );
     setFilter({
+      ...filter,
       [chipToDelete.type]: filter[chipToDelete.type].filter(
         (item) => item.value !== chipToDelete.item.value
       ),
@@ -147,28 +175,49 @@ function CarList(props) {
             <FilterButton
               name="Brand"
               data={brands.map((brand) => ({
-                ...brand,
                 title: brand.name,
                 value: brand.id,
               }))}
               onFilter={(value) => {
-                setFilter({ brand: value });
-                setFilter({ model: value });
+                setFilter({ ...filter, brand: value });
               }}
               filterInChip={filter.brand}
             />
             <FilterButton
               name="Model"
               data={models.map((model) => ({
-                ...model,
                 title: model.name,
                 value: model.id,
               }))}
               onFilter={(value) => {
-                // setFilter({ model: value });
+                setFilter({ ...filter, model: value });
               }}
-              filterInChip={filter.brand}
+              filterInChip={filter.model}
             />
+
+            <FilterButton
+              name="Seat"
+              data={seatData.map((seat) => ({
+                title: seat.title,
+                value: seat.value,
+              }))}
+              onFilter={(value) => {
+                setFilter({ ...filter, seat: value });
+              }}
+              filterInChip={filter.seat}
+            />
+            <div className={classes.slider}>
+              <Typography id="range-slider" gutterBottom>
+                Price range
+              </Typography>
+              <Slider
+                value={valueSlider}
+                onChange={handleChangeSlider}
+                valueLabelDisplay="auto"
+                aria-labelledby="range-slider"
+                getAriaValueText={valuetext}
+              />
+            </div>
           </Grid>
         </Grid>
         <Grid item lg={12}>

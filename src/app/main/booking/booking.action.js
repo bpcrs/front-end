@@ -141,13 +141,13 @@ export function fetchCarFilter(
   size,
   brandId = [],
   modelId = [],
+  seat = [],
   fromPrice,
-  toPrice,
-  seat
+  toPrice
 ) {
   return (dispatch) => {
     const params = { page, size };
-    console.log(modelId);
+    // console.log(modelId);
 
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
       ...params,
@@ -155,9 +155,15 @@ export function fetchCarFilter(
         .map((brand) => parseInt(brand.value))
         .join(",")
         .toString(),
+      models: modelId
+        .map((model) => parseInt(model.value))
+        .join(",")
+        .toString(),
+      seat: seat
+        .map((seat) => parseInt(seat.value))
+        .join(",")
+        .toString(),
       fromPrice: fromPrice,
-      models: modelId,
-      seat: seat,
       toPrice: toPrice,
     });
     request.then(
@@ -248,7 +254,7 @@ export function fetchImageList(page, size, carId) {
     request.then(
       (response) => {
         dispatch(fetchImageSuccess(response.success ? response.data : []));
-        console.log("Images", response.data);
+        // console.log("Images", response.data);
       },
       (error) => {
         dispatch(fetchImageFailure(error));

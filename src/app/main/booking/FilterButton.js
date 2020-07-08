@@ -21,6 +21,7 @@ export const FilterButton = (props) => {
   const [anchorEl, setAnchorEl] = useState(null);
   useEffect(() => {
     let result = data.filter((item) => item.title.indexOf(input) !== -1);
+    console.log(data);
     if (result.length !== 0) {
       setValue(result);
     } else {
