@@ -19,7 +19,7 @@ import {
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { FilterButton } from "./FilterButton";
-// import { SliderFilterButton } from "./SliderFilterButton";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   rootChip: {
@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   slider: {
     width: 300,
+    paddingLeft: theme.spacing(8),
   },
   paper: {
     padding: theme.spacing(2),
@@ -69,46 +70,13 @@ const seatData = [
   { title: "7", value: 7 },
 ];
 function valuetext(value) {
-  return `${value}°C`;
+  return `${value}`;
 }
-// const data = [
-//   { title: "The Shawshank Redemption", value: 1994 },
-//   { title: "The Godfather", value: 1972 },
-//   { title: "The Godfather: Part II", value: 1974 },
-//   { title: "The Dark Knight", value: 2008 },
-//   { title: "12 Angry Men", value: 1957 },
-//   { title: "Schindler's List", value: 1993 },
-//   { title: "Pulp Fiction", value: 1994 },
-//   { title: "The Lord of the Rings: The Return of the King", value: 2003 },
-//   { title: "The Good, the Bad and the Ugly", value: 1966 },
-//   { title: "Fight Club", value: 1999 },
-//   { title: "The Lord of the Rings: The Fellowship of the Ring", value: 2001 },
-//   { title: "Star Wars: Episode V - The Empire Strikes Back", value: 1980 },
-//   { title: "Forrest Gump", value: 1994 },
-//   { title: "Inception", value: 2010 },
-//   { title: "The Lord of the Rings: The Two Towers", value: 2002 },
-//   { title: "One Flew Over the Cuckoo's Nest", value: 1975 },
-//   { title: "Goodfellas", value: 1990 },
-//   { title: "The Matrix", value: 1999 },
-//   { title: "Seven Samurai", value: 1954 },
-//   { title: "Star Wars: Episode IV - A New Hope", value: 1977 },
-//   { title: "City of God", value: 2002 },
-//   { title: "Se7en", value: 1995 },
-//   { title: "The Silence of the Lambs", value: 1991 },
-//   { title: "It's a Wonderful Life", value: 1946 },
-//   { title: "Life Is Beautiful", value: 1997 },
-//   { title: "The Usual Suspects", value: 1995 },
-//   { title: "Léon: The Professional", value: 1994 },
-//   { title: "Spirited Away", value: 2001 },
-//   { title: "Saving Private Ryan", value: 1998 },
-//   { title: "Once Upon a Time in the West", value: 1968 },
-//   { title: "American History X", value: 1998 },
-//   { title: "Interstellar", value: 2014 },
-// ];
 function CarList(props) {
   const size = 8;
   const minPrice = 100000;
   const maxPrice = 5000000;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [valueSlider, setValueSlider] = useState([minPrice, maxPrice]);
   const classes = useStyles();
@@ -126,6 +94,27 @@ function CarList(props) {
     model: [],
     seat: [],
   });
+  const showPriceRange = () => {
+    return (
+      <Grid>
+        <NumberFormat
+          value={valueSlider[0]}
+          displayType={"text"}
+          thousandSeparator={true}
+          // prefix={"$"}
+          suffix={" VNĐ"}
+        />{" "}
+        -{" "}
+        <NumberFormat
+          value={valueSlider[1]}
+          displayType={"text"}
+          thousandSeparator={true}
+          // prefix={"$"}
+          suffix={" VNĐ"}
+        />
+      </Grid>
+    );
+  };
   const [chipData, setChipData] = useState([]);
 
   const handleChangeSlider = (event, newValue) => {
@@ -137,7 +126,15 @@ function CarList(props) {
     dispatch(fetchBrandList());
     dispatch(fetchModelList());
     dispatch(
-      fetchCarFilter(currentPage, size, filter.brand, filter.model, filter.seat)
+      fetchCarFilter(
+        currentPage,
+        size,
+        filter.brand,
+        filter.model,
+        filter.seat,
+        valueSlider[0],
+        valueSlider[1]
+      )
     );
 
     const filterToChip = () => {
@@ -147,7 +144,7 @@ function CarList(props) {
       setChipData(tags.flat());
     };
     filterToChip();
-  }, [currentPage, dispatch, filter]);
+  }, [currentPage, dispatch, filter, valueSlider]);
 
   const handleDelete = (chipToDelete) => () => {
     // console.log(chipToDelete);
@@ -208,15 +205,45 @@ function CarList(props) {
             />
             <div className={classes.slider}>
               <Typography id="range-slider" gutterBottom>
-                Price range
+                Price range : {showPriceRange()}
               </Typography>
               <Slider
                 value={valueSlider}
                 onChange={handleChangeSlider}
-                valueLabelDisplay="auto"
+                valueLabelDisplay="off"
                 aria-labelledby="range-slider"
                 getAriaValueText={valuetext}
+                min={minPrice}
+                max={maxPrice}
+                marks={[
+                  {
+                    value: minPrice,
+                    label: (
+                      <NumberFormat
+                        value={minPrice}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        // prefix={"$"}
+                        suffix={" VNĐ"}
+                      />
+                    ),
+                  },
+                  {
+                    value: maxPrice,
+                    label: (
+                      <NumberFormat
+                        value={maxPrice}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        // prefix={"$"}
+                        suffix={" VNĐ"}
+                      />
+                    ),
+                  },
+                ]}
               />
+
+              {console.log("Value", valueSlider[0])}
             </div>
           </Grid>
         </Grid>
