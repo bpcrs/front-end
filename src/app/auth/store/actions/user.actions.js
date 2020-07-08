@@ -62,8 +62,8 @@ export function setUserData(user) {
  */
 export function updateUserSettings(settings) {
   return (dispatch, getState) => {
-    const oldUser = getState().auth.user;
-    console.log(oldUser);
+    // const oldUser = getState().auth.user;
+    // console.log(oldUser);
 
     const user = {};
 

@@ -2,6 +2,7 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT } from "../../services/api";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
+export const FETCH_FILTER_CARS_SUCCESS = "[CAR] FETCH FILTER DATA SUCCESS";
 export const FETCH_CARS_FAILURE = "[CAR] FETCH DATA FAILURE";
 
 export const FETCH_REVIEW_SUCCESS = "[REVIEW] FETCH DATA SUCCESS";
@@ -16,9 +17,21 @@ export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
 export const FETCH_IMAGE_CAR_SUCCESS = "[IMAGE] FETCH IMAGE SUCCESS";
 export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
 
+export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
+export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
+
+export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
+export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
+
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
+    payload: cars,
+  };
+}
+export function fetchCarFilterSuccess(cars) {
+  return {
+    type: FETCH_FILTER_CARS_SUCCESS,
     payload: cars,
   };
 }
@@ -78,6 +91,31 @@ export function fetchImageFailure(error) {
     payload: error,
   };
 }
+export function fetchBrandsSuccess(brands) {
+  return {
+    type: FETCH_BRAND_SUCCESS,
+    payload: brands,
+  };
+}
+export function fetchBrandsFailure(error) {
+  return {
+    type: FETCH_BRAND_FAILURE,
+    payload: error,
+  };
+}
+export function fetchModelsSuccess(models) {
+  return {
+    type: FETCH_MODEL_SUCCESS,
+    payload: models,
+  };
+}
+export function fetchModelsFailure(error) {
+  return {
+    type: FETCH_MODEL_FAILURE,
+    payload: error,
+  };
+}
+
 export function fetchCarList(page, size) {
   return (dispatch) => {
     // dispatch({
@@ -90,6 +128,53 @@ export function fetchCarList(page, size) {
     request.then(
       (response) =>
         dispatch(fetchCarSuccess(response.success ? response.data : [])),
+      (error) => {
+        dispatch(fetchCarsError(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchCarFilter(
+  page,
+  size,
+  brandId = [],
+  modelId = [],
+  seat = [],
+  fromPrice,
+  toPrice
+) {
+  return (dispatch) => {
+    const params = { page, size };
+    // console.log(modelId);
+
+    const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
+      ...params,
+      brand: brandId
+        .map((brand) => parseInt(brand.value))
+        .join(",")
+        .toString(),
+      models: modelId
+        .map((model) => parseInt(model.value))
+        .join(",")
+        .toString(),
+      seat: seat
+        .map((seat) => parseInt(seat.value))
+        .join(",")
+        .toString(),
+      fromPrice: fromPrice,
+      toPrice: toPrice,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(
+            fetchCarFilterSuccess(response.success ? response.data : [])
+          );
+          console.log("Filter car", response.data);
+        }
+      },
       (error) => {
         dispatch(fetchCarsError(error));
         dispatch(showMessageError(error.message));
@@ -169,10 +254,43 @@ export function fetchImageList(page, size, carId) {
     request.then(
       (response) => {
         dispatch(fetchImageSuccess(response.success ? response.data : []));
-        console.log("Images", response.data);
+        // console.log("Images", response.data);
       },
       (error) => {
         dispatch(fetchImageFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchBrandList(page, size) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.BRAND_CONTROLLER_GETALL, {
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchBrandsSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchBrandsFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchModelList() {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.MODEL_CONTROLLER_GETALL);
+    request.then(
+      (response) => {
+        dispatch(fetchModelsSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchModelsFailure(error));
         dispatch(showMessageError(error.message));
       }
     );

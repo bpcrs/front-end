@@ -87,7 +87,7 @@ export default function CarEdits(props) {
   };
 
   const updateCar = () => {
-    console.log("Name car : ", currentCar.name);
+    // console.log("Name car : ", currentCar.name);
 
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
