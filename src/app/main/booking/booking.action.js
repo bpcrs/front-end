@@ -1,5 +1,5 @@
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT } from "../../services/api";
+import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CARS_FAILURE = "[CAR] FETCH DATA FAILURE";
@@ -15,6 +15,12 @@ export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
 
 export const FETCH_IMAGE_CAR_SUCCESS = "[IMAGE] FETCH IMAGE SUCCESS";
 export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
+
+export const POST_CAR_SUBMIT_SUCCESS = "[CAR_SUBMIT] POST DATA SUCCESS";
+export const POST_CAR_SUBMIT_FAILURE = "[CAR_SUBMIT] POST DATA FAILURE";
+
+export const POST_IMAGE_CAR_SUBMIT_SUCCESS = "[IMAGE_CAR_SUBMIT] POST IMAGE SUCCESS";
+export const POST_IMAGE_CAR_SUBMIT_FAILURE ="[IMAGE_CAR_SUBMIT] POST IMAGE FAILURE";
 
 export function fetchCarSuccess(cars) {
   return {
@@ -75,6 +81,30 @@ export function fetchImageSuccess(images) {
 export function fetchImageFailure(error) {
   return {
     type: FETCH_IMAGE_CAR_FAILURE,
+    payload: error,
+  };
+}
+export function postCarSubmitSuccess(car) {
+  return {
+    type: POST_CAR_SUBMIT_SUCCESS,
+    payload: car,
+  };
+}
+export function postCarSubmitFailure(error) {
+  return {
+    type: POST_CAR_SUBMIT_FAILURE,
+    payload: error,
+  };
+}
+export function postImageCarSubmitSuccess(images){
+  return{
+    type: POST_IMAGE_CAR_SUBMIT_SUCCESS,
+    payload: images,
+  };
+}
+export function postImageCarSubmitFailure(error){
+  return{
+    type: POST_IMAGE_CAR_SUBMIT_FAILURE,
     payload: error,
   };
 }
@@ -173,6 +203,52 @@ export function fetchImageList(page, size, carId) {
       },
       (error) => {
         dispatch(fetchImageFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function postCarSubmit(car, listImage) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postCarSubmitSuccess(response.data));
+          dispatch(postImageCar(listImage, response.data.id))
+          console.log("Success submit car ", response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit car error");
+        }
+      },
+      (error) => {
+        dispatch(postCarSubmitFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  }
+}
+
+export function postImageCar(link, carId) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.IMAGE_CONTROLLER_GETALL, {},{
+      carId,
+      link
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postImageCarSubmitSuccess(response.data));
+          console.log("Success submit image car");
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit image car error");
+        }
+      },
+      (error) => {
+        dispatch(postImageCarSubmitFailure(error));
         dispatch(showMessageError(error.message));
       }
     );

@@ -11,11 +11,8 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Layout from '../../layout';
 import Paper from '@material-ui/core/Paper';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import ProgressBar from 'react-customizable-progressbar'
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import firebase from './firebase';
 import Slide from '@material-ui/core/Slide'
