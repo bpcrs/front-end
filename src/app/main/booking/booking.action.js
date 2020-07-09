@@ -18,10 +18,12 @@ export const FETCH_IMAGE_CAR_SUCCESS = "[IMAGE] FETCH IMAGE SUCCESS";
 export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
 
 export const POST_CAR_SUBMIT_SUCCESS = "[CAR_SUBMIT] POST DATA SUCCESS";
+export const POST_CAR_SUBMIT = "[CAR_SUBMIT] POST DATA";
 export const POST_CAR_SUBMIT_FAILURE = "[CAR_SUBMIT] POST DATA FAILURE";
 
 export const POST_IMAGE_CAR_SUBMIT_SUCCESS = "[IMAGE_CAR_SUBMIT] POST IMAGE SUCCESS";
 export const POST_IMAGE_CAR_SUBMIT_FAILURE = "[IMAGE_CAR_SUBMIT] POST IMAGE FAILURE";
+
 export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
 export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 
@@ -100,6 +102,11 @@ export function postCarSubmitSuccess(car) {
   return {
     type: POST_CAR_SUBMIT_SUCCESS,
     payload: car,
+  };
+}
+export function postCar() {
+  return {
+    type: POST_CAR_SUBMIT,
   };
 }
 export function postCarSubmitFailure(error) {
@@ -370,3 +377,4 @@ export function fetchModelList() {
     );
   };
 }
+
