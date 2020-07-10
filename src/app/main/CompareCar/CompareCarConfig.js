@@ -23,7 +23,6 @@ export const CompareCarConfig = {
             }
         }
     },
-    auth    : authRoles.onlyGuest,
     routes  : [
         {
             path     : '/compareCar',
