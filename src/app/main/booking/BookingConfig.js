@@ -51,5 +51,17 @@ export const BookingConfig = {
       path: APP_PATH.CAR_EDIT + "/:id",
       component: CarEdit,
     },
+    {
+      path: APP_PATH.CAR_COMPARE,
+      component: FuseLoadable({
+        loader: () => import("../CompareCar/CompareCar")
+      }),
+    },
+    {
+      path: APP_PATH.LICENSE_SUBMIT,
+      component: FuseLoadable({
+        loader: () => import("../submitLicense/submitLicense")
+      }),
+    },
   ],
 };
