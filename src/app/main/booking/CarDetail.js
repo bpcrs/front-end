@@ -19,6 +19,7 @@ import Chip from "@material-ui/core/Chip";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewList, fetchCarDetail } from "./booking.action";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -342,7 +343,15 @@ export default function CarDetails(props) {
                     Car rental fee
                   </Typography>
                   <Typography variant="body2" align="right" color="textPrimary">
-                    1,200,000 dong
+                    {
+                      <NumberFormat
+                        value={carDetail.price}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        // prefix={"$"}
+                        suffix={" VNĐ"}
+                      />
+                    }
                   </Typography>
                   <Button
                     variant="contained"

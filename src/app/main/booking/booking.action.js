@@ -1,5 +1,5 @@
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT } from "../../services/api";
+import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_FILTER_CARS_SUCCESS = "[CAR] FETCH FILTER DATA SUCCESS";
@@ -22,6 +22,12 @@ export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 
 export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
 export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
+
+export const POST_BOOKING_SUCCESS = "[BOOKING] POST BOOKING SUCCESS";
+export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
+
+export const PUT_BOOKING_SUCCESS = "[BOOKING] PUT BOOKING SUCCESS";
+export const PUT_BOOKING_FAILURE = "[BOOKING] PUT BOOKING FAILURE";
 
 export function fetchCarSuccess(cars) {
   return {
@@ -115,12 +121,21 @@ export function fetchModelsFailure(error) {
     payload: error,
   };
 }
+export function postBookingSuccess(booking) {
+  return {
+    type: POST_BOOKING_SUCCESS,
+    payload: booking,
+  };
+}
+export function putBookingSuccess(booking) {
+  return {
+    type: PUT_BOOKING_SUCCESS,
+    payload: booking,
+  };
+}
 
 export function fetchCarList(page, size) {
   return (dispatch) => {
-    // dispatch({
-    //   type: FETCH_CAR_LIST,
-    // });
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
       page,
       size,
@@ -129,7 +144,6 @@ export function fetchCarList(page, size) {
       (response) =>
         dispatch(fetchCarSuccess(response.success ? response.data : [])),
       (error) => {
-        dispatch(fetchCarsError(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -176,7 +190,6 @@ export function fetchCarFilter(
         }
       },
       (error) => {
-        dispatch(fetchCarsError(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -194,7 +207,6 @@ export function fetchReviewList(page, size, carId) {
       (response) =>
         dispatch(fetchReviewSuccess(response.success ? response.data : [])),
       (error) => {
-        dispatch(fetchReviewError(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -208,14 +220,11 @@ export function fetchCarDetail(id) {
       (response) => {
         if (response.success) {
           dispatch(fetchCarDetailSuccess(response.data));
-          // console.log("Data", response.data);
         } else {
           dispatch(showMessageError(response.message));
         }
       },
       (error) => {
-        console.log(error);
-        dispatch(fetchCarDetailError(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -229,15 +238,11 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
-          // console.log("Success update car ", response.data);
         } else {
-          // console.log("Fail update car");
           dispatch(showMessageError(response.message));
         }
       },
       (error) => {
-        console.log(error);
-        dispatch(putCarEditFailure(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -254,10 +259,8 @@ export function fetchImageList(page, size, carId) {
     request.then(
       (response) => {
         dispatch(fetchImageSuccess(response.success ? response.data : []));
-        // console.log("Images", response.data);
       },
       (error) => {
-        dispatch(fetchImageFailure(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -275,7 +278,6 @@ export function fetchBrandList(page, size) {
         dispatch(fetchBrandsSuccess(response.success ? response.data : []));
       },
       (error) => {
-        dispatch(fetchBrandsFailure(error));
         dispatch(showMessageError(error.message));
       }
     );
@@ -290,7 +292,35 @@ export function fetchModelList() {
         dispatch(fetchModelsSuccess(response.success ? response.data : []));
       },
       (error) => {
-        dispatch(fetchModelsFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function postBookingRequest(booking) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
+    request.then(
+      (response) => {
+        dispatch(postBookingSuccess(response.success ? response.data : []));
+        console.log("Create success ", response.data);
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function putBookingRequest(id, booking) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.BOOKING_CONTROLLER_GETBYID(id), {}, booking);
+    request.then(
+      (response) => {
+        dispatch(putBookingSuccess(response.success ? response.data : []));
+      },
+      (error) => {
         dispatch(showMessageError(error.message));
       }
     );

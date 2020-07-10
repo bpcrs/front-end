@@ -56,4 +56,6 @@ export const ENDPOINT = {
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
+  BOOKING_CONTROLLER_GETALL: "/booking",
+  BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
 };
