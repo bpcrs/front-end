@@ -1,6 +1,7 @@
 import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 import CarDetail from "./CarDetail";
 import CarEdit from "./CarEdit";
+import CarCompare from "./CarCompare"
 import { APP_PATH } from "../../../constant";
 export const BookingConfig = {
   settings: {
