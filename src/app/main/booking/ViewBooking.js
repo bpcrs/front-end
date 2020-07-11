@@ -17,7 +17,7 @@ import Layout from "../../layout";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { useDispatch } from "react-redux";
-import { postBookingRequest, postBookingSuccess } from "./booking.action";
+import { postBookingRequest } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,11 +43,11 @@ const useStyles = makeStyles((theme) => ({
 export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { booking, carDetail } = props.location.state;
+  const { booking, carDetail, bookingReq } = props.location.state;
   const classes = useStyles();
-  const { bookingRequest, setBookingRequest } = useState({});
+  // const [bookingRequest, setBookingRequest] = useState({});
 
-  console.log("Booking ", booking);
+  // console.log("Booking ", bookingReq);
 
   const handleBooking = () => {
     createBookingRequest();
@@ -56,14 +56,15 @@ export default function ViewBooking(props) {
       state: {
         booking,
         carDetail,
+        bookingReq,
       },
     });
   };
 
   const createBookingRequest = () => {
-    setBookingRequest(...bookingRequest, booking);
-    console.log("Booking Request: ", bookingRequest);
-    // dispatch(postBookingRequest(bookingRequest));
+    // setBookingRequest(booking);
+    console.log("Booking Request: ", bookingReq);
+    dispatch(postBookingRequest(bookingReq));
   };
 
   return (
