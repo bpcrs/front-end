@@ -8,7 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Layout from '../../layout';
-
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchReviewList, fetchCarDetail } from "./booking.action";
+import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 const StyledTableRow = withStyles((theme) => ({
     root: {
         '&:nth-of-type(odd)': {
@@ -33,22 +37,23 @@ const rows = [
 
 const useStyles = makeStyles(() => ({
     root: {
-        // flexGrow: 1,
         display: 'flex',
         flexWrap: 'wrap',
 
 
     },
-    // paper: {
-    //     padding: theme.spacing(2),
-    //     textAlign: 'center',
-    //     color: theme.palette.text.secondary,
-
-    // },
 }));
 export default function CarCompare(props) {
     const classes = useStyles();
-
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const carDetail = useSelector((state) => state.booking.carDetail);
+    console.log(carDetail);
+    useEffect(() => {
+        const carId = 1;
+        dispatch(fetchReviewList(1, 10, carId));
+        dispatch(fetchCarDetail(carId));
+      }, [dispatch, props]);
     return (
         <Layout name="Compare your car">
 
