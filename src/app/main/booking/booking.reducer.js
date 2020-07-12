@@ -3,7 +3,7 @@ const initialState = {
   cars: [],
   reviews: [],
   images: [],
-  loading: true,
+  loading: false,
   carDetail: {},
   brands: [],
   filterCars: [],
@@ -70,11 +70,29 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         booking: payload,
       };
     }
-    case Actions.CREATE_AGREEMENT_SUCCESS: {
+    case Actions.POST_IMAGE_CAR_SUBMIT_SUCCESS: {
       return {
         ...state,
         loading: false,
-        agreemnts: payload,
+      };
+    }
+    case Actions.POST_CAR_SUBMIT: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+    case Actions.POST_REVIEW_SUBMIT_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        reviews : [...state.reviews, payload]
+      };
+    }
+    case Actions.POST_REVIEW_SUBMIT: {
+      return {
+        ...state,
+        loading: true,
       };
     }
     default: {

@@ -5,11 +5,12 @@ import { UserConfig } from "app/main/user/UserConfig";
 import { LoginConfig } from "../login/LoginConfig";
 import { LandingConfig } from "../main/landing/LandingConfig";
 // import { CarConfig } from '../car/CarConfig'
+import {SubmitLicenseConfig} from '../main/submitLicense/submitLicenseConfig';
+
 import { BookingConfig } from "../main/booking/BookingConfig";
 import { CompareCarConfig } from "../main/CompareCar/CompareCarConfig";
 import { ChatConfig } from "../main/chat/ChatConfig";
 import { ErrorConfig } from "../main/error/ErrorConfig";
-
 import { APP_PATH } from "../../constant";
 const routeConfigs = [
   UserConfig,
@@ -17,6 +18,7 @@ const routeConfigs = [
   LandingConfig,
   CompareCarConfig,
   BookingConfig,
+  SubmitLicenseConfig,
   ChatConfig,
   ErrorConfig,
 ];

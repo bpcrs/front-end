@@ -22,6 +22,8 @@ export const APP_PATH = {
   CAR_SUBMIT: "/submit",
   CAR_EDIT: "/car-edit",
   VIEW_BOOKING: "/view-booking",
+  LICENSE_SUBMIT: "/submitLicense",
+  CAR_COMPARE: "/compareCar",
 
   CHAT: "/chat",
   ERORR_404: "/error/404",

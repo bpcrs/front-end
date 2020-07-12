@@ -24,7 +24,16 @@ export const GET = (endpoint, params = {}) => {
     });
 };
 export const POST = (endpoint, params = {}, body = {}) => {
-  return request(endpoint, "POST", params, body);
+  return request(endpoint, "POST", params, body)
+  .then((response) => {
+    return response.data;
+  })
+  .catch((error) => {
+    const errResponse =
+      (error && error.response && error.response.data) ||
+      (error && error.message);
+    return errResponse;
+  });
 };
 export const request = (endpoint, method, params = {}, body = {}) => {
   return axios({
@@ -53,7 +62,8 @@ export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   REVIEW_CONTROLLER_GETALL: "/review",
-  ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
+  ACCOUNT_ADDRESS_GETBYID:(id)=> `/account/address/${id}`,
+  IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
   BOOKING_CONTROLLER_GETALL: "/booking",
