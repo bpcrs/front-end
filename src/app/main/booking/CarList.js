@@ -81,16 +81,14 @@ function CarList(props) {
   const [valueSlider, setValueSlider] = useState([minPrice, maxPrice]);
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
   const brands = useSelector((state) => state.booking.brands);
   const filterCars = useSelector((state) => state.booking.filterCars);
   const models = useSelector((state) => state.booking.models);
-
   const [filter, setFilter] = useState({
     brand: [],
     model: [],
-    seat: [],
+    seat: []
   });
   const showPriceRange = () => {
     return (

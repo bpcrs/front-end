@@ -2,6 +2,7 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
+export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_FILTER_CARS_SUCCESS = "[CAR] FETCH FILTER DATA SUCCESS";
 export const FETCH_CARS_FAILURE = "[CAR] FETCH DATA FAILURE";
 
@@ -282,6 +283,43 @@ export function fetchCarDetail(id) {
         }
       },
       (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchCarCompare(id1, id2) {
+  return (dispatch) => {
+    const request1 = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id1));
+    const request2 = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id2));
+    request1.then(
+      (response) => {
+        if (response.success) {
+          dispatch(fetchCarDetailSuccess(response.data));
+          // console.log("Data", response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        console.log(error);
+        dispatch(fetchCarDetailError(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+    request2.then(
+      (response) => {
+        if (response.success) {
+          dispatch(fetchCarDetailSuccess(response.data));
+          // console.log("Data", response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        console.log(error);
+        dispatch(fetchCarDetailError(error));
         dispatch(showMessageError(error.message));
       }
     );
