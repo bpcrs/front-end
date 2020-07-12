@@ -30,6 +30,10 @@ export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
 export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
 
+export const POST_REVIEW_SUBMIT_SUCCESS = "[REVIEW_SUBMIT] POST REVIEW SUBMIT SUCCESS";
+export const POST_REVIEW_SUBMIT_FAILURE = "[REVIEW-SUBMIT] POST REVIEW SUBMIT FAILURE";
+export const POST_REVIEW_SUBMIT = "[REVIEW-SUBMIT] POST REVIEW SUBMIT";
+
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -109,6 +113,11 @@ export function postCar() {
     type: POST_CAR_SUBMIT,
   };
 }
+export function postReview() {
+  return {
+    type: POST_REVIEW_SUBMIT,
+  };
+}
 export function postCarSubmitFailure(error) {
   return {
     type: POST_CAR_SUBMIT_FAILURE,
@@ -151,7 +160,18 @@ export function fetchModelsFailure(error) {
     payload: error,
   };
 }
-
+export function postReviewSubmitSuccess(review) {
+  return {
+    type: POST_REVIEW_SUBMIT_SUCCESS,
+    payload: review,
+  };
+}
+export function postReviewSubmitFailure(error) {
+  return {
+    type: POST_REVIEW_SUBMIT_FAILURE,
+    payload: error,
+  };
+}
 export function fetchCarList(page, size) {
   return (dispatch) => {
     // dispatch({
@@ -378,3 +398,23 @@ export function fetchModelList() {
   };
 }
 
+export function postReviewSubmit(review) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.REVIEW_CONTROLLER_GETALL, {}, review);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postImageCarSubmitSuccess(response.data))
+          console.log("Success submit review car");
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit review car error");
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+        dispatch(postReviewSubmitFailure(error.message));
+      }
+    );
+  };
+}
