@@ -1,4 +1,3 @@
-// import React from "react";
 import React, { useState, useEffect } from "react";
 import {
   CardHeader,
@@ -17,7 +16,6 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
-// import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchReviewList, fetchCarDetail, postReviewSubmit, postReview } from "./booking.action";
 import Dialog from '@material-ui/core/Dialog';
@@ -25,6 +23,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Slide from '@material-ui/core/Slide'
+import NumberFormat from "react-number-format";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -92,6 +91,30 @@ export default function CarDetails(props) {
   const loading = useSelector((state) => state.booking.loading);
   const { booking, carDetails } = props.location.state;
 
+  // const owner = carDetail.owner;
+  const convert = (str) => {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    // hours = ("0" + date.getHours()).slice(-2),
+    // minutes = ("0" + date.getMinutes()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  };
+
+  const bookingReq = {
+    description: "rent car",
+    destination: booking.destination.description,
+    status: "REQUEST",
+    fromDate: convert(booking.fromDate),
+    toDate: convert(booking.toDate),
+    location: booking.location.description,
+    carId: carDetail.id,
+    price: carDetail.price,
+    lessorId: 2,
+    renterId: currentUser.id,
+  };
+  // console.log("Car Detail", owner);
+  // console.log("Booking Request", bookingReq);
 
   useEffect(() => {
     const carId = props.match.params.id;
@@ -105,6 +128,8 @@ export default function CarDetails(props) {
       state: {
         booking,
         carDetails,
+        carDetail,
+        bookingReq,
       },
     });
   };
@@ -134,9 +159,7 @@ export default function CarDetails(props) {
   const submitReviewCarToDB = () => {
     dispatch(postReview());
     dispatch(postReviewSubmit(currentRating));
-    if (loading == false) {
-      window.location.reload();
-    }
+    setCurrentRating({comment : ""})
   };
 
   return (
@@ -405,7 +428,15 @@ export default function CarDetails(props) {
                     Car rental fee
                   </Typography>
                   <Typography variant="body2" align="right" color="textPrimary">
-                    1,200,000 dong
+                    {
+                      <NumberFormat
+                        value={carDetail.price}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        // prefix={"$"}
+                        suffix={" VNĐ"}
+                      />
+                    }
                   </Typography>
                   <Button
                     variant="contained"

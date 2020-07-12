@@ -77,6 +77,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
+        reviews : [...state.reviews, payload]
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {

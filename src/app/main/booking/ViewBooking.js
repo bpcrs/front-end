@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Typography,
@@ -14,6 +14,10 @@ import {
 import CarItem from "./CarItem";
 import { Link } from "react-router-dom";
 import Layout from "../../layout";
+import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
+import { useDispatch } from "react-redux";
+import { postBookingRequest } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,8 +41,32 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ViewBooking(props) {
-  const { booking, carDetail } = props.location.state;
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const { booking, carDetail, bookingReq } = props.location.state;
   const classes = useStyles();
+  // const [bookingRequest, setBookingRequest] = useState({});
+
+  // console.log("Booking ", bookingReq);
+
+  const handleBooking = () => {
+    createBookingRequest();
+    history.push({
+      pathname: APP_PATH.CHAT,
+      state: {
+        booking,
+        carDetail,
+        bookingReq,
+      },
+    });
+  };
+
+  const createBookingRequest = () => {
+    // setBookingRequest(booking);
+    console.log("Booking Request: ", bookingReq);
+    dispatch(postBookingRequest(bookingReq));
+  };
+
   return (
     <Layout name="Review Plan">
       <div>
@@ -192,7 +220,12 @@ export default function ViewBooking(props) {
             />
           </Grid>
           <Grid item xs={12} lg={6} xl={6} className={classes.paper}>
-            <Button color="primary" variant="contained" fullWidth>
+            <Button
+              color="primary"
+              onClick={handleBooking}
+              variant="contained"
+              fullWidth
+            >
               Book
             </Button>
           </Grid>

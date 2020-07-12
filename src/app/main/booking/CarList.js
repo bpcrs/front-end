@@ -66,8 +66,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const seatData = [
-  { title: "4", value: 4 },
-  { title: "7", value: 7 },
+  { title: "4 seat", value: 4 },
+  { title: "7 seat", value: 7 },
 ];
 function valuetext(value) {
   return `${value}`;
@@ -86,8 +86,6 @@ function CarList(props) {
   const brands = useSelector((state) => state.booking.brands);
   const filterCars = useSelector((state) => state.booking.filterCars);
   const models = useSelector((state) => state.booking.models);
-  console.log("Filter Cars", filterCars);
-  // console.log("Models ", models);
 
   const [filter, setFilter] = useState({
     brand: [],
@@ -101,7 +99,6 @@ function CarList(props) {
           value={valueSlider[0]}
           displayType={"text"}
           thousandSeparator={true}
-          // prefix={"$"}
           suffix={" VNĐ"}
         />{" "}
         -{" "}
@@ -109,7 +106,6 @@ function CarList(props) {
           value={valueSlider[1]}
           displayType={"text"}
           thousandSeparator={true}
-          // prefix={"$"}
           suffix={" VNĐ"}
         />
       </Grid>
@@ -122,7 +118,6 @@ function CarList(props) {
   };
 
   useEffect(() => {
-    // dispatch(fetchCarList(currentPage, size));
     dispatch(fetchBrandList());
     dispatch(fetchModelList());
     dispatch(
@@ -147,9 +142,6 @@ function CarList(props) {
   }, [currentPage, dispatch, filter, valueSlider]);
 
   const handleDelete = (chipToDelete) => () => {
-    // console.log(chipToDelete);
-    // console.log(chipData);
-
     setChipData((chips) =>
       chips.filter(
         (chip) =>
@@ -223,7 +215,6 @@ function CarList(props) {
                         value={minPrice}
                         displayType={"text"}
                         thousandSeparator={true}
-                        // prefix={"$"}
                         suffix={" VNĐ"}
                       />
                     ),
@@ -235,15 +226,12 @@ function CarList(props) {
                         value={maxPrice}
                         displayType={"text"}
                         thousandSeparator={true}
-                        // prefix={"$"}
                         suffix={" VNĐ"}
                       />
                     ),
                   },
                 ]}
               />
-
-              {console.log("Value", valueSlider[0])}
             </div>
           </Grid>
         </Grid>
@@ -254,13 +242,9 @@ function CarList(props) {
                 <Typography variant="subtitle2">Filter:</Typography>
               </li>
               {chipData.map((data) => {
-                // if (data.label === "React") {
-                //   icon = <TagFacesIcon />;
-                // }
                 return (
                   <li key={data.key}>
                     <Chip
-                      // icon={icon}
                       label={data.item.title}
                       onDelete={handleDelete(data)}
                       className={classes.chip}
@@ -290,6 +274,7 @@ function CarList(props) {
             <CarItem
               isAction={true}
               info={car}
+              model={models}
               booking={props.location.state}
             />
           </Grid>

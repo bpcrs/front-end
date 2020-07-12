@@ -66,4 +66,7 @@ export const ENDPOINT = {
   IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
+  BOOKING_CONTROLLER_GETALL: "/booking",
+  BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
+  CRITERIA_CONTROLLER_GETALL: "/criteria",
 };
