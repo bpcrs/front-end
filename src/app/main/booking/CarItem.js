@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -11,9 +11,13 @@ import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import CompareIcon from '@material-ui/icons/Compare';
 import { Grid, Icon, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import { useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
+
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 400,
@@ -35,10 +39,18 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
+  const [double, setDouble] = useState(false);
+  const history = useHistory();
   const { info } = props;
+  const carCompare = useSelector((state) => state.booking.carCompare);
+  const clickToAddCompareCar = () => {
+    carCompare.push({ info });
+    if (carCompare.length > 1) {
+      history.push(`${APP_PATH.CAR_COMPARE}`)
+    }
+  };
   return (
     <Card className={classes.card}>
       <CardHeader
@@ -62,7 +74,7 @@ export default function CarItem(props = { isAction: true }) {
       <CardMedia
         className={classes.media}
         image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-        title="Car thumnail"
+        title="Car thumbnail"
       />
       <CardContent>
         <Grid
@@ -131,7 +143,7 @@ export default function CarItem(props = { isAction: true }) {
             spacing={1}
             alignItems="center"
           >
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <Button
                 component={Link}
                 variant="contained"
@@ -145,7 +157,20 @@ export default function CarItem(props = { isAction: true }) {
                 View
               </Button>
             </Grid>
-            <Grid item xs={6} className={classes.alignRight}>
+            <Grid item xs={7}>
+              <Button
+                disabled={double}
+                variant="contained"
+                startIcon={<CompareIcon />}
+                onClick={() => {
+                  clickToAddCompareCar();
+                  setDouble(true);
+                }}
+              >
+                Compare
+              </Button>
+            </Grid>
+            <Grid item xs={12} className={classes.alignRight}>
               <Typography variant="subtitle2">3.000.000 VND</Typography>
             </Grid>
           </Grid>

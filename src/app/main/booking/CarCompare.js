@@ -8,11 +8,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Layout from '../../layout';
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewList, fetchCarDetail } from "./booking.action";
-import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import { useSelector } from "react-redux";
+
 const StyledTableRow = withStyles((theme) => ({
     root: {
         '&:nth-of-type(odd)': {
@@ -25,35 +23,26 @@ function createData(name, property1, property2) {
     return { name, property1, property2 };
 }
 
-const rows = [
-    createData('Name', '2020 Honda CR-V', '2020 GMC Terrain'),
-    createData('Price', '$1,120', '$1,195'),
-    createData('Seats', 5, 5),
-    createData('Consumer Rating', 4.9, 4.6),
-    createData('Model', '182.1 "', '182.3 "'),
-    createData('Sound', '104.8 "', '107.3 "'),
-    createData('Auto Drive', 'Yes', 'Yes'),
-];
-
 const useStyles = makeStyles(() => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
-
-
     },
 }));
 export default function CarCompare(props) {
     const classes = useStyles();
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const carDetail = useSelector((state) => state.booking.carDetail);
-    console.log(carDetail);
-    useEffect(() => {
-        const carId = 1;
-        dispatch(fetchReviewList(1, 10, carId));
-        dispatch(fetchCarDetail(carId));
-      }, [dispatch, props]);
+    const carCompare = useSelector((state) => state.booking.carCompare);
+    const carDetail1 = carCompare[0];
+    const carDetail2 = carCompare[1];
+    const rows = [
+        createData('Name', carDetail1.info.name, carDetail2.info.name),
+        createData('Price', carDetail1.info.price, carDetail2.info.price),
+        createData('Seats', carDetail1.info.seat, carDetail2.info.seat),
+        createData('Year', carDetail1.info.year, carDetail2.info.year),
+        createData('Sound', carDetail1.info.sound, carDetail2.info.sound),
+        createData('Auto Drive', carDetail1.info.auto_driver ? 'Automatic' : 'Manual', carDetail2.info.auto_driver ? 'Automatic' : 'Manual'),
+        createData('Screen', carDetail1.info.screen, carDetail2.info.screen)
+    ];
     return (
         <Layout name="Compare your car">
 
@@ -70,10 +59,8 @@ export default function CarCompare(props) {
                                 </Grid>
 
                                 <Grid item xs={6} lg={4}>
-                                    {/* <StyledTableCell align="right"> */}
                                     <img alt="" style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
                                         src={'https://www.cstatic-images.com/car-pictures/xl/USD00HOS021A021001.jpg'} />
-                                    {/* </StyledTableCell> */}
                                 </Grid>
 
                                 <Grid item xs={6} lg={4}>

@@ -81,18 +81,15 @@ function CarList(props) {
   const [valueSlider, setValueSlider] = useState([minPrice, maxPrice]);
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const cars = useSelector((state) => state.booking.cars);
   const loading = useSelector((state) => state.booking.loading);
   const brands = useSelector((state) => state.booking.brands);
   const filterCars = useSelector((state) => state.booking.filterCars);
   const models = useSelector((state) => state.booking.models);
   console.log("Filter Cars", filterCars);
-  // console.log("Models ", models);
-
   const [filter, setFilter] = useState({
     brand: [],
     model: [],
-    seat: [],
+    seat: []
   });
   const showPriceRange = () => {
     return (
@@ -256,7 +253,7 @@ function CarList(props) {
               {chipData.map((data) => {
                 // if (data.label === "React") {
                 //   icon = <TagFacesIcon />;
-                // }
+                // }  
                 return (
                   <li key={data.key}>
                     <Chip
