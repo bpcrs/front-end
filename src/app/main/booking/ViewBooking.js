@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Grid,
   Typography,
@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import Layout from "../../layout";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { postBookingRequest } from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,27 +43,52 @@ const useStyles = makeStyles((theme) => ({
 export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { booking, carDetail, bookingReq } = props.location.state;
+  const { booking, carDetail } = props.location.state;
   const classes = useStyles();
+  const currentUser = useSelector((state) => state.auth.user);
+  const bookingInStore = useSelector((state) => state.booking.booking);
+  console.log(bookingInStore);
   // const [bookingRequest, setBookingRequest] = useState({});
 
   // console.log("Booking ", bookingReq);
+  const convert = (str) => {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    // hours = ("0" + date.getHours()).slice(-2),
+    // minutes = ("0" + date.getMinutes()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  };
+
+  const bookingReq = {
+    description: "rent car",
+    destination: booking.destination.description,
+    status: "REQUEST",
+    fromDate: convert(booking.fromDate),
+    toDate: convert(booking.toDate),
+    location: booking.location.description,
+    carId: carDetail.id,
+    price: carDetail.price,
+    lessorId: carDetail.owner.id,
+    renterId: currentUser.id,
+  };
+
+  // console.log("Booking request");
 
   const handleBooking = () => {
     createBookingRequest();
     history.push({
       pathname: APP_PATH.CHAT,
       state: {
-        booking,
-        carDetail,
-        bookingReq,
+        // booking,
+        // carDetail,
+        bookingInStore,
       },
     });
   };
 
   const createBookingRequest = () => {
-    // setBookingRequest(booking);
-    console.log("Booking Request: ", bookingReq);
+    // console.log("Booking Request: ", bookingReq);
     dispatch(postBookingRequest(bookingReq));
   };
 

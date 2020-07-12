@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Avatar,
@@ -13,8 +13,13 @@ import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
-import { openAgreement, fetchCriteriaList } from "./chat.action";
-import { data } from "autoprefixer";
+import {
+  openAgreement,
+  fetchCriteriaList,
+  fetchAgreementList,
+  updateAgreementSuccess,
+} from "./chat.action";
+// import { data } from "autoprefixer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -79,18 +84,35 @@ const User = ({ displayName, email, photoURL }) => {
     </Grid>
   );
 };
-export const ChatArea = () => {
+export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const criterias = useSelector((state) => state.chat.criteria);
-  console.log(criterias.length);
+  const chip = useSelector((state) => state.chat.chip);
+  const agreements = useSelector((state) => state.chat.agreements);
+  const [updateAgreements, SetUpdateAgreements] = useState();
+  // console.log(updateAgreements);
+  // const booking = useSelector((state) => state.booking.booking);
+  // const bookingInStore = props.location.state;
+  // console.log(bookingInStore);
+
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
   };
+
+  const handleUpdateAgreement = () => {
+    // dispatch(updateAgreementSuccess(chip));
+    SetUpdateAgreements(updateAgreements, ...agreements);
+    console.log(updateAgreements);
+  };
+
   useEffect(() => {
     dispatch(fetchCriteriaList());
+    dispatch(fetchAgreementList(11));
+    // dispatch()
+    // addChip("Scope");
   }, [dispatch]);
   return (
     <Grid container>
@@ -137,21 +159,40 @@ export const ChatArea = () => {
           >
             {criterias.length !== 0 ? (
               <div className={classes.root}>
-                {criterias.map((data) => {
+                {chip.map((data) => {
+                  // console.log(data);
+                  // console.log(chip);
                   return (
                     <Chip
-                      icon={<Icon>error</Icon>}
-                      label={data.name}
+                      icon={<Icon>{data.approved ? "done" : "error"}</Icon>}
+                      label={data.type}
                       clickable
-                      color="secondary"
-                      onClick={() => handleOpenAgreement(data.name)}
+                      color="primary"
+                      // onChange={() => handleChip(chip.type)}
+                      style={{
+                        backgroundColor: data.approved ? "green" : "primary",
+                      }}
+                      onClick={() => handleOpenAgreement(data.type)}
                     />
                   );
                 })}
+                {console.log(chip)}
               </div>
             ) : (
               <></>
             )}
+
+            <Chip
+              icon={<Icon>done</Icon>}
+              label="Done"
+              clickable
+              color="primary"
+              // onChange={() => handleChip(chip.type)}
+              style={{
+                backgroundColor: "green",
+              }}
+              onClick={() => handleUpdateAgreement(chip)}
+            />
           </Grid>
         </Grid>
         <Grid

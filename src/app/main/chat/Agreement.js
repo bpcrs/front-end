@@ -57,16 +57,17 @@ export default function Agreement() {
   const agreement = useSelector((state) => state.chat.agreement);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
-  const criterias = useSelector((state) => state.chat.criteria);
+  // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
   const handleChange = (event, newValue) => {
     setScope(newValue);
   };
-  const handleSubmitScope = () => {
+  const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
-    submitMessage(scope, userLogged.id, selectedUser.id, "SCOPE");
+    submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
+  // const
   const AgreementByType = () => {
     switch (agreement.type) {
       case "Mileage limit":
@@ -93,7 +94,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleSubmitScope}
+              onClick={() => handleSubmitScope(agreement.type)}
             >
               Send
             </Button>
@@ -123,7 +124,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleSubmitScope}
+              onClick={() => handleSubmitScope("Extra")}
             >
               Send
             </Button>
@@ -153,7 +154,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleSubmitScope}
+              onClick={() => handleSubmitScope("Insurance")}
             >
               Send
             </Button>
@@ -183,7 +184,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleSubmitScope}
+              onClick={() => handleSubmitScope("Deposit")}
             >
               Send
             </Button>
@@ -213,7 +214,7 @@ export default function Agreement() {
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleSubmitScope}
+              onClick={() => handleSubmitScope("Indemnification")}
             >
               Send
             </Button>

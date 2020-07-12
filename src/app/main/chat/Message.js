@@ -10,8 +10,10 @@ import {
   Button,
 } from "@material-ui/core";
 // import GetDate from '../../../common/getDate';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
+import { closeAgreement, changeChip } from "./chat.action";
+
 const useStyles = makeStyles((theme) => ({
   messageBody: {
     width: "fit-content",
@@ -31,18 +33,33 @@ const useStyles = makeStyles((theme) => ({
 
 const Message = ({ message, receive, type = "SCOPE" }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const isRevice = userLogged.id !== receive;
+  const handleChangeChip = (type) => {
+    dispatch(changeChip(type, message));
+    dispatch(closeAgreement());
+  };
+  // const [mileageAgreement, setMileageAgreement] = useState({
+  //   value: message,
+  //   status: "CLOSE",
+  //   bookingId: 3,
+  //   criteriaId: 1,
+  // });
+  // const closeAgreementRequest = (type) => {
+  //   closeAgreement(type);
+  //   // dispatch(createAgreement(mileageAgreement));
+  // };
   const MessageByType = () => {
     switch (type) {
-      case "SCOPE":
+      case "Mileage limit":
         return (
           <Card className="w-1/2">
             <CardActionArea>
               <CardContent>
                 <Typography gutterBottom variant="subtitle1">
-                  Scope offering
+                  Mileage limit
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
@@ -53,7 +70,140 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
             </CardActionArea>
             {!isRevice ? (
               <CardActions>
-                <Button size="small" color="default" variant="outlined">
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => handleChangeChip("Mileage limit")}
+                >
+                  Agree
+                </Button>
+                <Button size="small" color="primary">
+                  Let't me think
+                </Button>
+              </CardActions>
+            ) : null}
+          </Card>
+        );
+      case "Extra":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Extra
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {isRevice
+                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            {!isRevice ? (
+              <CardActions>
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => handleChangeChip("Extra")}
+                >
+                  Agree
+                </Button>
+                <Button size="small" color="primary">
+                  Let't me think
+                </Button>
+              </CardActions>
+            ) : null}
+          </Card>
+        );
+      case "Insurance":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Insurance
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {isRevice
+                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            {!isRevice ? (
+              <CardActions>
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => handleChangeChip("Insurance")}
+                >
+                  Agree
+                </Button>
+                <Button size="small" color="primary">
+                  Let't me think
+                </Button>
+              </CardActions>
+            ) : null}
+          </Card>
+        );
+      case "Deposit":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Deposit
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {isRevice
+                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            {!isRevice ? (
+              <CardActions>
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => handleChangeChip("Deposit")}
+                >
+                  Agree
+                </Button>
+                <Button size="small" color="primary">
+                  Let't me think
+                </Button>
+              </CardActions>
+            ) : null}
+          </Card>
+        );
+      case "Indemnification":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Indemnification
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {isRevice
+                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            {!isRevice ? (
+              <CardActions>
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => handleChangeChip("Indemnification")}
+                >
                   Agree
                 </Button>
                 <Button size="small" color="primary">

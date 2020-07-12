@@ -59,4 +59,7 @@ export const ENDPOINT = {
   BOOKING_CONTROLLER_GETALL: "/booking",
   BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
   CRITERIA_CONTROLLER_GETALL: "/criteria",
+  AGREEMENT_CONTROLLER_GETALL: "/agreement",
+  AGREEMENT_CONTROLLER_PUTBYID: (id) => `/agreement/${id}`,
+  AGREEMENT_CONTROLLER_GETBYID: (id) => `/agreement/get/${id}`,
 };
