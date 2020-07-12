@@ -1,8 +1,11 @@
 import firebase from "../../firebase/firebase";
+import { showMessageError } from "../../store/actions/fuse";
+import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
 export const CLOSE_AGREEMENT = "[AGREEMENT] CLOSE";
+export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 
 export function setSelectedUser(user) {
   return {
@@ -27,6 +30,12 @@ export function closeAgreement() {
     },
   };
 }
+export function fetchCriteriaSuccess(critera) {
+  return {
+    type: FETCH_CRITERIA_SUCCESS,
+    payload: critera,
+  };
+}
 export function submitMessage(message, send, receive, type) {
   const arr = [send, receive].sort();
   firebase
@@ -44,4 +53,18 @@ export function submitMessage(message, send, receive, type) {
 }
 export async function getUser(id) {
   return await firebase.firestore().collection("users").doc(`${id}`).get();
+}
+
+export function fetchCriteriaList() {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.CRITERIA_CONTROLLER_GETALL);
+    request.then(
+      (response) => {
+        dispatch(fetchCriteriaSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }

@@ -14,6 +14,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { Grid, Icon, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import NumberFormat from "react-number-format";
+
 const useStyles = makeStyles((theme) => ({
   card: {
     maxWidth: 400,
@@ -118,7 +120,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">{info.model}</Typography>
+              <Typography variant="caption"></Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -131,7 +133,7 @@ export default function CarItem(props = { isAction: true }) {
             spacing={1}
             alignItems="center"
           >
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <Button
                 component={Link}
                 variant="contained"
@@ -146,7 +148,17 @@ export default function CarItem(props = { isAction: true }) {
               </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
-              <Typography variant="subtitle2">3.000.000 VND</Typography>
+              <Typography variant="subtitle2">
+                {
+                  <NumberFormat
+                    value={info.price}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    // prefix={"$"}
+                    suffix={" VNĐ"}
+                  />
+                }
+              </Typography>
             </Grid>
           </Grid>
         </CardActions>

@@ -57,6 +57,7 @@ export default function Agreement() {
   const agreement = useSelector((state) => state.chat.agreement);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
+  const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
   const handleChange = (event, newValue) => {
@@ -68,7 +69,7 @@ export default function Agreement() {
   };
   const AgreementByType = () => {
     switch (agreement.type) {
-      case "SCOPE":
+      case "Mileage limit":
         return (
           <Box className="px-24 py-24">
             <PrettoSlider
@@ -85,8 +86,129 @@ export default function Agreement() {
               }
             />
             <Typography>
-              You will offer {scope === 100 ? "unlimited" : scope + " km"} not
-              exceeded destination registered.
+              Mileage limit: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleSubmitScope}
+            >
+              Send
+            </Button>
+          </Box>
+        );
+      case "Extra":
+        return (
+          <Box className="px-24 py-24">
+            <PrettoSlider
+              valueLabelDisplay="on"
+              aria-labelledby="continuous-slider"
+              value={scope}
+              marks={true}
+              onChange={handleChange}
+              onDragStop={(e) => console.log(e)}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
+            />
+            <Typography>
+              Extra: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleSubmitScope}
+            >
+              Send
+            </Button>
+          </Box>
+        );
+      case "Insurance":
+        return (
+          <Box className="px-24 py-24">
+            <PrettoSlider
+              valueLabelDisplay="on"
+              aria-labelledby="continuous-slider"
+              value={scope}
+              marks={true}
+              onChange={handleChange}
+              onDragStop={(e) => console.log(e)}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
+            />
+            <Typography>
+              Insurance: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleSubmitScope}
+            >
+              Send
+            </Button>
+          </Box>
+        );
+      case "Deposit":
+        return (
+          <Box className="px-24 py-24">
+            <PrettoSlider
+              valueLabelDisplay="on"
+              aria-labelledby="continuous-slider"
+              value={scope}
+              marks={true}
+              onChange={handleChange}
+              onDragStop={(e) => console.log(e)}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
+            />
+            <Typography>
+              Deposit: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
+            </Typography>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleSubmitScope}
+            >
+              Send
+            </Button>
+          </Box>
+        );
+      case "Indemnification":
+        return (
+          <Box className="px-24 py-24">
+            <PrettoSlider
+              valueLabelDisplay="on"
+              aria-labelledby="continuous-slider"
+              value={scope}
+              marks={true}
+              onChange={handleChange}
+              onDragStop={(e) => console.log(e)}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
+            />
+            <Typography>
+              Indemnification: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
             </Typography>
             <Button
               variant="outlined"

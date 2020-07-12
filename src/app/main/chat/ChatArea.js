@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Avatar,
@@ -13,7 +13,8 @@ import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
-import { openAgreement } from "./chat.action";
+import { openAgreement, fetchCriteriaList } from "./chat.action";
+import { data } from "autoprefixer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,10 +83,15 @@ export const ChatArea = () => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const criterias = useSelector((state) => state.chat.criteria);
+  console.log(criterias.length);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
   };
+  useEffect(() => {
+    dispatch(fetchCriteriaList());
+  }, [dispatch]);
   return (
     <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>
@@ -129,36 +135,23 @@ export const ChatArea = () => {
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            <div className={classes.root}>
-              <Chip
-                icon={<Icon>done</Icon>}
-                label="Scope"
-                clickable
-                color="secondary"
-                onClick={() => handleOpenAgreement("SCOPE")}
-              />
-              <Chip
-                icon={<Icon>error</Icon>}
-                label="Extra"
-                clickable
-                color="primary"
-                onClick={() => handleOpenAgreement("SCOPE")}
-              />
-              <Chip
-                icon={<Icon>error</Icon>}
-                label="Insurance"
-                clickable
-                color="primary"
-                onClick={() => handleOpenAgreement("SCOPE")}
-              />
-              <Chip
-                icon={<Icon>error</Icon>}
-                label="Warranties"
-                clickable
-                color="primary"
-                onClick={() => handleOpenAgreement("SCOPE")}
-              />
-            </div>
+            {criterias.length !== 0 ? (
+              <div className={classes.root}>
+                {criterias.map((data) => {
+                  return (
+                    <Chip
+                      icon={<Icon>error</Icon>}
+                      label={data.name}
+                      clickable
+                      color="secondary"
+                      onClick={() => handleOpenAgreement(data.name)}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <></>
+            )}
           </Grid>
         </Grid>
         <Grid
