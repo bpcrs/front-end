@@ -87,33 +87,14 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
+
   const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
   const { booking, carDetails } = props.location.state;
 
   // const owner = carDetail.owner;
-  const convert = (str) => {
-    var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
-    // hours = ("0" + date.getHours()).slice(-2),
-    // minutes = ("0" + date.getMinutes()).slice(-2);
-    return [date.getFullYear(), mnth, day].join("-");
-  };
 
-  const bookingReq = {
-    description: "rent car",
-    destination: booking.destination.description,
-    status: "REQUEST",
-    fromDate: convert(booking.fromDate),
-    toDate: convert(booking.toDate),
-    location: booking.location.description,
-    carId: carDetail.id,
-    price: carDetail.price,
-    lessorId: 2,
-    renterId: currentUser.id,
-  };
-  // console.log("Car Detail", owner);
+  // console.log("Car Detail", carDetail.owner);
   // console.log("Booking Request", bookingReq);
 
   useEffect(() => {
@@ -129,7 +110,6 @@ export default function CarDetails(props) {
         booking,
         carDetails,
         carDetail,
-        bookingReq,
       },
     });
   };

@@ -41,6 +41,8 @@ export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
 export const PUT_BOOKING_SUCCESS = "[BOOKING] PUT BOOKING SUCCESS";
 export const PUT_BOOKING_FAILURE = "[BOOKING] PUT BOOKING FAILURE";
 
+export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
+
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -189,6 +191,12 @@ export function putBookingSuccess(booking) {
   return {
     type: PUT_BOOKING_SUCCESS,
     payload: booking,
+  };
+}
+export function createAgreementSuccess(agreements) {
+  return {
+    type: CREATE_AGREEMENT_SUCCESS,
+    payload: agreements,
   };
 }
 
@@ -443,8 +451,8 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(postBookingSuccess(response.success ? response.data : []));
-        console.log("Create success ", response.data);
+        dispatch(postBookingSuccess(response.data));
+        // console.log("Create success ", response.data);
       },
       (error) => {
         dispatch(showMessageError(error.message));

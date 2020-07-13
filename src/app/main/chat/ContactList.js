@@ -113,6 +113,8 @@ const ContactList = () => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  // const carDetail = useSelector((state) => state.booking.carDetail);
+
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
 

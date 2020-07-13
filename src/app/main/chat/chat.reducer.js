@@ -4,6 +4,9 @@ const initialState = {
   selectedUser: {},
   agreement: { isOpen: false, type: "INIT" },
   criteria: [],
+  chip: [],
+  agreements: [],
+  booking: {},
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
@@ -27,6 +30,58 @@ const chatReducer = (state = initialState, { type, payload }) => {
         criteria: payload,
       };
     }
+    case Actions.CHANGE_CHIP: {
+      console.log(payload);
+      const chipNeedChange = state.chip.findIndex(
+        (item) => item.type === payload.type
+      );
+
+      console.log(chipNeedChange);
+      const updateChip = state.chip.map((item, index) => {
+        if (index !== chipNeedChange) {
+          return item;
+        }
+        return {
+          ...item,
+          ...payload,
+        };
+      });
+      return {
+        ...state,
+        chip: updateChip,
+      };
+    }
+    case Actions.INIT_CHIP: {
+      return {
+        ...state,
+        chip: payload,
+      };
+    }
+    case Actions.UPDATE_AGREEMENT_SUCCESS: {
+      console.log(payload);
+      const updateAgreements = state.agreements.map((item, index) => {
+        payload.map((itemPayload, itemIndex) => {
+          if (itemIndex !== index) {
+            return item;
+          }
+          return {
+            ...item,
+            ...payload,
+          };
+        });
+      });
+      return {
+        ...state,
+        agreements: updateAgreements,
+      };
+    }
+    case Actions.FETCH_AGREEMENT_SUCCESS: {
+      return {
+        ...state,
+        agreements: payload,
+      };
+    }
+
     default: {
       return state;
     }

@@ -9,6 +9,8 @@ const initialState = {
   brands: [],
   filterCars: [],
   models: [],
+  agreemnts: [],
+  booking: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -67,6 +69,13 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         models: payload,
+      };
+    }
+    case Actions.POST_BOOKING_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        booking: payload,
       };
     }
     case Actions.POST_IMAGE_CAR_SUBMIT_SUCCESS: {
