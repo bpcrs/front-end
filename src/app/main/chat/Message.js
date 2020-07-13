@@ -37,8 +37,8 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const isRevice = userLogged.id !== receive;
-  const handleChangeChip = (type) => {
-    dispatch(changeChip(type, message));
+  const handleChangeChip = (name) => {
+    dispatch(changeChip(name, message));
     dispatch(closeAgreement());
   };
   // const [mileageAgreement, setMileageAgreement] = useState({

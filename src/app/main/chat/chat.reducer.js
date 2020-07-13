@@ -33,7 +33,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
     case Actions.CHANGE_CHIP: {
       console.log(payload);
       const chipNeedChange = state.chip.findIndex(
-        (item) => item.type === payload.type
+        (item) => item.name === payload.name
       );
 
       console.log(chipNeedChange);
@@ -57,22 +57,10 @@ const chatReducer = (state = initialState, { type, payload }) => {
         chip: payload,
       };
     }
-    case Actions.UPDATE_AGREEMENT_SUCCESS: {
-      console.log(payload);
-      const updateAgreements = state.agreements.map((item, index) => {
-        payload.map((itemPayload, itemIndex) => {
-          if (itemIndex !== index) {
-            return item;
-          }
-          return {
-            ...item,
-            ...payload,
-          };
-        });
-      });
+    case Actions.CREATE_AGREEMENT_SUCCESS: {
       return {
         ...state,
-        agreements: updateAgreements,
+        agreements: payload,
       };
     }
     case Actions.FETCH_AGREEMENT_SUCCESS: {

@@ -1,6 +1,6 @@
 import firebase from "../../firebase/firebase";
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT } from "../../services/api";
+import { GET, ENDPOINT, POST } from "../../services/api";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
@@ -9,7 +9,7 @@ export const CHANGE_CHIP = "[CHIP] CHANGE";
 export const INIT_CHIP = "[CHIP] INIT";
 export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
-export const UPDATE_AGREEMENT_SUCCESS = "[AGREEMENT] UPDATE AGREEMENT SUCCESS";
+export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 
 export function setSelectedUser(user) {
   return {
@@ -34,13 +34,14 @@ export function closeAgreement() {
     },
   };
 }
-export function changeChip(type, value) {
+export function changeChip(name, value) {
   return {
     type: CHANGE_CHIP,
     payload: {
       approved: true,
-      type,
+      name,
       value,
+      bookingId: 11,
     },
   };
 }
@@ -48,9 +49,10 @@ export function initChip(criteras) {
   return {
     type: INIT_CHIP,
     payload: criteras.map((data) => ({
-      type: data.name,
+      name: data.name,
       approved: false,
       value: 30,
+      criteriaId: data.id,
     })),
   };
 }
@@ -66,13 +68,10 @@ export function fetchAgreementSuccess(agreements) {
     payload: agreements,
   };
 }
-export function updateAgreementSuccess(agreements) {
+export function createAgreementSuccess(agreements) {
   return {
-    type: UPDATE_AGREEMENT_SUCCESS,
-    payload: agreements.map((data) => ({
-      approved: data.approved,
-      value: data.value,
-    })),
+    type: CREATE_AGREEMENT_SUCCESS,
+    payload: agreements,
   };
 }
 
@@ -124,16 +123,13 @@ export function fetchAgreementList(id) {
   };
 }
 
-export function updateAgreement(id, agreement) {
+export function createAgreement(agreements) {
   return (dispatch) => {
-    const request = PUT(
-      ENDPOINT.AGREEMENT_CONTROLLER_PUTBYID(id),
-      {},
-      agreement
-    );
+    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreements);
     request.then(
       (response) => {
-        dispatch(updateAgreementSuccess(response.success ? response.data : []));
+        dispatch(createAgreementSuccess(response.success ? response.data : []));
+        console.log(response.data);
       },
       (error) => {
         showMessageError(error.message);

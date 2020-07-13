@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Avatar,
@@ -16,8 +16,7 @@ import Chat from "./Chat";
 import {
   openAgreement,
   fetchCriteriaList,
-  fetchAgreementList,
-  updateAgreementSuccess,
+  createAgreement,
 } from "./chat.action";
 // import { data } from "autoprefixer";
 
@@ -90,12 +89,11 @@ export const ChatArea = (props) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
-  const agreements = useSelector((state) => state.chat.agreements);
-  const [updateAgreements, SetUpdateAgreements] = useState();
+  // const agreements = useSelector((state) => state.chat.agreements);
   // console.log(updateAgreements);
   // const booking = useSelector((state) => state.booking.booking);
   // const bookingInStore = props.location.state;
-  // console.log(bookingInStore);
+  // console.log(agreements);
 
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
@@ -103,16 +101,14 @@ export const ChatArea = (props) => {
   };
 
   const handleUpdateAgreement = () => {
-    // dispatch(updateAgreementSuccess(chip));
-    SetUpdateAgreements(updateAgreements, ...agreements);
-    console.log(updateAgreements);
+    // console.log("Agreements will be created", chip);
+    dispatch(createAgreement(chip));
+    // dispatch(updateAgreement(11, updateAgreements));
   };
 
   useEffect(() => {
     dispatch(fetchCriteriaList());
-    dispatch(fetchAgreementList(11));
-    // dispatch()
-    // addChip("Scope");
+    // dispatch(fetchAgreementList(11));
   }, [dispatch]);
   return (
     <Grid container>
@@ -165,14 +161,14 @@ export const ChatArea = (props) => {
                   return (
                     <Chip
                       icon={<Icon>{data.approved ? "done" : "error"}</Icon>}
-                      label={data.type}
+                      label={data.name}
                       clickable
                       color="primary"
                       // onChange={() => handleChip(chip.type)}
                       style={{
                         backgroundColor: data.approved ? "green" : "primary",
                       }}
-                      onClick={() => handleOpenAgreement(data.type)}
+                      onClick={() => handleOpenAgreement(data.name)}
                     />
                   );
                 })}
