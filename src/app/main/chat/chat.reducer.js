@@ -69,7 +69,12 @@ const chatReducer = (state = initialState, { type, payload }) => {
         agreements: payload,
       };
     }
-
+    case Actions.FETCH_BOOKING_REQUEST: {
+      return {
+        ...state,
+        booking: payload,
+      };
+    }
     default: {
       return state;
     }

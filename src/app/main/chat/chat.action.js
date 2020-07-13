@@ -10,6 +10,7 @@ export const INIT_CHIP = "[CHIP] INIT";
 export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
+export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 
 export function setSelectedUser(user) {
   return {
@@ -34,14 +35,14 @@ export function closeAgreement() {
     },
   };
 }
-export function changeChip(name, value) {
+export function changeChip(name, value, bookingId) {
   return {
     type: CHANGE_CHIP,
     payload: {
       approved: true,
       name,
       value,
-      bookingId: 11,
+      bookingId: bookingId,
     },
   };
 }
@@ -72,6 +73,12 @@ export function createAgreementSuccess(agreements) {
   return {
     type: CREATE_AGREEMENT_SUCCESS,
     payload: agreements,
+  };
+}
+export function fetchBookingRequest(booking) {
+  return {
+    type: FETCH_BOOKING_REQUEST,
+    payload: booking,
   };
 }
 

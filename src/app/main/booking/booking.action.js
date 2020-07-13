@@ -1,5 +1,6 @@
 import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
+import { fetchBookingRequest } from "../chat/chat.action";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_FILTER_CARS_SUCCESS = "[CAR] FETCH FILTER DATA SUCCESS";
@@ -311,11 +312,14 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(postBookingSuccess(response.data));
-        // console.log("Create success ", response.data);
+        dispatch(
+          fetchBookingRequest(response.data.data),
+          postBookingSuccess(response.success ? response.data.data : {})
+        );
+        console.log("Create success ", response.data.data);
       },
       (error) => {
-        dispatch(showMessageError(error.message));
+        showMessageError(error.message);
       }
     );
   };

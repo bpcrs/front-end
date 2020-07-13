@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Avatar,
@@ -8,11 +8,27 @@ import {
   Paper,
   Chip,
   Icon,
+  Button,
+  Slide,
+  Dialog,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Card,
+  CardContent,
+  FormControl,
+  TextField,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
 } from "@material-ui/core";
+import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
+// import CarItem from ".././booking/CarItem";
 import {
   openAgreement,
   fetchCriteriaList,
@@ -27,6 +43,18 @@ const useStyles = makeStyles((theme) => ({
     },
     float: "right",
     paddingRight: theme.spacing(1),
+  },
+  appBar: {
+    position: "relative",
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+  spacingCard: {
+    marginTop: theme.spacing(1),
+    marginLeft: 0,
+    marginRight: 0,
   },
 }));
 const StyledBadge = withStyles((theme) => ({
@@ -83,27 +111,267 @@ const User = ({ displayName, email, photoURL }) => {
     </Grid>
   );
 };
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+export function ViewBookingDialog() {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const booking = useSelector((state) => state.chat.booking);
+  // const carDetail = useSelector((state) => state.booking.carDetail);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+        View booking
+      </Button>
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={handleClose}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            {/* <Typography variant="h6" className={classes.title}>
+              Sound
+            </Typography>
+            <Button autoFocus color="inherit" onClick={handleClose}>
+              save
+            </Button> */}
+          </Toolbar>
+        </AppBar>
+        <div>
+          <Card>
+            <CardContent>
+              <Grid container>
+                <Grid item xs={12} xl={6}>
+                  <Typography variant="subtitle1">
+                    PICK UP & DESTINAION
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} xl={6} justify="flex-end" container>
+                  <FormControl fullWidth className={classes.spacingCard}>
+                    <TextField
+                      id="pickup-basic"
+                      label="Pickup"
+                      variant="outlined"
+                      fullWidth
+                      disabled
+                      // value="61 Hang Tre"
+                      value={booking.description}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth className={classes.spacingCard}>
+                    <TextField
+                      id="destinaion-basic"
+                      label="Destinaion"
+                      variant="outlined"
+                      fullWidth
+                      disabled
+                      // value="TP HCM"
+                      value={booking.destination}
+                    />
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </div>
+        <div className={classes.spacingCard}>
+          <Card>
+            <CardContent>
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1">
+                    TRIP DURATION{" ("}
+                    {Math.round(
+                      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                        (1000 * 60 * 60 * 24)
+                    ) + 1}{" "}
+                    days)
+                  </Typography>
+                </Grid>
+
+                <Grid item xl={5} lg={5} container direction="row" spacing={1}>
+                  <Grid
+                    item
+                    xs={6}
+                    xl={6}
+                    lg={6}
+                    style={{ textAlign: "right" }}
+                  >
+                    <Typography variant="h4">
+                      {new Date(booking.fromDate).getDate()}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={6} xl={6} lg={6}>
+                    <Grid>
+                      <Typography variant="caption">
+                        {`${new Date(booking.fromDate).toLocaleString(
+                          "default",
+                          {
+                            month: "short",
+                          }
+                        )}-${new Date(booking.fromDate).getFullYear()}`}
+                      </Typography>
+                      <Typography variant="caption" component="p">
+                        7:00 AM
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
+                <Grid
+                  item
+                  xs={12}
+                  xl={2}
+                  lg={2}
+                  container
+                  justify="center"
+                  alignItems="center"
+                  spacing={1}
+                >
+                  <Grid item>
+                    <Typography variant="overline">To</Typography>
+                  </Grid>
+                </Grid>
+                <Grid item xl={5} lg={5} container direction="row" spacing={1}>
+                  <Grid
+                    item
+                    xs={6}
+                    xl={6}
+                    lg={6}
+                    style={{ textAlign: "right" }}
+                  >
+                    <Typography variant="h4">
+                      {new Date(booking.toDate).getDate()}
+                    </Typography>
+                    {/* <p className="text-base sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl">09</p> */}
+                  </Grid>
+                  <Grid item xs={6} xl={6} lg={6}>
+                    <Grid>
+                      <Typography variant="caption">{`${new Date(
+                        booking.toDate
+                      ).toLocaleString("default", {
+                        month: "short",
+                      })}-${new Date(
+                        booking.toDate
+                      ).getFullYear()}`}</Typography>
+                      <Typography variant="caption" component="p">
+                        7:00 PM
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </div>
+        <div className={classes.spacingCard}>
+          {/* <Grid container className={classes.root} spacing={2}>
+            <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
+              <CarItem isAction={false} info={carDetail} />
+            </Grid>
+          </Grid> */}
+        </div>
+      </Dialog>
+    </div>
+  );
+}
+
+export function CloseAgreementDialog(props) {
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { agreement } = props;
+  console.log(agreement);
+  // const agreeAgreements =  props
+
+  const handleUpdateAgreement = () => {
+    // console.log("Agreements will be created", chip);
+    dispatch(createAgreement(agreement));
+    handleClose();
+    // dispatch(updateAgreement(11, updateAgreements));
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  return (
+    <div>
+      <Chip
+        icon={<Icon>done</Icon>}
+        label="Done"
+        clickable
+        color="primary"
+        size="medium"
+        // onChange={() => handleChip(chip.type)}
+        style={{
+          backgroundColor: "green",
+        }}
+        onClick={handleClickOpen}
+      />
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          {"Use Google's location service?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Agree all agreement ? This booking will start after you click agree
+            button. Please check carefully
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Disagree
+          </Button>
+          <Button onClick={handleUpdateAgreement} color="primary">
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
 export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
-  // const agreements = useSelector((state) => state.chat.agreements);
-  // console.log(updateAgreements);
-  // const booking = useSelector((state) => state.booking.booking);
-  // const bookingInStore = props.location.state;
-  // console.log(agreements);
-
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
-  };
-
-  const handleUpdateAgreement = () => {
-    // console.log("Agreements will be created", chip);
-    dispatch(createAgreement(chip));
-    // dispatch(updateAgreement(11, updateAgreements));
   };
 
   useEffect(() => {
@@ -142,6 +410,7 @@ export const ChatArea = (props) => {
           >
             {selectedUser.id && <User {...selectedUser} />}
             Status: Dealing
+            <ViewBookingDialog />
           </Grid>
           <Grid
             item
@@ -178,17 +447,7 @@ export const ChatArea = (props) => {
               <></>
             )}
 
-            <Chip
-              icon={<Icon>done</Icon>}
-              label="Done"
-              clickable
-              color="primary"
-              // onChange={() => handleChip(chip.type)}
-              style={{
-                backgroundColor: "green",
-              }}
-              onClick={() => handleUpdateAgreement(chip)}
-            />
+            <CloseAgreementDialog agreement={chip} />
           </Grid>
         </Grid>
         <Grid

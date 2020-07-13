@@ -46,9 +46,8 @@ export default function ViewBooking(props) {
   const { booking, carDetail } = props.location.state;
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
-  const bookingInStore = useSelector((state) => state.booking.booking);
-  console.log(bookingInStore);
-  // const [bookingRequest, setBookingRequest] = useState({});
+  // const bookingInStore = useSelector((state) => state.booking.booking);
+  // console.log(bookingInStore);
 
   // console.log("Booking ", bookingReq);
   const convert = (str) => {
@@ -61,7 +60,7 @@ export default function ViewBooking(props) {
   };
 
   const bookingReq = {
-    description: "rent car",
+    description: booking.location.description,
     destination: booking.destination.description,
     status: "REQUEST",
     fromDate: convert(booking.fromDate),
@@ -80,9 +79,9 @@ export default function ViewBooking(props) {
     history.push({
       pathname: APP_PATH.CHAT,
       state: {
-        // booking,
-        // carDetail,
-        bookingInStore,
+        booking,
+        carDetail,
+        // bookingInStore,
       },
     });
   };

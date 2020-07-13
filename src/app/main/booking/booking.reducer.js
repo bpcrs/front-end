@@ -1,6 +1,7 @@
 import * as Actions from "./booking.action";
 const initialState = {
   cars: [],
+  bookingRequest: {},
   reviews: [],
   images: [],
   loading: true,
@@ -9,7 +10,6 @@ const initialState = {
   filterCars: [],
   models: [],
   agreemnts: [],
-  booking: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -66,8 +66,8 @@ const bookingReducer = (state = initialState, { type, payload }) => {
     case Actions.POST_BOOKING_SUCCESS: {
       return {
         ...state,
-        loading: false,
-        booking: payload,
+        // loading: false,
+        bookingRequest: payload,
       };
     }
     case Actions.CREATE_AGREEMENT_SUCCESS: {
