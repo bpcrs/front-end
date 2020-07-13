@@ -18,11 +18,22 @@ export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
 export const FETCH_IMAGE_CAR_SUCCESS = "[IMAGE] FETCH IMAGE SUCCESS";
 export const FETCH_IMAGE_CAR_FAILURE = "[IMAGE] FETCH IMAGE FAILURE";
 
+export const POST_CAR_SUBMIT_SUCCESS = "[CAR_SUBMIT] POST DATA SUCCESS";
+export const POST_CAR_SUBMIT = "[CAR_SUBMIT] POST DATA";
+export const POST_CAR_SUBMIT_FAILURE = "[CAR_SUBMIT] POST DATA FAILURE";
+
+export const POST_IMAGE_CAR_SUBMIT_SUCCESS = "[IMAGE_CAR_SUBMIT] POST IMAGE SUCCESS";
+export const POST_IMAGE_CAR_SUBMIT_FAILURE = "[IMAGE_CAR_SUBMIT] POST IMAGE FAILURE";
+
 export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
 export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 
 export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
 export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
+
+export const POST_REVIEW_SUBMIT_SUCCESS = "[REVIEW_SUBMIT] POST REVIEW SUBMIT SUCCESS";
+export const POST_REVIEW_SUBMIT_FAILURE = "[REVIEW-SUBMIT] POST REVIEW SUBMIT FAILURE";
+export const POST_REVIEW_SUBMIT = "[REVIEW-SUBMIT] POST REVIEW SUBMIT";
 
 export const POST_BOOKING_SUCCESS = "[BOOKING] POST BOOKING SUCCESS";
 export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
@@ -100,6 +111,40 @@ export function fetchImageFailure(error) {
     payload: error,
   };
 }
+export function postCarSubmitSuccess(car) {
+  return {
+    type: POST_CAR_SUBMIT_SUCCESS,
+    payload: car,
+  };
+}
+export function postCar() {
+  return {
+    type: POST_CAR_SUBMIT,
+  };
+}
+export function postReview() {
+  return {
+    type: POST_REVIEW_SUBMIT,
+  };
+}
+export function postCarSubmitFailure(error) {
+  return {
+    type: POST_CAR_SUBMIT_FAILURE,
+    payload: error,
+  };
+}
+export function postImageCarSubmitSuccess(images) {
+  return {
+    type: POST_IMAGE_CAR_SUBMIT_SUCCESS,
+    payload: images,
+  };
+}
+export function postImageCarSubmitFailure(error) {
+  return {
+    type: POST_IMAGE_CAR_SUBMIT_FAILURE,
+    payload: error,
+  };
+}
 export function fetchBrandsSuccess(brands) {
   return {
     type: FETCH_BRAND_SUCCESS,
@@ -121,6 +166,18 @@ export function fetchModelsSuccess(models) {
 export function fetchModelsFailure(error) {
   return {
     type: FETCH_MODEL_FAILURE,
+    payload: error,
+  };
+}
+export function postReviewSubmitSuccess(review) {
+  return {
+    type: POST_REVIEW_SUBMIT_SUCCESS,
+    payload: review,
+  };
+}
+export function postReviewSubmitFailure(error) {
+  return {
+    type: POST_REVIEW_SUBMIT_FAILURE,
     payload: error,
   };
 }
@@ -276,6 +333,51 @@ export function fetchImageList(page, size, carId) {
   };
 }
 
+export function postCarSubmit(car, listImage) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postCarSubmitSuccess(response.data));
+          dispatch(postImageCar(listImage, response.data.id))
+          console.log("Success submit car ", response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit car error");
+        }
+      },
+      (error) => {
+        dispatch(postCarSubmitFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  }
+}
+
+export function postImageCar(link, carId) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.IMAGE_CONTROLLER_GETALL, {}, {
+      carId,
+      link
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postImageCarSubmitSuccess(response.data));
+          console.log("Success submit image car");
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit image car error");
+        }
+      },
+      (error) => {
+        dispatch(postImageCarSubmitFailure(error));
+      }
+    );
+  }
+}
+
 export function fetchBrandList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.BRAND_CONTROLLER_GETALL, {
@@ -339,15 +441,22 @@ export function putBookingRequest(id, booking) {
   };
 }
 
-export function createAgreementRequest(id) {
+export function postReviewSubmit(review) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETBYID(id));
+    const request = POST(ENDPOINT.REVIEW_CONTROLLER_GETALL, {}, review);
     request.then(
       (response) => {
-        dispatch(createAgreementSuccess(response.success ? response.data : []));
+        if (response.success) {
+          dispatch(postReviewSubmitSuccess(response.data))
+          console.log("Success submit review car");
+        } else {
+          dispatch(showMessageError(response.message));
+          console.log("Success submit review car error");
+        }
       },
       (error) => {
-        showMessageError(error.message);
+        dispatch(showMessageError(error.message));
+        dispatch(postReviewSubmitFailure(error.message));
       }
     );
   };
