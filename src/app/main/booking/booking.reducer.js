@@ -5,6 +5,7 @@ const initialState = {
   images: [],
   loading: false,
   carDetail: {},
+  carCompare: [],
   brands: [],
   filterCars: [],
   models: [],
@@ -31,6 +32,13 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         carDetail: payload,
+      };
+    }
+    case Actions.FETCH_CAR_COMPARE_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        carCompare: payload,
       };
     }
     case Actions.FETCH_IMAGE_CAR_SUCCESS: {

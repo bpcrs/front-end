@@ -60,9 +60,7 @@ function Landing() {
           logo={<Logo />}
           navs={[
             <Button variant="text">Features</Button>,
-            <Button variant="text" onClick={() => history.push("/compareCar")}>
-              Use Cases
-            </Button>,
+            <Button variant="text">Use Cases</Button>,
             <Button variant="text">Pricing</Button>,
             <Button variant="text">About Us</Button>,
             <Button

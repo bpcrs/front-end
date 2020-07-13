@@ -23,8 +23,7 @@ export const APP_PATH = {
   CAR_EDIT: "/car-edit",
   VIEW_BOOKING: "/view-booking",
   LICENSE_SUBMIT: "/submitLicense",
-  CAR_COMPARE: "/compareCar",
-
+  CAR_COMPARE: "/car-compare",
   CHAT: "/chat",
   ERORR_404: "/error/404",
   LANDING_MOBILE: "/landing-mobile",

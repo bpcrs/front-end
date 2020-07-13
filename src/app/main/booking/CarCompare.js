@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import Table from '@material-ui/core/Table';
@@ -8,6 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Layout from '../../layout';
+import { APP_PATH } from "../../../constant";
+import { useSelector } from "react-redux";
 
 const StyledTableRow = withStyles((theme) => ({
     root: {
@@ -21,40 +23,26 @@ function createData(name, property1, property2) {
     return { name, property1, property2 };
 }
 
-const rows = [
-    createData('Name', '2020 Honda CR-V', '2020 GMC Terrain'),
-    createData('Price', '$1,120', '$1,195'),
-    createData('Seats', 5, 5),
-    createData('Consumer Rating', 4.9, 4.6),
-    createData('Model', '182.1 "', '182.3 "'),
-    createData('Sound', '104.8 "', '107.3 "'),
-    createData('Auto Drive', 'Yes', 'Yes'),
-
-
-
-];
-
 const useStyles = makeStyles(() => ({
     root: {
-        // flexGrow: 1,
         display: 'flex',
         flexWrap: 'wrap',
-
-
     },
-    // paper: {
-    //     padding: theme.spacing(2),
-    //     textAlign: 'center',
-    //     color: theme.palette.text.secondary,
-
-    // },
 }));
-
-// class CompareCar extends Component {
-export default function CompareCar() {
-    // render() {
+export default function CarCompare(props) {
     const classes = useStyles();
-
+    const carCompare = useSelector((state) => state.booking.carCompare);
+    const carDetail1 = carCompare[0];
+    const carDetail2 = carCompare[1];
+    const rows = [
+        createData('Name', carDetail1.info.name, carDetail2.info.name),
+        createData('Price', carDetail1.info.price, carDetail2.info.price),
+        createData('Seats', carDetail1.info.seat, carDetail2.info.seat),
+        createData('Year', carDetail1.info.year, carDetail2.info.year),
+        createData('Sound', carDetail1.info.sound, carDetail2.info.sound),
+        createData('Auto Drive', carDetail1.info.auto_driver ? 'Automatic' : 'Manual', carDetail2.info.auto_driver ? 'Automatic' : 'Manual'),
+        createData('Screen', carDetail1.info.screen, carDetail2.info.screen)
+    ];
     return (
         <Layout name="Compare your car">
 
@@ -71,10 +59,8 @@ export default function CompareCar() {
                                 </Grid>
 
                                 <Grid item xs={6} lg={4}>
-                                    {/* <StyledTableCell align="right"> */}
                                     <img alt="" style={{ borderRadius: "10px", align: "right" }} width='150px' height='150px'
                                         src={'https://www.cstatic-images.com/car-pictures/xl/USD00HOS021A021001.jpg'} />
-                                    {/* </StyledTableCell> */}
                                 </Grid>
 
                                 <Grid item xs={6} lg={4}>
@@ -129,14 +115,7 @@ export default function CompareCar() {
                         ))}
                     </TableBody>
                 </Table>
-
             </TableContainer>
-
         </Layout>
-
     );
 }
-
-// }
-
-// export default withStyles(styles, {withTheme: true })(CompareCar);

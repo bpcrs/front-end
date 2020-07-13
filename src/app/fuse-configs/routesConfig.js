@@ -8,7 +8,6 @@ import { LandingConfig } from "../main/landing/LandingConfig";
 import {SubmitLicenseConfig} from '../main/submitLicense/submitLicenseConfig';
 
 import { BookingConfig } from "../main/booking/BookingConfig";
-import { CompareCarConfig } from "../main/CompareCar/CompareCarConfig";
 import { ChatConfig } from "../main/chat/ChatConfig";
 import { ErrorConfig } from "../main/error/ErrorConfig";
 import { APP_PATH } from "../../constant";
@@ -16,7 +15,6 @@ const routeConfigs = [
   UserConfig,
   LoginConfig,
   LandingConfig,
-  CompareCarConfig,
   BookingConfig,
   SubmitLicenseConfig,
   ChatConfig,
