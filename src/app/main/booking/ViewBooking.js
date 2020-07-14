@@ -17,7 +17,11 @@ import Layout from "../../layout";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { useDispatch, useSelector } from "react-redux";
-import { postBookingRequest } from "./booking.action";
+import {
+  postBookingRequest,
+  notificationBooking,
+  postBookingSuccess,
+} from "./booking.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,11 +48,11 @@ export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const { booking, carDetail } = props.location.state;
+  // const { info } = props;
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
-  const bookingInStore = useSelector((state) => state.booking.booking);
-  console.log(bookingInStore);
-  // const [bookingRequest, setBookingRequest] = useState({});
+  // const bookingInStore = useSelector((state) => state.booking.booking);
+  // console.log(bookingInStore);
 
   // console.log("Booking ", bookingReq);
   const convert = (str) => {
@@ -61,7 +65,7 @@ export default function ViewBooking(props) {
   };
 
   const bookingReq = {
-    description: "rent car",
+    description: booking.location.description,
     destination: booking.destination.description,
     status: "REQUEST",
     fromDate: convert(booking.fromDate),
@@ -80,16 +84,29 @@ export default function ViewBooking(props) {
     history.push({
       pathname: APP_PATH.CHAT,
       state: {
-        // booking,
-        // carDetail,
-        bookingInStore,
+        booking,
+        carDetail,
+        // bookingInStore,
       },
     });
   };
 
   const createBookingRequest = () => {
     // console.log("Booking Request: ", bookingReq);
-    dispatch(postBookingRequest(bookingReq));
+    const data = {
+      // renterName: currentUser.displayName,
+      car: carDetail.name,
+      renterInfo: currentUser,
+    };
+    dispatch(postBookingRequest(bookingReq, carDetail.name, currentUser));
+    // dispatch(postBookingSuccess)
+    // notificationBooking(
+    //   "REQUEST",
+    //   currentUser.id,
+    //   carDetail.owner.id,
+    //   currentUser.displayName,
+    //   carDetail.name
+    // );
   };
 
   return (

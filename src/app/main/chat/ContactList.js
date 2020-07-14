@@ -9,7 +9,11 @@ import {
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
-import { setSelectedUser } from "./chat.action";
+import {
+  setSelectedUser,
+  getRequestFirebase,
+  getBookingRequest,
+} from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -117,19 +121,44 @@ const ContactList = () => {
 
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
+  // const [bookingReq, setBookingReq] = useState([]);
 
   const setSelectedContact = (id) => {
     dispatch(setSelectedUser(users.find((u) => u.id === id)));
+    const ref = firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.id}`)
+      .collection("requests");
+    const query = ref
+      .where("rent", "==", id)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          console.log(doc.data().bookingId);
+
+          // dispatch(getRequestFirebase(doc.data()));
+          dispatch(getBookingRequest(doc.data().bookingId));
+        });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    console.log(query);
+    // async function getR
   };
 
   useEffect(() => {
     const usersFirebase = firebase.firestore().collection("users");
+    // .doc(`${userLogged.id}`);
+    // console.log("User renter", usersFirebase.get());
+
     async function getImagesContact() {
       const usersInfo = await usersFirebase.get();
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-  }, []);
+  }, [userLogged.id]);
   const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
     <Box
       onClick={() => setSelectedContact(id)}
