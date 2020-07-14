@@ -7,6 +7,7 @@ const initialState = {
   chip: [],
   agreements: [],
   booking: {},
+  request: {},
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
@@ -15,6 +16,12 @@ const chatReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         selectedUser: payload,
+      };
+    }
+    case Actions.GET_REQUEST_FIREBASE: {
+      return {
+        ...state,
+        request: payload,
       };
     }
     case Actions.OPEN_AGREEMENT:

@@ -34,6 +34,8 @@ import {
   fetchCriteriaList,
   createAgreement,
 } from "./chat.action";
+import ViewBooking from "../booking/ViewBooking";
+import { fetchBookingRequest } from "../booking/booking.action";
 // import { data } from "autoprefixer";
 
 const useStyles = makeStyles((theme) => ({
@@ -112,15 +114,47 @@ const User = ({ displayName, email, photoURL }) => {
   );
 };
 
+const UserSelected = ({ displayName, email, photoURL }) => {
+  const booking = useSelector((state) => state.chat.booking);
+  return (
+    <Grid container className="px-8 py-8">
+      <Grid item lg>
+        <StyledBadge
+          overlap="circle"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          variant="dot"
+        >
+          <Avatar src={photoURL} />
+        </StyledBadge>
+      </Grid>
+      <Grid lg={10} item>
+        <Typography component="span" className="normal-case font-600 flex">
+          {displayName}
+        </Typography>
+        <Typography className="text-11" color="textSecondary" variant="caption">
+          {email}
+        </Typography>
+        {/* {id === userLogged.id} */}
+        <ViewBookingDialog info={booking} />
+      </Grid>
+    </Grid>
+  );
+};
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export function ViewBookingDialog() {
+export function ViewBookingDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const booking = useSelector((state) => state.chat.booking);
+  // const booking = useSelector((state) => state.chat.booking);
   // const carDetail = useSelector((state) => state.booking.carDetail);
+  const { info } = props;
+  console.log(info);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -133,7 +167,7 @@ export function ViewBookingDialog() {
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        View booking
+        View booking info
       </Button>
       <Dialog
         fullScreen
@@ -162,6 +196,7 @@ export function ViewBookingDialog() {
         <div>
           <Card>
             <CardContent>
+              {/* <ViewBooking info = { booking } /> */}
               <Grid container>
                 <Grid item xs={12} xl={6}>
                   <Typography variant="subtitle1">
@@ -177,7 +212,9 @@ export function ViewBookingDialog() {
                       fullWidth
                       disabled
                       // value="61 Hang Tre"
-                      value={booking.description}
+                      value={
+                        info.description ? info.description : "61 Hang Tre"
+                      }
                     />
                   </FormControl>
                   <FormControl fullWidth className={classes.spacingCard}>
@@ -188,7 +225,7 @@ export function ViewBookingDialog() {
                       fullWidth
                       disabled
                       // value="TP HCM"
-                      value={booking.destination}
+                      value={info.destination ? info.destination : "TP HCM"}
                     />
                   </FormControl>
                 </Grid>
@@ -204,7 +241,7 @@ export function ViewBookingDialog() {
                   <Typography variant="subtitle1">
                     TRIP DURATION{" ("}
                     {Math.round(
-                      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                      (new Date(info.toDate) - new Date(info.fromDate)) /
                         (1000 * 60 * 60 * 24)
                     ) + 1}{" "}
                     days)
@@ -220,18 +257,15 @@ export function ViewBookingDialog() {
                     style={{ textAlign: "right" }}
                   >
                     <Typography variant="h4">
-                      {new Date(booking.fromDate).getDate()}
+                      {new Date(info.fromDate).getDate()}
                     </Typography>
                   </Grid>
                   <Grid item xs={6} xl={6} lg={6}>
                     <Grid>
                       <Typography variant="caption">
-                        {`${new Date(booking.fromDate).toLocaleString(
-                          "default",
-                          {
-                            month: "short",
-                          }
-                        )}-${new Date(booking.fromDate).getFullYear()}`}
+                        {`${new Date(info.fromDate).toLocaleString("default", {
+                          month: "short",
+                        })}-${new Date(info.fromDate).getFullYear()}`}
                       </Typography>
                       <Typography variant="caption" component="p">
                         7:00 AM
@@ -263,19 +297,17 @@ export function ViewBookingDialog() {
                     style={{ textAlign: "right" }}
                   >
                     <Typography variant="h4">
-                      {new Date(booking.toDate).getDate()}
+                      {new Date(info.toDate).getDate()}
                     </Typography>
                     {/* <p className="text-base sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl">09</p> */}
                   </Grid>
                   <Grid item xs={6} xl={6} lg={6}>
                     <Grid>
                       <Typography variant="caption">{`${new Date(
-                        booking.toDate
+                        info.toDate
                       ).toLocaleString("default", {
                         month: "short",
-                      })}-${new Date(
-                        booking.toDate
-                      ).getFullYear()}`}</Typography>
+                      })}-${new Date(info.toDate).getFullYear()}`}</Typography>
                       <Typography variant="caption" component="p">
                         7:00 PM
                       </Typography>
@@ -369,6 +401,7 @@ export const ChatArea = (props) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
+  // const booking = useSelector((state) => state.chat.booking);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
@@ -376,6 +409,7 @@ export const ChatArea = (props) => {
 
   useEffect(() => {
     dispatch(fetchCriteriaList());
+    // dispatch(fetchBookingRequest(26));
     // dispatch(fetchAgreementList(11));
   }, [dispatch]);
   return (
@@ -408,9 +442,9 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedUser.id && <User {...selectedUser} />}
+            {selectedUser.id && <UserSelected {...selectedUser} />}
             Status: Dealing
-            <ViewBookingDialog />
+            {/* <ViewBookingDialog info={booking} /> */}
           </Grid>
           <Grid
             item

@@ -11,7 +11,14 @@ export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
+export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 
+export function getRequestFirebase(request) {
+  return {
+    type: GET_REQUEST_FIREBASE,
+    payload: request,
+  };
+}
 export function setSelectedUser(user) {
   return {
     type: SET_SELECTED_USER,
@@ -140,6 +147,20 @@ export function createAgreement(agreements) {
       },
       (error) => {
         showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function getBookingRequest(id) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_GETBYID(id));
+    request.then(
+      (response) => {
+        dispatch(fetchBookingRequest(response.success ? response.data : {}));
+      },
+      (error) => {
+        showMessageError(error);
       }
     );
   };

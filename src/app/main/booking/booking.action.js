@@ -1,6 +1,7 @@
 import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
-import { fetchBookingRequest } from "../chat/chat.action";
+// import { fetchBookingRequest } from "../chat/chat.action";
+import firebase from "../../firebase/firebase";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_FILTER_CARS_SUCCESS = "[CAR] FETCH FILTER DATA SUCCESS";
@@ -22,8 +23,10 @@ export const POST_CAR_SUBMIT_SUCCESS = "[CAR_SUBMIT] POST DATA SUCCESS";
 export const POST_CAR_SUBMIT = "[CAR_SUBMIT] POST DATA";
 export const POST_CAR_SUBMIT_FAILURE = "[CAR_SUBMIT] POST DATA FAILURE";
 
-export const POST_IMAGE_CAR_SUBMIT_SUCCESS = "[IMAGE_CAR_SUBMIT] POST IMAGE SUCCESS";
-export const POST_IMAGE_CAR_SUBMIT_FAILURE = "[IMAGE_CAR_SUBMIT] POST IMAGE FAILURE";
+export const POST_IMAGE_CAR_SUBMIT_SUCCESS =
+  "[IMAGE_CAR_SUBMIT] POST IMAGE SUCCESS";
+export const POST_IMAGE_CAR_SUBMIT_FAILURE =
+  "[IMAGE_CAR_SUBMIT] POST IMAGE FAILURE";
 
 export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
 export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
@@ -31,8 +34,10 @@ export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
 export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
 export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
 
-export const POST_REVIEW_SUBMIT_SUCCESS = "[REVIEW_SUBMIT] POST REVIEW SUBMIT SUCCESS";
-export const POST_REVIEW_SUBMIT_FAILURE = "[REVIEW-SUBMIT] POST REVIEW SUBMIT FAILURE";
+export const POST_REVIEW_SUBMIT_SUCCESS =
+  "[REVIEW_SUBMIT] POST REVIEW SUBMIT SUCCESS";
+export const POST_REVIEW_SUBMIT_FAILURE =
+  "[REVIEW-SUBMIT] POST REVIEW SUBMIT FAILURE";
 export const POST_REVIEW_SUBMIT = "[REVIEW-SUBMIT] POST REVIEW SUBMIT";
 
 export const POST_BOOKING_SUCCESS = "[BOOKING] POST BOOKING SUCCESS";
@@ -40,6 +45,8 @@ export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
 
 export const PUT_BOOKING_SUCCESS = "[BOOKING] PUT BOOKING SUCCESS";
 export const PUT_BOOKING_FAILURE = "[BOOKING] PUT BOOKING FAILURE";
+
+export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 
@@ -199,6 +206,12 @@ export function createAgreementSuccess(agreements) {
     payload: agreements,
   };
 }
+export function fetchBookingSuccess(booking) {
+  return {
+    type: FETCH_BOOKING_SUCCESS,
+    payload: booking,
+  };
+}
 
 export function fetchCarList(page, size) {
   return (dispatch) => {
@@ -340,7 +353,7 @@ export function postCarSubmit(car, listImage) {
       (response) => {
         if (response.success) {
           dispatch(postCarSubmitSuccess(response.data));
-          dispatch(postImageCar(listImage, response.data.id))
+          dispatch(postImageCar(listImage, response.data.id));
           console.log("Success submit car ", response.data);
         } else {
           dispatch(showMessageError(response.message));
@@ -352,15 +365,19 @@ export function postCarSubmit(car, listImage) {
         dispatch(showMessageError(error.message));
       }
     );
-  }
+  };
 }
 
 export function postImageCar(link, carId) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.IMAGE_CONTROLLER_GETALL, {}, {
-      carId,
-      link
-    });
+    const request = POST(
+      ENDPOINT.IMAGE_CONTROLLER_GETALL,
+      {},
+      {
+        carId,
+        link,
+      }
+    );
     request.then(
       (response) => {
         if (response.success) {
@@ -375,7 +392,7 @@ export function postImageCar(link, carId) {
         dispatch(postImageCarSubmitFailure(error));
       }
     );
-  }
+  };
 }
 
 export function fetchBrandList(page, size) {
@@ -409,14 +426,22 @@ export function fetchModelList() {
   };
 }
 
-export function postBookingRequest(booking) {
+export function postBookingRequest(booking, car, renter) {
   return (dispatch) => {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
         dispatch(
-          fetchBookingRequest(response.data.data),
+          // fetchBookingRequest(response.data.data)
           postBookingSuccess(response.success ? response.data.data : {})
+        );
+        notificationBooking(
+          "REQUEST",
+          booking.renterId,
+          booking.lessorId,
+          car,
+          renter,
+          response.data.id
         );
         console.log("Create success ", response.data.data);
       },
@@ -447,7 +472,7 @@ export function postReviewSubmit(review) {
     request.then(
       (response) => {
         if (response.success) {
-          dispatch(postReviewSubmitSuccess(response.data))
+          dispatch(postReviewSubmitSuccess(response.data));
           console.log("Success submit review car");
         } else {
           dispatch(showMessageError(response.message));
@@ -461,3 +486,32 @@ export function postReviewSubmit(review) {
     );
   };
 }
+
+export function notificationBooking(
+  status,
+  rent,
+  owner,
+  car,
+  renterInfo,
+  bookingId
+) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${owner}`)
+    .collection("requests")
+    // .doc(`${rent}`)
+    // .collection("info")
+    .add({
+      status,
+      rent,
+      car,
+      displayName: renterInfo.displayName,
+      email: renterInfo.email,
+      photoURL: renterInfo.photoURL,
+      bookingId,
+      createAt: new Date().getTime(),
+    });
+}
+
+export function fetchBookingRequest(id) {}

@@ -4,11 +4,14 @@ import {
   MuiThemeProvider,
   Toolbar,
   makeStyles,
+  Icon,
+  Grid,
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import Logo from "app/fuse-layouts/shared-components/Logo";
 import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
+import Notification from "app/fuse-layouts/shared-components/Notification";
 import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
     height: 64,
     backgroundColor: theme.palette.divider,
+  },
+  notification: {
+    padding: theme.spacing(2),
   },
 }));
 
@@ -40,6 +46,12 @@ const ToolbarLayout3 = () => {
                         </Hidden> */}
             <div className={classes.separator} />
             <UserMenu />
+            <Notification />
+            {/* <Grid className={classes.notification}>
+              <Icon>notifications_none</Icon>
+            </Grid>
+            <Grid className={classes.notification}>
+            </Grid> */}
             {/* <Hidden mdDown>
                             <ChatPanel />
                               <div className={classes.separator} />
