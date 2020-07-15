@@ -406,6 +406,10 @@ export function postCarSubmit(car, listImage) {
   };
 }
 
+export function setOwnerData(user) {
+  firebase.firestore().collection("owners").doc(`${user.id}`).set(user);
+}
+
 export function postImageCar(link, carId) {
   return (dispatch) => {
     const request = POST(

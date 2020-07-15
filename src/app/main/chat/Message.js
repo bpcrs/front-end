@@ -80,7 +80,7 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
                   Agree
                 </Button>
                 <Button size="small" color="primary">
-                  Let't me think
+                  Let me think
                 </Button>
               </CardActions>
             ) : null}

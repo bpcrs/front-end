@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import {
   setSelectedUser,
-  getRequestFirebase,
+  // getRequestFirebase,
   getBookingRequest,
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
