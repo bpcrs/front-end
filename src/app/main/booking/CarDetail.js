@@ -17,12 +17,17 @@ import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewList, fetchCarDetail, postReviewSubmit, postReview } from "./booking.action";
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Slide from '@material-ui/core/Slide'
+import {
+  fetchReviewList,
+  fetchCarDetail,
+  postReviewSubmit,
+  postReview,
+} from "./booking.action";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Slide from "@material-ui/core/Slide";
 import NumberFormat from "react-number-format";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -61,12 +66,14 @@ const Review = ({ comment, rating, renter, createdDate }) => {
           >
             <CardHeader
               avatar={
-                <Avatar aria-label="recipe" className={classes.avatar} src={renter.imageUrl}>
-
-                </Avatar>
+                <Avatar
+                  aria-label="recipe"
+                  className={classes.avatar}
+                  src={renter.imageUrl}
+                ></Avatar>
               }
               title={renter.fullName}
-              subheader={(new Date(createdDate).toLocaleDateString())}
+              subheader={new Date(createdDate).toLocaleDateString()}
             />
             <Rating name="read-only" value={rating} readOnly size="small" />
           </Grid>
@@ -91,6 +98,13 @@ export default function CarDetails(props) {
   const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
   const { booking, carDetails } = props.location.state;
+  const summaryPrice =
+    carDetail.price *
+    (Math.round(
+      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+        (1000 * 60 * 60 * 24)
+    ) +
+      1);
 
   // const owner = carDetail.owner;
 
@@ -118,14 +132,14 @@ export default function CarDetails(props) {
     carId: props.match.params.id,
     accountId: currentUser.id,
     rating: 5,
-    comment: ""
+    comment: "",
   });
   const handleInputComment = (event) => {
     setCurrentRating({
       ...currentRating,
       comment: event.target.value,
     });
-  }
+  };
 
   const [rateSart, setRateStar] = useState(5);
   const handleInputRateStar = (event) => {
@@ -134,12 +148,12 @@ export default function CarDetails(props) {
       ...currentRating,
       rating: event.target.value,
     });
-  }
+  };
 
   const submitReviewCarToDB = () => {
     dispatch(postReview());
     dispatch(postReviewSubmit(currentRating));
-    setCurrentRating({comment : ""})
+    setCurrentRating({ comment: "" });
   };
 
   return (
@@ -152,7 +166,9 @@ export default function CarDetails(props) {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
-          <DialogTitle id="alert-dialog-slide-title">{"Uploading Review"}</DialogTitle>
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Uploading Review"}
+          </DialogTitle>
           <DialogContent>
             <div align="center" className={classes.progressBar}>
               <CircularProgress color="secondary" />
@@ -311,11 +327,10 @@ export default function CarDetails(props) {
                               src={currentUser.photoURL}
                               aria-label="recipe"
                               className={classes.avatar}
-                            >
-                            </Avatar>
+                            ></Avatar>
                           }
                           title={currentUser.displayName}
-                        // subheader="May 14, 2020"
+                          // subheader="May 14, 2020"
                         />
                         <Rating
                           name="Rating"
@@ -358,7 +373,12 @@ export default function CarDetails(props) {
                       container
                     >
                       <Grid item lg={4} xs={12}>
-                        <Button fullWidth variant="contained" color="primary" onClick={submitReviewCarToDB}>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          onClick={submitReviewCarToDB}
+                        >
                           Submit
                         </Button>
                       </Grid>
@@ -404,13 +424,34 @@ export default function CarDetails(props) {
               <CardContent>
                 <Typography variant="h6">Price summary</Typography>
                 <Grid container justify="space-between">
-                  <Typography variant="body2" align="left" color="textPrimary">
+                  {/* <Typography variant="body2" align="left" color="textPrimary">
                     Car rental fee
-                  </Typography>
+                  </Typography> */}
                   <Typography variant="body2" align="right" color="textPrimary">
                     {
                       <NumberFormat
                         value={carDetail.price}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        // prefix={"$"}
+                        // suffix={" VNĐ"}
+                      />
+                    }{" "}
+                    {" * "}{" "}
+                    {Math.round(
+                      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                        (1000 * 60 * 60 * 24)
+                    ) + 1}{" "}
+                    {"(days) = "}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    align="center"
+                    color="textPrimary"
+                  >
+                    {
+                      <NumberFormat
+                        value={summaryPrice}
                         displayType={"text"}
                         thousandSeparator={true}
                         // prefix={"$"}

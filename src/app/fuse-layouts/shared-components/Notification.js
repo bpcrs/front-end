@@ -112,7 +112,7 @@ const Notification = () => {
                       chat
                     </Icon>
                     <Typography>
-                      {notify.renterName} request to rental you at car{" "}
+                      {notify.displayName} request to rental you at car{" "}
                       {notify.car}
                     </Typography>
                   </MenuItem>

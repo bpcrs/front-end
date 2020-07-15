@@ -19,6 +19,7 @@ import {
   fetchBrandList,
   fetchModelList,
   postCar,
+  setOwnerData,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -90,7 +91,7 @@ export default function CarSubmit(props) {
   const loading = useSelector((state) => state.booking.loading);
   const brands = useSelector((state) => state.booking.brands);
   const models = useSelector((state) => state.booking.models);
-
+  const userLogged = useSelector((state) => state.auth.user);
   const [currentCar, setCurrentCar] = useState({});
   const handleInputChange = (event) => {
     setCurrentCar({
@@ -310,6 +311,8 @@ export default function CarSubmit(props) {
 
   var submitCarToDB = () => {
     dispatch(postCarSubmit(currentCar, linkImageArr));
+    console.log("Owner info ", userLogged);
+    dispatch(setOwnerData(userLogged));
     if (loading == false) {
       handleChangePage();
     }

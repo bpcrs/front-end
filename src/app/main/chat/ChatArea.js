@@ -34,8 +34,8 @@ import {
   fetchCriteriaList,
   createAgreement,
 } from "./chat.action";
-import ViewBooking from "../booking/ViewBooking";
-import { fetchBookingRequest } from "../booking/booking.action";
+// import ViewBooking from "../booking/ViewBooking";
+// import { fetchBookingRequest } from "../booking/booking.action";
 // import { data } from "autoprefixer";
 
 const useStyles = makeStyles((theme) => ({
