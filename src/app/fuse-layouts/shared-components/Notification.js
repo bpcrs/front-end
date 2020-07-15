@@ -82,9 +82,6 @@ const Notification = () => {
           </div> */}
 
         <Icon style={{ color: "red" }}>notifications_active</Icon>
-        <Icon className="text-16 ml-12 hidden sm:flex" variant="action">
-          keyboard_arrow_down
-        </Icon>
       </Button>
 
       <Popover
@@ -105,22 +102,30 @@ const Notification = () => {
         }}
       >
         <React.Fragment>
-          {notification
-            .sort((first, second) => first.createAt - second.createAt)
-            .map((notify) => (
-              <Grid className={classes.notification} onClick={handleClick}>
-                <MenuItem>
-                  <Icon style={{ color: "blue" }} className={classes.icon}>
-                    chat
-                  </Icon>
-                  <Typography>
-                    {notify.renterName} request to rental you at car{" "}
-                    {notify.car}
-                  </Typography>
-                </MenuItem>
-              </Grid>
-            ))}
+          {notification.length !== 0 &&
+            notification
+              .sort((first, second) => first.createAt - second.createAt)
+              .map((notify) => (
+                <Grid className={classes.notification} onClick={handleClick}>
+                  <MenuItem>
+                    <Icon style={{ color: "blue" }} className={classes.icon}>
+                      chat
+                    </Icon>
+                    <Typography>
+                      {notify.renterName} request to rental you at car{" "}
+                      {notify.car}
+                    </Typography>
+                  </MenuItem>
+                </Grid>
+              ))}
         </React.Fragment>
+        {notification.length === 0 ? (
+          <React.Fragment>
+            <Typography>No new notification</Typography>
+          </React.Fragment>
+        ) : (
+          ""
+        )}
       </Popover>
     </React.Fragment>
   );
