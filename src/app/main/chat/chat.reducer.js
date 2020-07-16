@@ -5,10 +5,11 @@ const initialState = {
   agreement: { isOpen: false, type: "INIT" },
   criteria: [],
   chip: [],
-  agreements: [],
+  newAgreement: {},
   booking: {},
   request: {},
   usersRequest: [],
+  responseAgreement: {},
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
@@ -46,6 +47,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
     }
     case Actions.CHANGE_CHIP: {
       console.log(payload);
+      // dispatchEvent()
       const chipNeedChange = state.chip.findIndex(
         (item) => item.name === payload.name
       );
@@ -63,6 +65,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         chip: updateChip,
+        newAgreement: updateChip[chipNeedChange],
       };
     }
     case Actions.INIT_CHIP: {
@@ -80,7 +83,7 @@ const chatReducer = (state = initialState, { type, payload }) => {
     case Actions.CREATE_AGREEMENT_SUCCESS: {
       return {
         ...state,
-        agreements: payload,
+        responseAgreement: payload,
       };
     }
     case Actions.FETCH_AGREEMENT_SUCCESS: {

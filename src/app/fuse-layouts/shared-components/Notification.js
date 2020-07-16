@@ -64,12 +64,7 @@ const Notification = () => {
         .collection("notification")
         .doc(`${userLogged.id}`)
         .collection("requests")
-        //   .get();
-        // return snapshot
-        //   .docs.map((doc))
-
-        //   .collection("info")
-        .orderBy("createAt", "asc")
+        .orderBy("createAt", "desc")
         .limitToLast(10)
         .onSnapshot((ns) => {
           setNotification([]);

@@ -133,23 +133,34 @@ const ContactList = (props) => {
   // const [bookingReq, setBookingReq] = useState([]);
 
   const setSelectedContact = (id, isRental) => {
+    console.log(id, userLogged.id);
     dispatch(setSelectedUser(users.find((u) => u.id === id)));
     const ref = firebase
       .firestore()
       .collection("notification")
-      .doc(`${userLogged.id}`)
+      .doc(Boolean(isRental) ? `${id}` : `${userLogged.id}`)
       .collection("requests");
+    // .orderBy("createAt", "desc")
+    // .limitToLast(10);
     const query = ref
-      .where("rent", "==", id)
+      .where("rent", "==", Boolean(isRental) ? userLogged.id : id)
+      // .orderBy("createAt", "desc")
+      // .limit(1)
+      // .limitToLast(10)
       .get()
       .then(function (querySnapshot) {
-        querySnapshot.forEach(function (doc) {
-          console.log(doc.data().bookingId);
+        console.log(querySnapshot.docs[0].data().bookingId);
+        dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
+        // querySnapshot.forEach(function (doc) {
+        //   console.log(doc.data().bookingId);
 
-          // dispatch(getRequestFirebase(doc.data()));
-          dispatch(getBookingRequest(doc.data().bookingId));
-        });
+        //   dispatch(getBookingRequest(doc.data().bookingId));
+        // });
       })
+      // .onSnapshot((ns) => {
+      //   console.log(ns.data().bookingId);
+      //   dispatch(getBookingRequest(ns.data().bookingId));
+      // })
       .catch(function (error) {
         console.log(error);
       });

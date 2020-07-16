@@ -153,7 +153,7 @@ export function ViewBookingDialog(props) {
   const [open, setOpen] = useState(false);
   // const booking = useSelector((state) => state.chat.booking);
   const { info } = props;
-  console.log(info);
+  // console.log(info);
 
   const handleClickOpen = () => {
     setOpen(true);

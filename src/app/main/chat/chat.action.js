@@ -90,10 +90,10 @@ export function fetchAgreementSuccess(agreements) {
     payload: agreements,
   };
 }
-export function createAgreementSuccess(agreements) {
+export function createAgreementSuccess(agreement) {
   return {
     type: CREATE_AGREEMENT_SUCCESS,
-    payload: agreements,
+    payload: agreement,
   };
 }
 export function fetchBookingRequest(booking) {
@@ -150,13 +150,13 @@ export function fetchAgreementList(id) {
     );
   };
 }
-
-export function createAgreement(agreements) {
+export function createAgreement(agreement) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreements);
+    console.log(agreement);
+    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
     request.then(
       (response) => {
-        dispatch(createAgreementSuccess(response.success ? response.data : []));
+        dispatch(createAgreementSuccess(response.success ? response.data : {}));
         console.log(response.data);
       },
       (error) => {
