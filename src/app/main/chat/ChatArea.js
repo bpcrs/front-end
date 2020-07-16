@@ -333,7 +333,7 @@ export function CloseAgreementDialog(props) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { agreement } = props;
-  console.log(agreement);
+  // console.log(agreement);
   // const agreeAgreements =  props
 
   const handleUpdateAgreement = () => {
@@ -476,7 +476,7 @@ export const ChatArea = (props) => {
                     />
                   );
                 })}
-                {console.log(chip)}
+                {/* {console.log(chip)} */}
               </div>
             ) : (
               <></>

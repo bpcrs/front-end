@@ -15,6 +15,7 @@ import {
   getBookingRequest,
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
+import { request } from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,9 +118,10 @@ const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  var temp = [];
   // const carDetail = useSelector((state) => state.booking.carDetail);
   const { info, renter } = props || {};
-  console.log(renter);
+  // console.log(renter);
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   // const [bookingReq, setBookingReq] = useState([]);
@@ -227,8 +229,14 @@ const ContactList = (props) => {
         <Grid>
           {users
             .filter(
-              (request) => request.email === renter[0].email
-              // user.email === renter.forEach((rent) => console.log(rent))
+              (request) => {
+                return renter.some((f) => {
+                  return f.email === request.email;
+                });
+              }
+              // renter.forEach((rent) => rent.email === request.email)
+              // request.email === renter[1].email ||
+              // request.email === renter[2].email
             )
             .map((user, index) => (
               <Grid
