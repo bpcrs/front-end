@@ -71,6 +71,12 @@ const chatReducer = (state = initialState, { type, payload }) => {
         chip: payload,
       };
     }
+    case Actions.UPDATE_CHIP: {
+      return {
+        ...state,
+        chip: payload,
+      };
+    }
     case Actions.CREATE_AGREEMENT_SUCCESS: {
       return {
         ...state,

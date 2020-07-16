@@ -399,9 +399,12 @@ export const ChatArea = (props) => {
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { carDetail, notification } = props.location.state || {};
-  // console.log(notification);
-  const criterias = useSelector((state) => state.chat.criteria);
+  // console.log(carDetail);
+  // const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
+
+  // console.log(criteria);
+  // const chipRole = [];
   // const booking = useSelector((state) => state.chat.booking);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
@@ -457,7 +460,7 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {criterias.length !== 0 ? (
+            {chip.length !== 0 ? (
               <div className={classes.root}>
                 {chip.map((data) => {
                   // console.log(data);
@@ -481,7 +484,6 @@ export const ChatArea = (props) => {
             ) : (
               <></>
             )}
-
             <CloseAgreementDialog agreement={chip} />
           </Grid>
         </Grid>
@@ -500,7 +502,11 @@ export const ChatArea = (props) => {
             justify="flex-start"
             alignContent="flex-start"
           >
-            <ContactList info={carDetail} renter={notification} />
+            <ContactList
+              info={carDetail}
+              renter={notification}
+              chipList={chip}
+            />
           </Grid>
           <Grid
             item

@@ -9,11 +9,10 @@ import {
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
 import { APP_PATH } from "../../../constant";
-import { getUsersRequest } from "../../main/chat/chat.action";
 // import { theme } from "@chakra-ui/core";
 // import { blue } from "@material-ui/core/colors";
 

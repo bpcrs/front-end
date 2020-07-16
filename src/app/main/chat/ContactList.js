@@ -13,9 +13,9 @@ import {
   setSelectedUser,
   // getRequestFirebase,
   getBookingRequest,
+  updateChip,
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
-import { request } from "../../services/api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,15 +118,21 @@ const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  var temp = [];
   // const carDetail = useSelector((state) => state.booking.carDetail);
-  const { info, renter } = props || {};
+  // const chip = useSelector((state) => state.chat.chip);
+  const { info, renter, chipList } = props || {};
+  // const [is]
+  // const [chipData, setChipData] = useState([]);
+  // console.log(
+  //   "Chip list ",
+  //   chipList.filter((item) => item.name !== "Insurance" && item.name !== "Indemnification")
+  // );
   // console.log(renter);
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   // const [bookingReq, setBookingReq] = useState([]);
 
-  const setSelectedContact = (id) => {
+  const setSelectedContact = (id, isRental) => {
     dispatch(setSelectedUser(users.find((u) => u.id === id)));
     const ref = firebase
       .firestore()
@@ -149,25 +155,48 @@ const ContactList = (props) => {
       });
     console.log(query);
     // async function getR
+    if (isRental) {
+      dispatch(
+        updateChip(
+          chipList.filter(
+            (item) =>
+              item.name !== "Insurance" && item.name !== "Indemnification"
+          )
+        )
+      );
+    } else {
+      dispatch(
+        updateChip(
+          chipList.filter(
+            (item) =>
+              item.name !== "Mileage limit" &&
+              item.name !== "Extra" &&
+              item.name !== "Deposit"
+          )
+        )
+      );
+    }
   };
 
   useEffect(() => {
     const usersFirebase = firebase.firestore().collection("users");
-    // const rentersFirebase = firebase.firestore().collection("users");
-    // .doc(`${userLogged.id}`);
-    // console.log("User renter", usersFirebase.get());
-
     async function getImagesContact() {
       const usersInfo = await usersFirebase.get();
-      // const rentersInfo = await rentersFirebase.get();
-      // rentersFirebase.docs.map((doc))
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
+    // setChipData(chipList);
   }, [userLogged.id, info]);
-  const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
+  const ContactButton = ({
+    displayName,
+    email,
+    photoURL,
+    id,
+    isActive,
+    isRental,
+  }) => (
     <Box
-      onClick={() => setSelectedContact(id)}
+      onClick={() => setSelectedContact(id, isRental)}
       className={isActive ? classes.contactButton : ""}
     >
       <Grid container className="px-8 py-8">
@@ -221,9 +250,12 @@ const ContactList = (props) => {
                 <ContactButton
                   {...user}
                   isActive={user.id === selectedUser.id}
+                  isRental={true}
                 />
               </Grid>
             ))}
+          {/* {chipList.filter((item) => item.name !== "Extra")} */}
+          {/* {console.log(chipList)} */}
         </Grid>
       ) : (
         <Grid>
@@ -251,9 +283,14 @@ const ContactList = (props) => {
                 <ContactButton
                   {...user}
                   isActive={user.id === selectedUser.id}
+                  isRental={false}
                 />
+                {/* {dispatch(initChip(chipList))} */}
               </Grid>
             ))}
+          {/* {setChipData} */}
+          {/* {chipList.filter((item) => item.name !== "Extra")} */}
+          {/* {console.log(chipList)} */}
         </Grid>
       )}
     </div>

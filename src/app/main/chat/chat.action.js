@@ -7,6 +7,7 @@ export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
 export const CLOSE_AGREEMENT = "[AGREEMENT] CLOSE";
 export const CHANGE_CHIP = "[CHIP] CHANGE";
 export const INIT_CHIP = "[CHIP] INIT";
+export const UPDATE_CHIP = "[CHIP] UPDATE";
 export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
@@ -69,6 +70,12 @@ export function initChip(criteras) {
       value: 30,
       criteriaId: data.id,
     })),
+  };
+}
+export function updateChip(chips) {
+  return {
+    type: UPDATE_CHIP,
+    payload: chips,
   };
 }
 export function fetchCriteriaSuccess(critera) {
