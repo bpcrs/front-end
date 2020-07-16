@@ -50,8 +50,8 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
   async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));
     // const agreement = dispatch(useSelector((state) => state.chat.newAgreement));
+    dispatch(createAgreement(newAgreement));
     dispatch(closeAgreement());
-    dispatch(createAgreement(data));
   }
   // const [mileageAgreement, setMileageAgreement] = useState({
   //   value: message,
