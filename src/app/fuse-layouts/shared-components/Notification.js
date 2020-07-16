@@ -9,10 +9,11 @@ import {
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
 import { APP_PATH } from "../../../constant";
+import { getUsersRequest } from "../../main/chat/chat.action";
 // import { theme } from "@chakra-ui/core";
 // import { blue } from "@material-ui/core/colors";
 
@@ -27,13 +28,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Notification = () => {
   // const [notificationMenu, setNotificationMenu] = useState(null);
+  // const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [notification, setNotification] = useState([]);
   const userLogged = useSelector((state) => state.auth.user);
-  console.log("User ", userLogged.displayName);
-  console.log("Notification ", notification);
+  // console.log("User ", userLogged.displayName);
+  // console.log("Notification ", notification);
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,9 +46,13 @@ const Notification = () => {
   const handleClick = () => {
     history.push({
       pathname: APP_PATH.CHAT,
+      state: {
+        notification,
+        // bookingInStore,
+      },
     });
   };
-
+  // getUsersRequest(notification);
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
@@ -68,11 +74,13 @@ const Notification = () => {
         .limitToLast(10)
         .onSnapshot((ns) => {
           setNotification([]);
-          ns.docs.map((notify) =>
-            setNotification((noti) => [...noti, notify.data()])
+          ns.docs.map(
+            (notify) => setNotification((noti) => [...noti, notify.data()])
+            // getUsersRequest((noti) => [...noti, notify.data()]);
           );
         });
     }
+    // dispatch(getUsersRequest(notification));
     getNotificationFromFirebase();
   }, [userLogged.id]);
   return (

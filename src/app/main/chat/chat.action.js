@@ -12,11 +12,18 @@ export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
+export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function getUsersRequest(users) {
+  return {
+    type: GET_USERS_REQUEST,
+    payload: users,
   };
 }
 export function setSelectedUser(user) {

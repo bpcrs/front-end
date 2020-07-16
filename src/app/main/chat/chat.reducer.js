@@ -8,6 +8,7 @@ const initialState = {
   agreements: [],
   booking: {},
   request: {},
+  usersRequest: [],
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
@@ -16,6 +17,12 @@ const chatReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         selectedUser: payload,
+      };
+    }
+    case Actions.GET_USERS_REQUEST: {
+      return {
+        ...state,
+        usersRequest: payload,
       };
     }
     case Actions.GET_REQUEST_FIREBASE: {

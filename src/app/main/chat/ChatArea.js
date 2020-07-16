@@ -152,7 +152,6 @@ export function ViewBookingDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   // const booking = useSelector((state) => state.chat.booking);
-  // const carDetail = useSelector((state) => state.booking.carDetail);
   const { info } = props;
   console.log(info);
 
@@ -399,6 +398,8 @@ export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const { carDetail, notification } = props.location.state || {};
+  // console.log(notification);
   const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
   // const booking = useSelector((state) => state.chat.booking);
@@ -499,7 +500,7 @@ export const ChatArea = (props) => {
             justify="flex-start"
             alignContent="flex-start"
           >
-            <ContactList />
+            <ContactList info={carDetail} renter={notification} />
           </Grid>
           <Grid
             item

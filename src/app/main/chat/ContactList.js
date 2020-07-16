@@ -113,12 +113,13 @@ const StyledBadge = withStyles((theme) => ({
     },
   },
 }))(Badge);
-const ContactList = () => {
+const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   // const carDetail = useSelector((state) => state.booking.carDetail);
-
+  const { info, renter } = props || {};
+  console.log(renter);
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   // const [bookingReq, setBookingReq] = useState([]);
@@ -150,15 +151,18 @@ const ContactList = () => {
 
   useEffect(() => {
     const usersFirebase = firebase.firestore().collection("users");
+    // const rentersFirebase = firebase.firestore().collection("users");
     // .doc(`${userLogged.id}`);
     // console.log("User renter", usersFirebase.get());
 
     async function getImagesContact() {
       const usersInfo = await usersFirebase.get();
+      // const rentersInfo = await rentersFirebase.get();
+      // rentersFirebase.docs.map((doc))
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-  }, [userLogged.id]);
+  }, [userLogged.id, info]);
   const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
     <Box
       onClick={() => setSelectedContact(id)}
@@ -195,21 +199,55 @@ const ContactList = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      {users
-        .filter((user) => user.email !== userLogged.email)
-        .map((user, index) => (
-          <Grid
-            key={user.id}
-            item
-            lg={12}
-            className="py-8"
-            style={{
-              backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
-            }}
-          >
-            <ContactButton {...user} isActive={user.id === selectedUser.id} />
-          </Grid>
-        ))}
+      {info !== undefined ? (
+        <Grid>
+          {users
+            .filter(
+              (user) =>
+                user.email !== userLogged.email && user.id === info.owner.id
+            )
+            .map((user, index) => (
+              <Grid
+                key={user.id}
+                item
+                lg={12}
+                className="py-8"
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+                }}
+              >
+                <ContactButton
+                  {...user}
+                  isActive={user.id === selectedUser.id}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      ) : (
+        <Grid>
+          {users
+            .filter(
+              (request) => request.email === renter[0].email
+              // user.email === renter.forEach((rent) => console.log(rent))
+            )
+            .map((user, index) => (
+              <Grid
+                key={user.id}
+                item
+                lg={12}
+                className="py-8"
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+                }}
+              >
+                <ContactButton
+                  {...user}
+                  isActive={user.id === selectedUser.id}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      )}
     </div>
   );
 };
