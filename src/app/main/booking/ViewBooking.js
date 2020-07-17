@@ -48,7 +48,7 @@ export default function ViewBooking(props) {
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
   // const bookingInStore = useSelector((state) => state.booking.booking);
-  // console.log(bookingInStore);
+  // console.log(carDetail.owner.id);
 
   // console.log("Booking ", bookingReq);
   const convert = (str) => {

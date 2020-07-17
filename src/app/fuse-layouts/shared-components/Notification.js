@@ -27,13 +27,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Notification = () => {
   // const [notificationMenu, setNotificationMenu] = useState(null);
+  // const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [notification, setNotification] = useState([]);
   const userLogged = useSelector((state) => state.auth.user);
-  console.log("User ", userLogged.displayName);
-  console.log("Notification ", notification);
+  // console.log("User ", userLogged.displayName);
+  // console.log("Notification ", notification);
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,9 +45,13 @@ const Notification = () => {
   const handleClick = () => {
     history.push({
       pathname: APP_PATH.CHAT,
+      state: {
+        notification,
+        // bookingInStore,
+      },
     });
   };
-
+  // getUsersRequest(notification);
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
@@ -59,20 +64,17 @@ const Notification = () => {
         .collection("notification")
         .doc(`${userLogged.id}`)
         .collection("requests")
-        //   .get();
-        // return snapshot
-        //   .docs.map((doc))
-
-        //   .collection("info")
-        .orderBy("createAt", "asc")
+        .orderBy("createAt", "desc")
         .limitToLast(10)
         .onSnapshot((ns) => {
           setNotification([]);
-          ns.docs.map((notify) =>
-            setNotification((noti) => [...noti, notify.data()])
+          ns.docs.map(
+            (notify) => setNotification((noti) => [...noti, notify.data()])
+            // getUsersRequest((noti) => [...noti, notify.data()]);
           );
         });
     }
+    // dispatch(getUsersRequest(notification));
     getNotificationFromFirebase();
   }, [userLogged.id]);
   return (

@@ -12,7 +12,7 @@ import {
 // import GetDate from '../../../common/getDate';
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { closeAgreement, changeChip } from "./chat.action";
+import { closeAgreement, changeChip, createAgreement } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -37,11 +37,22 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const booking = useSelector((state) => state.chat.booking);
+  const newAgreement = useSelector((state) => state.chat.newAgreement);
   const isRevice = userLogged.id !== receive;
-  const handleChangeChip = (name) => {
-    dispatch(changeChip(name, message, booking.id));
-    dispatch(closeAgreement());
+  console.log(newAgreement);
+  const data = {
+    name: "Mileage limit",
+    value: 212,
+    approved: true,
+    criteriaId: 1,
+    bookingId: 35,
   };
+  async function handleChangeChip(name) {
+    dispatch(changeChip(name, message, booking.id));
+    // const agreement = dispatch(useSelector((state) => state.chat.newAgreement));
+    dispatch(createAgreement(newAgreement));
+    dispatch(closeAgreement());
+  }
   // const [mileageAgreement, setMileageAgreement] = useState({
   //   value: message,
   //   status: "CLOSE",
