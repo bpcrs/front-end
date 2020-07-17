@@ -62,7 +62,7 @@ const Notification = () => {
       await firebase
         .firestore()
         .collection("notification")
-        .doc(`${userLogged.id}`)
+        .doc(userLogged.email)
         .collection("requests")
         .orderBy("createAt", "desc")
         .limitToLast(10)
@@ -76,7 +76,7 @@ const Notification = () => {
     }
     // dispatch(getUsersRequest(notification));
     getNotificationFromFirebase();
-  }, [userLogged.id]);
+  }, [userLogged.email, userLogged.id]);
   return (
     <React.Fragment>
       <Button className="h-64" onClick={notificationClick}>
@@ -114,8 +114,8 @@ const Notification = () => {
                       chat
                     </Icon>
                     <Typography>
-                      {notify.displayName} request to rental you at car{" "}
-                      {notify.car}
+                      {notify.renter.fullName} request to rental you at car{" "}
+                      {notify.car.name}
                     </Typography>
                   </MenuItem>
                 </Grid>
