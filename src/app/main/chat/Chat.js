@@ -156,9 +156,13 @@ const Chat = () => {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-              {/* <IconButton className="absolute pin-r pin-t">
-              <Icon className="text-24">attach_file</Icon>
-            </IconButton> */}
+
+              <IconButton
+                className="absolute pin-r pin-t"
+                onClick={() => onMessageSubmit()}
+              >
+                <Icon className="text-24">attach_file</Icon>
+              </IconButton>
               <IconButton
                 className="absolute pin-r pin-t"
                 onClick={() => onMessageSubmit()}

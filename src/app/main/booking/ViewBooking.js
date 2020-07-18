@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
 export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { booking, carDetail } = props.location.state;
+  const { bookingChange, carDetail } = props.location.state;
   // const { info } = props;
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
@@ -61,12 +61,12 @@ export default function ViewBooking(props) {
   };
 
   const bookingReq = {
-    description: booking.location.description,
-    destination: booking.destination.description,
+    description: bookingChange.location.description,
+    destination: bookingChange.destination.description,
     status: "REQUEST",
-    fromDate: convert(booking.fromDate),
-    toDate: convert(booking.toDate),
-    location: booking.location.description,
+    fromDate: convert(bookingChange.fromDate),
+    toDate: convert(bookingChange.toDate),
+    location: bookingChange.location.description,
     carId: carDetail.id,
     price: carDetail.price,
     lessorId: carDetail.owner.id,
@@ -80,7 +80,7 @@ export default function ViewBooking(props) {
     history.push({
       pathname: APP_PATH.CHAT,
       state: {
-        booking,
+        bookingChange,
         carDetail,
         // bookingInStore,
       },
@@ -111,7 +111,7 @@ export default function ViewBooking(props) {
                     variant="outlined"
                     fullWidth
                     disabled
-                    value={booking.location.description}
+                    value={bookingChange.location.description}
                   />
                 </FormControl>
                 <FormControl fullWidth className={classes.spacingCard}>
@@ -121,7 +121,7 @@ export default function ViewBooking(props) {
                     variant="outlined"
                     fullWidth
                     disabled
-                    value={booking.destination.description}
+                    value={bookingChange.destination.description}
                   />
                 </FormControl>
               </Grid>
@@ -137,7 +137,8 @@ export default function ViewBooking(props) {
                 <Typography variant="subtitle1">
                   TRIP DURATION{" ("}
                   {Math.round(
-                    (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                    (new Date(bookingChange.toDate) -
+                      new Date(bookingChange.fromDate)) /
                       (1000 * 60 * 60 * 24)
                   ) + 1}{" "}
                   days)
@@ -147,15 +148,18 @@ export default function ViewBooking(props) {
               <Grid item xl={5} lg={5} container direction="row" spacing={1}>
                 <Grid item xs={6} xl={6} lg={6} style={{ textAlign: "right" }}>
                   <Typography variant="h4">
-                    {new Date(booking.fromDate).getDate()}
+                    {new Date(bookingChange.fromDate).getDate()}
                   </Typography>
                 </Grid>
                 <Grid item xs={6} xl={6} lg={6}>
                   <Grid>
                     <Typography variant="caption">
-                      {`${new Date(booking.fromDate).toLocaleString("default", {
-                        month: "short",
-                      })}-${new Date(booking.fromDate).getFullYear()}`}
+                      {`${new Date(bookingChange.fromDate).toLocaleString(
+                        "default",
+                        {
+                          month: "short",
+                        }
+                      )}-${new Date(bookingChange.fromDate).getFullYear()}`}
                     </Typography>
                     <Typography variant="caption" component="p">
                       7:00 AM
@@ -181,16 +185,16 @@ export default function ViewBooking(props) {
               <Grid item xl={5} lg={5} container direction="row" spacing={1}>
                 <Grid item xs={6} xl={6} lg={6} style={{ textAlign: "right" }}>
                   <Typography variant="h4">
-                    {new Date(booking.toDate).getDate()}
+                    {new Date(bookingChange.toDate).getDate()}
                   </Typography>
                   {/* <p className="text-base sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl">09</p> */}
                 </Grid>
                 <Grid item xs={6} xl={6} lg={6}>
                   <Grid>
                     <Typography variant="caption">{`${new Date(
-                      booking.toDate
+                      bookingChange.toDate
                     ).toLocaleString("default", { month: "short" })}-${new Date(
-                      booking.toDate
+                      bookingChange.toDate
                     ).getFullYear()}`}</Typography>
                     <Typography variant="caption" component="p">
                       7:00 PM

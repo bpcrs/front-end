@@ -11,7 +11,7 @@ import {
   FeaturesList,
 } from "landing-blocks/dist";
 import { GradientCurtains } from "landing-blocks/dist/decorations";
-
+import { APP_CONST } from "../../../constant";
 import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
@@ -20,6 +20,21 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import GoogleMaps from "./GoogleMaps";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
+import throttle from "lodash/throttle";
+import { GET, FETCH } from "../../services/api";
+
+function loadScript(src, pickup, destination, id) {
+  if (!pickup || !destination) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.setAttribute("async", "");
+  script.setAttribute("id", id);
+  script.src = src;
+  pickup.appendChild(script);
+  destination.appendChild(destination);
+}
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -42,7 +57,37 @@ function Landing() {
   const [location, setLocation] = useState();
   const [destination, setDestination] = useState();
   const [selectedDate, handleDateChange] = useState([null, null]);
+
+  const distance = () => {
+    const script = document.createElement("script");
+    script.setAttribute("async", "");
+    script.setAttribute("id", "google-maps");
+    script.src = `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${location.description}&destinations=${destination.description}&key=${APP_CONST.GOOGE_MAP_KEY}`;
+    var service = new window.google.maps.DistanceMatrixService();
+    // const fetch = React.useMemo(
+    // () =>
+    //   throttle((callback) => {
+    service.getDistanceMatrix(
+      {
+        destinations: [location.description, destination.description],
+        travelMode: "DRIVING",
+        transitOptions: "TransitOptions",
+        drivingOptions: "DrivingOptions",
+        unitSystem: "UnitSystem",
+        avoidHighways: Boolean,
+        avoidTolls: Boolean,
+      },
+      callback
+    );
+
+    function callback(response, status) {
+      console.log("Response distance", response);
+    }
+  };
+
   const handleBooking = () => {
+    console.log("Location", location, destination);
+    distance();
     history.push({
       pathname: APP_PATH.CAR_LIST,
       state: {
@@ -53,6 +98,7 @@ function Landing() {
       },
     });
   };
+
   return (
     <div className={classes.paper}>
       <LandingProvider primary="#5D21D2">

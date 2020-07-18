@@ -40,13 +40,13 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
   const newAgreement = useSelector((state) => state.chat.newAgreement);
   const isRevice = userLogged.id !== receive;
   console.log(newAgreement);
-  const data = {
-    name: "Mileage limit",
-    value: 212,
-    approved: true,
-    criteriaId: 1,
-    bookingId: 35,
-  };
+  // const data = {
+  //   name: "Mileage limit",
+  //   value: 212,
+  //   approved: true,
+  //   criteriaId: 1,
+  //   bookingId: 35,
+  // };
   async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));
     // const agreement = dispatch(useSelector((state) => state.chat.newAgreement));
