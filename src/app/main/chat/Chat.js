@@ -6,15 +6,17 @@ import {
   Icon,
   Grid,
   Collapse,
+  Button,
 } from "@material-ui/core";
 import classNames from "classnames";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { makeStyles } from "@material-ui/styles";
 import firebase from "../../firebase/firebase";
 import Message from "./Message";
 import { useSelector } from "react-redux";
 import ScrollToBottom from "react-scroll-to-bottom";
 import Agreement from "./Agreement";
-import { submitMessage } from "./chat.action";
+import { submitMessage, storeImage } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -100,6 +102,18 @@ const Chat = () => {
     setSizeMsg(sizeMsg + 1);
   };
 
+  const onImgSubmit = (event) => {
+    //  const image = document.getElementById("output");
+    //  image.src = URL.createObjectURL(event.target.files[0]);
+    storeImage(event.target.files[0], userLogged.id, selectedUser.id);
+    setSendMessage("");
+    setSizeMsg(sizeMsg + 1);
+  };
+
+  // const storeImgToFirebase = () => {
+
+  // }
+
   return (
     <Grid
       container
@@ -156,13 +170,30 @@ const Chat = () => {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-
-              <IconButton
-                className="absolute pin-r pin-t"
-                onClick={() => onMessageSubmit()}
+              <p>
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  accept="image/*"
+                  name="image"
+                  id="file"
+                  onChange={onImgSubmit}
+                />
+              </p>
+              {/* <IconButton>
+                <label htmlFor="file">Img</label>
+                <Icon className="text-24" htmlFor="file">
+                  attach_file
+                </Icon>
+              </IconButton> */}
+              <Button
+                variant="contained"
+                color="secondary"
+                htmlFor="file"
+                startIcon={<Icon htmlFor="file">attach_file</Icon>}
               >
-                <Icon className="text-24">attach_file</Icon>
-              </IconButton>
+                <label htmlFor="file">Image</label>
+              </Button>
               <IconButton
                 className="absolute pin-r pin-t"
                 onClick={() => onMessageSubmit()}

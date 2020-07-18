@@ -14,11 +14,18 @@ export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
+export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function getImgUrlFromFirebase(url) {
+  return {
+    type: GET_IMG_URL,
+    payload: url,
   };
 }
 export function getUsersRequest(users) {
@@ -178,4 +185,22 @@ export function getBookingRequest(id) {
       }
     );
   };
+}
+
+export function storeImage(img, send, receive) {
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const date = new Date().getTime();
+  const uploadTask = firebase
+    .storage()
+    .ref("Chat/" + date)
+    .child(img.name);
+
+  uploadTask.put(img, metadata).then(function (result) {
+    uploadTask.getDownloadURL().then(function (url) {
+      console.log("file available at ", url);
+      submitMessage(url, send, receive, "IMG");
+    });
+  });
 }

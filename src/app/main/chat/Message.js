@@ -29,9 +29,22 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.getContrastText(theme.palette.grey[300]),
     },
   },
+  imgBody: {
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 15,
+    color: theme.palette.primary.contrastText,
+    position: "relative",
+    padding: theme.spacing(2),
+    "&.send": {
+      backgroundColor: theme.palette.grey[300],
+      color: theme.palette.getContrastText(theme.palette.grey[300]),
+    },
+    width: "fit-content",
+    maxWidth: 400,
+  },
 }));
 
-const Message = ({ message, receive, type = "SCOPE" }) => {
+const Message = ({ message, receive, type }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
@@ -225,8 +238,24 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
             ) : null}
           </Card>
         );
+      case "IMG":
+        return (
+          <Grid
+            className={classNames(classes.imgBody, isRevice ? "send" : "")}
+            style={{
+              textAlign: isRevice ? "left" : "right",
+            }}
+          >
+            <div>
+              <img src={message} alt="img" width="300" height="300" />
+            </div>
+          </Grid>
+        );
       default:
         return (
+          // {if {message.type} === "IMG" {
+
+          // }}
           <Grid
             item
             className={classNames(classes.messageBody, isRevice ? "send" : "")}
