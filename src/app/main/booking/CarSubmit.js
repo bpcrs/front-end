@@ -19,7 +19,6 @@ import {
   fetchBrandList,
   fetchModelList,
   postCar,
-  setOwnerData,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
@@ -312,8 +311,7 @@ export default function CarSubmit(props) {
   var submitCarToDB = () => {
     dispatch(postCarSubmit(currentCar, linkImageArr));
     console.log("Owner info ", userLogged);
-    dispatch(setOwnerData(userLogged));
-    if (loading == false) {
+    if (loading === false) {
       handleChangePage();
     }
   };

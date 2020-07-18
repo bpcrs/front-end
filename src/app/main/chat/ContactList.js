@@ -271,16 +271,13 @@ const ContactList = (props) => {
       ) : (
         <Grid>
           {users
-            .filter(
-              (request) => {
-                return renter.some((f) => {
-                  return f.email === request.email;
-                });
-              }
-              // renter.forEach((rent) => rent.email === request.email)
-              // request.email === renter[1].email ||
-              // request.email === renter[2].email
-            )
+            // .filter(
+            //   (request) => {
+            //     return renter.some((f) => {
+            //       return f.email === request.email;
+            //     });
+            //   }
+            // )
             .map((user, index) => (
               <Grid
                 key={user.id}

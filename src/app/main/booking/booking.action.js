@@ -406,10 +406,6 @@ export function postCarSubmit(car, listImage) {
   };
 }
 
-export function setOwnerData(user) {
-  firebase.firestore().collection("owners").doc(`${user.id}`).set(user);
-}
-
 export function postImageCar(link, carId) {
   return (dispatch) => {
     const request = POST(
@@ -468,24 +464,17 @@ export function fetchModelList() {
   };
 }
 
-export function postBookingRequest(booking, car, renter) {
+export function postBookingRequest(booking) {
   return (dispatch) => {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
         dispatch(
           // fetchBookingRequest(response.data.data)
-          postBookingSuccess(response.success ? response.data.data : {})
+          postBookingSuccess(response.success ? response.data : {})
         );
-        notificationBooking(
-          "REQUEST",
-          booking.renterId,
-          booking.lessorId,
-          car,
-          renter,
-          response.data.id
-        );
-        console.log("Create success ", response.data.data);
+        notificationBooking(false, response.data);
+        console.log("Create success ", response.data);
       },
       (error) => {
         showMessageError(error.message);
@@ -529,29 +518,18 @@ export function postReviewSubmit(review) {
   };
 }
 
-export function notificationBooking(
-  status,
-  rent,
-  owner,
-  car,
-  renterInfo,
-  bookingId
-) {
+export function notificationBooking(status, booking) {
+  console.log(status, booking);
   firebase
     .firestore()
     .collection("notification")
-    .doc(`${owner}`)
+    .doc(`${booking.lessor.email}`)
     .collection("requests")
-    // .doc(`${rent}`)
-    // .collection("info")
     .add({
       status,
-      rent,
-      car,
-      displayName: renterInfo.displayName,
-      email: renterInfo.email,
-      photoURL: renterInfo.photoURL,
-      bookingId,
+      car: booking.car,
+      owner: booking.lessor,
+      renter: booking.renter,
       createAt: new Date().getTime(),
     });
 }

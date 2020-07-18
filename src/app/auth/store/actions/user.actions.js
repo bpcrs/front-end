@@ -52,7 +52,7 @@ export function setUserData(user) {
     await firebase
       .firestore()
       .collection("users")
-      .doc(user.data.id.toString())
+      .doc(user.data.email)
       .set(user.data);
   };
 }
