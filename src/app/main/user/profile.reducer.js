@@ -1,15 +1,31 @@
 import * as Actions from "./profile.action";
 const initialState = {
-  //   address: {},
-  //   payment: {},
-  //   rentHistory: [],
-  //   leaseHistory: [],
+    address: {},
+    payment: {},
+    rentHistory: [],
+    leaseHistory: [],
+    cars: [],
 };
 const profileReducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    default: {
-      return state;
-    }
-  }
+    switch (type) {
+        case Actions.FETCH_ADDRESS_SUCCESS: {
+            return {
+                ...state,
+                address: payload,
+                loading: false
+            }
+        }
+        case Actions.FETCH_CAR_INFORMATION_OWNER_SUCCESS: {
+            return {
+                ...state,
+                cars: payload,
+                loading: false
+
+            }
+        }
+        default: {
+            return state;
+        }
+    };
 };
 export default profileReducer;

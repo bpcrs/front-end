@@ -20,6 +20,8 @@ import { useSelector } from "react-redux";
 import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
 
+import CarInformationProfile from "./CarInformationProfile";
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -92,7 +94,7 @@ export default function Profile() {
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
   };
-  const onAddressUpdate = () => {};
+  const onAddressUpdate = () => { };
   return (
     <Layout name="Profile">
       <div className={classes.root}>
@@ -215,7 +217,10 @@ export default function Profile() {
               </Button>
             </TabPanel>
             <TabPanel value={tab} index={1}>
-              <h2>Car Information</h2>
+              <div style={{ backgroundColor: "#E0E0E0",height:"100%" }}>
+                <h2>Car Information</h2>
+                <CarInformationProfile />
+              </div>
             </TabPanel>
             <TabPanel value={tab} index={2}>
               <h2>Payment Method</h2>
