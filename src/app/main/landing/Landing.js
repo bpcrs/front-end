@@ -16,12 +16,11 @@ import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Logo from "app/fuse-layouts/shared-components/Logo";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import GoogleMaps from "./GoogleMaps";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
-import throttle from "lodash/throttle";
-import { GET, FETCH } from "../../services/api";
+import { createBooking } from "../booking/booking.action";
 
 function loadScript(src, pickup, destination, id) {
   if (!pickup || !destination) {
@@ -51,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function Landing() {
+  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
@@ -86,8 +86,13 @@ function Landing() {
   };
 
   const handleBooking = () => {
-    console.log("Location", location, destination);
-    distance();
+    // const booking = {
+    //   location: location,
+    //   destination: destination,
+    //   fromDate: selectedDate[0],
+    //   toDate: selectedDate[1],
+    // };
+    // dispatch(createBooking(booking));
     history.push({
       pathname: APP_PATH.CAR_LIST,
       state: {

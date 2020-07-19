@@ -16,6 +16,13 @@ const initialState = {
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.CREATE_BOOKING_REQUEST: {
+      return {
+        ...state,
+        booking: payload,
+        loading: false,
+      };
+    }
     case Actions.FETCH_CARS_SUCCESS: {
       return {
         ...state,
