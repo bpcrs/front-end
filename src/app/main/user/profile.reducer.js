@@ -26,6 +26,6 @@ const profileReducer = (state = initialState, { type, payload }) => {
         default: {
             return state;
         }
-    }
-}
+    };
+};
 export default profileReducer;

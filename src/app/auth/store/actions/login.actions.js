@@ -10,19 +10,16 @@ export function submitLogin(token) {
       .signInWithToken(token)
       .then((token) => {
         const userFromToken = jwtService.getUserDataFromToken();
+        console.log(userFromToken);
         dispatch(
           setUserData({
-            role: userFromToken.roleName,
+            role: userFromToken.role,
             data: {
               displayName: userFromToken.fullName,
               photoURL: userFromToken.imageUrl,
               email: userFromToken.email,
               id: userFromToken.id,
-              city: userFromToken.city,
-              district: userFromToken.district,
-              ward: userFromToken.ward,
-              street: userFromToken.street,
-              shortcuts: []
+              shortcuts: [],
             },
           })
         );

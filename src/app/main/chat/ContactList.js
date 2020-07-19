@@ -13,6 +13,7 @@ import {
   setSelectedUser,
   // getRequestFirebase,
   getBookingRequest,
+  updateChip,
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 
@@ -113,55 +114,100 @@ const StyledBadge = withStyles((theme) => ({
     },
   },
 }))(Badge);
-const ContactList = () => {
+const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   // const carDetail = useSelector((state) => state.booking.carDetail);
-
+  // const chip = useSelector((state) => state.chat.chip);
+  const { info, renter, chipList } = props || {};
+  // const [is]
+  // const [chipData, setChipData] = useState([]);
+  // console.log(
+  //   "Chip list ",
+  //   chipList.filter((item) => item.name !== "Insurance" && item.name !== "Indemnification")
+  // );
+  // console.log(renter);
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   // const [bookingReq, setBookingReq] = useState([]);
 
-  const setSelectedContact = (id) => {
+  const setSelectedContact = (id, isRental) => {
+    console.log(id, userLogged.id);
     dispatch(setSelectedUser(users.find((u) => u.id === id)));
     const ref = firebase
       .firestore()
       .collection("notification")
-      .doc(`${userLogged.id}`)
+      .doc(Boolean(isRental) ? `${id}` : `${userLogged.id}`)
       .collection("requests");
+    // .orderBy("createAt", "desc")
+    // .limitToLast(10);
     const query = ref
-      .where("rent", "==", id)
+      .where("rent", "==", Boolean(isRental) ? userLogged.id : id)
+      // .orderBy("createAt", "desc")
+      // .limit(1)
+      // .limitToLast(10)
       .get()
       .then(function (querySnapshot) {
-        querySnapshot.forEach(function (doc) {
-          console.log(doc.data().bookingId);
+        console.log(querySnapshot.docs[0].data().bookingId);
+        dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
+        // querySnapshot.forEach(function (doc) {
+        //   console.log(doc.data().bookingId);
 
-          // dispatch(getRequestFirebase(doc.data()));
-          dispatch(getBookingRequest(doc.data().bookingId));
-        });
+        //   dispatch(getBookingRequest(doc.data().bookingId));
+        // });
       })
+      // .onSnapshot((ns) => {
+      //   console.log(ns.data().bookingId);
+      //   dispatch(getBookingRequest(ns.data().bookingId));
+      // })
       .catch(function (error) {
         console.log(error);
       });
     console.log(query);
     // async function getR
+    if (isRental) {
+      dispatch(
+        updateChip(
+          chipList.filter(
+            (item) =>
+              item.name !== "Insurance" && item.name !== "Indemnification"
+          )
+        )
+      );
+    } else {
+      dispatch(
+        updateChip(
+          chipList.filter(
+            (item) =>
+              item.name !== "Mileage limit" &&
+              item.name !== "Extra" &&
+              item.name !== "Deposit"
+          )
+        )
+      );
+    }
   };
 
   useEffect(() => {
     const usersFirebase = firebase.firestore().collection("users");
-    // .doc(`${userLogged.id}`);
-    // console.log("User renter", usersFirebase.get());
-
     async function getImagesContact() {
       const usersInfo = await usersFirebase.get();
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-  }, [userLogged.id]);
-  const ContactButton = ({ displayName, email, photoURL, id, isActive }) => (
+    // setChipData(chipList);
+  }, [userLogged.id, info]);
+  const ContactButton = ({
+    displayName,
+    email,
+    photoURL,
+    id,
+    isActive,
+    isRental,
+  }) => (
     <Box
-      onClick={() => setSelectedContact(id)}
+      onClick={() => setSelectedContact(id, isRental)}
       className={isActive ? classes.contactButton : ""}
     >
       <Grid container className="px-8 py-8">
@@ -195,21 +241,66 @@ const ContactList = () => {
 
   return (
     <div style={{ width: "100%" }}>
-      {users
-        .filter((user) => user.email !== userLogged.email)
-        .map((user, index) => (
-          <Grid
-            key={user.id}
-            item
-            lg={12}
-            className="py-8"
-            style={{
-              backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
-            }}
-          >
-            <ContactButton {...user} isActive={user.id === selectedUser.id} />
-          </Grid>
-        ))}
+      {info !== undefined ? (
+        <Grid>
+          {users
+            .filter(
+              (user) =>
+                user.email !== userLogged.email && user.id === info.owner.id
+            )
+            .map((user, index) => (
+              <Grid
+                key={user.id}
+                item
+                lg={12}
+                className="py-8"
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+                }}
+              >
+                <ContactButton
+                  {...user}
+                  isActive={user.id === selectedUser.id}
+                  isRental={true}
+                />
+              </Grid>
+            ))}
+          {/* {chipList.filter((item) => item.name !== "Extra")} */}
+          {/* {console.log(chipList)} */}
+        </Grid>
+      ) : (
+        <Grid>
+          {users
+            // .filter(
+            //   (request) => {
+            //     return renter.some((f) => {
+            //       return f.email === request.email;
+            //     });
+            //   }
+            // )
+            .map((user, index) => (
+              <Grid
+                key={user.id}
+                item
+                lg={12}
+                className="py-8"
+                style={{
+                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+                }}
+              >
+                <ContactButton
+                  {...user}
+                  isActive={user.id === selectedUser.id}
+                  isRental={false}
+                />
+                {/* {dispatch(initChip(chipList))} */}
+              </Grid>
+            ))}
+          {/* {setChipData} */}
+          {/* {chipList.filter((item) => item.name !== "Extra")} */}
+          {/* {console.log(chipList)} */}
+        </Grid>
+      )}
     </div>
   );
 };

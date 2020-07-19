@@ -12,7 +12,7 @@ import {
 // import GetDate from '../../../common/getDate';
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { closeAgreement, changeChip } from "./chat.action";
+import { closeAgreement, changeChip, createAgreement } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -29,19 +29,43 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.getContrastText(theme.palette.grey[300]),
     },
   },
+  imgBody: {
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: 15,
+    color: theme.palette.primary.contrastText,
+    position: "relative",
+    padding: theme.spacing(2),
+    "&.send": {
+      backgroundColor: theme.palette.grey[300],
+      color: theme.palette.getContrastText(theme.palette.grey[300]),
+    },
+    width: "fit-content",
+    maxWidth: 400,
+  },
 }));
 
-const Message = ({ message, receive, type = "SCOPE" }) => {
+const Message = ({ message, receive, type }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const booking = useSelector((state) => state.chat.booking);
+  const newAgreement = useSelector((state) => state.chat.newAgreement);
   const isRevice = userLogged.id !== receive;
-  const handleChangeChip = (name) => {
+  console.log(newAgreement);
+  // const data = {
+  //   name: "Mileage limit",
+  //   value: 212,
+  //   approved: true,
+  //   criteriaId: 1,
+  //   bookingId: 35,
+  // };
+  async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));
+    // const agreement = dispatch(useSelector((state) => state.chat.newAgreement));
+    dispatch(createAgreement(newAgreement));
     dispatch(closeAgreement());
-  };
+  }
   // const [mileageAgreement, setMileageAgreement] = useState({
   //   value: message,
   //   status: "CLOSE",
@@ -214,8 +238,24 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
             ) : null}
           </Card>
         );
+      case "IMG":
+        return (
+          <Grid
+            className={classNames(classes.imgBody, isRevice ? "send" : "")}
+            style={{
+              textAlign: isRevice ? "left" : "right",
+            }}
+          >
+            <div>
+              <img src={message} alt="img" width="300" height="300" />
+            </div>
+          </Grid>
+        );
       default:
         return (
+          // {if {message.type} === "IMG" {
+
+          // }}
           <Grid
             item
             className={classNames(classes.messageBody, isRevice ? "send" : "")}

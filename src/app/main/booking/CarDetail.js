@@ -29,6 +29,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Slide from "@material-ui/core/Slide";
 import NumberFormat from "react-number-format";
+import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
+import GoogleMaps from "../landing/GoogleMaps";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -47,6 +49,11 @@ const useStyles = makeStyles((theme) => ({
   },
   comment: {
     margin: theme.spacing(2),
+  },
+  paper: {
+    marginTop: theme.spacing(2),
+    color: theme.palette.text.secondary,
+    width: "100%",
   },
 }));
 const Review = ({ comment, rating, renter, createdDate }) => {
@@ -98,35 +105,41 @@ export default function CarDetails(props) {
   const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
   const { booking, carDetails } = props.location.state;
+  const [bookingChange, setBookingChange] = useState(booking);
+  const [selectedDate, setDateChange] = useState([
+    bookingChange.fromDate,
+    bookingChange.toDate,
+  ]);
+  // console.log(selectedDate);
+  const handleBookingChange = () => {
+    // setDateChange(date);
+    setBookingChange({
+      ...bookingChange,
+      ...selectedDate,
+    });
+    history.push({
+      pathname: APP_PATH.VIEW_BOOKING,
+      state: {
+        bookingChange,
+        carDetails,
+        carDetail,
+      },
+    });
+  };
+  console.log("Booking change", bookingChange);
   const summaryPrice =
     carDetail.price *
     (Math.round(
-      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+      (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
         (1000 * 60 * 60 * 24)
     ) +
       1);
-
-  // const owner = carDetail.owner;
-
-  // console.log("Car Detail", carDetail.owner);
-  // console.log("Booking Request", bookingReq);
 
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
     dispatch(fetchCarDetail(carId));
   }, [dispatch, props]);
-
-  const handleBooking = () => {
-    history.push({
-      pathname: APP_PATH.VIEW_BOOKING,
-      state: {
-        booking,
-        carDetails,
-        carDetail,
-      },
-    });
-  };
 
   const [currentRating, setCurrentRating] = useState({
     carId: props.match.params.id,
@@ -399,23 +412,36 @@ export default function CarDetails(props) {
                   <Icon>gps_fixed</Icon>
                   <Typography variant="h6">Pick-up</Typography>
                 </Grid>
-                <Typography variant="body2" color="textPrimary" component="p">
-                  {new Date(booking.fromDate).toDateString()}
-                </Typography>
-                <Typography variant="body2" color="textPrimary" component="p">
-                  {booking.location.description}
-                </Typography>
+                <div className={classes.paper}></div>
+                <DateRangePicker
+                  value={selectedDate}
+                  onChange={(date) => setDateChange(date)}
+                  disablePast
+                  showTodayButton
+                  inputFormat="dd/MM/yyyy"
+                  renderInput={(startProps, endProps) => (
+                    <React.Fragment>
+                      <TextField {...startProps} helperText="" />
+                      <DateRangeDelimiter> to </DateRangeDelimiter>
+                      <TextField {...endProps} helperText="" />
+                    </React.Fragment>
+                  )}
+                />
+                <GoogleMaps
+                  label="Pick-up location"
+                  value={bookingChange.location}
+                  onChange={(value) =>
+                    setBookingChange({ ...bookingChange, location: value })
+                  }
+                />
+                <GoogleMaps
+                  label="Destination"
+                  value={bookingChange.destination}
+                  onChange={(value) =>
+                    setBookingChange({ ...bookingChange, destination: value })
+                  }
+                />
                 <br />
-                <Grid spacing={1} container alignItems="baseline">
-                  <Icon>gps_fixed</Icon>
-                  <Typography variant="h6">Drop-off</Typography>
-                </Grid>
-                <Typography variant="body2" color="textPrimary" component="p">
-                  {new Date(booking.toDate).toDateString()}
-                </Typography>
-                <Typography variant="body2" color="textPrimary" component="p">
-                  {booking.destination.description}
-                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -424,22 +450,17 @@ export default function CarDetails(props) {
               <CardContent>
                 <Typography variant="h6">Price summary</Typography>
                 <Grid container justify="space-between">
-                  {/* <Typography variant="body2" align="left" color="textPrimary">
-                    Car rental fee
-                  </Typography> */}
                   <Typography variant="body2" align="right" color="textPrimary">
                     {
                       <NumberFormat
                         value={carDetail.price}
                         displayType={"text"}
                         thousandSeparator={true}
-                        // prefix={"$"}
-                        // suffix={" VNĐ"}
                       />
                     }{" "}
                     {" * "}{" "}
                     {Math.round(
-                      (new Date(booking.toDate) - new Date(booking.fromDate)) /
+                      (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
                         (1000 * 60 * 60 * 24)
                     ) + 1}{" "}
                     {"(days) = "}
@@ -454,7 +475,6 @@ export default function CarDetails(props) {
                         value={summaryPrice}
                         displayType={"text"}
                         thousandSeparator={true}
-                        // prefix={"$"}
                         suffix={" VNĐ"}
                       />
                     }
@@ -463,7 +483,10 @@ export default function CarDetails(props) {
                     variant="contained"
                     color="primary"
                     className="w-full mt-20"
-                    onClick={handleBooking}
+                    disabled={
+                      !bookingChange.location || !bookingChange.destination
+                    }
+                    onClick={handleBookingChange}
                   >
                     Book Now
                   </Button>

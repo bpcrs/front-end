@@ -9,10 +9,12 @@ import {
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
 import { APP_PATH } from "../../../constant";
+import { showMessage } from "../../store/actions/fuse";
+import { fetchNotification } from "../../main/user/profile.action";
 // import { theme } from "@chakra-ui/core";
 // import { blue } from "@material-ui/core/colors";
 
@@ -27,13 +29,12 @@ const useStyles = makeStyles((theme) => ({
 
 const Notification = () => {
   // const [notificationMenu, setNotificationMenu] = useState(null);
+  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notification, setNotification] = useState([]);
   const userLogged = useSelector((state) => state.auth.user);
-  console.log("User ", userLogged.displayName);
-  console.log("Notification ", notification);
+  const [notification, setNotification] = useState([]);
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -44,43 +45,44 @@ const Notification = () => {
   const handleClick = () => {
     history.push({
       pathname: APP_PATH.CHAT,
+      state: {
+        notification,
+        // bookingInStore,
+      },
     });
   };
-
+  // getUsersRequest(notification);
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
   useEffect(() => {
-    setNotification([]);
-    async function getNotificationFromFirebase() {
-      // const userId = userLogged.id
-      await firebase
+    const fetchNotificationFromFirebase = () => {
+      firebase
         .firestore()
         .collection("notification")
-        .doc(`${userLogged.id}`)
+        .doc(`${userLogged.email}`)
         .collection("requests")
-        //   .get();
-        // return snapshot
-        //   .docs.map((doc))
-
-        //   .collection("info")
-        .orderBy("createAt", "asc")
+        .orderBy("createAt", "desc")
         .limitToLast(10)
         .onSnapshot((ns) => {
-          setNotification([]);
-          ns.docs.map((notify) =>
-            setNotification((noti) => [...noti, notify.data()])
+          setNotification(
+            ns.docs.map((noti) => {
+              dispatch(
+                showMessage({
+                  message: "Your have new notification",
+                })
+              );
+              return noti.data();
+            })
           );
         });
-    }
-    getNotificationFromFirebase();
-  }, [userLogged.id]);
+    };
+    fetchNotificationFromFirebase();
+    // eslint-disable-next-line
+  }, [userLogged.email]);
   return (
     <React.Fragment>
       <Button className="h-64" onClick={notificationClick}>
-        {/* <div className="hidden md:flex flex-col ml-12 items-start">
-          </div> */}
-
         <Icon style={{ color: "red" }}>notifications_active</Icon>
       </Button>
 
@@ -112,8 +114,7 @@ const Notification = () => {
                       chat
                     </Icon>
                     <Typography>
-                      {notify.displayName} request to rental you at car{" "}
-                      {notify.car}
+                      {`${notify.owner.fullName} request to rental you at car ${notify.car.name}`}
                     </Typography>
                   </MenuItem>
                 </Grid>

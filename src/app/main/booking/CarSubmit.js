@@ -19,7 +19,6 @@ import {
   fetchBrandList,
   fetchModelList,
   postCar,
-  setOwnerData,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";

@@ -7,16 +7,31 @@ export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
 export const CLOSE_AGREEMENT = "[AGREEMENT] CLOSE";
 export const CHANGE_CHIP = "[CHIP] CHANGE";
 export const INIT_CHIP = "[CHIP] INIT";
+export const UPDATE_CHIP = "[CHIP] UPDATE";
 export const FETCH_CRITERIA_SUCCESS = "[CRITERIA] FETCH CRITERIA SUCCESS";
 export const FETCH_AGREEMENT_SUCCESS = "[AGREEMENT] FETCH AGREEMENT SUCCESS";
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
+export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
+export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function getImgUrlFromFirebase(url) {
+  return {
+    type: GET_IMG_URL,
+    payload: url,
+  };
+}
+export function getUsersRequest(users) {
+  return {
+    type: GET_USERS_REQUEST,
+    payload: users,
   };
 }
 export function setSelectedUser(user) {
@@ -64,6 +79,12 @@ export function initChip(criteras) {
     })),
   };
 }
+export function updateChip(chips) {
+  return {
+    type: UPDATE_CHIP,
+    payload: chips,
+  };
+}
 export function fetchCriteriaSuccess(critera) {
   return {
     type: FETCH_CRITERIA_SUCCESS,
@@ -76,10 +97,10 @@ export function fetchAgreementSuccess(agreements) {
     payload: agreements,
   };
 }
-export function createAgreementSuccess(agreements) {
+export function createAgreementSuccess(agreement) {
   return {
     type: CREATE_AGREEMENT_SUCCESS,
-    payload: agreements,
+    payload: agreement,
   };
 }
 export function fetchBookingRequest(booking) {
@@ -136,13 +157,13 @@ export function fetchAgreementList(id) {
     );
   };
 }
-
-export function createAgreement(agreements) {
+export function createAgreement(agreement) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreements);
+    console.log(agreement);
+    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
     request.then(
       (response) => {
-        dispatch(createAgreementSuccess(response.success ? response.data : []));
+        dispatch(createAgreementSuccess(response.success ? response.data : {}));
         console.log(response.data);
       },
       (error) => {
@@ -164,4 +185,22 @@ export function getBookingRequest(id) {
       }
     );
   };
+}
+
+export function storeImage(img, send, receive) {
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const date = new Date().getTime();
+  const uploadTask = firebase
+    .storage()
+    .ref("Chat/" + date)
+    .child(img.name);
+
+  uploadTask.put(img, metadata).then(function (result) {
+    uploadTask.getDownloadURL().then(function (url) {
+      console.log("file available at ", url);
+      submitMessage(url, send, receive, "IMG");
+    });
+  });
 }

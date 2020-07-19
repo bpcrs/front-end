@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function GoogleMaps(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState(props.value);
   const [inputValue, setInputValue] = React.useState("");
   const [options, setOptions] = React.useState([]);
   const loaded = React.useRef(false);
@@ -96,7 +96,7 @@ export default function GoogleMaps(props) {
   return (
     <Autocomplete
       id="google-map-demo"
-      style={{ width: "100%", paddingBottom: "8px" }}
+      style={{ width: "100%", paddingBottom: "8px", marginTop: "16px" }}
       getOptionLabel={(option) =>
         typeof option === "string" ? option : option.description
       }

@@ -152,9 +152,8 @@ export function ViewBookingDialog(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   // const booking = useSelector((state) => state.chat.booking);
-  // const carDetail = useSelector((state) => state.booking.carDetail);
   const { info } = props;
-  console.log(info);
+  // console.log(info);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -334,7 +333,7 @@ export function CloseAgreementDialog(props) {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { agreement } = props;
-  console.log(agreement);
+  // console.log(agreement);
   // const agreeAgreements =  props
 
   const handleUpdateAgreement = () => {
@@ -399,8 +398,13 @@ export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  const criterias = useSelector((state) => state.chat.criteria);
+  const { carDetail, notification } = props.location.state || {};
+  // console.log(carDetail);
+  // const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
+
+  // console.log(criteria);
+  // const chipRole = [];
   // const booking = useSelector((state) => state.chat.booking);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
@@ -456,7 +460,7 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {criterias.length !== 0 ? (
+            {chip.length !== 0 ? (
               <div className={classes.root}>
                 {chip.map((data) => {
                   // console.log(data);
@@ -475,12 +479,11 @@ export const ChatArea = (props) => {
                     />
                   );
                 })}
-                {console.log(chip)}
+                {/* {console.log(chip)} */}
               </div>
             ) : (
               <></>
             )}
-
             <CloseAgreementDialog agreement={chip} />
           </Grid>
         </Grid>
@@ -499,7 +502,11 @@ export const ChatArea = (props) => {
             justify="flex-start"
             alignContent="flex-start"
           >
-            <ContactList />
+            <ContactList
+              info={carDetail}
+              renter={notification}
+              chipList={chip}
+            />
           </Grid>
           <Grid
             item
