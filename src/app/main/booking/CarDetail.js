@@ -110,23 +110,24 @@ export default function CarDetails(props) {
     bookingChange.fromDate,
     bookingChange.toDate,
   ]);
-  // console.log(selectedDate);
   const handleBookingChange = () => {
-    // setDateChange(date);
+    console.log(new Date(selectedDate[0]));
+    bookingChange.fromDate = new Date();
     setBookingChange({
       ...bookingChange,
-      ...selectedDate,
+      fromDate: selectedDate[0],
     });
-    history.push({
-      pathname: APP_PATH.VIEW_BOOKING,
-      state: {
-        bookingChange,
-        carDetails,
-        carDetail,
-      },
-    });
+    console.log(bookingChange);
+    // history.push({
+    //   pathname: APP_PATH.VIEW_BOOKING,
+    //   state: {
+    //     bookingChange,
+    //     carDetails,
+    //     carDetail,
+    //   },
+    // });
   };
-  console.log("Booking change", bookingChange);
+  // console.log("Booking change", bookingChange);
   const summaryPrice =
     carDetail.price *
     (Math.round(

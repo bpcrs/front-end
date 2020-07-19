@@ -11,6 +11,7 @@ const initialState = {
   filterCars: [],
   models: [],
   agreemnts: [],
+  booking: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -94,7 +95,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        reviews : [...state.reviews, payload]
+        reviews: [...state.reviews, payload],
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {
