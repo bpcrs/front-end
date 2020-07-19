@@ -530,6 +530,7 @@ export function notificationBooking(status, booking) {
       car: booking.car,
       owner: booking.lessor,
       renter: booking.renter,
+      bookingId: booking.id,
       createAt: new Date().getTime(),
     });
 }

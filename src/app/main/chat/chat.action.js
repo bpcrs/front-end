@@ -88,7 +88,12 @@ export function updateChip(chips) {
 export function fetchCriteriaSuccess(critera) {
   return {
     type: FETCH_CRITERIA_SUCCESS,
-    payload: critera,
+    payload: critera.map((data) => ({
+      name: data.name,
+      approved: false,
+      value: 30,
+      criteriaId: data.id,
+    })),
   };
 }
 export function fetchAgreementSuccess(agreements) {
@@ -125,6 +130,7 @@ export function submitMessage(message, send, receive, type) {
       type,
     });
 }
+
 export async function getUser(id) {
   return await firebase.firestore().collection("users").doc(`${id}`).get();
 }
@@ -157,7 +163,13 @@ export function fetchAgreementList(id) {
     );
   };
 }
-export function createAgreement(agreement) {
+export function createAgreement(name, value, bookingId) {
+  const agreement = {
+    approved: true,
+    bookingId: bookingId,
+    criteriaName: name,
+    value: value,
+  };
   return (dispatch) => {
     console.log(agreement);
     const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
