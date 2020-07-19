@@ -72,4 +72,5 @@ export const ENDPOINT = {
   AGREEMENT_CONTROLLER_GETALL: "/agreement",
   AGREEMENT_CONTROLLER_PUTBYID: (id) => `/agreement/${id}`,
   AGREEMENT_CONTROLLER_GETBYID: (id) => `/agreement/get/${id}`,
+  CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
 };

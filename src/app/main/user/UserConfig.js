@@ -1,6 +1,7 @@
 // import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 import User from './User';
 import Profile from './Profile';
+import CarInformationProfile from './CarInformationProfile';
 
 export const UserConfig = {
     settings: {
@@ -32,6 +33,10 @@ export const UserConfig = {
         {
             path: '/profile',
             component: Profile
+        },
+        {
+            path: '/CarInformationProfile',
+            component: CarInformationProfile
         }
     ]
 };

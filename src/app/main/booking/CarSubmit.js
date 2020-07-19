@@ -312,7 +312,7 @@ export default function CarSubmit(props) {
   var submitCarToDB = () => {
     dispatch(postCarSubmit(currentCar, linkImageArr));
     console.log("Owner info ", userLogged);
-    dispatch(setOwnerData(userLogged));
+
     if (loading == false) {
       handleChangePage();
     }

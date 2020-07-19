@@ -3,7 +3,8 @@ const initialState = {
     address: {},
     payment: {},
     rentHistory: [],
-    leaseHistory: []
+    leaseHistory: [],
+    cars: [],
 };
 const profileReducer = (state = initialState, { type, payload }) => {
     switch (type) {
@@ -12,6 +13,14 @@ const profileReducer = (state = initialState, { type, payload }) => {
                 ...state,
                 address: payload,
                 loading: false
+            }
+        }
+        case Actions.FETCH_CAR_INFORMATION_OWNER_SUCCESS: {
+            return {
+                ...state,
+                cars: payload,
+                loading: false
+
             }
         }
         default: {
