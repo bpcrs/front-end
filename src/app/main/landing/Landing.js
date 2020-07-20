@@ -111,8 +111,26 @@ function Landing() {
           logo={<Logo />}
           navs={[
             <Button variant="text">Features</Button>,
-            <Button variant="text">My Booking</Button>,
-            <Button variant="text">My Booking Request</Button>,
+            <Button
+              variant="outlined"
+              onClick={() =>
+                userLogged.id === 0
+                  ? history.push(APP_PATH.LOGIN)
+                  : history.push(APP_PATH.PROFILE)
+              }
+            >
+              My Booking
+            </Button>,
+            <Button
+              variant="outlined"
+              onClick={() =>
+                userLogged.id === 0
+                  ? history.push(APP_PATH.LOGIN)
+                  : history.push(APP_PATH.PROFILE)
+              }
+            >
+              My Rental
+            </Button>,
             <Button variant="text">About Us</Button>,
             <Button
               variant="outlined"

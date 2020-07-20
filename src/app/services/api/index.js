@@ -84,16 +84,21 @@ export const PUT = (endpoint, params = {}, body = {}) => {
 export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
+  CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
+
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
   IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
+
   BOOKING_CONTROLLER_GETALL: "/booking",
   BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
+  BOOKING_CONTROLLER_OWNER_GETBYID: (id) => `/booking/requests/${id}`,
+
   CRITERIA_CONTROLLER_GETALL: "/criteria",
+
   AGREEMENT_CONTROLLER_GETALL: "/agreement",
   AGREEMENT_CONTROLLER_PUTBYID: (id) => `/agreement/${id}`,
   AGREEMENT_CONTROLLER_GETBYID: (id) => `/agreement/get/${id}`,
-  CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
 };
