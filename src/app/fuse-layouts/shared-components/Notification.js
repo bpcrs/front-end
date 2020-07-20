@@ -114,7 +114,7 @@ const Notification = () => {
                       chat
                     </Icon>
                     <Typography>
-                      {`${notify.owner.fullName} request to rental you at car ${notify.car.name}`}
+                      {`${notify.renter.fullName} request to rental you at car ${notify.car.name}`}
                     </Typography>
                   </MenuItem>
                 </Grid>

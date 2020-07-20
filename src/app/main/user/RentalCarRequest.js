@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CarInformationProfile(props) {
+const RentalCarRequest = (props) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -120,4 +120,6 @@ export default function CarInformationProfile(props) {
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default RentalCarRequest;

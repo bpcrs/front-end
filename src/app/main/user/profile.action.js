@@ -4,8 +4,12 @@ import { showMessageError } from "../../store/actions/fuse";
 export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
 export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
 
-export const FETCH_CAR_INFORMATION_OWNER_SUCCESS = "[CAR_INFORMATION] FETCH DATA SUCCESS";
-export const FETCH_CAR_INFORMATION_OWNER_FAILURE = "[CAR_INFORMATION] FETCH DATA FAILURE";
+export const FETCH_CAR_INFORMATION_OWNER_SUCCESS =
+  "[CAR_INFORMATION] FETCH DATA SUCCESS";
+export const FETCH_CAR_INFORMATION_OWNER_FAILURE =
+  "[CAR_INFORMATION] FETCH DATA FAILURE";
+
+export const FETCH_BOOKING_RENTAL_OWNER = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
 
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
@@ -31,6 +35,12 @@ export function fetchAccountAddressError(account) {
   return {
     type: FETCH_ADDRESS_FAILURE,
     payload: account,
+  };
+}
+export function fetchBookingRentalOwnerSuccess(bookings) {
+  return {
+    type: FETCH_BOOKING_RENTAL_OWNER,
+    payload: bookings,
   };
 }
 
@@ -65,33 +75,19 @@ export function fetchCarInformationOwner(ownerId) {
     );
   };
 }
-// import { GET, ENDPOINT } from "../../services/api";
 
-// export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
-// export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
-
-// export function fetchAccountAddressSuccess(account) {
-//   return {
-//     type: FETCH_ADDRESS_SUCCESS,
-//     payload: account,
-//   };
-// }
-// export function fetchAccountAddressError(account) {
-//   return {
-//     type: FETCH_ADDRESS_FAILURE,
-//     payload: account,
-//   };
-// }
-
-// export function fetchAccountAddress(id) {
-//   return (dispatch) => {
-//     const request = GET(ENDPOINT.ACCOUNT_ADDRESS_GETBYID(id));
-//     request.then((response) => {
-//       if (response.success) {
-//         dispatch(fetchAccountAddressSuccess(response.data));
-//       } else {
-//         dispatch(fetchAccountAddressError(response.message));
-//       }
-//     });
-//   };
-// }
+export function fetchBookingRentalMyCar(ownerId) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_OWNER_GETBYID(ownerId));
+    request.then(
+      (response) => {
+        dispatch(
+          fetchBookingRentalOwnerSuccess(response.success ? response.data : [])
+        );
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
