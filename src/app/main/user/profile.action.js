@@ -1,5 +1,6 @@
-import { GET, ENDPOINT } from "../../services/api";
+import { GET, ENDPOINT, PUT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
+import firebase from "../../firebase/firebase";
 
 export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
 export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
@@ -10,6 +11,7 @@ export const FETCH_CAR_INFORMATION_OWNER_FAILURE =
   "[CAR_INFORMATION] FETCH DATA FAILURE";
 
 export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
+export const APPROVE_BOOKING_REQUEST = "[BOOKING] APPROVE BOOKING SUCCESS";
 
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
@@ -41,6 +43,12 @@ export function fetchBookingRentalCarSuccess(bookings) {
   return {
     type: FETCH_BOOKING_RENTAL_CAR,
     payload: bookings,
+  };
+}
+export function approveBookingRequestSuccess(booking) {
+  return {
+    type: APPROVE_BOOKING_REQUEST,
+    payload: booking,
   };
 }
 
@@ -93,4 +101,57 @@ export function fetchBookingRentalMyCar(carId, page, size) {
       }
     );
   };
+}
+
+export function fetchBookingRequest(renterId, page, size) {
+  return (dispatch) => {
+    const params = { page, size };
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(renterId), {
+      ...params,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          fetchBookingRentalCarSuccess(response.success ? response.data : [])
+        );
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function approveBookingRequest(bookingId, status) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.BOOKING_CONTROLLER_GETBYID(bookingId), {
+      status,
+    });
+    request.then(
+      (response) => {
+        dispatch(approveBookingRequestSuccess(response.data));
+        notificationBooking(response.data);
+        console.log(response.success ? response.data : "");
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function notificationBooking(booking) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${booking.renter.email}`)
+    .collection("requests")
+    .add({
+      status: booking.status,
+      car: booking.car,
+      owner: booking.lessor,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+    });
 }

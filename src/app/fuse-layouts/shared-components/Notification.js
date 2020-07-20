@@ -35,8 +35,37 @@ const Notification = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const userLogged = useSelector((state) => state.auth.user);
   const [notification, setNotification] = useState([]);
+  // const [notifyMsg, setNotifyMsg] = useState();
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const renderNotification = (notify) => {
+    console.log(notify.status);
+    switch (notify.status) {
+      case "CONFIRM":
+        return (
+          <Typography>
+            {" "}
+            {notify.owner.fullName} has accepted your booking request{" "}
+          </Typography>
+        );
+      case "DENY":
+        return (
+          <Typography>
+            {" "}
+            {notify.owner.fullName} has denied your booking request{" "}
+          </Typography>
+        );
+      case "REQUEST":
+        return (
+          <Typography>
+            {" "}
+            {notify.renter.fullName} has requested your car {notify.car.name}{" "}
+          </Typography>
+        );
+      default:
+        return <Typography>Nothing</Typography>;
+    }
   };
 
   const notficationClose = () => {
@@ -113,9 +142,7 @@ const Notification = () => {
                     <Icon style={{ color: "blue" }} className={classes.icon}>
                       chat
                     </Icon>
-                    <Typography>
-                      {`${notify.renter.fullName} request to rental you at car ${notify.car.name}`}
-                    </Typography>
+                    {renderNotification(notify)}
                   </MenuItem>
                 </Grid>
               ))}

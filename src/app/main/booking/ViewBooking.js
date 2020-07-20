@@ -78,7 +78,7 @@ export default function ViewBooking(props) {
   const handleBooking = () => {
     createBookingRequest();
     history.push({
-      pathname: APP_PATH.CHAT,
+      pathname: APP_PATH.PROFILE,
       state: {
         // bookingInStore,
       },

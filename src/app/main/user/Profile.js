@@ -21,6 +21,7 @@ import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
 import RentalCarRequest from "./RentalCarRequest";
 import CarInformationProfile from "./CarInformationProfile";
+import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -112,11 +113,7 @@ const Profile = (props) => {
                 label="Personal Information"
                 {...a11yProps(0)}
               />
-              <Tab
-                icon={<DriveEtaIcon />}
-                label="Car Information"
-                {...a11yProps(1)}
-              />
+              <Tab icon={<DriveEtaIcon />} label="My Cars" {...a11yProps(1)} />
               <Tab
                 icon={<PaymentIcon />}
                 label="Payment Method"
@@ -124,7 +121,7 @@ const Profile = (props) => {
               />
               <Tab
                 icon={<HistoryIcon />}
-                label="Rental History"
+                label="My Booking"
                 {...a11yProps(3)}
               />
               <Tab
@@ -226,8 +223,8 @@ const Profile = (props) => {
               <h2>Payment Method</h2>
             </TabPanel>
             <TabPanel value={tab} index={3}>
-              <h2>Rental Car</h2>
-              <RentalCarRequest />
+              {/* <h2>Rental Car</h2> */}
+              <BookingRequest />
             </TabPanel>
             <TabPanel value={tab} index={4}>
               <h2>Lease History</h2>

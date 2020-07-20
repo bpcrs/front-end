@@ -475,11 +475,8 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(
-          // fetchBookingRequest(response.data.data)
-          postBookingSuccess(response.success ? response.data : {})
-        );
-        notificationBooking(false, response.data);
+        dispatch(postBookingSuccess(response.success ? response.data : {}));
+        notificationBooking(response.data);
         console.log("Create success ", response.data);
       },
       (error) => {
@@ -524,15 +521,14 @@ export function postReviewSubmit(review) {
   };
 }
 
-export function notificationBooking(status, booking) {
-  console.log(status, booking);
+export function notificationBooking(booking) {
   firebase
     .firestore()
     .collection("notification")
     .doc(`${booking.lessor.email}`)
     .collection("requests")
     .add({
-      status,
+      status: booking.status,
       car: booking.car,
       owner: booking.lessor,
       renter: booking.renter,

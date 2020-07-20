@@ -51,6 +51,7 @@ export default function CarInformationProfile(props) {
   const history = useHistory();
   const [isDetail, setIsDetail] = useState(false);
   const [detail, setDetail] = useState();
+  const [name, setName] = useState();
 
   const handleCickSetting = (carId) => {
     history.push({
@@ -61,9 +62,10 @@ export default function CarInformationProfile(props) {
     });
   };
 
-  const handleClickBooked = (carId) => {
+  const handleClickBooked = (carId, carName) => {
     setIsDetail(true);
     setDetail(carId);
+    setName(carName);
   };
 
   useEffect(() => {
@@ -71,57 +73,62 @@ export default function CarInformationProfile(props) {
   }, [currentUser.id, dispatch]);
 
   return !isDetail ? (
-    <TableContainer>
-      <Table
-        className={classes.table}
-        aria-label="customized table"
-        width="100%"
-      >
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Name</StyledTableCell>
-            <StyledTableCell>Plate number</StyledTableCell>
-            <StyledTableCell>Status</StyledTableCell>
-            <StyledTableCell>Book request</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {cars.map((car, index) => (
-            // <Grid item xs={12} xl={12} lg={12}>
-            <TableRow
-              className="h-64 cursor-pointer"
-              hover
-              // role="checkbox"
-              // aria-checked={isSelected}
-              tabIndex={-1}
-              key={index}
-              // selected={isSelected}
-            >
-              <TableCell component="th" scope="row">
-                {car.name}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {car.plateNum}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                <CarStatus name={car.status} />
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {car.status === "Booked" ? (
-                  <IconButton onClick={() => handleClickBooked(car.id)}>
-                    <Icon>details</Icon>
-                  </IconButton>
-                ) : null}
-              </TableCell>
+    <Grid>
+      {/* <Typography>My Cars</Typography> */}
+      <TableContainer>
+        <Table
+          className={classes.table}
+          aria-label="customized table"
+          width="100%"
+        >
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Plate number</StyledTableCell>
+              <StyledTableCell>Status</StyledTableCell>
+              <StyledTableCell>Book request</StyledTableCell>
             </TableRow>
-            // </Grid>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {cars.map((car, index) => (
+              // <Grid item xs={12} xl={12} lg={12}>
+              <TableRow
+                className="h-64 cursor-pointer"
+                hover
+                // role="checkbox"
+                // aria-checked={isSelected}
+                tabIndex={-1}
+                key={index}
+                // selected={isSelected}
+              >
+                <TableCell component="th" scope="row">
+                  {car.name}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {car.plateNum}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  <CarStatus name={car.status} />
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {car.status === "Booked" ? (
+                    <IconButton
+                      onClick={() => handleClickBooked(car.id, car.name)}
+                    >
+                      <Icon>details</Icon>
+                    </IconButton>
+                  ) : null}
+                </TableCell>
+              </TableRow>
+              // </Grid>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
   ) : (
     <Grid>
-      <Typography>List booking</Typography>
+      <Typography>List rental booking of car {name} </Typography>
       <IconButton onClick={() => setIsDetail(false)}>
         <Icon>arrow_back</Icon>
       </IconButton>
