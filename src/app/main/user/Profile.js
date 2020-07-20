@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -86,10 +86,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Profile() {
+const Profile = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
-  const [tab, setTab] = React.useState(0);
+  const [tab, setTab] = useState(0);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
@@ -217,8 +217,8 @@ export default function Profile() {
               </Button>
             </TabPanel>
             <TabPanel value={tab} index={1}>
-              <div style={{ backgroundColor: "#E0E0E0", height: "100%" }}>
-                <h2>Car Information</h2>
+              <div>
+                {/* <h2>Car Information</h2> */}
                 <CarInformationProfile />
               </div>
             </TabPanel>
@@ -237,4 +237,6 @@ export default function Profile() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Profile;

@@ -9,7 +9,7 @@ export const FETCH_CAR_INFORMATION_OWNER_SUCCESS =
 export const FETCH_CAR_INFORMATION_OWNER_FAILURE =
   "[CAR_INFORMATION] FETCH DATA FAILURE";
 
-export const FETCH_BOOKING_RENTAL_OWNER = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
+export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
 
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
@@ -37,9 +37,9 @@ export function fetchAccountAddressError(account) {
     payload: account,
   };
 }
-export function fetchBookingRentalOwnerSuccess(bookings) {
+export function fetchBookingRentalCarSuccess(bookings) {
   return {
-    type: FETCH_BOOKING_RENTAL_OWNER,
+    type: FETCH_BOOKING_RENTAL_CAR,
     payload: bookings,
   };
 }
@@ -76,13 +76,16 @@ export function fetchCarInformationOwner(ownerId) {
   };
 }
 
-export function fetchBookingRentalMyCar(ownerId) {
+export function fetchBookingRentalMyCar(carId, page, size) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.BOOKING_CONTROLLER_OWNER_GETBYID(ownerId));
+    const params = { page, size };
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_OWNER_GETBYID(carId), {
+      ...params,
+    });
     request.then(
       (response) => {
         dispatch(
-          fetchBookingRentalOwnerSuccess(response.success ? response.data : [])
+          fetchBookingRentalCarSuccess(response.success ? response.data : [])
         );
       },
       (error) => {

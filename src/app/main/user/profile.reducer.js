@@ -6,6 +6,7 @@ const initialState = {
   leaseHistory: [],
   cars: [],
   bookings: [],
+  loading: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -23,7 +24,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
         loading: false,
       };
     }
-    case Actions.FETCH_BOOKING_RENTAL_OWNER: {
+    case Actions.FETCH_BOOKING_RENTAL_CAR: {
       return {
         ...state,
         bookings: payload,
