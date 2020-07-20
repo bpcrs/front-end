@@ -22,6 +22,9 @@ import {
   DialogTitle,
   DialogContentText,
   DialogContent,
+  Stepper,
+  Step,
+  StepLabel,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/styles";
@@ -393,19 +396,30 @@ export function CloseAgreementDialog(props) {
     </div>
   );
 }
+function getSteps() {
+  return ["Insurance", "Indemnification ", "3"];
+}
+function getStepContent(step) {
+  switch (step) {
+    case 0:
+      return "Select campaign settings...";
+    case 1:
+      return "What is an ad group anyways?";
+    case 2:
+      return "This is the bit I really care about!";
+    default:
+      return "Unknown step";
+  }
+}
 
 export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { carDetail, notification } = props.location.state || {};
-  // console.log(carDetail);
-  // const criterias = useSelector((state) => state.chat.criteria);
   const chip = useSelector((state) => state.chat.chip);
-
-  // console.log(criteria);
-  // const chipRole = [];
-  // const booking = useSelector((state) => state.chat.booking);
+  const steps = getSteps();
+  const [activeStep, setActiveStep] = useState(0);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
@@ -454,12 +468,60 @@ export const ChatArea = (props) => {
             item
             container
             lg={4}
-            direction="column"
-            className="px-16 py-16"
-            justify="center"
-            alignContent="flex-start"
+            // direction="column"
             style={{ backgroundColor: "#E6E6E6" }}
           >
+            <Grid item lg={12} className="px-8 py-8">
+              <Stepper
+                alternativeLabel
+                activeStep={activeStep}
+                // connector={<ColorlibConnector />}
+              >
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+            </Grid>
+            <Grid item lg={12} className="px-8 py-8">
+              {activeStep === steps.length ? (
+                <div>
+                  <Typography className={classes.instructions}>
+                    All steps completed - you&apos;re finished
+                  </Typography>
+                  <Button
+                    onClick={() => setActiveStep(0)}
+                    className={classes.button}
+                  >
+                    Reset
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  <Typography className={classes.instructions}>
+                    {getStepContent(activeStep)}
+                  </Typography>
+                  <div>
+                    <Button
+                      disabled={activeStep === 0}
+                      onClick={() => setActiveStep((preStep) => preStep - 1)}
+                      className={classes.button}
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setActiveStep((preStep) => preStep + 1)}
+                      className={classes.button}
+                    >
+                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Grid>
             {chip.length !== 0 ? (
               <div className={classes.root}>
                 {chip.map((data) => {
@@ -479,12 +541,11 @@ export const ChatArea = (props) => {
                     />
                   );
                 })}
-                {/* {console.log(chip)} */}
               </div>
             ) : (
               <></>
             )}
-            <CloseAgreementDialog agreement={chip} />
+            {/* <CloseAgreementDialog agreement={chip} /> */}
           </Grid>
         </Grid>
         <Grid
