@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -21,6 +21,7 @@ import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
 import RentalCarRequest from "./RentalCarRequest";
 import CarInformationProfile from "./CarInformationProfile";
+import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -86,10 +87,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Profile() {
+const Profile = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
-  const [tab, setTab] = React.useState(0);
+  const [tab, setTab] = useState(0);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
@@ -112,11 +113,7 @@ export default function Profile() {
                 label="Personal Information"
                 {...a11yProps(0)}
               />
-              <Tab
-                icon={<DriveEtaIcon />}
-                label="Car Information"
-                {...a11yProps(1)}
-              />
+              <Tab icon={<DriveEtaIcon />} label="My Cars" {...a11yProps(1)} />
               <Tab
                 icon={<PaymentIcon />}
                 label="Payment Method"
@@ -124,7 +121,7 @@ export default function Profile() {
               />
               <Tab
                 icon={<HistoryIcon />}
-                label="Rental History"
+                label="My Booking"
                 {...a11yProps(3)}
               />
               <Tab
@@ -217,8 +214,8 @@ export default function Profile() {
               </Button>
             </TabPanel>
             <TabPanel value={tab} index={1}>
-              <div style={{ backgroundColor: "#E0E0E0", height: "100%" }}>
-                <h2>Car Information</h2>
+              <div>
+                {/* <h2>Car Information</h2> */}
                 <CarInformationProfile />
               </div>
             </TabPanel>
@@ -226,8 +223,8 @@ export default function Profile() {
               <h2>Payment Method</h2>
             </TabPanel>
             <TabPanel value={tab} index={3}>
-              <h2>Rental Car</h2>
-              <RentalCarRequest />
+              {/* <h2>Rental Car</h2> */}
+              <BookingRequest />
             </TabPanel>
             <TabPanel value={tab} index={4}>
               <h2>Lease History</h2>
@@ -237,4 +234,6 @@ export default function Profile() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Profile;

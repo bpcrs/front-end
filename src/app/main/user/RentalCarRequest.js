@@ -1,124 +1,157 @@
 // import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardHeader, Avatar } from "@material-ui/core";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import {
+  Grid,
+  Backdrop,
+  TableCell,
+  TableRow,
+  TableHead,
+  Typography,
+  IconButton,
+  Icon,
+} from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
-import SettingIcon from "@material-ui/icons/Settings";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCarInformationOwner } from "./profile.action";
+import {
+  // fetchCarInformationOwner,
+  fetchBookingRentalMyCar,
+  approveBookingRequest,
+} from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import Pagination from "@material-ui/lab/Pagination";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   card: {
     margin: theme.spacing(2),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
 const RentalCarRequest = (props) => {
+  const size = 5;
   const classes = useStyles();
-
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
-  const cars = useSelector((state) => state.profile.cars);
-  const currentUser = useSelector((state) => state.auth.user);
-  const history = useHistory();
+  const loading = useSelector((state) => state.profile.loading);
+  const rentalBookings = useSelector((state) => state.profile.bookings);
+  const { carId } = props;
+  // const confirm = "";
 
-  const handleCickSetting = (carId) => {
-    history.push({
-      pathname: APP_PATH.CAR_EDIT + "/" + carId,
-      state: {
-        carId,
-      },
-    });
+  // const currentUser = useSelector((state) => state.auth.user);
+  // const history = useHistory();
+
+  const handleConfirm = (id, status) => {
+    dispatch(approveBookingRequest(id, !status ? "DENY" : "CONFIRM"));
   };
 
   useEffect(() => {
-    dispatch(fetchCarInformationOwner(currentUser.id));
-  }, [currentUser.id, dispatch]);
+    // dispatch(fetchCarInformationOwner(currentUser.id));
+    // if (rentalBookings.count % size === 0) {
+    //   setCurrentPage((currentPage) => currentPage - 1);
+    // }
+    dispatch(fetchBookingRentalMyCar(carId, "REQUEST", currentPage, size));
+  }, [currentPage, dispatch, carId]);
 
-  const borderState = {
-    border: "2px solid",
-    borderColor: "#B0C4DE",
-    borderRadius: "0px 50px 50px 50px",
-    height: "50%",
-    textAlign: "center",
-    marginTop: "1%",
-  };
-
-  const replaceTextCarState = (carState) => {
-    if (carState) {
-      return "Available";
-    } else {
-      return "Not Available";
-    }
-  };
-  const handleColorCarState = (carState) => {
-    if (carState) {
-      return "green";
-    } else {
-      return "red";
-    }
-  };
   return (
-    <TableContainer>
-      <Table
-        className={classes.table}
-        aria-label="customized table"
-        width="100%"
-      >
-        <TableBody>
-          {cars.map((car) => (
-            <Card className={classes.card}>
-              <Grid
-                container
-                spacing={0}
-                style={{ wordWrap: "break-word", textAlign: "center" }}
-              >
-                <Grid item xs={3} lg={3}>
-                  <h2>{car.name}</h2>
-                </Grid>
-
-                <Grid item xs={2} lg={2}>
-                  <p>${car.price}</p>
-                </Grid>
-
-                <Grid item xs={4} lg={4}>
-                  <CardHeader
-                    avatar={
-                      <Avatar
-                        aria-label="recipe"
-                        className={classes.avatar}
-                        src="https://lh3.googleusercontent.com/a-/AOh14GhWcAjNF98iWQlx6syJZbHBqqJBh5RWr4m8lcpPgA=s96-c"
-                      ></Avatar>
-                    }
-                    title="Nguyen Duy Tien"
-                    subheader="on rent"
-                  />
-                </Grid>
-
-                <Grid item xs={2} lg={2} style={borderState}>
-                  <p style={{ color: handleColorCarState(car.available) }}>
-                    {replaceTextCarState(car.available)}
-                  </p>
-                </Grid>
-
-                <Grid item xs={1} lg={1}>
-                  <div>
-                    <SettingIcon
-                      style={{ marginTop: "50%" }}
-                      onClick={() => handleCickSetting(car.id)}
-                    />
-                  </div>
-                </Grid>
-              </Grid>
-            </Card>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Grid>
+      <Typography></Typography>
+      <TableContainer>
+        <Table
+          className={classes.table}
+          aria-label="customized table"
+          width="100%"
+        >
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Renter Name</StyledTableCell>
+              <StyledTableCell>Time Rental</StyledTableCell>
+              <StyledTableCell>Start date</StyledTableCell>
+              <StyledTableCell>Approve</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <Backdrop className={classes.backdrop} open={loading}>
+              <CircularProgress color="inherit" />
+            </Backdrop>
+            {rentalBookings.data &&
+              rentalBookings.data.map(
+                ((booking, index) => (
+                  <TableRow
+                    className="h-64 cursor-pointer"
+                    hover
+                    // role="checkbox"
+                    // aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={index}
+                    // selected={isSelected}
+                  >
+                    <TableCell component="th" scope="row">
+                      {booking.renter.fullName}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {Math.round(
+                        (new Date(booking.toDate) -
+                          new Date(booking.fromDate)) /
+                          (1000 * 60 * 60 * 24)
+                      ) + 1}{" "}
+                      days
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {new Date(booking.fromDate).toDateString()}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <IconButton
+                        onClick={() => handleConfirm(booking.id, true)}
+                      >
+                        <Icon style={{ color: "green" }}>done</Icon>
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleConfirm(booking.id, false)}
+                      >
+                        <Icon style={{ color: "red" }}>
+                          remove_circle_outline
+                        </Icon>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ): null)
+              )}
+            <Grid xs={12} lg={12} item container justify="flex-end">
+              <Pagination
+                count={
+                  rentalBookings.count !== 0 &&
+                  rentalBookings.count % size === 0
+                    ? Math.floor(rentalBookings.count / size)
+                    : Math.floor(rentalBookings.count / size) + 1
+                }
+                color="primary"
+                onChange={(e, page) => setCurrentPage(page)}
+              />
+            </Grid>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
   );
 };
 
