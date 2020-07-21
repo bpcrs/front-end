@@ -46,11 +46,17 @@ export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
 
 export const PUT_BOOKING_SUCCESS = "[BOOKING] PUT BOOKING SUCCESS";
 export const PUT_BOOKING_FAILURE = "[BOOKING] PUT BOOKING FAILURE";
-
+export const CREATE_BOOKING_REQUEST = "[BOOKING] CREATE BOOKING";
 export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 
+export function createBooking(booking) {
+  return {
+    type: CREATE_BOOKING_REQUEST,
+    payload: booking,
+  };
+}
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -469,11 +475,8 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(
-          // fetchBookingRequest(response.data.data)
-          postBookingSuccess(response.success ? response.data : {})
-        );
-        notificationBooking(false, response.data);
+        dispatch(postBookingSuccess(response.success ? response.data : {}));
+        notificationBooking(response.data);
         console.log("Create success ", response.data);
       },
       (error) => {
@@ -518,18 +521,18 @@ export function postReviewSubmit(review) {
   };
 }
 
-export function notificationBooking(status, booking) {
-  console.log(status, booking);
+export function notificationBooking(booking) {
   firebase
     .firestore()
     .collection("notification")
     .doc(`${booking.lessor.email}`)
     .collection("requests")
     .add({
-      status,
+      status: booking.status,
       car: booking.car,
       owner: booking.lessor,
       renter: booking.renter,
+      bookingId: booking.id,
       createAt: new Date().getTime(),
     });
 }

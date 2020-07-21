@@ -101,32 +101,27 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-
   const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
-  const { booking, carDetails } = props.location.state;
+  const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
   const [selectedDate, setDateChange] = useState([
     bookingChange.fromDate,
     bookingChange.toDate,
   ]);
-  // console.log(selectedDate);
   const handleBookingChange = () => {
-    // setDateChange(date);
-    setBookingChange({
-      ...bookingChange,
-      ...selectedDate,
-    });
+    console.log(bookingChange);
     history.push({
       pathname: APP_PATH.VIEW_BOOKING,
       state: {
         bookingChange,
-        carDetails,
         carDetail,
+        fromDate: selectedDate[0],
+        toDate: selectedDate[1],
       },
     });
   };
-  console.log("Booking change", bookingChange);
+  // console.log("Booking change", bookingChange);
   const summaryPrice =
     carDetail.price *
     (Math.round(

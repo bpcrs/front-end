@@ -17,6 +17,7 @@ export const APP_PATH = {
   HOME: "/",
   ADMIN: "/admin",
   LOGIN: "/login",
+  PROFILE: "/profile",
   CAR_LIST: "/cars",
   CAR_ITEM: "/car",
   CAR_SUBMIT: "/submit",

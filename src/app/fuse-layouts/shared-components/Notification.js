@@ -35,23 +35,49 @@ const Notification = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const userLogged = useSelector((state) => state.auth.user);
   const [notification, setNotification] = useState([]);
+  // const [notifyMsg, setNotifyMsg] = useState();
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleClick = (state) => {
+    const path = !state ? APP_PATH.CHAT : APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+  };
+  const renderNotification = (notify) => {
+    console.log(notify.status);
+    switch (notify.status) {
+      case "CONFIRM":
+        return (
+          <Typography onClick={() => handleClick(false)}>
+            {" "}
+            {notify.owner.fullName} has accepted your booking request{" "}
+          </Typography>
+        );
+      case "DENY":
+        return (
+          <Typography>
+            {" "}
+            {notify.owner.fullName} has denied your booking request{" "}
+          </Typography>
+        );
+      case "REQUEST":
+        return (
+          <Typography onClick={() => handleClick(true)}>
+            {" "}
+            {notify.renter.fullName} has requested your car {notify.car.name}{" "}
+          </Typography>
+        );
+      default:
+        return <Typography>Nothing</Typography>;
+    }
   };
 
   const notficationClose = () => {
     setAnchorEl(null);
   };
-  const handleClick = () => {
-    history.push({
-      pathname: APP_PATH.CHAT,
-      state: {
-        notification,
-        // bookingInStore,
-      },
-    });
-  };
-  // getUsersRequest(notification);
+
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
@@ -108,14 +134,12 @@ const Notification = () => {
             notification
               .sort((first, second) => first.createAt - second.createAt)
               .map((notify) => (
-                <Grid className={classes.notification} onClick={handleClick}>
+                <Grid className={classes.notification}>
                   <MenuItem>
                     <Icon style={{ color: "blue" }} className={classes.icon}>
                       chat
                     </Icon>
-                    <Typography>
-                      {`${notify.owner.fullName} request to rental you at car ${notify.car.name}`}
-                    </Typography>
+                    {renderNotification(notify)}
                   </MenuItem>
                 </Grid>
               ))}
