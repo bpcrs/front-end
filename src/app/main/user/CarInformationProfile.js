@@ -111,7 +111,7 @@ export default function CarInformationProfile(props) {
                   <CarStatus name={car.status} />
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {car.status === "Booked" ? (
+                  {car.status === "BOOKED" ? (
                     <IconButton
                       onClick={() => handleClickBooked(car.id, car.name)}
                     >
