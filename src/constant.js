@@ -27,4 +27,5 @@ export const APP_PATH = {
   CHAT: "/chat",
   ERORR_404: "/error/404",
   LANDING_MOBILE: "/landing-mobile",
+  CHECKING: "/checking",
 };

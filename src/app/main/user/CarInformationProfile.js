@@ -13,9 +13,6 @@ import { fetchCarInformationOwner } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 
-function createData(name, property1, property2) {
-    return { name, property1, property2 };
-}
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,7 +37,7 @@ export default function CarInformationProfile(props) {
         history.push({
             pathname: APP_PATH.CAR_EDIT + "/" + carId,
             state: {
-            carId,
+                carId,
             }
         });
     };
@@ -49,14 +46,14 @@ export default function CarInformationProfile(props) {
         dispatch(fetchCarInformationOwner(currentUser.id));
     }, [dispatch]);
 
-    const borderState = {
-        border: "2px solid",
-        borderColor: "#B0C4DE",
-        borderRadius: "0px 50px 50px 50px",
-        height: "50%",
-        textAlign: "center",
-        marginTop: "1%",
-    };
+    // const borderState = {
+    //     border: "2px solid",
+    //     borderColor: "#B0C4DE",
+    //     borderRadius: "0px 50px 50px 50px",
+    //     height: "50%",
+    //     textAlign: "center",
+    //     marginTop: "1%",
+    // };
 
     const replaceTextCarState = (carState) => {
         if (carState) {
@@ -108,7 +105,14 @@ export default function CarInformationProfile(props) {
                                     </Grid>
 
                                     <Grid item xs={2} lg={2}
-                                        style={borderState}>
+                                        style={{
+                                            border: "2px solid",
+                                            borderColor: "#B0C4DE",
+                                            borderRadius: "0px 50px 50px 50px",
+                                            height: "50%",
+                                            textAlign: "center",
+                                            marginTop: "1%",
+                                        }}>
                                         <p style={{ color: handleColorCarState(car.available) }} >{replaceTextCarState(car.available)}</p>
                                     </Grid>
 
@@ -116,13 +120,6 @@ export default function CarInformationProfile(props) {
                                         <div >
                                             <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(car.id)} />
                                         </div>
-
-                                        {/* <div>
-                                            <Button
-                                                startIcon={<SettingIcon />}
-                                                onClick={()=> handleCickSetting(car.id)}                                                
-                                                style={{ marginTop: "40%" }} />
-                                        </div> */}
                                     </Grid>
                                 </Grid>
                             </Card>
