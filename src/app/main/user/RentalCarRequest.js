@@ -69,7 +69,7 @@ const RentalCarRequest = (props) => {
     // if (rentalBookings.count % size === 0) {
     //   setCurrentPage((currentPage) => currentPage - 1);
     // }
-    dispatch(fetchBookingRentalMyCar(carId, currentPage, size));
+    dispatch(fetchBookingRentalMyCar(carId, "REQUEST", currentPage, size));
   }, [currentPage, dispatch, carId]);
 
   return (
@@ -94,8 +94,8 @@ const RentalCarRequest = (props) => {
               <CircularProgress color="inherit" />
             </Backdrop>
             {rentalBookings.data &&
-              rentalBookings.data.map((booking, index) =>
-                booking.status === "REQUEST" ? (
+              rentalBookings.data.map(
+                ((booking, index) => (
                   <TableRow
                     className="h-64 cursor-pointer"
                     hover
@@ -134,7 +134,7 @@ const RentalCarRequest = (props) => {
                       </IconButton>
                     </TableCell>
                   </TableRow>
-                ) : null
+                ): null)
               )}
             <Grid xs={12} lg={12} item container justify="flex-end">
               <Pagination

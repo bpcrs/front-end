@@ -84,9 +84,9 @@ export function fetchCarInformationOwner(ownerId) {
   };
 }
 
-export function fetchBookingRentalMyCar(carId, page, size) {
+export function fetchBookingRentalMyCar(carId, status, page, size) {
   return (dispatch) => {
-    const params = { page, size };
+    const params = { page, size, status };
     const request = GET(ENDPOINT.BOOKING_CONTROLLER_OWNER_GETBYID(carId), {
       ...params,
     });

@@ -39,12 +39,18 @@ const Notification = () => {
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleClick = (state) => {
+    const path = !state ? APP_PATH.CHAT : APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+  };
   const renderNotification = (notify) => {
     console.log(notify.status);
     switch (notify.status) {
       case "CONFIRM":
         return (
-          <Typography>
+          <Typography onClick={() => handleClick(false)}>
             {" "}
             {notify.owner.fullName} has accepted your booking request{" "}
           </Typography>
@@ -58,7 +64,7 @@ const Notification = () => {
         );
       case "REQUEST":
         return (
-          <Typography>
+          <Typography onClick={() => handleClick(true)}>
             {" "}
             {notify.renter.fullName} has requested your car {notify.car.name}{" "}
           </Typography>
@@ -71,16 +77,7 @@ const Notification = () => {
   const notficationClose = () => {
     setAnchorEl(null);
   };
-  const handleClick = () => {
-    history.push({
-      pathname: APP_PATH.CHAT,
-      state: {
-        notification,
-        // bookingInStore,
-      },
-    });
-  };
-  // getUsersRequest(notification);
+
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
 
@@ -137,7 +134,7 @@ const Notification = () => {
             notification
               .sort((first, second) => first.createAt - second.createAt)
               .map((notify) => (
-                <Grid className={classes.notification} onClick={handleClick}>
+                <Grid className={classes.notification}>
                   <MenuItem>
                     <Icon style={{ color: "blue" }} className={classes.icon}>
                       chat
