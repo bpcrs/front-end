@@ -45,6 +45,7 @@ const StyledTableCell = withStyles((theme) => ({
     fontSize: 14,
   },
 }))(TableCell);
+
 const useRowStyles = makeStyles({
   root: {
     "& > *": {
@@ -169,47 +170,10 @@ const RentalCarRequest = (props) => {
   const loading = useSelector((state) => state.profile.loading);
   const rentalBookings = useSelector((state) => state.profile.bookings);
   const { carId, bookingStatus } = props;
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
 
   // const currentUser = useSelector((state) => state.auth.user);
   // const history = useHistory();
-
-  const handleConfirm = (id, status) => {
-    dispatch(approveBookingRequest(id, !status ? "DENY" : "PENDING"));
-  };
-  const handleBookingStatus = (booking) => {
-    switch (booking.status) {
-      case "REQUEST":
-        return (
-          <TableCell component="th" scope="row">
-            <IconButton onClick={() => handleConfirm(booking.id, true)}>
-              <Icon style={{ color: "green" }}>done</Icon>
-            </IconButton>
-            <IconButton onClick={() => handleConfirm(booking.id, false)}>
-              <Icon style={{ color: "red" }}>remove_circle_outline</Icon>
-            </IconButton>
-          </TableCell>
-        );
-      case "PENDING":
-        return (
-          <TableCell component="th" scope="row">
-            <IconButton>
-              <Icon style={{ color: "blue" }}>chat</Icon>
-            </IconButton>
-          </TableCell>
-        );
-      case "CONFIRM":
-        return (
-          <TableCell component="th" scope="row">
-            <IconButton>
-              <Icon>done</Icon>
-            </IconButton>
-          </TableCell>
-        );
-      default:
-        return null;
-    }
-  };
 
   const handleTableRowStatusBooking = (booking) => {
     switch (booking) {
