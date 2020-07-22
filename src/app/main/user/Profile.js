@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
-import RentalCarRequest from "./RentalCarRequest";
+import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
 import BookingRequest from "./BookingRequest";
 
@@ -224,7 +224,7 @@ const Profile = (props) => {
             </TabPanel>
             <TabPanel value={tab} index={3}>
               {/* <h2>Rental Car</h2> */}
-              <BookingRequest />
+              <MyBooking />
             </TabPanel>
             <TabPanel value={tab} index={4}>
               <h2>Lease History</h2>

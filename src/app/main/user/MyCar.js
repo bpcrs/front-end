@@ -42,7 +42,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-export default function CarInformationProfile(props) {
+const MyCar = (props) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -160,4 +160,6 @@ export default function CarInformationProfile(props) {
       <Booking carId={detail} />
     </Grid>
   );
-}
+};
+
+export default MyCar;
