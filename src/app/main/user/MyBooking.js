@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { Grid, Tabs, Tab, Box, Typography } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest } from "./profile.action";
+
 import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
@@ -52,19 +51,10 @@ const useStyles = makeStyles((theme) => ({
 
 const MyBooking = () => {
   const [tabValue, setTabValue] = useState(0);
-  //   const size = 5;
-  //   const dispatch = useDispatch();
-  //   const userLogged = useSelector((state) => state.auth.user);
-  //   const [status, setStatus] = useState("REQUEST");
-  //   const [currentPage, setCurrentPage] = useState(1);
-
+  const classes = useStyles();
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
-
-  //   useEffect(() => {
-  //     dispatch(fetchBookingRequest(userLogged.id, status, currentPage, size));
-  //   }, [currentPage, dispatch, status, userLogged]);
 
   return (
     <Grid>
