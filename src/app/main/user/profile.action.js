@@ -103,9 +103,10 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
   };
 }
 
-export function fetchBookingRequest(renterId, page, size) {
+export function fetchBookingRequest(renterId, status, page, size) {
   return (dispatch) => {
-    const params = { page, size };
+    const params = { page, size, status };
+    console.log(params);
     const request = GET(ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(renterId), {
       ...params,
     });

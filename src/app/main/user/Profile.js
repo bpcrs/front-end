@@ -20,7 +20,7 @@ import { useSelector } from "react-redux";
 import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
 import RentalCarRequest from "./RentalCarRequest";
-import CarInformationProfile from "./CarInformationProfile";
+import MyCar from "./MyCar";
 import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
@@ -216,7 +216,7 @@ const Profile = (props) => {
             <TabPanel value={tab} index={1}>
               <div>
                 {/* <h2>Car Information</h2> */}
-                <CarInformationProfile />
+                <MyCar />
               </div>
             </TabPanel>
             <TabPanel value={tab} index={2}>

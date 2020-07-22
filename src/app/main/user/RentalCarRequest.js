@@ -24,6 +24,8 @@ import {
 } from "./profile.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -61,9 +63,15 @@ function Row(props) {
   const { booking } = props;
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleConfirm = (id, status) => {
     dispatch(approveBookingRequest(id, !status ? "DENY" : "PENDING"));
+  };
+  const agreementChat = () => {
+    history.push({
+      pathname: APP_PATH.CHAT,
+    });
   };
   const handleBookingStatus = (booking) => {
     switch (booking.status) {
@@ -81,7 +89,7 @@ function Row(props) {
       case "PENDING":
         return (
           <TableCell component="th" scope="row">
-            <IconButton>
+            <IconButton onClick={() => agreementChat()}>
               <Icon style={{ color: "blue" }}>chat</Icon>
             </IconButton>
           </TableCell>

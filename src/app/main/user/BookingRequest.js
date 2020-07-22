@@ -57,7 +57,7 @@ const BookingRequest = (props) => {
   // const history = useHistory();
 
   useEffect(() => {
-    dispatch(fetchBookingRequest(currentUser.id, currentPage, size));
+    dispatch(fetchBookingRequest(currentUser.id, "REQUEST", currentPage, size));
   }, [currentPage, dispatch, currentUser.id]);
 
   return (
