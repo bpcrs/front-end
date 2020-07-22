@@ -19,6 +19,7 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CarStatus from "./CarStatus";
 import RentalCarRequest from "./RentalCarRequest";
+import Booking from "./Booking";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -86,6 +87,7 @@ export default function CarInformationProfile(props) {
               <StyledTableCell>Name</StyledTableCell>
               <StyledTableCell>Plate number</StyledTableCell>
               <StyledTableCell>Status</StyledTableCell>
+              <StyledTableCell>Detail</StyledTableCell>
               <StyledTableCell>Book request</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -111,13 +113,16 @@ export default function CarInformationProfile(props) {
                   <CarStatus name={car.status} />
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {car.status === "BOOKED" ? (
-                    <IconButton
-                      onClick={() => handleClickBooked(car.id, car.name)}
-                    >
-                      <Icon>details</Icon>
-                    </IconButton>
-                  ) : null}
+                  <IconButton onClick={() => handleCickSetting(car.id)}>
+                    <Icon>settings</Icon>
+                  </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  <IconButton
+                    onClick={() => handleClickBooked(car.id, car.name)}
+                  >
+                    <Icon style={{ color: "purple" }}>details</Icon>
+                  </IconButton>
                 </TableCell>
               </TableRow>
               // </Grid>
@@ -128,11 +133,12 @@ export default function CarInformationProfile(props) {
     </Grid>
   ) : (
     <Grid>
-      <Typography>List rental booking of car {name} </Typography>
       <IconButton onClick={() => setIsDetail(false)}>
         <Icon>arrow_back</Icon>
+        <Typography>My cars</Typography>
       </IconButton>
-      <RentalCarRequest carId={detail} />
+      {/* <RentalCarRequest carId={detail} /> */}
+      <Booking carId={detail} />
     </Grid>
   );
 }

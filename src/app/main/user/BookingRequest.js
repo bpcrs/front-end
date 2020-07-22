@@ -7,8 +7,8 @@ import {
   TableRow,
   TableHead,
   Typography,
-  IconButton,
-  Icon,
+  // IconButton,
+  // Icon,
 } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
@@ -16,12 +16,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  // fetchCarInformationOwner,
-  fetchBookingRequest,
-} from "./profile.action";
-import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { fetchBookingRequest } from "./profile.action";
+// import { useHistory } from "react-router-dom";
+// import { APP_PATH } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
@@ -54,15 +51,10 @@ const BookingRequest = (props) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.profile.loading);
   const myBookings = useSelector((state) => state.profile.bookings);
-  const { carId } = props;
-  // const confirm = "";
+  // const { carId } = props;
 
   const currentUser = useSelector((state) => state.auth.user);
   // const history = useHistory();
-
-  const handleConfirm = (id, status) => {
-    // dispatch(approveBookingRequest(id, !status ? "DENY" : "CONFIRM"));
-  };
 
   useEffect(() => {
     dispatch(fetchBookingRequest(currentUser.id, currentPage, size));
