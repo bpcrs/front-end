@@ -7,6 +7,8 @@ import {
   TableRow,
   TableHead,
   Typography,
+  IconButton,
+  Icon,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -17,8 +19,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingRequest } from "./profile.action";
-// import { useHistory } from "react-router-dom";
-// import { APP_PATH } from "../../../constant";
+import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
@@ -51,14 +53,20 @@ const BookingRequest = (props) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.profile.loading);
   const myBookings = useSelector((state) => state.profile.bookings);
-  // const { carId } = props;
+  const { status } = props;
+  const history = useHistory();
 
   const currentUser = useSelector((state) => state.auth.user);
-  // const history = useHistory();
+
+  const handleAgreement = () => {
+    history.push({
+      pathname: APP_PATH.CHAT,
+    });
+  };
 
   useEffect(() => {
-    dispatch(fetchBookingRequest(currentUser.id, currentPage, size));
-  }, [currentPage, dispatch, currentUser.id]);
+    dispatch(fetchBookingRequest(currentUser.id, status, currentPage, size));
+  }, [currentPage, dispatch, currentUser.id, status]);
 
   return (
     <Grid>
@@ -75,6 +83,9 @@ const BookingRequest = (props) => {
               <StyledTableCell>Time Rental</StyledTableCell>
               <StyledTableCell>Start date</StyledTableCell>
               <StyledTableCell>Status</StyledTableCell>
+              {status === "PENDING" ? (
+                <StyledTableCell>Agreement</StyledTableCell>
+              ) : null}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -109,6 +120,13 @@ const BookingRequest = (props) => {
                   <TableCell component="th" scope="row">
                     <BookingStatus name={booking.status} />
                   </TableCell>
+                  {status === "PENDING" ? (
+                    <TableCell component="th" scope="row">
+                      <IconButton onClick={() => handleAgreement()}>
+                        <Icon style={{ color: "blue" }}>chat</Icon>
+                      </IconButton>
+                    </TableCell>
+                  ) : null}
                 </TableRow>
                 // </Grid>
               ))}
