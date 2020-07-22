@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
+  detailBooking: {
+    marginLeft: theme.spacing(1),
+  },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -96,7 +99,7 @@ function Row(props) {
     }
   };
 
-  // const classes = useRowStyles();
+  const classes = useStyles();
   return (
     <React.Fragment>
       <TableRow
@@ -132,28 +135,83 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Detail:
               </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow key={booking.fromDate}>
-                    <TableCell component="th" scope="row">
-                      {booking.fromDate}
-                    </TableCell>
-                    <TableCell>{booking.toDate}</TableCell>
-                    <TableCell align="right">{booking.location}</TableCell>
-                    <TableCell align="right">{booking.destination}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+              >
+                <Typography color="textSecondary" variant="subtitle2">
+                  Renter name:{" "}
+                </Typography>
+                <Typography className={classes.detailBooking}>
+                  {" "}
+                  {booking.renter.fullName}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+              >
+                <Typography color="textSecondary" variant="subtitle2">
+                  Pick-up location:{" "}
+                </Typography>
+                <Typography className={classes.detailBooking}>
+                  {" "}
+                  {booking.location}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+              >
+                <Typography color="textSecondary" variant="subtitle2">
+                  Drop location:{" "}
+                </Typography>
+                <Typography className={classes.detailBooking}>
+                  {" "}
+                  {booking.destination}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+              >
+                <Typography color="textSecondary" variant="subtitle2">
+                  From date:{" "}
+                </Typography>
+                <Typography className={classes.detailBooking}>
+                  {" "}
+                  {new Date(booking.fromDate).toDateString()}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                container
+                direction="row"
+                alignItems="center"
+                justify="flex-start"
+              >
+                <Typography color="textSecondary" variant="subtitle2">
+                  End date:{" "}
+                </Typography>
+                <Typography className={classes.detailBooking}>
+                  {" "}
+                  {new Date(booking.toDate).toDateString()}
+                </Typography>
+              </Grid>
             </Box>
           </Collapse>
         </TableCell>
