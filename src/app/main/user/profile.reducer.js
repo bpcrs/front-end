@@ -9,6 +9,7 @@ const initialState = {
     data: [],
   },
   loading: false,
+  open: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -17,6 +18,19 @@ const profileReducer = (state = initialState, { type, payload }) => {
         ...state,
         address: payload,
         loading: false,
+      };
+    }
+    case Actions.CHANGE_OPEN: {
+      return {
+        ...state,
+        open: !state.open,
+      };
+    }
+    case Actions.ADD_CAR_REGISTER: {
+      return {
+        ...state,
+        cars: [...state.cars, payload],
+        loading: true,
       };
     }
     case Actions.FETCH_CAR_INFORMATION_OWNER_SUCCESS: {

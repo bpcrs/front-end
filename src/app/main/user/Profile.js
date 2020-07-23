@@ -99,6 +99,7 @@ const Profile = (props) => {
   const userLogged = useSelector((state) => state.auth.user);
   const history = useHistory();
   const [tab, setTab] = useState(0);
+  // const { close } = props;
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
