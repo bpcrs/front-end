@@ -45,8 +45,8 @@ const ToolbarLayout3 = () => {
                             <div className={classes.separator}/>
                         </Hidden> */}
             {/* <div className={classes.separator} /> */}
+            <Notification />
             <UserMenu />
-            {/* <Notification /> */}
             {/* <Grid className={classes.notification}>
               <Icon>notifications_none</Icon>
             </Grid>

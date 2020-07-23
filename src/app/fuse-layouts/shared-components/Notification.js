@@ -69,8 +69,14 @@ const Notification = () => {
             {notify.renter.fullName} has requested your car {notify.car.name}{" "}
           </Typography>
         );
+      case "PENDING":
+        return (
+          <Typography onClick={() => handleClick(true)}>
+            {notify.renter.fullName} neogating your car {notify.car.name}{" "}
+          </Typography>
+        );
       default:
-        return <Typography>Nothing</Typography>;
+        return "";
     }
   };
 
@@ -108,8 +114,8 @@ const Notification = () => {
   }, [userLogged.email]);
   return (
     <React.Fragment>
-      <Button className="h-64" onClick={notificationClick}>
-        <Icon style={{ color: "red" }}>notifications_active</Icon>
+      <Button onClick={notificationClick}>
+        <Icon fontSize="small">notifications</Icon>
       </Button>
 
       <Popover
