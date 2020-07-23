@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import * as authActions from "app/auth/store/actions";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
-import { APP_ROLE } from "../../../constant";
+import { APP_PATH } from "../../../constant";
 
 class UserMenu extends Component {
   state = {
@@ -34,7 +34,7 @@ class UserMenu extends Component {
 
     return (
       <React.Fragment>
-        <Button className="h-64" onClick={this.userMenuClick}>
+        <Button className="h-64" component={Link} to={APP_PATH.PROFILE}>
           {user.photoURL ? (
             <Avatar className="" alt="user photo" src={user.photoURL} />
           ) : (
@@ -53,13 +53,8 @@ class UserMenu extends Component {
               {user.role}
             </Typography>
           </div>
-
-          <Icon className="text-16 ml-12 hidden sm:flex" variant="action">
-            keyboard_arrow_down
-          </Icon>
         </Button>
-
-        <Popover
+        {/* <Popover
           open={Boolean(userMenu)}
           anchorEl={userMenu}
           onClose={this.userMenuClose}
@@ -125,7 +120,7 @@ class UserMenu extends Component {
               </MenuItem>
             </React.Fragment>
           )}
-        </Popover>
+        </Popover> */}
       </React.Fragment>
     );
   }

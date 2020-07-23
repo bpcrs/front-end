@@ -6,10 +6,10 @@ export const LandingConfig = {
     layout: {
       config: {
         navbar: {
-          display: false,
+          display: true,
         },
         toolbar: {
-          display: false,
+          display: true,
         },
         footer: {
           display: false,

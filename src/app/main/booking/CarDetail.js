@@ -268,7 +268,7 @@ export default function CarDetails(props) {
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
-                              {carDetail.model}
+                              {carDetail.model ? carDetail.model.name : ""}
                             </Typography>
                           </Grid>
                         </Grid>
