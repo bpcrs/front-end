@@ -15,6 +15,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PropTypes from "prop-types";
 import Layout from "../../layout";
 import CheckCar from "./CheckCar";
+import CheckUser from "./CheckUser";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -117,11 +118,14 @@ export default function Cheking() {
                     <Grid item xs={9} sm={9}>
 
                         <TabPanel value={tab} index={0}>
-                            <h2>Personal Information</h2>
+                            <div style={{ backgroundColor: "#E0E0E0", height: "100%" }}>
+                                <h2>Personal Information</h2>
+                                <CheckUser />
+                            </div>
                         </TabPanel>
 
                         <TabPanel value={tab} index={1}>
-                            <div style={{ backgroundColor: "#E0E0E0", height: "100%" }}>
+                            <div>
                                 <h2>Car Information</h2>
                                 <CheckCar />
                             </div>

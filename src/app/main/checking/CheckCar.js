@@ -1,5 +1,5 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardHeader, Avatar } from "@material-ui/core";
+import { Grid, Card, CardHeader, Avatar, TableCell } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { fetchCarCheckingAdmin } from "./checking.action";
-
+import TablePagination from '@material-ui/core/TablePagination';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +25,24 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+    root: {
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+    },
+}))(TableRow);
+
 export default function CheckCar() {
     const classes = useStyles();
     const history = useHistory();
@@ -36,24 +54,21 @@ export default function CheckCar() {
     }, [dispatch]);
 
 
-    const replaceTextCarState = (carState) => {
-        if (carState) {
-            return "Available";
-        } else {
-            return "Not Available";
-        }
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(2);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
     };
-    const handleColorCarState = (carState) => {
-        if (carState) {
-            return "green";
-        } else {
-            return "red";
-        }
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
     };
 
     const handleCickSetting = (carId) => {
         history.push({
-            pathname: APP_PATH.CAR_EDIT + "/" + carId,
+            pathname: APP_PATH.CAR_CHECKING + "/" + carId,
             state: {
                 carId,
             }
@@ -61,115 +76,73 @@ export default function CheckCar() {
     };
 
     return (
-        <TableContainer>
-            <Table
-                className={classes.table}
-                aria-label="customized table"
-                width="100%"
-            >
-                <TableBody>
-                    {   cars.data &&
-                        cars.data.map((car, index) => (
-                            <TableRow>
-                                <Card className={classes.card} key={index}>
-                                    <Grid container spacing={0} style={{ wordWrap: "break-word", textAlign: "center" }}>
-                                        <Grid item xs={3} lg={3}>
-                                            <h2>{car.name}</h2>
-                                        </Grid>
+        <div>
+            <TableContainer>
+                <Table
+                    className={classes.table}
+                    aria-label="customized table"
+                    width="100%"
+                >
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Name</StyledTableCell>
+                            <StyledTableCell>Date Create</StyledTableCell>
+                            <StyledTableCell>Owner</StyledTableCell>
+                            <StyledTableCell>Status</StyledTableCell>
+                            <StyledTableCell>Action</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {
+                            cars.data &&
+                            cars.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((car, index) => (
+                                <StyledTableRow style={{ wordWrap: "break-word", textAlign: "center" }} key={index}>
 
-                                        <Grid item xs={2} lg={2}>
-                                            <p>${car.price}</p>
-                                        </Grid>
+                                    <TableCell component="th" scope="row">
+                                        {car.name}
+                                    </TableCell>
 
-                                        <Grid item xs={4} lg={4}>
-                                            <CardHeader
-                                                avatar={
-                                                    <Avatar
-                                                        aria-label="recipe"
-                                                        className={classes.avatar}
-                                                        src="https://lh3.googleusercontent.com/a-/AOh14GhWcAjNF98iWQlx6syJZbHBqqJBh5RWr4m8lcpPgA=s96-c"
-                                                    ></Avatar>
-                                                }
-                                                title="Nguyen Duy Tien"
-                                                subheader="on rent"
-                                            />
-                                        </Grid>
+                                    <TableCell component="th" scope="row">
+                                        {new Date(car.createdDate).toLocaleDateString()}
+                                    </TableCell>
 
-                                        <Grid item xs={2} lg={2}
-                                            style={{
-                                                border: "2px solid",
-                                                borderColor: "#B0C4DE",
-                                                borderRadius: "0px 50px 50px 50px",
-                                                height: "50%",
-                                                textAlign: "center",
-                                                marginTop: "1%",
-                                            }}>
-                                            <p style={{ color: handleColorCarState(car.available) }} >{replaceTextCarState(car.available)}</p>
-                                        </Grid>
+                                    <TableCell component="th" scope="row">
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar
+                                                    aria-label="recipe"
+                                                    className={classes.avatar}
+                                                    src={car.owner.imageUrl}
+                                                ></Avatar>
+                                            }
+                                            title={car.owner.fullName}
+                                        // subheader="on rent"
+                                        />
+                                    </TableCell>
 
-                                        <Grid item xs={1} lg={1}>
-                                            <div >
-                                                <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(car.id)} />
-                                            </div>
-                                        </Grid>
-                                    </Grid>
-                                </Card>
-                            </TableRow>
-                        ))
+                                    <TableCell component="th" scope="row">
+                                        {car.status}
+                                    </TableCell>
 
+                                    <TableCell component="th" scope="row">
+                                        <SettingIcon onClick={() => handleCickSetting(car.id)}/>
+                                    </TableCell>
 
-
-                        // cars.map((car) => (
-                        //     <TableRow>
-                        //         <Card className={classes.card}>
-                        //             <Grid container spacing={0} style={{ wordWrap: "break-word", textAlign: "center" }}>
-                        //                 <Grid item xs={3} lg={3}>
-                        //                     <h2>{car.name}</h2>
-                        //                 </Grid>
-
-                        //                 <Grid item xs={2} lg={2}>
-                        //                     <p>${car.price}</p>
-                        //                 </Grid>
-
-                        //                 <Grid item xs={4} lg={4}>
-                        //                     <CardHeader
-                        //                         avatar={
-                        //                             <Avatar
-                        //                                 aria-label="recipe"
-                        //                                 src="https://lh3.googleusercontent.com/a-/AOh14GhWcAjNF98iWQlx6syJZbHBqqJBh5RWr4m8lcpPgA=s96-c"
-                        //                             ></Avatar>
-                        //                         }
-                        //                         title="Nguyen Duy Tien"
-                        //                         subheader="Owner"
-                        //                     />
-                        //                 </Grid>
-
-                        //                 <Grid item xs={2} lg={2}
-                        //                     style={{
-                        //                         border: "2px solid",
-                        //                         borderColor: "#B0C4DE",
-                        //                         borderRadius: "0px 50px 50px 50px",
-                        //                         height: "50%",
-                        //                         textAlign: "center",
-                        //                         marginTop: "1%",
-                        //                     }}>
-                        //                     <p style={{ color: handleColorCarState(car.available) }} >{replaceTextCarState(car.available)}</p>
-                        //                 </Grid>
-
-                        //                 <Grid item xs={1} lg={1}>
-                        //                     <div >
-                        //                         <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(car.id)} />
-                        //                     </div>
-                        //                 </Grid>
-
-
-                        //             </Grid>
-                        //         </Card>
-                        //     </TableRow>
-                        // ))
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                                </StyledTableRow>
+                            ))
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[2, 3, 4]}
+                component="div"
+                count={cars.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+        </div>
     );
 }

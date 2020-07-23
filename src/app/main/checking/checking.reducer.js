@@ -2,6 +2,10 @@ import * as Actions from "./checking.action";
 
 const initialState = {
     cars: [],
+    carDetail: {},
+    brands: [],
+    models: [],
+    images: [],
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
@@ -11,6 +15,12 @@ const CheckingReducer = (state = initialState, { type, payload }) => {
                ...state,
                cars: payload,
            }
+        }
+        case Actions.FETCH_CAR_DETAIL_CHECKING_SUCCESS: {
+            return{
+                ...state,
+                carDetail: payload,
+            }
         }
         default: {
             return state;

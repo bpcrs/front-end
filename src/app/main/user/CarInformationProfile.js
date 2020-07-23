@@ -54,6 +54,8 @@ export default function CarInformationProfile(props) {
   const [detail, setDetail] = useState();
   const [name, setName] = useState();
 
+  console.log("user: " , currentUser);
+  console.log("cars: ", cars);
   const handleCickSetting = (carId) => {
     history.push({
       pathname: APP_PATH.CAR_EDIT + "/" + carId,

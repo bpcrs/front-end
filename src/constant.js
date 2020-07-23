@@ -29,4 +29,5 @@ export const APP_PATH = {
   ERORR_404: "/error/404",
   LANDING_MOBILE: "/landing-mobile",
   CHECKING: "/checking",
+  CAR_CHECKING: "/car-check",
 };
