@@ -105,7 +105,7 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-  const currentUser = useSelector((state) => state.auth.user);
+  // const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
@@ -138,8 +138,6 @@ export default function CarDetails(props) {
       },
     });
   };
-
-  // console.log("Booking change", bookingChange);
 
   useEffect(() => {
     const carId = props.match.params.id;
@@ -417,14 +415,15 @@ export default function CarDetails(props) {
           <Grid item xs={12} xl={12} lg={12}>
             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
               <CardContent>
-                <Typography variant="h6" color="secondary">
-                  Price detail:{" "}
+                <Typography variant="h6" color="initial" display="initial">
+                  Price detail{" "}
                 </Typography>
                 <Grid container justify="space-between">
                   <Typography
-                    variant="body2"
-                    color="textSecondary"
+                    variant="subtitle1"
+                    color="initial"
                     align="right"
+                    display="initial"
                   >
                     Price
                   </Typography>
@@ -439,9 +438,10 @@ export default function CarDetails(props) {
                 </Grid>
                 <Grid container justify="space-between">
                   <Typography
-                    variant="body2"
-                    color="textSecondary"
+                    variant="subtitle1"
+                    color="initial"
                     align="right"
+                    display="initial"
                   >
                     Rental period
                   </Typography>
@@ -461,11 +461,16 @@ export default function CarDetails(props) {
                   </Typography>
                 </Grid>
                 <Divider orientation="horizontal" light="true" />
-                <Grid container justify="space-between">
+                <Grid
+                  container
+                  justify="space-between"
+                  className={classes.paper}
+                >
                   <Typography
-                    variant="subtitle1"
+                    variant="h6"
+                    color="primary"
                     align="right"
-                    color="secondary"
+                    display="initial"
                   >
                     Total:
                   </Typography>

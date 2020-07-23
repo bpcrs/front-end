@@ -19,7 +19,6 @@ import { APP_PATH } from "../../../constant";
 import { useDispatch, useSelector } from "react-redux";
 import { postBookingRequest } from "./booking.action";
 import { useState } from "react";
-import { tr } from "date-fns/locale";
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -123,7 +123,7 @@ const BookingRequest = (props) => {
                   {status === "PENDING" ? (
                     <TableCell component="th" scope="row">
                       <IconButton onClick={() => handleAgreement()}>
-                        <Icon style={{ color: "blue" }}>chat</Icon>
+                        <Icon style={{ color: "blue" }}>send</Icon>
                       </IconButton>
                     </TableCell>
                   ) : null}
