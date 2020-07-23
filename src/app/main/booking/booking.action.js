@@ -46,11 +46,17 @@ export const POST_BOOKING_FAILURE = "[BOOKING] POST BOOKING FAILURE";
 
 export const PUT_BOOKING_SUCCESS = "[BOOKING] PUT BOOKING SUCCESS";
 export const PUT_BOOKING_FAILURE = "[BOOKING] PUT BOOKING FAILURE";
-
+export const CREATE_BOOKING_REQUEST = "[BOOKING] CREATE BOOKING";
 export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 
+export function createBooking(booking) {
+  return {
+    type: CREATE_BOOKING_REQUEST,
+    payload: booking,
+  };
+}
 export function fetchCarSuccess(cars) {
   return {
     type: FETCH_CARS_SUCCESS,
@@ -530,6 +536,7 @@ export function notificationBooking(status, booking) {
       car: booking.car,
       owner: booking.lessor,
       renter: booking.renter,
+      bookingId: booking.id,
       createAt: new Date().getTime(),
     });
 }

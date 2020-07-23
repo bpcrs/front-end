@@ -9,10 +9,19 @@ import {
   CardActions,
   Button,
 } from "@material-ui/core";
-// import GetDate from '../../../common/getDate';
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { closeAgreement, changeChip, createAgreement } from "./chat.action";
+import {
+  closeAgreement,
+  changeChip,
+  createAgreement,
+  submitMessage,
+} from "./chat.action";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -31,38 +40,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = ({ message, receive, type = "SCOPE" }) => {
+const Message = ({ message, receive, type }) => {
+  // console.log("Create At ", createAt);
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const booking = useSelector((state) => state.chat.booking);
   const newAgreement = useSelector((state) => state.chat.newAgreement);
+  const [openImg, setOpenImg] = useState(false);
+  // const [insurance, setInsurance] = useState(false);
+  // console.log(insurance);
+
+  // const handleInsurance = () => {
+  //   setInsurance(true);
+  // };
+
+  const handleClickOpen = () => {
+    setOpenImg(true);
+  };
+
+  const handleClose = () => {
+    setOpenImg(false);
+  };
   const isRevice = userLogged.id !== receive;
   console.log(newAgreement);
-  const data = {
-    name: "Mileage limit",
-    value: 212,
-    approved: true,
-    criteriaId: 1,
-    bookingId: 35,
-  };
+
   async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));
-    // const agreement = dispatch(useSelector((state) => state.chat.newAgreement));
-    dispatch(createAgreement(newAgreement));
+    const send = `agree agreement ${type} with ${message}`;
+    submitMessage(send, userLogged.id, selectedUser.id, "DONE");
+    dispatch(createAgreement(name, message, booking.id));
     dispatch(closeAgreement());
   }
-  // const [mileageAgreement, setMileageAgreement] = useState({
-  //   value: message,
-  //   status: "CLOSE",
-  //   bookingId: 3,
-  //   criteriaId: 1,
-  // });
-  // const closeAgreementRequest = (type) => {
-  //   closeAgreement(type);
-  //   // dispatch(createAgreement(mileageAgreement));
-  // };
+
   const MessageByType = () => {
     switch (type) {
       case "Mileage limit":
@@ -123,7 +134,7 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
                   Agree
                 </Button>
                 <Button size="small" color="primary">
-                  Let't me think
+                  Let me think
                 </Button>
               </CardActions>
             ) : null}
@@ -144,18 +155,21 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
                 </Typography>
               </CardContent>
             </CardActionArea>
+
             {!isRevice ? (
               <CardActions>
                 <Button
                   size="small"
                   color="default"
                   variant="outlined"
-                  onClick={() => handleChangeChip("Insurance")}
+                  onClick={() => {
+                    handleChangeChip("Insurance");
+                  }}
                 >
                   Agree
                 </Button>
                 <Button size="small" color="primary">
-                  Let't me think
+                  Let me think
                 </Button>
               </CardActions>
             ) : null}
@@ -187,7 +201,7 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
                   Agree
                 </Button>
                 <Button size="small" color="primary">
-                  Let't me think
+                  Let me think
                 </Button>
               </CardActions>
             ) : null}
@@ -219,10 +233,54 @@ const Message = ({ message, receive, type = "SCOPE" }) => {
                   Agree
                 </Button>
                 <Button size="small" color="primary">
-                  Let't me think
+                  Let me think
                 </Button>
               </CardActions>
             ) : null}
+          </Card>
+        );
+      case "IMG":
+        return (
+          <Grid
+            className={classNames(isRevice ? "send" : "")}
+            style={{
+              textAlign: isRevice ? "left" : "right",
+            }}
+            item
+            lg={6}
+          >
+            <img
+              style={{ width: "100%" }}
+              src={message}
+              alt="img"
+              onClick={handleClickOpen}
+            />
+
+            <Dialog
+              open={openImg}
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <img style={{ width: "100%" }} src={message} alt="img" />
+            </Dialog>
+          </Grid>
+        );
+      case "DONE":
+        return (
+          <Card className="w-1/2">
+            <CardActionArea>
+              <CardContent>
+                <Typography gutterBottom variant="subtitle1">
+                  Agree Success
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {!isRevice
+                    ? `${selectedUser.displayName} ${message} `
+                    : `You ${message} `}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
           </Card>
         );
       default:

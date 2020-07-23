@@ -14,11 +14,18 @@ export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
+export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function getImgUrlFromFirebase(url) {
+  return {
+    type: GET_IMG_URL,
+    payload: url,
   };
 }
 export function getUsersRequest(users) {
@@ -81,7 +88,12 @@ export function updateChip(chips) {
 export function fetchCriteriaSuccess(critera) {
   return {
     type: FETCH_CRITERIA_SUCCESS,
-    payload: critera,
+    payload: critera.map((data) => ({
+      name: data.name,
+      approved: false,
+      value: 30,
+      criteriaId: data.id,
+    })),
   };
 }
 export function fetchAgreementSuccess(agreements) {
@@ -118,6 +130,7 @@ export function submitMessage(message, send, receive, type) {
       type,
     });
 }
+
 export async function getUser(id) {
   return await firebase.firestore().collection("users").doc(`${id}`).get();
 }
@@ -150,7 +163,13 @@ export function fetchAgreementList(id) {
     );
   };
 }
-export function createAgreement(agreement) {
+export function createAgreement(name, value, bookingId) {
+  const agreement = {
+    approved: true,
+    bookingId: bookingId,
+    criteriaName: name,
+    value: value,
+  };
   return (dispatch) => {
     console.log(agreement);
     const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
@@ -178,4 +197,22 @@ export function getBookingRequest(id) {
       }
     );
   };
+}
+
+export function storeImage(img, send, receive) {
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const date = new Date().getTime();
+  const uploadTask = firebase
+    .storage()
+    .ref("Chat/" + date)
+    .child(img.name);
+
+  uploadTask.put(img, metadata).then(function (result) {
+    uploadTask.getDownloadURL().then(function (url) {
+      console.log("file available at ", url);
+      submitMessage(url, send, receive, "IMG");
+    });
+  });
 }

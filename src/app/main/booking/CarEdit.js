@@ -93,12 +93,15 @@ export default function CarEdits(props) {
   };
 
   useEffect(() => {
+    const { carId } = props.location.state;
+    console.log("check carID 02: " + carId)
+
     const fetchCar = () => {
-      dispatch(fetchCarDetail(props.match.params.id));
+      dispatch(fetchCarDetail(carId));
       setCurrentCar(carDetail);
     };
     fetchCar();
-    dispatch(fetchImageList(1, 10, props.match.params.id));
+    // dispatch(fetchImageList(1, 10, carId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carDetail.id]);
 

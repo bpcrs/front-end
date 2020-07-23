@@ -118,54 +118,35 @@ const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
-  // const carDetail = useSelector((state) => state.booking.carDetail);
-  // const chip = useSelector((state) => state.chat.chip);
   const { info, renter, chipList } = props || {};
-  // const [is]
-  // const [chipData, setChipData] = useState([]);
-  // console.log(
-  //   "Chip list ",
-  //   chipList.filter((item) => item.name !== "Insurance" && item.name !== "Indemnification")
-  // );
-  // console.log(renter);
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
-  // const [bookingReq, setBookingReq] = useState([]);
-
-  const setSelectedContact = (id, isRental) => {
-    console.log(id, userLogged.id);
+  const setSelectedContact = (id, email, isRental) => {
+    // const isRental = email === userLogged.email;
+    console.log("isRental ", isRental);
+    // console.log(id, userLogged.id);
     dispatch(setSelectedUser(users.find((u) => u.id === id)));
     const ref = firebase
       .firestore()
       .collection("notification")
-      .doc(Boolean(isRental) ? `${id}` : `${userLogged.id}`)
+      .doc(!isRental ? `${userLogged.email}` : `${email}`)
       .collection("requests");
-    // .orderBy("createAt", "desc")
-    // .limitToLast(10);
+
     const query = ref
-      .where("rent", "==", Boolean(isRental) ? userLogged.id : id)
-      // .orderBy("createAt", "desc")
-      // .limit(1)
-      // .limitToLast(10)
+      .where(
+        "renter.email",
+        "==",
+        !isRental ? `${email}` : `${userLogged.email}`
+      )
       .get()
       .then(function (querySnapshot) {
         console.log(querySnapshot.docs[0].data().bookingId);
         dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
-        // querySnapshot.forEach(function (doc) {
-        //   console.log(doc.data().bookingId);
-
-        //   dispatch(getBookingRequest(doc.data().bookingId));
-        // });
       })
-      // .onSnapshot((ns) => {
-      //   console.log(ns.data().bookingId);
-      //   dispatch(getBookingRequest(ns.data().bookingId));
-      // })
       .catch(function (error) {
         console.log(error);
       });
     console.log(query);
-    // async function getR
     if (isRental) {
       dispatch(
         updateChip(
@@ -196,7 +177,6 @@ const ContactList = (props) => {
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-    // setChipData(chipList);
   }, [userLogged.id, info]);
   const ContactButton = ({
     displayName,
@@ -207,7 +187,7 @@ const ContactList = (props) => {
     isRental,
   }) => (
     <Box
-      onClick={() => setSelectedContact(id, isRental)}
+      onClick={() => setSelectedContact(id, email, isRental)}
       className={isActive ? classes.contactButton : ""}
     >
       <Grid container className="px-8 py-8">
@@ -271,13 +251,7 @@ const ContactList = (props) => {
       ) : (
         <Grid>
           {users
-            // .filter(
-            //   (request) => {
-            //     return renter.some((f) => {
-            //       return f.email === request.email;
-            //     });
-            //   }
-            // )
+            .filter((user) => user.email !== userLogged.email)
             .map((user, index) => (
               <Grid
                 key={user.id}

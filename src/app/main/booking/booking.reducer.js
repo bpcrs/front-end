@@ -11,10 +11,18 @@ const initialState = {
   filterCars: [],
   models: [],
   agreemnts: [],
+  booking: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.CREATE_BOOKING_REQUEST: {
+      return {
+        ...state,
+        booking: payload,
+        loading: false,
+      };
+    }
     case Actions.FETCH_CARS_SUCCESS: {
       return {
         ...state,
@@ -94,7 +102,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        reviews : [...state.reviews, payload]
+        reviews: [...state.reviews, payload],
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {

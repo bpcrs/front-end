@@ -48,13 +48,13 @@ const chatReducer = (state = initialState, { type, payload }) => {
     case Actions.CHANGE_CHIP: {
       console.log(payload);
       // dispatchEvent()
-      const chipNeedChange = state.chip.findIndex(
+      const agreementNeedChange = state.criteria.findIndex(
         (item) => item.name === payload.name
       );
 
-      console.log(chipNeedChange);
-      const updateChip = state.chip.map((item, index) => {
-        if (index !== chipNeedChange) {
+      console.log(agreementNeedChange);
+      const updateAgreement = state.criteria.map((item, index) => {
+        if (index !== agreementNeedChange) {
           return item;
         }
         return {
@@ -64,8 +64,8 @@ const chatReducer = (state = initialState, { type, payload }) => {
       });
       return {
         ...state,
-        chip: updateChip,
-        newAgreement: updateChip[chipNeedChange],
+        criteria: updateAgreement,
+        newAgreement: updateAgreement[agreementNeedChange],
       };
     }
     case Actions.INIT_CHIP: {
