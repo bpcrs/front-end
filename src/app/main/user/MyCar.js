@@ -63,6 +63,12 @@ const MyCar = (props) => {
     // window.open
   };
 
+  const handleAddCar = () => {
+    history.push({
+      pathname: APP_PATH.CAR_SUBMIT,
+    });
+  };
+
   const handleClickBooked = (carId, carName) => {
     setIsDetail(true);
     setDetail(carId);
@@ -76,6 +82,10 @@ const MyCar = (props) => {
   return !isDetail ? (
     <Grid>
       {/* <Typography>My Cars</Typography> */}
+      <IconButton onClick={handleAddCar}>
+        <Icon style={{ color: "blue" }}>playlist_add</Icon>
+        <Typography style={{ color: "blue" }}>Add car</Typography>
+      </IconButton>
       <TableContainer>
         <Table
           className={classes.table}
@@ -136,7 +146,7 @@ const MyCar = (props) => {
     <Grid>
       <IconButton onClick={() => setIsDetail(false)}>
         <Icon>arrow_back</Icon>
-        <Typography>My cars</Typography>
+        <Typography>Back</Typography>
       </IconButton>
       <Grid
         item

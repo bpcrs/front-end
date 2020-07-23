@@ -18,6 +18,7 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { useDispatch, useSelector } from "react-redux";
 import { postBookingRequest } from "./booking.action";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,14 +44,21 @@ const useStyles = makeStyles((theme) => ({
 export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { bookingChange, carDetail, fromDate, toDate } = props.location.state;
+  const {
+    bookingChange,
+    carDetail,
+    fromDate,
+    toDate,
+    totalPrice,
+  } = props.location.state;
   // const { info } = props;
+  const [checkTerms, SetCheckTerms] = useState(false);
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
-  // const bookingInStore = useSelector((state) => state.booking.booking);
-  // console.log(carDetail.owner.id);
 
-  // console.log("Booking ", bookingReq);
+  const handleCheckBox = () => {
+    SetCheckTerms(!checkTerms);
+  };
   const convert = (str) => {
     var date = new Date(str),
       mnth = ("0" + (date.getMonth() + 1)).slice(-2),
@@ -71,6 +79,7 @@ export default function ViewBooking(props) {
     price: carDetail.price,
     lessorId: carDetail.owner.id,
     renterId: currentUser.id,
+    totalPrice: totalPrice,
   };
 
   console.log("Booking request", bookingReq);
@@ -120,6 +129,16 @@ export default function ViewBooking(props) {
                     fullWidth
                     disabled
                     value={bookingChange.destination.description}
+                  />
+                </FormControl>
+                <FormControl fullWidth className={classes.spacingCard}>
+                  <TextField
+                    id="destinaion-basic"
+                    label="Estimate price"
+                    variant="outlined"
+                    fullWidth
+                    disabled
+                    value={bookingReq.totalPrice}
                   />
                 </FormControl>
               </Grid>
@@ -226,8 +245,8 @@ export default function ViewBooking(props) {
             <FormControlLabel
               control={
                 <Checkbox
-                  // checked={state.checkedB}
-                  // onChange={handleChange}
+                  checked={checkTerms}
+                  onChange={handleCheckBox}
                   name="checkedB"
                   color="primary"
                 />
@@ -248,6 +267,7 @@ export default function ViewBooking(props) {
               onClick={handleBooking}
               variant="contained"
               fullWidth
+              disabled={!checkTerms}
             >
               Book
             </Button>
