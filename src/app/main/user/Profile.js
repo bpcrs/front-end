@@ -22,7 +22,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
 import RentalCarRequest from "./RentalCarRequest";
-import CarInformationProfile from "./CarInformationProfile";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
@@ -222,11 +221,11 @@ const Profile = (props) => {
           </Grid>
           <Grid item xs={9} sm={9}>
             <TabPanel value={tab} index={0}>
-              <CarInformationProfile />
+              <MyCar />
             </TabPanel>
             <TabPanel value={tab} index={1}></TabPanel>
             <TabPanel value={tab} index={2}>
-              <h2>Payment Method</h2>
+              {/* <h2>Payment Method</h2> */}
             </TabPanel>
             <TabPanel value={tab} index={3}>
               <MyBooking />
