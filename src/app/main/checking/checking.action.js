@@ -1,4 +1,4 @@
-import { GET, ENDPOINT } from "../../services/api";
+import { GET, PUT, ENDPOINT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
 
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
@@ -7,12 +7,14 @@ export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 export const FETCH_CAR_DETAIL_CHECKING_SUCCESS = "[CAR_DETAIL_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_CHECKING_FAILURE = "[CAR_DETAIL_CHECKING] FETCH DATA FAILURE";
 
-export const FETCH_BRAND_SUCCESS = "[BRAND] FETCH BRAND SUCCESS";
-export const FETCH_BRAND_FAILURE = "[BRAND] FETCH BRAND FAILURE";
+export const FETCH_USER_CHECKING_SUCCESS = "[USER_CHECKING] FETCH DATA SUCCESS";
+export const FETCH_USER_CHECKING_FAILURE = "[USER_CHECKING] FETCH DATA SUCCESS";
 
-export const FETCH_MODEL_SUCCESS = "[MODEL] FETCH MODEL SUCCESS";
-export const FETCH_MODEL_FAILURE = "[MODEL] FETCH MODEL FAILURE";
+export const FETCH_USER_DETAIL_CHECKING_SUCCESS = "[USER_DETAIL_CHECKING] FETCH DATA SUCCESS";
+export const FETCH_USER_DETAIL_CHECKING_FAILURE = "[USER_DETAIL_CHECKING] FETCH DATA FAILURE";
 
+export const PUT_CAR_EDIT_CHECK_SUCCESS = "[CAR_EDIT_CHECK] PUT DATA SUCCESS";
+export const PUT_CAR_EDIT_CHECK_FAILURE = "[CAR_EDIT_CHECK] PUT DATA FAILURE";
 
 export function fetchCarCheckingSuccess(cars) {
     return {
@@ -42,38 +44,56 @@ export function fetchCarDetaiCheckingFailure(error) {
     }
 }
 
-export function fetchBrandsSuccess(brands) {
+export function fetchUserCheckingSuccess(users) {
     return {
-        type: FETCH_BRAND_SUCCESS,
-        payload: brands,
+        type: FETCH_USER_CHECKING_SUCCESS,
+        payload: users,
+    }
+}
+
+export function fetchUserCheckingFailure(error) {
+    return {
+        type: FETCH_USER_CHECKING_FAILURE,
+        payload: error,
+    }
+}
+
+export function fetchUserDetailCheckingSuccess(user) {
+    return {
+        type: FETCH_USER_DETAIL_CHECKING_SUCCESS,
+        payload: user,
+    }
+}
+
+export function fetchUserDetailCheckingFailure(error) {
+    return {
+        type: FETCH_USER_DETAIL_CHECKING_FAILURE,
+        payload: error
+    }
+}
+
+export function putCarEditSuccess(car) {
+    return {
+        type: PUT_CAR_EDIT_CHECK_SUCCESS,
+        payload: car,
     };
 }
 
-export function fetchBrandsFailure(error) {
+export function putCarEditFailure(error) {
     return {
-        type: FETCH_BRAND_FAILURE,
+        type: PUT_CAR_EDIT_CHECK_FAILURE,
         payload: error,
     };
 }
 
-export function fetchModelsSuccess(models) {
-    return {
-        type: FETCH_MODEL_SUCCESS,
-        payload: models,
-    };
-}
-
-export function fetchModelsFailure(error) {
-    return {
-        type: FETCH_MODEL_FAILURE,
-        payload: error,
-    };
-}
-
-export function fetchCarCheckingAdmin() {
+export function fetchCarCheckingAdmin(isAvailable, page, size) {
     return (dispatch) => {
         // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
-        const request = GET(ENDPOINT.CAR_CONTROLLER_ADMIN_GETALL);
+        const request = GET(ENDPOINT.CAR_CONTROLLER_ADMIN_GETALL, {
+            isAvailable,
+            page,
+            size,
+        });
         request.then(
             (response) => {
                 if (response.success) {
@@ -109,29 +129,35 @@ export function fetchCarDetailCheck(carId) {
     }
 }
 
-export function fetchBrandList(page, size) {
+export function fetchUserListChecking() {
     return (dispatch) => {
-        const request = GET(ENDPOINT.BRAND_CONTROLLER_GETALL, {
-            page,
-            size,
-        });
+        const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETALL);
         request.then(
             (response) => {
-                dispatch(fetchBrandsSuccess(response.success ? response.data : []));
+                if (response.success) {
+                    dispatch(fetchUserCheckingSuccess(response.data));
+                } else {
+                    dispatch(showMessageError(response.message));
+                }
             },
             (error) => {
+                dispatch(fetchUserCheckingFailure(error));
                 dispatch(showMessageError(error.message));
             }
-        );
-    };
+        )
+    }
 }
 
-export function fetchModelList() {
+export function putCarUpdate(id, car) {
     return (dispatch) => {
-        const request = GET(ENDPOINT.MODEL_CONTROLLER_GETALL);
+        const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
         request.then(
             (response) => {
-                dispatch(fetchModelsSuccess(response.success ? response.data : []));
+                if (response.success) {
+                    dispatch(putCarEditSuccess(response.data));
+                } else {
+                    dispatch(showMessageError(response.message));
+                }
             },
             (error) => {
                 dispatch(showMessageError(error.message));

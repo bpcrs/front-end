@@ -11,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { fetchCarCheckingAdmin } from "./checking.action";
-import TablePagination from '@material-ui/core/TablePagination';
-
+import Pagination from "@material-ui/lab/Pagination";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,23 +48,12 @@ export default function CheckCar() {
     const history = useHistory();
     const dispatch = useDispatch();
     const cars = useSelector((state) => state.checking.cars);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const size = 2;
+    const isAvailable = false;
     useEffect(() => {
-        dispatch(fetchCarCheckingAdmin());
-    }, [dispatch]);
-
-
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(2);
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
+        dispatch(fetchCarCheckingAdmin(isAvailable, currentPage, size));
+    }, [isAvailable, currentPage, dispatch]);
 
     const handleCickSetting = (carId) => {
         history.push({
@@ -76,73 +65,84 @@ export default function CheckCar() {
     };
 
     return (
-        <div>
-            <TableContainer>
-                <Table
-                    className={classes.table}
-                    aria-label="customized table"
-                    width="100%"
-                >
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>Name</StyledTableCell>
-                            <StyledTableCell>Date Create</StyledTableCell>
-                            <StyledTableCell>Owner</StyledTableCell>
-                            <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell>Action</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            cars.data &&
-                            cars.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((car, index) => (
-                                <StyledTableRow style={{ wordWrap: "break-word", textAlign: "center" }} key={index}>
 
-                                    <TableCell component="th" scope="row">
-                                        {car.name}
-                                    </TableCell>
+        <Grid container>
 
-                                    <TableCell component="th" scope="row">
-                                        {new Date(car.createdDate).toLocaleDateString()}
-                                    </TableCell>
+            <Grid xs={12} lg={12}>
+                <TableContainer>
+                    <Table
+                        className={classes.table}
+                        aria-label="customized table"
+                        width="100%"
+                    >
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>Name</StyledTableCell>
+                                <StyledTableCell>Date Create</StyledTableCell>
+                                <StyledTableCell>Owner</StyledTableCell>
+                                <StyledTableCell>Status</StyledTableCell>
+                                <StyledTableCell>Action</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {
+                                cars.data &&
+                                cars.data.map((car, index) => (
+                                    <StyledTableRow style={{ wordWrap: "break-word", textAlign: "center" }} key={index}>
 
-                                    <TableCell component="th" scope="row">
-                                        <CardHeader
-                                            avatar={
-                                                <Avatar
-                                                    aria-label="recipe"
-                                                    className={classes.avatar}
-                                                    src={car.owner.imageUrl}
-                                                ></Avatar>
-                                            }
-                                            title={car.owner.fullName}
-                                        // subheader="on rent"
-                                        />
-                                    </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {car.name}
+                                        </TableCell>
 
-                                    <TableCell component="th" scope="row">
-                                        {car.status}
-                                    </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {new Date(car.createdDate).toLocaleDateString()}
+                                        </TableCell>
 
-                                    <TableCell component="th" scope="row">
-                                        <SettingIcon onClick={() => handleCickSetting(car.id)}/>
-                                    </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar
+                                                        aria-label="recipe"
+                                                        className={classes.avatar}
+                                                        src={car.owner.imageUrl}
+                                                    ></Avatar>
+                                                }
+                                                title={car.owner.fullName}
+                                            // subheader="on rent"
+                                            />
+                                        </TableCell>
 
-                                </StyledTableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TablePagination
-                rowsPerPageOptions={[2, 3, 4]}
-                component="div"
-                count={cars.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onChangePage={handleChangePage}
-                onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-        </div>
+                                        <TableCell component="th" scope="row">
+                                            <div className={classNames("inline text-12 p-4 rounded truncate", "bg-red text-white")}
+                                                 >{car.status}</div>
+                                        </TableCell>
+
+                                        <TableCell component="th" scope="row">
+                                            <SettingIcon onClick={() => handleCickSetting(car.id)} />
+                                        </TableCell>
+
+                                    </StyledTableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Grid>
+
+
+            <Grid xs={12} lg={12} item container justify="flex-end">
+                <Pagination
+                    count={
+                        cars.count !== 0 &&
+                            cars.count % size === 0
+                            ? Math.floor(cars.count / size)
+                            : Math.floor(cars.count / size) + 1
+                    }
+                    color="primary"
+                    onChange={(e, page) => setCurrentPage(page)}
+                />
+            </Grid>
+
+        </Grid>
     );
 }

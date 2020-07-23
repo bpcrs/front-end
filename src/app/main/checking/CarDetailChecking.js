@@ -9,8 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import PublishIcon from "@material-ui/icons/Publish";
+import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchCarDetailCheck, fetchBrandList, fetchModelList } from "./checking.action";
+import { fetchCarDetailCheck, putCarUpdate } from "./checking.action";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -48,19 +49,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CarDetailChecking(props) {
-    const { carId } = props.location.state;
     const classes = useStyles();
     const history = useHistory();
     const dispatch = useDispatch();
     const carDetail = useSelector((state) => state.checking.carDetail);
-    const brands = useSelector((state) => state.checking.brands);
-    const models = useSelector((state) => state.checking.models);
-   
+    const [currentCar, setCurrentCar] = useState({});
+    const changePage = useSelector((state) => state.checking.changePage);
+
     useEffect(() => {
-        dispatch(fetchCarDetailCheck(carId));
-        dispatch(fetchBrandList());
-        dispatch(fetchModelList());
-    }, [dispatch])
+        const { carId } = props.location.state;
+
+        const fetchCar = () => {
+            dispatch(fetchCarDetailCheck(carId));
+            setCurrentCar(carDetail);
+        };
+        fetchCar();
+
+        if (changePage) {
+            history.push({
+                pathname: APP_PATH.CHECKING,
+            });
+        }
+    }, [carDetail.id, changePage])
+
+    
+    const handleValueAutoDrive = (state) => {
+        if (state) {
+            return "TRUE";
+        }
+        else {
+            return "FALSE";
+        }
+    };
+
+    const handleAcceptCar = () => {
+        dispatch(putCarUpdate(currentCar.id, {
+            available: true,
+            status: "AVAILABLE",
+        }));
+    };
+
 
     return (
         <Layout name="Car checking form">
@@ -78,6 +106,8 @@ export default function CarDetailChecking(props) {
                                         className={classes.textField}
                                         label="Brand"
                                         variant="outlined"
+                                        value={currentCar.brand ? currentCar.brand.name : ""}
+                                        disabled
                                     />
                                 </Grid>
 
@@ -86,6 +116,8 @@ export default function CarDetailChecking(props) {
                                         className={classes.textField}
                                         label="Model"
                                         variant="outlined"
+                                        value={currentCar.model ? currentCar.model.name : ""}
+                                        disabled
                                     />
                                 </Grid>
                             </Grid>
@@ -95,7 +127,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="year"
                                     name="year"
-                                    value={carDetail.year}
+                                    value={currentCar.year ? currentCar.year : ""}
                                     disabled
                                     label="Years"
                                     variant="outlined"
@@ -106,7 +138,7 @@ export default function CarDetailChecking(props) {
                                 <TextField
                                     className={classes.textField}
                                     id="name"
-                                    value={carDetail.name}
+                                    value={currentCar.name ? currentCar.name : ""}
                                     disabled
                                     label="Name"
                                     name="name"
@@ -120,6 +152,8 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     label="Auto Drive"
                                     variant="outlined"
+                                    value={handleValueAutoDrive(currentCar.autoDrive)}
+                                    disabled
                                 />
                             </Grid>
                         </Card>
@@ -137,7 +171,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="vin"
                                     name="vin"
-                                    value={carDetail.vin}
+                                    value={currentCar.vin ? currentCar.vin : ""}
                                     disabled
                                     label="Vin number"
                                     variant="outlined"
@@ -155,7 +189,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="seat"
                                     name="seat"
-                                    value={carDetail.seat}
+                                    value={currentCar.seat ? currentCar.seat : ""}
                                     disabled
                                     label="Seat"
                                     variant="outlined"
@@ -173,7 +207,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="sound"
                                     name="sound"
-                                    value={carDetail.sound}
+                                    value={currentCar.sound ? currentCar.sound : ""}
                                     disabled
                                     label="Sound"
                                     variant="outlined"
@@ -191,7 +225,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="screen"
                                     name="screen"
-                                    value={carDetail.screen}
+                                    value={currentCar.screen ? currentCar.screen : ""}
                                     disabled
                                     label="Screen"
                                     variant="outlined"
@@ -208,7 +242,7 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="price"
                                     name="price"
-                                    value={carDetail.price}
+                                    value={currentCar.price ? currentCar.price : ""}
                                     disabled
                                     label="Price (per day)"
                                     variant="outlined"
@@ -226,8 +260,8 @@ export default function CarDetailChecking(props) {
                                     className={classes.textField}
                                     id="plateNum"
                                     name="plateNum"
-                                    value={carDetail.plateNum}
-                                    // disabled
+                                    value={currentCar.plateNum ? currentCar.plateNum : ""}
+                                    disabled
                                     label="Plate number"
                                     variant="outlined"
 
@@ -241,45 +275,19 @@ export default function CarDetailChecking(props) {
                     <Card className={classes.card}>
                         <div className="mt-20">
                             <Grid container>
-                                <Grid item xs={12} lg={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 1</p>
-                                        <p>
-                                            <img id="output" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 2</p>
-                                        <p>
-                                            <img
-                                                id="output2"
-                                                width="200"
-                                                height="200"
-                                            />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6} sm={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 3</p>
-                                        <p>
-                                            <img id="output3" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6} sm={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 4</p>
-                                        <p>
-                                            <img id="output4" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
+                                {
+                                    currentCar.images &&
+                                    currentCar.images.map((image, index) => (
+                                        <Grid item xs={12} lg={6} key={index}>
+                                            <div style={{ textAlign: "center" }}>
+                                                <p>Picture {index + 1}</p>
+                                                <p>
+                                                    <img src={image.link} id="output" width="200" height="200" />
+                                                </p>
+                                            </div>
+                                        </Grid>
+                                    ))
+                                }
                             </Grid>
                         </div>
                     </Card>
@@ -287,14 +295,27 @@ export default function CarDetailChecking(props) {
             </Grid>
 
             <Grid container justify="center">
-                <Button
-                    variant="contained"
-                    color="primary"
-
-                    startIcon={<PublishIcon />}
-                >
-                    Submit
+                <Grid item xs={6} lg={6}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleAcceptCar()}
+                        startIcon={<PublishIcon />}
+                        style={{ marginLeft: "30%" }}
+                    >
+                        Accept
         </Button>
+                </Grid>
+
+                <Grid item xs={6} lg={6}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        startIcon={<CancelIcon />}
+                        style={{ marginLeft: "30%" }}
+                    >
+                        Deny
+        </Button></Grid>
             </Grid>
         </Layout>
     );

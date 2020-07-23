@@ -119,14 +119,14 @@ export default function Cheking() {
 
                         <TabPanel value={tab} index={0}>
                             <div style={{ backgroundColor: "#E0E0E0", height: "100%" }}>
-                                <h2>Personal Information</h2>
+                                <h2>Personal Checking</h2>
                                 <CheckUser />
                             </div>
                         </TabPanel>
 
                         <TabPanel value={tab} index={1}>
                             <div>
-                                <h2>Car Information</h2>
+                                <h2>Car Checking</h2>
                                 <CheckCar />
                             </div>
                         </TabPanel>

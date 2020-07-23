@@ -3,9 +3,10 @@ import * as Actions from "./checking.action";
 const initialState = {
     cars: [],
     carDetail: {},
-    brands: [],
-    models: [],
     images: [],
+    users: [],
+    loading: false,
+    changePage: false,
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
@@ -20,6 +21,18 @@ const CheckingReducer = (state = initialState, { type, payload }) => {
             return{
                 ...state,
                 carDetail: payload,
+            }
+        }
+        case Actions.FETCH_USER_CHECKING_SUCCESS: {
+            return{
+                ...state,
+                users: payload,
+            }
+        }
+        case Actions.PUT_CAR_EDIT_CHECK_SUCCESS:{
+            return {
+                ...state,
+                changePage: true,
             }
         }
         default: {
