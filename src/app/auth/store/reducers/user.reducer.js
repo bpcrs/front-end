@@ -38,10 +38,6 @@ const user = function (state = initialState, action) {
             photoURL: userFromToken.imageUrl,
             email: userFromToken.email,
             id: userFromToken.id,
-            city: userFromToken.city,
-            district: userFromToken.district,
-            ward: userFromToken.ward,
-            street: userFromToken.street,
           },
         };
       }

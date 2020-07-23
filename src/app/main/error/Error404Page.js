@@ -2,6 +2,7 @@ import React from "react";
 import { Typography, Button } from "@material-ui/core";
 import { FuseAnimate } from "@fuse";
 import { Link } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 
 const Error404Page = () => {
   return (
@@ -24,7 +25,7 @@ const Error404Page = () => {
         </FuseAnimate>
         <br />
         <Button color="primary" variant="outlined">
-          <Link className="font-medium" to="/">
+          <Link className="font-medium" to={APP_PATH.HOME}>
             Go back to home
           </Link>
         </Button>

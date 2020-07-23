@@ -9,6 +9,7 @@ import {
   Typography,
   IconButton,
   Icon,
+  Box,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -63,87 +64,99 @@ const BookingRequest = (props) => {
       pathname: APP_PATH.CHAT,
     });
   };
-
   useEffect(() => {
-    dispatch(fetchBookingRequest(currentUser.id, status, currentPage, size));
+    dispatch(
+      fetchBookingRequest(
+        currentUser.id,
+        status && status.map((item) => item.name),
+        currentPage,
+        size
+      )
+    );
   }, [currentPage, dispatch, currentUser.id, status]);
 
   return (
     <Grid>
-      <Typography></Typography>
-      <TableContainer>
-        <Table
-          className={classes.table}
-          aria-label="customized table"
-          width="100%"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Car Name</StyledTableCell>
-              <StyledTableCell>Time Rental</StyledTableCell>
-              <StyledTableCell>Start date</StyledTableCell>
-              <StyledTableCell>Status</StyledTableCell>
-              {status === "PENDING" ? (
-                <StyledTableCell>Agreement</StyledTableCell>
-              ) : null}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <Backdrop className={classes.backdrop} open={loading}>
-              <CircularProgress color="inherit" />
-            </Backdrop>
-            {myBookings.data &&
-              myBookings.data.map((booking, index) => (
-                // <Grid item xs={12} xl={12} lg={12}>
-                <TableRow
-                  className="h-64 cursor-pointer"
-                  hover
-                  // role="checkbox"
-                  // aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={index}
-                  // selected={isSelected}
-                >
-                  <TableCell component="th" scope="row">
-                    {booking.car.name}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {Math.round(
-                      (new Date(booking.toDate) - new Date(booking.fromDate)) /
-                        (1000 * 60 * 60 * 24)
-                    ) + 1}{" "}
-                    days
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {new Date(booking.fromDate).toDateString()}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <BookingStatus name={booking.status} />
-                  </TableCell>
-                  {status === "PENDING" ? (
+      <Box hidden={myBookings.data && myBookings.data.length !== 0}>
+        <Typography>We did't find any booking</Typography>
+      </Box>
+
+      <Box hidden={!myBookings.data || myBookings.data.length === 0}>
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-label="customized table"
+            width="100%"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Car Name</StyledTableCell>
+                <StyledTableCell>Time Rental</StyledTableCell>
+                <StyledTableCell>Start date</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
+                {status === "PENDING" ? (
+                  <StyledTableCell>Agreement</StyledTableCell>
+                ) : null}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
+              {myBookings.data &&
+                myBookings.data.map((booking, index) => (
+                  // <Grid item xs={12} xl={12} lg={12}>
+                  <TableRow
+                    className="h-64 cursor-pointer"
+                    hover
+                    // role="checkbox"
+                    // aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={index}
+                    // selected={isSelected}
+                  >
                     <TableCell component="th" scope="row">
-                      <IconButton onClick={() => handleAgreement()}>
-                        <Icon style={{ color: "blue" }}>send</Icon>
-                      </IconButton>
+                      {booking.car.name}
                     </TableCell>
-                  ) : null}
-                </TableRow>
-                // </Grid>
-              ))}
-            <Grid xs={12} lg={12} item container justify="flex-end">
-              <Pagination
-                count={
-                  myBookings.count !== 0 && myBookings.count % size === 0
-                    ? Math.floor(myBookings.count / size)
-                    : Math.floor(myBookings.count / size) + 1
-                }
-                color="primary"
-                onChange={(e, page) => setCurrentPage(page)}
-              />
-            </Grid>
-          </TableBody>
-        </Table>
-      </TableContainer>
+                    <TableCell component="th" scope="row">
+                      {Math.round(
+                        (new Date(booking.toDate) -
+                          new Date(booking.fromDate)) /
+                          (1000 * 60 * 60 * 24)
+                      ) + 1}{" "}
+                      days
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      {new Date(booking.fromDate).toDateString()}
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                      <BookingStatus name={booking.status} />
+                    </TableCell>
+                    {status === "PENDING" ? (
+                      <TableCell component="th" scope="row">
+                        <IconButton onClick={() => handleAgreement()}>
+                          <Icon style={{ color: "blue" }}>send</Icon>
+                        </IconButton>
+                      </TableCell>
+                    ) : null}
+                  </TableRow>
+                  // </Grid>
+                ))}
+              <Grid xs={12} lg={12} item container justify="flex-end">
+                <Pagination
+                  count={
+                    myBookings.count !== 0 && myBookings.count % size === 0
+                      ? Math.floor(myBookings.count / size)
+                      : Math.floor(myBookings.count / size) + 1
+                  }
+                  color="primary"
+                  onChange={(e, page) => setCurrentPage(page)}
+                />
+              </Grid>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Grid>
   );
 };

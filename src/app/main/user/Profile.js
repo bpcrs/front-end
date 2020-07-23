@@ -210,7 +210,7 @@ const Profile = (props) => {
               <Tab
                 // icon={<HistoryIcon />}
                 label="My Booking"
-                {...a11yProps(3)}
+                {...a11yProps(2)}
               />
               <Tab
                 // icon={<UpdateIcon />}
@@ -225,9 +225,6 @@ const Profile = (props) => {
             </TabPanel>
             <TabPanel value={tab} index={1}></TabPanel>
             <TabPanel value={tab} index={2}>
-              {/* <h2>Payment Method</h2> */}
-            </TabPanel>
-            <TabPanel value={tab} index={3}>
               <MyBooking />
             </TabPanel>
             <TabPanel value={tab} index={3}></TabPanel>
