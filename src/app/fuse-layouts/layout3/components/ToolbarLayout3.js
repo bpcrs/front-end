@@ -44,9 +44,9 @@ const ToolbarLayout3 = () => {
                             <FuseSearch/>
                             <div className={classes.separator}/>
                         </Hidden> */}
-            <div className={classes.separator} />
+            {/* <div className={classes.separator} /> */}
             <UserMenu />
-            <Notification />
+            {/* <Notification /> */}
             {/* <Grid className={classes.notification}>
               <Icon>notifications_none</Icon>
             </Grid>

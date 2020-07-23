@@ -107,7 +107,7 @@ function Landing() {
   return (
     <div className={classes.paper}>
       <LandingProvider primary="#5D21D2">
-        <NavBar
+        {/* <NavBar
           logo={<Logo />}
           navs={[
             <Button variant="text">Features</Button>,
@@ -141,7 +141,7 @@ function Landing() {
               {userLogged.id === 0 ? "Login" : userLogged.displayName}
             </Button>,
           ]}
-        />
+        /> */}
         <Hero
           heading={
             <Typography variant="h5">
