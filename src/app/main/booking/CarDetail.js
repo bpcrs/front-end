@@ -41,8 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   media: {
-    height: 140,
+    height: 160,
     width: "100%",
+    marginLeft: theme.spacing(22),
   },
   review: {
     margin: theme.spacing(1),
@@ -53,6 +54,10 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     color: theme.palette.text.secondary,
+    width: "100%",
+  },
+  imgs: {
+    height: 100,
     width: "100%",
   },
 }));
@@ -109,6 +114,12 @@ export default function CarDetails(props) {
     bookingChange.fromDate,
     bookingChange.toDate,
   ]);
+  const fakeImg =
+    "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
+  // console.log(carDetail.images[0]);
+  const [image, setImage] = useState(
+    carDetail.images ? carDetail.images[0].link : fakeImg
+  );
   const handleBookingChange = () => {
     console.log(bookingChange);
     history.push({
@@ -120,6 +131,9 @@ export default function CarDetails(props) {
         toDate: selectedDate[1],
       },
     });
+  };
+  const handleClickImageCar = (image) => {
+    setImage(image);
   };
   // console.log("Booking change", bookingChange);
   const summaryPrice =
@@ -167,14 +181,38 @@ export default function CarDetails(props) {
                 </Typography>
 
                 <Grid container spacing={1}>
-                  <Grid item xs={12} sm={6}>
-                    <CardMedia
-                      className={classes.media}
-                      image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-                      title="Contemplative Reptile"
-                    />
+                  <Grid xs={6} sm={6}>
+                    <Grid>
+                      {carDetail.images ? (
+                        <CardMedia
+                          className={classes.media}
+                          image={image}
+                          title="Contemplative Reptile"
+                        />
+                      ) : (
+                        <CardMedia
+                          className={classes.media}
+                          image={image}
+                          title="Contemplative Reptile"
+                        />
+                      )}
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item container>
+                    {carDetail.images &&
+                      carDetail.images.map((image, index) => (
+                        <Grid lg item>
+                          <CardMedia
+                            key={index}
+                            className={classes.imgs}
+                            image={image.link}
+                            title="Contemplative Reptile"
+                            onClick={() => handleClickImageCar(image.link)}
+                          />
+                        </Grid>
+                      ))}
+                  </Grid>
+                  <Grid item xs={12} sm={12}>
                     <Typography
                       gutterBottom
                       variant="h6"
@@ -240,7 +278,7 @@ export default function CarDetails(props) {
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
-                              {carDetail.model}
+                              {carDetail.model ? carDetail.model.name : ""}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -301,7 +339,7 @@ export default function CarDetails(props) {
               <CardContent>
                 <Grid spacing={1} container alignItems="baseline">
                   <Icon>gps_fixed</Icon>
-                  <Typography variant="h6">Pick-up</Typography>
+                  <Typography variant="h6">Info</Typography>
                 </Grid>
                 <div className={classes.paper}></div>
                 <DateRangePicker
