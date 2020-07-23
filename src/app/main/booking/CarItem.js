@@ -189,7 +189,7 @@ export default function CarItem(props = { isAction: true }) {
                     displayType={"text"}
                     thousandSeparator={true}
                     // prefix={"$"}
-                    suffix={" VNĐ"}
+                    suffix={" đ"}
                   />
                 }
               </Typography>
