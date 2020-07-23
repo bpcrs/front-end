@@ -15,11 +15,11 @@ import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCarInformationOwner } from "./profile.action";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 
 import CarStatus from "./CarStatus";
-import RentalCarRequest from "./RentalCarRequest";
+import Booking from "./Booking";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,7 +43,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-export default function CarInformationProfile(props) {
+const MyCar = (props) => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -63,6 +63,7 @@ export default function CarInformationProfile(props) {
         carId,
       },
     });
+    // window.open
   };
 
   const handleClickBooked = (carId, carName) => {
@@ -89,6 +90,7 @@ export default function CarInformationProfile(props) {
               <StyledTableCell>Name</StyledTableCell>
               <StyledTableCell>Plate number</StyledTableCell>
               <StyledTableCell>Status</StyledTableCell>
+              <StyledTableCell>Detail</StyledTableCell>
               <StyledTableCell>Book request</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -114,13 +116,17 @@ export default function CarInformationProfile(props) {
                   <CarStatus name={car.status} />
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {car.status === "Booked" ? (
-                    <IconButton
-                      onClick={() => handleClickBooked(car.id, car.name)}
-                    >
-                      <Icon>details</Icon>
-                    </IconButton>
-                  ) : null}
+                  <IconButton onClick={() => handleCickSetting(car.id)}>
+                    {/* <Link to={APP_PATH.CAR_EDIT + "/" + car.id}>Detail</Link> */}
+                    <Icon>settings</Icon>
+                  </IconButton>
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  <IconButton
+                    onClick={() => handleClickBooked(car.id, car.name)}
+                  >
+                    <Icon style={{ color: "purple" }}>details</Icon>
+                  </IconButton>
                 </TableCell>
               </TableRow>
               // </Grid>
@@ -131,11 +137,32 @@ export default function CarInformationProfile(props) {
     </Grid>
   ) : (
     <Grid>
-      <Typography>List rental booking of car {name} </Typography>
       <IconButton onClick={() => setIsDetail(false)}>
         <Icon>arrow_back</Icon>
+        <Typography>My cars</Typography>
       </IconButton>
-      <RentalCarRequest carId={detail} />
+      <Grid
+        item
+        container
+        direction="row"
+        alignItems="center"
+        justify="flex-start"
+      >
+        <Typography variant="body2" color="secondary">
+          Car:
+        </Typography>
+        <Typography
+          variant="subtitle2"
+          color="initial"
+          className={classes.card}
+        >
+          {name}
+        </Typography>
+      </Grid>
+      {/* <RentalCarRequest carId={detail} /> */}
+      <Booking carId={detail} />
     </Grid>
   );
-}
+};
+
+export default MyCar;

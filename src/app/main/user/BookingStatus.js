@@ -23,6 +23,11 @@ export const bookingStatus = [
     name: "CANCEL",
     color: "bg-purple text-white",
   },
+  {
+    id: 5,
+    name: "PENDING",
+    color: "bg-yellow text-white",
+  },
 ];
 
 const BookingStatus = ({ name }) => {

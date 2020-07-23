@@ -1,7 +1,7 @@
 // import FuseLoadable from '@fuse/components/FuseLoadable/FuseLoadable';
 import User from "./User";
 import Profile from "./Profile";
-import CarInformationProfile from "./CarInformationProfile";
+import MyCar from "./MyCar";
 import RentalCarRequest from "./RentalCarRequest";
 import { FuseLoadable } from "@fuse";
 import { APP_PATH } from "../../../constant";
@@ -38,8 +38,8 @@ export const UserConfig = {
       component: Profile,
     },
     {
-      path: "/CarInformationProfile",
-      component: CarInformationProfile,
+      path: "/MyCar",
+      component: MyCar,
     },
   ],
 };
