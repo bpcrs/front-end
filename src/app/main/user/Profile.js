@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -26,6 +26,9 @@ import CarInformationProfile from "./CarInformationProfile";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import MyBooking from "./MyBooking";
+import MyCar from "./MyCar";
+import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -91,12 +94,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Profile() {
+const Profile = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
-  const [tab, setTab] = React.useState(0);
   const history = useHistory();
+  const [tab, setTab] = useState(0);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
@@ -207,8 +210,8 @@ export default function Profile() {
               />
               <Tab
                 // icon={<HistoryIcon />}
-                label="Rental History"
-                {...a11yProps(2)}
+                label="My Booking"
+                {...a11yProps(3)}
               />
               <Tab
                 // icon={<UpdateIcon />}
@@ -223,7 +226,10 @@ export default function Profile() {
             </TabPanel>
             <TabPanel value={tab} index={1}></TabPanel>
             <TabPanel value={tab} index={2}>
-              <RentalCarRequest />
+              <h2>Payment Method</h2>
+            </TabPanel>
+            <TabPanel value={tab} index={3}>
+              <MyBooking />
             </TabPanel>
             <TabPanel value={tab} index={3}></TabPanel>
           </Grid>
@@ -231,4 +237,6 @@ export default function Profile() {
       </div>
     </Layout>
   );
-}
+};
+
+export default Profile;

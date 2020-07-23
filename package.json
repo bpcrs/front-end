@@ -70,6 +70,7 @@
     "react-scripts": "^3.4.1",
     "react-scroll-to-bottom": "^2.0.0",
     "react-select": "2.3.0",
+    "react-slideshow-image": "^2.0.2",
     "react-swipeable-views": "0.13.1",
     "react-table": "6.9.0",
     "react-text-mask": "5.4.3",

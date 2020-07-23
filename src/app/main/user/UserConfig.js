@@ -3,6 +3,10 @@ import User from "./User";
 import Profile from "./Profile";
 import CarInformationProfile from "./CarInformationProfile";
 import { APP_ROLE } from "../../../constant";
+import MyCar from "./MyCar";
+import RentalCarRequest from "./RentalCarRequest";
+import { FuseLoadable } from "@fuse";
+import { APP_PATH } from "../../../constant";
 
 export const UserConfig = {
   settings: {
@@ -39,6 +43,10 @@ export const UserConfig = {
     {
       path: "/CarInformationProfile",
       component: CarInformationProfile,
+    },
+    {
+      path: "/MyCar",
+      component: MyCar,
     },
   ],
 };

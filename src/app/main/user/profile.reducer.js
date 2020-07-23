@@ -5,7 +5,10 @@ const initialState = {
   rentHistory: [],
   leaseHistory: [],
   cars: [],
-  bookings: [],
+  bookings: {
+    data: [],
+  },
+  loading: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -23,11 +26,22 @@ const profileReducer = (state = initialState, { type, payload }) => {
         loading: false,
       };
     }
-    case Actions.FETCH_BOOKING_RENTAL_OWNER: {
+    case Actions.FETCH_BOOKING_RENTAL_CAR: {
       return {
         ...state,
         bookings: payload,
         loading: false,
+      };
+    }
+    case Actions.APPROVE_BOOKING_REQUEST: {
+      return {
+        ...state,
+        bookings: {
+          data: state.bookings.data.filter(
+            (element) => element.id !== payload.id
+          ),
+          count: state.bookings.count - 1,
+        },
       };
     }
     default: {
