@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import Layout from "../../layout";
-import firebase from "../submitLicense/firebase";
+import firebase from "../../firebase/firebase";
 import {
   postCarSubmit,
   fetchBrandList,
