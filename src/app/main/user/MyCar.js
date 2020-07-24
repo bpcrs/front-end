@@ -18,8 +18,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCarInformationOwner } from "./profile.action";
-import { useHistory, Link } from "react-router-dom";
+import { fetchCarInformationOwner, changeOpen } from "./profile.action";
+import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
@@ -48,13 +48,17 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function RegisterCar() {
+  const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.profile.open);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+    dispatch(changeOpen(true));
     setOpen(true);
   };
 
   const handleClose = () => {
+    dispatch(changeOpen(false));
     setOpen(false);
   };
 
@@ -70,7 +74,7 @@ function RegisterCar() {
           Register Car
         </Button>
       </Grid>
-      <Dialog onClose={handleClose} open={open} scroll="body">
+      <Dialog onClose={handleClose} open={isOpen} scroll="body">
         <DialogContent>
           <CarSubmit />
         </DialogContent>

@@ -34,9 +34,10 @@ export function addNewCarRegister(car) {
     payload: car,
   };
 }
-export function changeOpen() {
+export function changeOpen(open) {
   return {
     type: CHANGE_OPEN,
+    payload: open,
   };
 }
 export function fetchAccountAddressSuccess(account) {
