@@ -15,7 +15,6 @@ import {
   Tab,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
-import Layout from "../../layout";
 import firebase from "../../firebase/firebase";
 import {
   postCarSubmit,
@@ -25,18 +24,9 @@ import {
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Slide from "@material-ui/core/Slide";
+
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
-
-const ITEM_HEIGHT = 48;
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const useStyles = makeStyles((theme) => ({
   root: {

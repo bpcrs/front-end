@@ -399,7 +399,7 @@ export function postCarSubmit(car, listImage) {
         if (response.success) {
           // dispatch(postCarSubmitSuccess(response.data));
           dispatch(addNewCarRegister(response.data));
-          dispatch(changeOpen());
+          dispatch(changeOpen(false));
           dispatch(postImageCar(listImage, response.data.id));
           console.log("Success submit car ", response.data);
         } else {

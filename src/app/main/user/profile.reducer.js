@@ -23,7 +23,8 @@ const profileReducer = (state = initialState, { type, payload }) => {
     case Actions.CHANGE_OPEN: {
       return {
         ...state,
-        open: !state.open,
+        open: payload,
+        loading: false,
       };
     }
     case Actions.ADD_CAR_REGISTER: {
