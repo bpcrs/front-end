@@ -111,7 +111,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   }, [selectedValue, scope]);
   const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
-    submitMessage(scope, userLogged.id, selectedUser.id, type);
+    // submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
   const classes = useStyles();
   const AgreementByType = () => {

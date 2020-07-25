@@ -120,18 +120,17 @@ export function fetchBookingRequest(booking) {
   };
 }
 
-export function submitMessage(message, send, receive, type) {
-  const arr = [send, receive].sort();
+export function submitMessage(message, booking, type, fromRenter) {
   firebase
     .firestore()
     .collection("chatRooms")
-    .doc(`${arr[0]}v${arr[1]}`)
+    .doc(`booking-${booking.id}`)
     .collection("messages")
     .add({
-      send,
+      send: fromRenter ? booking.renter.id : booking.lessor.id,
       createAt: new Date().getTime(),
       message: message,
-      receive,
+      receive: !fromRenter ? booking.renter.id : booking.lessor.id,
       type,
     });
 }
@@ -204,7 +203,7 @@ export function getBookingRequest(id) {
   };
 }
 
-export function storeImage(img, send, receive) {
+export function storeImage(img, booking, fromRenter) {
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -217,7 +216,7 @@ export function storeImage(img, send, receive) {
   uploadTask.put(img, metadata).then(function (result) {
     uploadTask.getDownloadURL().then(function (url) {
       console.log("file available at ", url);
-      submitMessage(url, send, receive, "IMG");
+      submitMessage(url, booking, "IMG", fromRenter);
     });
   });
 }
