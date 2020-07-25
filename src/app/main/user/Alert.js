@@ -5,6 +5,10 @@ import MuiAlert from "@material-ui/lab/Alert";
 import { makeStyles } from "@material-ui/core/styles";
 
 function Alert(props) {
+  const { type } = props;
+  switch (type) {
+    case "register success":
+  }
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
@@ -17,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomizedSnackbars() {
+export default function CustomizedSnackbars(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
