@@ -43,6 +43,8 @@ export default function VerticalLinearStepper({ isRenter }) {
   const [skipped, setSkipped] = useState(new Set());
   const criteria = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
+
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
   };
@@ -59,14 +61,19 @@ export default function VerticalLinearStepper({ isRenter }) {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
-    dispatch(createAgreement(1, 100, 1));
-    submitMessage(
-      `${currentAgreement.type}-${currentAgreement.value}`,
-      1,
-      2,
-      currentAgreement.type
+    dispatch(
+      createAgreement(
+        criteria.find((item) => item.name === currentAgreement.type).id,
+        1000,
+        selectedBooking.id
+      )
     );
-    console.log(currentAgreement);
+    // submitMessage(
+    //   `${currentAgreement.type}-${currentAgreement.value}`,
+    //   selectedBooking,
+    //   currentAgreement.type,
+    //   true
+    // );
   };
 
   const getStepContent = (step) => {

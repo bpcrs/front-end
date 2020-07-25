@@ -419,7 +419,6 @@ export function CloseAgreementDialog(props) {
 export const ChatArea = (props) => {
   const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { carDetail, notification } = props.location.state || {};
   const chip = useSelector((state) => state.chat.chip);
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
@@ -473,7 +472,7 @@ export const ChatArea = (props) => {
             // direction="column"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedUser.id && (
+            {selectedBooking.id && (
               <>
                 <StepAgreement />
 

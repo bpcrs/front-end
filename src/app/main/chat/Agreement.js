@@ -92,7 +92,6 @@ const GreenRadio = withStyles({
 })((props) => <Radio color="default" {...props} />);
 export default function Agreement({ type, onSubmit = () => {} }) {
   const agreement = useSelector((state) => state.chat.agreement);
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
   const [selectedValue, setSelectedValue] = React.useState("basic");
 
@@ -104,14 +103,13 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   };
   useEffect(() => {
     function setAgreementValue() {
-      onSubmit(agreement);
+      onSubmit({ type, value: selectedValue });
     }
     setAgreementValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedValue, scope]);
   const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
-    // submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
   const classes = useStyles();
   const AgreementByType = () => {
