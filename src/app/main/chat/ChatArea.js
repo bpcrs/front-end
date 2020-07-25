@@ -461,7 +461,6 @@ export const ChatArea = (props) => {
             style={{ backgroundColor: "#E6E6E6" }}
           >
             {selectedUser.id && <UserSelected {...selectedUser} />}
-            Status: Dealing
             {/* <ViewBookingDialog info={booking} /> */}
           </Grid>
           <Grid
@@ -471,81 +470,94 @@ export const ChatArea = (props) => {
             // direction="column"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            <Grid item lg={12} className="px-8 py-8">
-              <Stepper
-                alternativeLabel
-                activeStep={activeStep}
-                // connector={<ColorlibConnector />}
-              >
-                {steps.map((label) => (
-                  <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
-            </Grid>
-            <Grid item lg={12} className="px-8 py-8">
-              {activeStep === steps.length ? (
-                <div>
-                  <Typography className={classes.instructions}>
-                    All steps completed - you&apos;re finished
-                  </Typography>
-                  <Button
-                    onClick={() => setActiveStep(0)}
-                    className={classes.button}
+            {selectedUser.id && (
+              <>
+                <Grid item lg={12} className="px-8 py-8">
+                  <Stepper
+                    alternativeLabel
+                    activeStep={activeStep}
+                    // connector={<ColorlibConnector />}
                   >
-                    Reset
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  <Typography className={classes.instructions}>
-                    {getStepContent(activeStep)}
-                  </Typography>
-                  <div>
-                    <Button
-                      disabled={activeStep === 0}
-                      onClick={() => setActiveStep((preStep) => preStep - 1)}
-                      className={classes.button}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => setActiveStep((preStep) => preStep + 1)}
-                      className={classes.button}
-                    >
-                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </Grid>
-            {chip.length !== 0 ? (
-              <div className={classes.root}>
-                {chip.map((data) => {
-                  // console.log(data);
-                  // console.log(chip);
-                  return (
-                    <Chip
-                      icon={<Icon>{data.approved ? "done" : "error"}</Icon>}
-                      label={data.name}
-                      clickable
-                      color="primary"
-                      // onChange={() => handleChip(chip.type)}
-                      style={{
-                        backgroundColor: data.approved ? "green" : "primary",
-                      }}
-                      onClick={() => handleOpenAgreement(data.name)}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <></>
+                    {steps.map((label) => (
+                      <Step key={label}>
+                        <StepLabel>{label}</StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                </Grid>
+                <Grid item lg={12} className="px-8 py-8">
+                  {activeStep === steps.length ? (
+                    <div>
+                      <Typography className={classes.instructions}>
+                        All steps completed - you&apos;re finished
+                      </Typography>
+                      <Button
+                        onClick={() => setActiveStep(0)}
+                        className={classes.button}
+                      >
+                        Reset
+                      </Button>
+                    </div>
+                  ) : (
+                    <div>
+                      <Typography className={classes.instructions}>
+                        {getStepContent(activeStep)}
+                      </Typography>
+                      <div>
+                        <Button
+                          disabled={activeStep === 0}
+                          onClick={() =>
+                            setActiveStep((preStep) => preStep - 1)
+                          }
+                          className={classes.button}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() =>
+                            setActiveStep((preStep) => preStep + 1)
+                          }
+                          className={classes.button}
+                        >
+                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </Grid>
+                <Grid>
+                  {chip.length !== 0 ? (
+                    <div className={classes.root}>
+                      {chip.map((data) => {
+                        // console.log(data);
+                        // console.log(chip);
+                        return (
+                          <Chip
+                            icon={
+                              <Icon>{data.approved ? "done" : "error"}</Icon>
+                            }
+                            label={data.name}
+                            clickable
+                            color="primary"
+                            // onChange={() => handleChip(chip.type)}
+                            style={{
+                              backgroundColor: data.approved
+                                ? "green"
+                                : "primary",
+                            }}
+                            onClick={() => handleOpenAgreement(data.name)}
+                          />
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                </Grid>
+              </>
             )}
-            {/* <CloseAgreementDialog agreement={chip} /> */}
           </Grid>
         </Grid>
         <Grid
