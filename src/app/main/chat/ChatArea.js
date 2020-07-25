@@ -37,6 +37,7 @@ import {
   fetchCriteriaList,
   createAgreement,
 } from "./chat.action";
+import StepAgreement from "./StepAgreement";
 // import ViewBooking from "../booking/ViewBooking";
 // import { fetchBookingRequest } from "../booking/booking.action";
 // import { data } from "autoprefixer";
@@ -396,21 +397,6 @@ export function CloseAgreementDialog(props) {
     </div>
   );
 }
-function getSteps() {
-  return ["Insurance", "Indemnification ", "3"];
-}
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return "Select campaign settings...";
-    case 1:
-      return "What is an ad group anyways?";
-    case 2:
-      return "This is the bit I really care about!";
-    default:
-      return "Unknown step";
-  }
-}
 
 export const ChatArea = (props) => {
   const classes = useStyles();
@@ -418,8 +404,6 @@ export const ChatArea = (props) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { carDetail, notification } = props.location.state || {};
   const chip = useSelector((state) => state.chat.chip);
-  const steps = getSteps();
-  const [activeStep, setActiveStep] = useState(0);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
@@ -472,61 +456,8 @@ export const ChatArea = (props) => {
           >
             {selectedUser.id && (
               <>
-                <Grid item lg={12} className="px-8 py-8">
-                  <Stepper
-                    alternativeLabel
-                    activeStep={activeStep}
-                    // connector={<ColorlibConnector />}
-                  >
-                    {steps.map((label) => (
-                      <Step key={label}>
-                        <StepLabel>{label}</StepLabel>
-                      </Step>
-                    ))}
-                  </Stepper>
-                </Grid>
-                <Grid item lg={12} className="px-8 py-8">
-                  {activeStep === steps.length ? (
-                    <div>
-                      <Typography className={classes.instructions}>
-                        All steps completed - you&apos;re finished
-                      </Typography>
-                      <Button
-                        onClick={() => setActiveStep(0)}
-                        className={classes.button}
-                      >
-                        Reset
-                      </Button>
-                    </div>
-                  ) : (
-                    <div>
-                      <Typography className={classes.instructions}>
-                        {getStepContent(activeStep)}
-                      </Typography>
-                      <div>
-                        <Button
-                          disabled={activeStep === 0}
-                          onClick={() =>
-                            setActiveStep((preStep) => preStep - 1)
-                          }
-                          className={classes.button}
-                        >
-                          Back
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={() =>
-                            setActiveStep((preStep) => preStep + 1)
-                          }
-                          className={classes.button}
-                        >
-                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </Grid>
+                <StepAgreement />
+
                 <Grid>
                   {chip.length !== 0 ? (
                     <div className={classes.root}>
