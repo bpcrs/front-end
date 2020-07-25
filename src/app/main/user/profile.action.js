@@ -14,6 +14,19 @@ export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
 export const APPROVE_BOOKING_REQUEST = "[BOOKING] APPROVE BOOKING SUCCESS";
 export const ADD_CAR_REGISTER = "[CAR] ADD DATA SUCCESS";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
+export const REGISTER_SUCCESS = "[OPEN] REGISTER SUCCESS";
+export const PROCESS_REGISTER = "[PROCESS] PROCESSING REGISTER";
+
+export function registerSuccess() {
+  return {
+    type: REGISTER_SUCCESS,
+  };
+}
+export function processingRegister() {
+  return {
+    type: PROCESS_REGISTER,
+  };
+}
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
     type: FETCH_CAR_INFORMATION_OWNER_SUCCESS,

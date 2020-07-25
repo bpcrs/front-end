@@ -2,7 +2,13 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
-import { addNewCarRegister, changeOpen } from "../user/profile.action";
+import {
+  addNewCarRegister,
+  changeOpen,
+  registerSuccess,
+  processingRegister,
+} from "../user/profile.action";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -393,15 +399,21 @@ export function fetchImageList(page, size, carId) {
 
 export function postCarSubmit(car, listImage) {
   return (dispatch) => {
+    // dispatch(registerSuccess(true));
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
           // dispatch(postCarSubmitSuccess(response.data));
           dispatch(addNewCarRegister(response.data));
-          dispatch(changeOpen(false));
           dispatch(postImageCar(listImage, response.data.id));
           console.log("Success submit car ", response.data);
+          // dispatch(registerSuccess);
+          dispatch(
+            showMessageSuccess(
+              "Register successfully ! Your car will be checked and available soon"
+            )
+          );
         } else {
           dispatch(showMessageError(response.message));
           console.log("Success submit car error");

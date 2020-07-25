@@ -12,19 +12,25 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  CircularProgress,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCarInformationOwner, changeOpen } from "./profile.action";
+import {
+  fetchCarInformationOwner,
+  changeOpen,
+  registerSuccess,
+} from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
 import CarSubmit from "../booking/CarSubmit";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -34,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   status: {
     padding: theme.spacing(1),
     backgroundColor: theme.palette.info,
+  },
+  progress: {
+    maxHeight: 50,
   },
 }));
 
@@ -49,16 +58,34 @@ const StyledTableCell = withStyles((theme) => ({
 
 function RegisterCar() {
   const dispatch = useDispatch();
+  const classes = useStyles();
   const isOpen = useSelector((state) => state.profile.open);
+  const loading = useSelector((state) => state.profile.loading);
+  const isSuccess = useSelector((state) => state.profile.registerSuccess);
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     dispatch(changeOpen(true));
-    setOpen(true);
   };
 
   const handleClose = () => {
     dispatch(changeOpen(false));
+  };
+
+  const handleRegisterClose = () => {
+    registerSuccess(false);
+  };
+
+  const handleTestOpen = () => {
+    setOpen(true);
+    dispatch(
+      showMessageSuccess(
+        "Register successfully ! Your car will be checked and available soon"
+      )
+    );
+  };
+
+  const handleTestClose = () => {
     setOpen(false);
   };
 
@@ -73,6 +100,14 @@ function RegisterCar() {
         >
           Register Car
         </Button>
+        {/* <Button
+          variant="text"
+          style={{ textTransform: "none", color: "blue" }}
+          onClick={handleTestOpen}
+          startIcon={<Icon>playlist_add</Icon>}
+        >
+          test
+        </Button> */}
       </Grid>
       <Dialog onClose={handleClose} open={isOpen} scroll="body">
         <DialogContent>
@@ -83,6 +118,23 @@ function RegisterCar() {
             Save changes
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog open={loading} scroll="body">
+        <DialogContent>
+          <Grid container justify="center">
+            <Grid item className={classes.progress}>
+              <CircularProgress color="secondary" size="25px" />
+            </Grid>
+          </Grid>
+          <Typography variant="h6" color="initial">
+            Checking information...
+          </Typography>
+        </DialogContent>
+        {/* <DialogActions>
+          <Button autoFocus onClick={handleRegisterClose} color="primary">
+            Close
+          </Button>
+        </DialogActions> */}
       </Dialog>
     </div>
   );
