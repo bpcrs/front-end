@@ -13,7 +13,8 @@ import { APP_PATH } from "../../../constant";
 import { fetchCarCheckingAdmin } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import classNames from "classnames";
-
+import DetailsIcon from '@material-ui/icons/Details';
+import Button from "@material-ui/core/Button";
 const useStyles = makeStyles((theme) => ({
     root: {
         // display: "flex",
@@ -114,11 +115,19 @@ export default function CheckCar() {
 
                                         <TableCell component="th" scope="row">
                                             <div className={classNames("inline text-12 p-4 rounded truncate", "bg-red text-white")}
-                                                 >{car.status}</div>
+                                            >{car.status}</div>
                                         </TableCell>
 
                                         <TableCell component="th" scope="row">
-                                            <SettingIcon onClick={() => handleCickSetting(car.id)} />
+                                            <Button
+                                                variant="contained"
+                                                color="default"
+                                                className={classes.button}
+                                                startIcon={<DetailsIcon />}
+                                                onClick={() => handleCickSetting(car.id)}
+                                            >
+                                                Check
+                                            </Button>
                                         </TableCell>
 
                                     </StyledTableRow>

@@ -12,7 +12,7 @@ const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 400,
+    maxWidth: "100%",
     flexGrow: 1,
   },
   header: {
@@ -23,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   img: {
-    height: 255,
+    height: 400,
     display: "block",
-    maxWidth: 400,
+    maxWidth: "100%",
     overflow: "hidden",
     width: "100%",
   },
@@ -106,8 +106,8 @@ function SwipeableTextMobileStepper(props) {
             {theme.direction === "rtl" ? (
               <KeyboardArrowLeft />
             ) : (
-              <KeyboardArrowRight />
-            )}
+                <KeyboardArrowRight />
+              )}
           </Button>
         }
         backButton={
@@ -115,8 +115,8 @@ function SwipeableTextMobileStepper(props) {
             {theme.direction === "rtl" ? (
               <KeyboardArrowRight />
             ) : (
-              <KeyboardArrowLeft />
-            )}
+                <KeyboardArrowLeft />
+              )}
             Back
           </Button>
         }
