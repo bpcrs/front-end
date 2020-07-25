@@ -10,9 +10,23 @@ const initialState = {
   },
   loading: false,
   open: false,
+  registerSuccess: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.PROCESS_REGISTER: {
+      return {
+        ...state,
+        open: false,
+        loading: true,
+      };
+    }
+    case Actions.REGISTER_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+      };
+    }
     case Actions.FETCH_ADDRESS_SUCCESS: {
       return {
         ...state,
@@ -31,7 +45,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         cars: [...state.cars, payload],
-        loading: true,
+        loading: false,
       };
     }
     case Actions.FETCH_CAR_INFORMATION_OWNER_SUCCESS: {
