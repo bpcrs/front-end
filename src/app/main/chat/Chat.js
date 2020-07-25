@@ -9,7 +9,6 @@ import {
   Button,
 } from "@material-ui/core";
 import classNames from "classnames";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { makeStyles } from "@material-ui/styles";
 import firebase from "../../firebase/firebase";
 import Message from "./Message";

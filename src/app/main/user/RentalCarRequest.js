@@ -51,13 +51,13 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-const useRowStyles = makeStyles({
-  root: {
-    "& > *": {
-      borderBottom: "unset",
-    },
-  },
-});
+// const useRowStyles = makeStyles({
+//   root: {
+//     "& > *": {
+//       borderBottom: "unset",
+//     },
+//   },
+// });
 
 function Row(props) {
   const { booking } = props;

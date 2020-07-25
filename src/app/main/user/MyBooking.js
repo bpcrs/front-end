@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { Grid, Tabs, Tab, Box, Typography } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest } from "./profile.action";
+
 import BookingRequest from "./BookingRequest";
+import BookingStatus from "./BookingStatus";
+import BookingFilter from "./BookingFilter";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,19 +27,6 @@ function TabPanel(props) {
   );
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  tab: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {},
   card: {
@@ -51,60 +39,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MyBooking = () => {
+  const [statusFilter, setStatusFilter] = useState();
   const [tabValue, setTabValue] = useState(0);
-  //   const size = 5;
-  //   const dispatch = useDispatch();
-  //   const userLogged = useSelector((state) => state.auth.user);
-  //   const [status, setStatus] = useState("REQUEST");
-  //   const [currentPage, setCurrentPage] = useState(1);
-
+  const classes = useStyles();
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  //   useEffect(() => {
-  //     dispatch(fetchBookingRequest(userLogged.id, status, currentPage, size));
-  //   }, [currentPage, dispatch, status, userLogged]);
-
   return (
-    <Grid>
-      {
-        <Tabs
-          value={tabValue}
-          onChange={handleChangeTab}
-          indicatorColor="secondary"
-          textColor="secondary"
-          variant="scrollable"
-          scrollButtons="auto"
-          classes={{ root: "w-full h-64" }}
-        >
-          <Tab
-            className="h-64 normal-case"
-            label="My booking request"
-            {...a11yProps(0)}
-          />
-          <Tab
-            className="h-64 normal-case"
-            label="Pending requests"
-            {...a11yProps(1)}
-          />
-          <Tab
-            className="h-64 normal-case"
-            label="History booking"
-            {...a11yProps(2)}
-          />
-        </Tabs>
-      }
-      <Grid>
-        <TabPanel value={tabValue} index={0}>
-          <BookingRequest status={"REQUEST"} />
-        </TabPanel>
-        <TabPanel value={tabValue} index={1}>
-          <BookingRequest status={"PENDING"} />
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
-          <BookingRequest status={"DONE"} />
-        </TabPanel>
+    <Grid container>
+      <Grid item lg={12} container justify="flex-end">
+        <BookingFilter onFilter={setStatusFilter} />
+      </Grid>
+      <Grid item lg={12}>
+        <BookingRequest status={statusFilter} />
       </Grid>
     </Grid>
   );

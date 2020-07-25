@@ -12,7 +12,8 @@ export const FETCH_CAR_INFORMATION_OWNER_FAILURE =
 
 export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
 export const APPROVE_BOOKING_REQUEST = "[BOOKING] APPROVE BOOKING SUCCESS";
-
+export const ADD_CAR_REGISTER = "[CAR] ADD DATA SUCCESS";
+export const CHANGE_OPEN = "[OPEN] CHANGE";
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
     type: FETCH_CAR_INFORMATION_OWNER_SUCCESS,
@@ -27,6 +28,18 @@ export function fetchCarInformationOwnerFailure(cars) {
   };
 }
 
+export function addNewCarRegister(car) {
+  return {
+    type: ADD_CAR_REGISTER,
+    payload: car,
+  };
+}
+export function changeOpen(open) {
+  return {
+    type: CHANGE_OPEN,
+    payload: open,
+  };
+}
 export function fetchAccountAddressSuccess(account) {
   return {
     type: FETCH_ADDRESS_SUCCESS,
@@ -105,8 +118,7 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
 
 export function fetchBookingRequest(renterId, status, page, size) {
   return (dispatch) => {
-    const params = { page, size, status };
-    console.log(params);
+    const params = { page, size, status: status && status.join(",") };
     const request = GET(ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(renterId), {
       ...params,
     });

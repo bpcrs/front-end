@@ -4,9 +4,10 @@ import jwtService from "../../../services/jwtService";
 
 const initialState = {
   role: APP_ROLE.GUEST,
-  displayName: "John Doe",
-  photoURL: "assets/images/avatars/Velazquez.jpg",
-  email: "johndoe@withinpixels.com",
+  displayName: "Customer",
+  photoURL:
+    "https://images.glints.com/unsafe/120x0/glints-dashboard.s3.amazonaws.com/profile-picture-default/1.jpg",
+  email: "empty",
   id: 0,
 };
 
@@ -37,10 +38,6 @@ const user = function (state = initialState, action) {
             photoURL: userFromToken.imageUrl,
             email: userFromToken.email,
             id: userFromToken.id,
-            city: userFromToken.city,
-            district: userFromToken.district,
-            ward: userFromToken.ward,
-            street: userFromToken.street,
           },
         };
       }

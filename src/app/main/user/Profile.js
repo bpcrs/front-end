@@ -9,6 +9,8 @@ import {
   Typography,
   Box,
   Button,
+  Icon,
+  Divider,
 } from "@material-ui/core";
 import DriveEtaIcon from "@material-ui/icons/DriveEta";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -16,9 +18,13 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import HistoryIcon from "@material-ui/icons/History";
 import UpdateIcon from "@material-ui/icons/Update";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Layout from "../../layout";
 import SaveIcon from "@material-ui/icons/Save";
+import RentalCarRequest from "./RentalCarRequest";
+import { logoutUser } from "../../auth/store/actions";
+import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
 import BookingRequest from "./BookingRequest";
@@ -89,146 +95,140 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
+  const history = useHistory();
   const [tab, setTab] = useState(0);
+  // const { close } = props;
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
   };
-  const onAddressUpdate = () => {};
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    history.push(APP_PATH.HOME);
+  };
   return (
     <Layout name="Profile">
       <div className={classes.root}>
         <Grid container>
-          <Grid item xs={3} sm={3}>
+          <h2>Personal Information</h2>
+          <Grid container spacing={2}>
+            <Grid item lg={12} container>
+              <Grid item lg={1}>
+                <Avatar
+                  aria-label="recipe"
+                  className={classes.avatar}
+                  src={userLogged.photoURL}
+                />
+              </Grid>
+              <Grid item lg>
+                <div className="hidden md:flex flex-col ml-12 items-start">
+                  <Typography
+                    variant="h5"
+                    // className="normal-case font-1000 flex"
+                  >
+                    {userLogged.displayName}
+                  </Typography>
+                  <Typography
+                    className="text-11 capitalize"
+                    color="textSecondary"
+                    variant="overline"
+                  >
+                    {userLogged.role}
+                  </Typography>
+                </div>
+              </Grid>
+              <Grid item lg={1}>
+                <Button
+                  variant="text"
+                  style={{ textTransform: "none", color: "red" }}
+                  onClick={handleLogout}
+                  startIcon={<Icon>settings_power</Icon>}
+                >
+                  Logout
+                </Button>
+              </Grid>
+            </Grid>
+            <Grid item lg={12} container>
+              <Grid item lg={2}></Grid>
+              <Grid item lg={5}>
+                <Typography variant="subtitle1">PHONE</Typography>
+                <Typography variant="subtitle2">
+                  {userLogged.displayName}
+                </Typography>
+                {/* <Typography>{userLogged.displayName}</Typography> */}
+              </Grid>
+              <Grid item lg={5}>
+                <Typography variant="subtitle1">EMAIL</Typography>
+                <Typography variant="subtitle2">{userLogged.email}</Typography>
+              </Grid>
+            </Grid>
+            {/* <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                id="standard-helperText"
+                label="Full Name"
+                className={classes.textField}
+                defaultValue={userLogged.displayName}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                id="standard-helperText"
+                label="Email"
+                defaultValue={userLogged.email}
+                className={classes.textField}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid> */}
+          </Grid>
+
+          <Grid item xs={12} lg={12}>
             <Tabs
-              orientation="vertical"
+              orientation="horizontal"
               variant="scrollable"
               value={tab}
               onChange={handleSetTab}
               aria-label="Vertical tabs example"
             >
               <Tab
-                icon={<AccountCircleIcon />}
-                label="Personal Information"
+                // icon={<DriveEtaIcon />}
+                label="Car Information"
                 {...a11yProps(0)}
               />
-              <Tab icon={<DriveEtaIcon />} label="My Cars" {...a11yProps(1)} />
               <Tab
-                icon={<PaymentIcon />}
+                // icon={<PaymentIcon />}
                 label="Payment Method"
+                {...a11yProps(1)}
+              />
+              <Tab
+                // icon={<HistoryIcon />}
+                label="My Booking"
                 {...a11yProps(2)}
               />
               <Tab
-                icon={<HistoryIcon />}
-                label="My Booking"
-                {...a11yProps(3)}
-              />
-              <Tab
-                icon={<UpdateIcon />}
+                // icon={<UpdateIcon />}
                 label="Lease History"
-                {...a11yProps(4)}
+                {...a11yProps(3)}
               />
             </Tabs>
           </Grid>
           <Grid item xs={9} sm={9}>
             <TabPanel value={tab} index={0}>
-              <h2>Personal Information</h2>
-              <Grid container spacing={2}>
-                <Grid item lg={12}>
-                  <Avatar
-                    aria-label="recipe"
-                    className={classes.avatar}
-                    src={userLogged.photoURL}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    id="standard-helperText"
-                    label="Full Name"
-                    className={classes.textField}
-                    defaultValue={userLogged.displayName}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    variant="outlined"
-                    id="standard-helperText"
-                    label="Email"
-                    defaultValue={userLogged.email}
-                    className={classes.textField}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              <h2>Physical Address</h2>
-              <Grid container>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="standard"
-                    label="City"
-                    defaultValue={userLogged.city}
-                    className={classes.textField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="standard"
-                    label="District"
-                    className={classes.textField}
-                    defaultValue={userLogged.district}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="standard"
-                    label="Ward"
-                    defaultValue={userLogged.ward}
-                    className={classes.textField}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="standard"
-                    label="Address"
-                    defaultValue={userLogged.street}
-                    className={classes.textField}
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                onClick={() => onAddressUpdate()}
-                className={classes.button}
-                startIcon={<SaveIcon />}
-              >
-                Save
-              </Button>
+              <MyCar />
             </TabPanel>
-            <TabPanel value={tab} index={1}>
-              <div>
-                {/* <h2>Car Information</h2> */}
-                <MyCar />
-              </div>
-            </TabPanel>
+            <TabPanel value={tab} index={1}></TabPanel>
             <TabPanel value={tab} index={2}>
-              <h2>Payment Method</h2>
-            </TabPanel>
-            <TabPanel value={tab} index={3}>
-              {/* <h2>Rental Car</h2> */}
               <MyBooking />
             </TabPanel>
-            <TabPanel value={tab} index={4}>
-              <h2>Lease History</h2>
-            </TabPanel>
+            <TabPanel value={tab} index={3}></TabPanel>
           </Grid>
         </Grid>
       </div>

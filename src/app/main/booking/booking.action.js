@@ -2,6 +2,7 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
+import { addNewCarRegister, changeOpen } from "../user/profile.action";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -396,7 +397,9 @@ export function postCarSubmit(car, listImage) {
     request.then(
       (response) => {
         if (response.success) {
-          dispatch(postCarSubmitSuccess(response.data));
+          // dispatch(postCarSubmitSuccess(response.data));
+          dispatch(addNewCarRegister(response.data));
+          dispatch(changeOpen(false));
           dispatch(postImageCar(listImage, response.data.id));
           console.log("Success submit car ", response.data);
         } else {

@@ -11,13 +11,13 @@ import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import CompareIcon from '@material-ui/icons/Compare';
+import CompareIcon from "@material-ui/icons/Compare";
 import { Grid, Icon, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,11 +45,12 @@ export default function CarItem(props = { isAction: true }) {
   const [double, setDouble] = useState(false);
   const history = useHistory();
   const { info } = props;
+  // console.log(info);
   const carCompare = useSelector((state) => state.booking.carCompare);
   const clickToAddCompareCar = () => {
     carCompare.push({ info });
     if (carCompare.length > 1) {
-      history.push(`${APP_PATH.CAR_COMPARE}`)
+      history.push(`${APP_PATH.CAR_COMPARE}`);
     }
   };
   return (
@@ -70,13 +71,22 @@ export default function CarItem(props = { isAction: true }) {
           </IconButton>
         }
         title={info.name}
-        subheader={info.model + " " + info.year}
+        subheader={info.model.name + " " + info.year}
       />
-      <CardMedia
-        className={classes.media}
-        image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-        title="Car thumbnail"
-      />
+      {info.images.length > 0 ? (
+        <CardMedia
+          className={classes.media}
+          image={info.images[0].link}
+          title="Car thumbnail"
+        />
+      ) : (
+        <CardMedia
+          className={classes.media}
+          image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
+          title="Car thumbnail"
+        />
+      )}
+
       <CardContent>
         <Grid
           spacing={1}
@@ -131,7 +141,7 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption"></Typography>
+              <Typography variant="caption">{info.model.name}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -166,7 +176,9 @@ export default function CarItem(props = { isAction: true }) {
                 onClick={() => {
                   clickToAddCompareCar();
                   setDouble(true);
-                }}>Compare
+                }}
+              >
+                Compare
               </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
@@ -177,12 +189,11 @@ export default function CarItem(props = { isAction: true }) {
                     displayType={"text"}
                     thousandSeparator={true}
                     // prefix={"$"}
-                    suffix={" VNĐ"}
+                    suffix={" đ"}
                   />
                 }
               </Typography>
             </Grid>
-
           </Grid>
         </CardActions>
       ) : null}

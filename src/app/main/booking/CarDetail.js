@@ -7,7 +7,6 @@ import {
   CardContent,
   Typography,
   Button,
-  CardMedia,
   Icon,
   makeStyles,
   TextField,
@@ -17,12 +16,7 @@ import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchReviewList,
-  fetchCarDetail,
-  postReviewSubmit,
-  postReview,
-} from "./booking.action";
+import { fetchReviewList, fetchCarDetail } from "./booking.action";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -31,6 +25,8 @@ import Slide from "@material-ui/core/Slide";
 import NumberFormat from "react-number-format";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
+import SwipeableTextMobileStepper from "./SlideShow";
+import Divider from "@material-ui/core/Divider";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -41,8 +37,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   media: {
-    height: 140,
+    height: 160,
     width: "100%",
+    marginLeft: theme.spacing(22),
   },
   review: {
     margin: theme.spacing(1),
@@ -53,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(2),
     color: theme.palette.text.secondary,
+    width: "100%",
+  },
+  platenum: {
+    marginLeft: theme.spacing(1),
+  },
+  imgs: {
+    height: 100,
     width: "100%",
   },
 }));
@@ -101,7 +105,7 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-  const currentUser = useSelector((state) => state.auth.user);
+  // const currentUser = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
@@ -109,6 +113,18 @@ export default function CarDetails(props) {
     bookingChange.fromDate,
     bookingChange.toDate,
   ]);
+
+  const fakeImg =
+    "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
+
+  const summaryPrice =
+    carDetail.price *
+    (Math.round(
+      (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
+        (1000 * 60 * 60 * 24)
+    ) +
+      1);
+
   const handleBookingChange = () => {
     console.log(bookingChange);
     history.push({
@@ -118,51 +134,16 @@ export default function CarDetails(props) {
         carDetail,
         fromDate: selectedDate[0],
         toDate: selectedDate[1],
+        totalPrice: summaryPrice,
       },
     });
   };
-  // console.log("Booking change", bookingChange);
-  const summaryPrice =
-    carDetail.price *
-    (Math.round(
-      (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
-        (1000 * 60 * 60 * 24)
-    ) +
-      1);
 
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
     dispatch(fetchCarDetail(carId));
   }, [dispatch, props]);
-
-  const [currentRating, setCurrentRating] = useState({
-    carId: props.match.params.id,
-    accountId: currentUser.id,
-    rating: 5,
-    comment: "",
-  });
-  const handleInputComment = (event) => {
-    setCurrentRating({
-      ...currentRating,
-      comment: event.target.value,
-    });
-  };
-
-  const [rateSart, setRateStar] = useState(5);
-  const handleInputRateStar = (event) => {
-    setRateStar(event.target.value);
-    setCurrentRating({
-      ...currentRating,
-      rating: event.target.value,
-    });
-  };
-
-  const submitReviewCarToDB = () => {
-    dispatch(postReview());
-    dispatch(postReviewSubmit(currentRating));
-    setCurrentRating({ comment: "" });
-  };
 
   return (
     <Grid container spacing={3}>
@@ -190,26 +171,23 @@ export default function CarDetails(props) {
           <Grid item xl={12} xs={12} lg={12}>
             <Card>
               <CardContent>
-                <Typography gutterBottom variant="h5">
-                  Car Details
-                </Typography>
-
                 <Grid container spacing={1}>
-                  <Grid item xs={12} sm={6}>
-                    <CardMedia
-                      className={classes.media}
-                      image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-                      title="Contemplative Reptile"
-                    />
+                  <Grid xs={6} sm={6}>
+                    <Grid>
+                      <SwipeableTextMobileStepper
+                        images={carDetail.images ? carDetail.images : [fakeImg]}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={6} sm={6}>
                     <Typography
                       gutterBottom
                       variant="h6"
                       component="h2"
                       align="center"
                     >
-                      {carDetail.name}
+                      {carDetail.brand ? carDetail.brand.name : ""}{" "}
+                      {carDetail.name} {carDetail.year}
                     </Typography>
                     <CardContent>
                       <Grid
@@ -268,7 +246,68 @@ export default function CarDetails(props) {
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
-                              {carDetail.model}
+                              {carDetail.model ? carDetail.model.name : ""}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                    <CardContent>
+                      <Grid
+                        spacing={1}
+                        container
+                        justify="space-between"
+                        alignItems="baseline"
+                      >
+                        <Grid
+                          xs={3}
+                          item
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="space-around"
+                        >
+                          <Grid justify="center" container>
+                            <Icon fontSize={"default"}>fullscreen</Icon>
+                          </Grid>
+                          <Grid item container justify="center">
+                            <Typography variant="caption">
+                              {carDetail.screen}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
+                          xs={3}
+                          item
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="space-around"
+                        >
+                          <Grid item container justify="center">
+                            <Icon fontSize={"default"}>surround_sound</Icon>
+                          </Grid>
+                          <Grid item container justify="center">
+                            <Typography variant="caption">
+                              {carDetail.sound}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+
+                        <Grid
+                          xs={3}
+                          item
+                          container
+                          direction="row"
+                          alignItems="center"
+                          justify="space-around"
+                        >
+                          <Grid item container justify="center">
+                            <Icon fontSize={"default"}>person_outline</Icon>
+                          </Grid>
+                          <Grid item container justify="center">
+                            <Typography variant="caption">
+                              {carDetail.owner ? carDetail.owner.fullName : ""}
                             </Typography>
                           </Grid>
                         </Grid>
@@ -285,20 +324,29 @@ export default function CarDetails(props) {
                           readOnly
                         />
                       </Grid>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        component="p"
-                      >
-                        FPT University - Ho Chi Minh City
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        color="textPrimary"
-                        component="p"
-                      >
-                        {carDetail.plateNum}
-                      </Typography>
+
+                      <Grid container>
+                        <Icon>location_on</Icon>
+                        <Typography
+                          variant="subtitle1"
+                          align="center"
+                          color="textSecondary"
+                          className={classes.platenum}
+                        >
+                          Go Vap - Ho Chi Minh City
+                        </Typography>
+                      </Grid>
+                      <Grid container>
+                        <Icon>confirmation_number</Icon>
+                        <Typography
+                          variant="subtitle1"
+                          align="center"
+                          color="textSecondary"
+                          className={classes.platenum}
+                        >
+                          {carDetail.plateNum}
+                        </Typography>
+                      </Grid>
                     </CardContent>
                   </Grid>
                 </Grid>
@@ -317,82 +365,6 @@ export default function CarDetails(props) {
                   reviews.map((review) => (
                     <Review key={review.id} {...review} />
                   ))}
-                <Card className={classes.review} elevation={20}>
-                  <CardContent>
-                    <Grid container spacing={1}>
-                      <Grid
-                        spacing={1}
-                        item
-                        xs={12}
-                        xl={4}
-                        container
-                        justify="space-between"
-                        alignItems="baseline"
-                      >
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              src={currentUser.photoURL}
-                              aria-label="recipe"
-                              className={classes.avatar}
-                            ></Avatar>
-                          }
-                          title={currentUser.displayName}
-                          // subheader="May 14, 2020"
-                        />
-                        <Rating
-                          name="Rating"
-                          value={rateSart}
-                          size="large"
-                          onChange={handleInputRateStar}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Grid
-                      item
-                      lg={12}
-                      xs={12}
-                      container
-                      spacing={1}
-                      className={classes.review}
-                    >
-                      <TextField
-                        id="outlined-textarea"
-                        label="Comment"
-                        placeholder="Tell us about your experience"
-                        value={currentRating.comment}
-                        onChange={handleInputComment}
-                        multiline
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
-                      />
-                    </Grid>
-
-                    <Grid
-                      className={classes.review}
-                      item
-                      xl={12}
-                      xs={12}
-                      lg={12}
-                      justify="flex-end"
-                      container
-                    >
-                      <Grid item lg={4} xs={12}>
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          onClick={submitReviewCarToDB}
-                        >
-                          Submit
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </CardContent>
-                </Card>
               </CardContent>
             </Card>
           </Grid>
@@ -405,7 +377,7 @@ export default function CarDetails(props) {
               <CardContent>
                 <Grid spacing={1} container alignItems="baseline">
                   <Icon>gps_fixed</Icon>
-                  <Typography variant="h6">Pick-up</Typography>
+                  <Typography variant="h6">Info</Typography>
                 </Grid>
                 <div className={classes.paper}></div>
                 <DateRangePicker
@@ -443,25 +415,67 @@ export default function CarDetails(props) {
           <Grid item xs={12} xl={12} lg={12}>
             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
               <CardContent>
-                <Typography variant="h6">Price summary</Typography>
+                <Typography variant="h6" color="initial" display="initial">
+                  Price detail{" "}
+                </Typography>
                 <Grid container justify="space-between">
-                  <Typography variant="body2" align="right" color="textPrimary">
-                    {
-                      <NumberFormat
-                        value={carDetail.price}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                      />
-                    }{" "}
-                    {" * "}{" "}
-                    {Math.round(
-                      (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
-                        (1000 * 60 * 60 * 24)
-                    ) + 1}{" "}
-                    {"(days) = "}
+                  <Typography
+                    variant="subtitle1"
+                    color="initial"
+                    align="right"
+                    display="initial"
+                  >
+                    Price
+                  </Typography>
+                  <Typography variant="body2" color="textPrimary" align="left">
+                    <NumberFormat
+                      value={carDetail.price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      suffix={" đ"}
+                    />
+                  </Typography>
+                </Grid>
+                <Grid container justify="space-between">
+                  <Typography
+                    variant="subtitle1"
+                    color="initial"
+                    align="right"
+                    display="initial"
+                  >
+                    Rental period
+                  </Typography>
+                  <Typography variant="body2" color="textPrimary" align="left">
+                    <NumberFormat
+                      value={
+                        Math.round(
+                          (new Date(selectedDate[1]) -
+                            new Date(selectedDate[0])) /
+                            (1000 * 60 * 60 * 24)
+                        ) + 1
+                      }
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      suffix={" days"}
+                    />
+                  </Typography>
+                </Grid>
+                <Divider orientation="horizontal" light="true" />
+                <Grid
+                  container
+                  justify="space-between"
+                  className={classes.paper}
+                >
+                  <Typography
+                    variant="h6"
+                    color="primary"
+                    align="right"
+                    display="initial"
+                  >
+                    Total:
                   </Typography>
                   <Typography
-                    variant="body2"
+                    variant="subtitle1"
                     align="center"
                     color="textPrimary"
                   >
@@ -470,7 +484,7 @@ export default function CarDetails(props) {
                         value={summaryPrice}
                         displayType={"text"}
                         thousandSeparator={true}
-                        suffix={" VNĐ"}
+                        suffix={" đ"}
                       />
                     }
                   </Typography>
