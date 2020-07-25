@@ -16,7 +16,24 @@ export const ADD_CAR_REGISTER = "[CAR] ADD DATA SUCCESS";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const REGISTER_SUCCESS = "[OPEN] REGISTER SUCCESS";
 export const PROCESS_REGISTER = "[PROCESS] PROCESSING REGISTER";
+export const OPEN_DETAIL = "[DETAIL] CHANGE";
+export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
 
+export function chooseCar(carId, name) {
+  return {
+    type: CHOOSE_CAR,
+    payload: {
+      carId,
+      name,
+    },
+  };
+}
+export function openDetail(state) {
+  return {
+    type: OPEN_DETAIL,
+    payload: state,
+  };
+}
 export function registerSuccess() {
   return {
     type: REGISTER_SUCCESS,
@@ -91,9 +108,12 @@ export function fetchAccountAddress(id) {
   };
 }
 
-export function fetchCarInformationOwner(ownerId) {
+export function fetchCarInformationOwner(ownerId, page, size) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.CAR_INFORMATION_OWNER_GETBYID(ownerId));
+    const params = { page, size };
+    const request = GET(ENDPOINT.CAR_INFORMATION_OWNER_GETBYID(ownerId), {
+      ...params,
+    });
     request.then(
       (response) => {
         if (response.success) {

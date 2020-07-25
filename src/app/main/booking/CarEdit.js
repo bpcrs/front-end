@@ -60,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CarEdits(props) {
   const maxNumber = 10;
   const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
+  const { carId } = props;
 
   const dispatch = useDispatch();
 
@@ -93,9 +94,6 @@ export default function CarEdits(props) {
   };
 
   useEffect(() => {
-    const { carId } = props.location.state;
-    console.log("check carID 02: " + carId)
-
     const fetchCar = () => {
       dispatch(fetchCarDetail(carId));
       setCurrentCar(carDetail);

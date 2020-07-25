@@ -17,20 +17,21 @@ import {
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
+import Pagination from "@material-ui/lab/Pagination";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCarInformationOwner,
   changeOpen,
-  registerSuccess,
+  openDetail,
+  chooseCar,
 } from "./profile.action";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
 import CarSubmit from "../booking/CarSubmit";
-import { showMessageSuccess } from "../../store/actions/fuse";
+import CarEdit from "../booking/CarEdit";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -56,13 +57,70 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
+function Row(props) {
+  const dispatch = useDispatch();
+  const { car } = props;
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickBooked = (carId, carName) => {
+    dispatch(openDetail(true));
+    dispatch(chooseCar(carId, carName));
+  };
+
+  return (
+    <React.Fragment>
+      <TableRow
+        className="h-64 cursor-pointer"
+        hover
+        // role="checkbox"
+        // aria-checked={isSelected}
+        tabIndex={-1}
+        // key={index}
+        // selected={isSelected}
+      >
+        <TableCell component="th" scope="row">
+          {car.name}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {car.plateNum}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <CarStatus name={car.status} />
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <IconButton onClick={() => setOpen(true)}>
+            <Icon>settings</Icon>
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <IconButton onClick={() => handleClickBooked(car.id, car.name)}>
+            <Icon style={{ color: "purple" }}>details</Icon>
+          </IconButton>
+        </TableCell>
+      </TableRow>
+      <Dialog onClose={handleClose} open={open} scroll="body">
+        <DialogContent>
+          <CarEdit carId={car.id} />
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
+            Save changes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}
+
 function RegisterCar() {
   const dispatch = useDispatch();
   const classes = useStyles();
   const isOpen = useSelector((state) => state.profile.open);
   const loading = useSelector((state) => state.profile.loading);
-  const isSuccess = useSelector((state) => state.profile.registerSuccess);
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     dispatch(changeOpen(true));
@@ -70,23 +128,6 @@ function RegisterCar() {
 
   const handleClose = () => {
     dispatch(changeOpen(false));
-  };
-
-  const handleRegisterClose = () => {
-    registerSuccess(false);
-  };
-
-  const handleTestOpen = () => {
-    setOpen(true);
-    dispatch(
-      showMessageSuccess(
-        "Register successfully ! Your car will be checked and available soon"
-      )
-    );
-  };
-
-  const handleTestClose = () => {
-    setOpen(false);
   };
 
   return (
@@ -100,14 +141,6 @@ function RegisterCar() {
         >
           Register Car
         </Button>
-        {/* <Button
-          variant="text"
-          style={{ textTransform: "none", color: "blue" }}
-          onClick={handleTestOpen}
-          startIcon={<Icon>playlist_add</Icon>}
-        >
-          test
-        </Button> */}
       </Grid>
       <Dialog onClose={handleClose} open={isOpen} scroll="body">
         <DialogContent>
@@ -142,40 +175,17 @@ function RegisterCar() {
 
 const MyCar = (props) => {
   const classes = useStyles();
-
+  const size = 5;
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.profile.cars);
   const currentUser = useSelector((state) => state.auth.user);
-  const history = useHistory();
-  const [isDetail, setIsDetail] = useState(false);
-  const [detail, setDetail] = useState();
-  const [name, setName] = useState();
-
-  const handleCickSetting = (carId) => {
-    history.push({
-      pathname: APP_PATH.CAR_EDIT + "/" + carId,
-      state: {
-        carId,
-      },
-    });
-    // window.open
-  };
-
-  const handleAddCar = () => {
-    history.push({
-      pathname: APP_PATH.CAR_SUBMIT,
-    });
-  };
-
-  const handleClickBooked = (carId, carName) => {
-    setIsDetail(true);
-    setDetail(carId);
-    setName(carName);
-  };
+  const isDetail = useSelector((state) => state.profile.isDetail);
+  const [currentPage, setCurrentPage] = useState(1);
+  const request = useSelector((state) => state.profile.request);
 
   useEffect(() => {
-    dispatch(fetchCarInformationOwner(currentUser.id));
-  }, [currentUser.id, dispatch]);
+    dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
+  }, [currentUser.id, dispatch, currentPage]);
 
   return !isDetail ? (
     <Grid>
@@ -190,7 +200,7 @@ const MyCar = (props) => {
         </Button>
       </Grid> */}
       <RegisterCar />
-      {cars.length > 0 ? (
+      {cars.count > 0 ? (
         <TableContainer>
           <Table
             className={classes.table}
@@ -207,42 +217,54 @@ const MyCar = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {cars.map((car, index) => (
-                // <Grid item xs={12} xl={12} lg={12}>
-                <TableRow
-                  className="h-64 cursor-pointer"
-                  hover
-                  // role="checkbox"
-                  // aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={index}
-                  // selected={isSelected}
-                >
-                  <TableCell component="th" scope="row">
-                    {car.name}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {car.plateNum}
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <CarStatus name={car.status} />
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <IconButton onClick={() => handleCickSetting(car.id)}>
-                      {/* <Link to={APP_PATH.CAR_EDIT + "/" + car.id}>Detail</Link> */}
-                      <Icon>settings</Icon>
-                    </IconButton>
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    <IconButton
-                      onClick={() => handleClickBooked(car.id, car.name)}
-                    >
-                      <Icon style={{ color: "purple" }}>details</Icon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-                // </Grid>
-              ))}
+              {cars.data &&
+                cars.data.map((car, index) => (
+                  // <Grid item xs={12} xl={12} lg={12}>
+                  // <TableRow
+                  //   className="h-64 cursor-pointer"
+                  //   hover
+                  //   // role="checkbox"
+                  //   // aria-checked={isSelected}
+                  //   tabIndex={-1}
+                  //   key={index}
+                  //   // selected={isSelected}
+                  // >
+                  //   <TableCell component="th" scope="row">
+                  //     {car.name}
+                  //   </TableCell>
+                  //   <TableCell component="th" scope="row">
+                  //     {car.plateNum}
+                  //   </TableCell>
+                  //   <TableCell component="th" scope="row">
+                  //     <CarStatus name={car.status} />
+                  //   </TableCell>
+                  //   <TableCell component="th" scope="row">
+                  //     <IconButton onClick={() => {}}>
+                  //       <Icon>settings</Icon>
+                  //     </IconButton>
+                  //   </TableCell>
+                  //   <TableCell component="th" scope="row">
+                  //     <IconButton
+                  //       onClick={() => handleClickBooked(car.id, car.name)}
+                  //     >
+                  //       <Icon style={{ color: "purple" }}>details</Icon>
+                  //     </IconButton>
+                  //   </TableCell>
+                  // </TableRow>
+                  <Row key={index} car={car} />
+                  // </Grid>
+                ))}
+              <Grid xs={12} lg={12} item container justify="flex-end">
+                <Pagination
+                  count={
+                    cars.count !== 0 && cars.count % size === 0
+                      ? Math.floor(cars.count / size)
+                      : Math.floor(cars.count / size) + 1
+                  }
+                  color="primary"
+                  onChange={(e, page) => setCurrentPage(page)}
+                />
+              </Grid>
             </TableBody>
           </Table>
         </TableContainer>
@@ -254,10 +276,18 @@ const MyCar = (props) => {
     </Grid>
   ) : (
     <Grid>
-      <IconButton onClick={() => setIsDetail(false)}>
+      {/* <IconButton onClick={() => setIsDetail(false)}>
         <Icon>arrow_back</Icon>
         <Typography>Back</Typography>
-      </IconButton>
+      </IconButton> */}
+      <Button
+        variant="text"
+        style={{ textTransform: "none", color: "blue" }}
+        onClick={() => dispatch(openDetail(false))}
+        startIcon={<Icon>arrow_back</Icon>}
+      >
+        Back
+      </Button>
       <Grid
         item
         container
@@ -273,11 +303,10 @@ const MyCar = (props) => {
           color="initial"
           className={classes.card}
         >
-          {name}
+          {request.name}
         </Typography>
       </Grid>
-      {/* <RentalCarRequest carId={detail} /> */}
-      <Booking carId={detail} />
+      <Booking carId={request.carId} />
     </Grid>
   );
 };

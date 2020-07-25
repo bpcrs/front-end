@@ -193,8 +193,10 @@ export default function CarSubmit(props) {
     });
   };
   var linkImageArr = new Array();
+  const linkLicen = new Array();
   var [imageCarArr, setImageCarArr] = useState([]);
   const [licenses, setLicenses] = useState([]);
+  const [linkLicenses, setLinkLicenses] = useState([]);
 
   const uploadLicences = (event) => {
     setLicenses([...licenses, ...event.target.files]);
@@ -234,7 +236,7 @@ export default function CarSubmit(props) {
               flag2 = false;
               console.log("length link download image: " + linkImageArr.length);
               console.log("Starting store car info to DB...");
-              submitCarToDB();
+              storeLicenseToFirebase();
             }
           }
         })
@@ -259,6 +261,29 @@ export default function CarSubmit(props) {
           }
         });
     }
+  };
+
+  const storeLicenseToFirebase = () => {
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    // eslint-disable-next-line array-callback-return
+    licenses.map((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/License" + date)
+        .child(img.name);
+      uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.getDownloadURL().then(function (url) {
+          console.log("file available at ", url);
+          linkLicen.push(url);
+          // setLinkLicenses([...linkLicenses, url]);
+        });
+      });
+    });
+    console.log("link licenses", linkLicen);
+    submitCarToDB();
   };
 
   var storeImageToFireBase = () => {
@@ -348,8 +373,8 @@ export default function CarSubmit(props) {
   };
 
   var submitCarToDB = () => {
-    dispatch(postCarSubmit(currentCar, linkImageArr));
-    console.log("Owner info ", userLogged);
+    dispatch(postCarSubmit(currentCar, linkImageArr, linkLicen));
+    // console.log("Owner info ", userLogged);
 
     // handleChangePage();
   };
@@ -357,6 +382,8 @@ export default function CarSubmit(props) {
   var submitCarInfor = () => {
     dispatch(processingRegister());
     storeImageToFireBase();
+    // storeLicenseToFirebase();
+    // submitCarToDB();
   };
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
