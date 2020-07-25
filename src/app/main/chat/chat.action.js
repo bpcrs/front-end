@@ -71,12 +71,14 @@ export function changeChip(name, value, bookingId) {
 export function initChip(criteras) {
   return {
     type: INIT_CHIP,
-    payload: criteras.map((data) => ({
-      name: data.name,
-      approved: false,
-      value: 30,
-      criteriaId: data.id,
-    })),
+    payload:
+      criteras &&
+      criteras.map((data) => ({
+        name: data.name,
+        approved: false,
+        value: 30,
+        criteriaId: data.id,
+      })),
   };
 }
 export function updateChip(chips) {

@@ -159,12 +159,13 @@ const ContactList = (props) => {
     } else {
       dispatch(
         updateChip(
-          chipList.filter(
-            (item) =>
-              item.name !== "Mileage limit" &&
-              item.name !== "Extra" &&
-              item.name !== "Deposit"
-          )
+          chipList &&
+            chipList.filter(
+              (item) =>
+                item.name !== "Mileage limit" &&
+                item.name !== "Extra" &&
+                item.name !== "Deposit"
+            )
         )
       );
     }

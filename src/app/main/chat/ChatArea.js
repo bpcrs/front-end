@@ -459,7 +459,7 @@ export const ChatArea = (props) => {
                 <StepAgreement />
 
                 <Grid>
-                  {chip.length !== 0 ? (
+                  {chip && chip.length !== 0 ? (
                     <div className={classes.root}>
                       {chip.map((data) => {
                         // console.log(data);

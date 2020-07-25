@@ -6,11 +6,21 @@ import {
   Box,
   Slider,
   Typography,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Radio,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { closeAgreement, submitMessage } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
+import { FuseAnimateGroup } from "@fuse";
+import classNames from "classnames";
+import { makeStyles } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
+
 const PrettoSlider = withStyles({
   root: {
     height: 6,
@@ -53,10 +63,37 @@ const PrettoSlider = withStyles({
     backgroundColor: "currentColor",
   },
 })(Slider);
+const useStyles = makeStyles((theme) => ({
+  header: {
+    height: 600,
+    background:
+      "linear-gradient(to right, " +
+      theme.palette.primary.dark +
+      " 0%, " +
+      theme.palette.primary.main +
+      " 100%)",
+    color: theme.palette.primary.contrastText,
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.primary[800],
+    color: theme.palette.getContrastText(theme.palette.primary[800]),
+  },
+}));
+const GreenRadio = withStyles({
+  root: {
+    color: green[400],
+    "&$checked": {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 export default function Agreement() {
   const agreement = useSelector((state) => state.chat.agreement);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
+  const [selectedValue, setSelectedValue] = React.useState("Basic");
+
   // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
@@ -67,7 +104,7 @@ export default function Agreement() {
     dispatch(closeAgreement());
     submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
-  // const
+  const classes = useStyles();
   const AgreementByType = () => {
     switch (agreement.type) {
       case "Mileage limit":
@@ -132,32 +169,111 @@ export default function Agreement() {
         );
       case "Insurance":
         return (
-          <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
-            />
-            <Typography>
-              Insurance: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Insurance")}
-            >
-              Send
-            </Button>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={6} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Basic Protection
+                      </Typography>
+                      <Typography variant="caption" color="inherit">
+                        Save 15%
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +200.000VND
+                        </Typography>
+                      </div>
+
+                      <Divider className="my-32" />
+
+                      <div className="flex flex-col">
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Projects
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Pages
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">100</span>
+                          Mb Disk Space
+                        </Typography>
+                      </div>
+                    </CardContent>
+
+                    <div className="flex justify-center pb-32">
+                      <GreenRadio
+                        checked={selectedValue === "basic"}
+                        onChange={() => setSelectedValue("basic")}
+                        value="basic"
+                        name="radio-button-demo"
+                        inputProps={{ "aria-label": "basic" }}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </Grid>
+              <Grid lg={6} item>
+                <div className="w-full">
+                  <Card square raised>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Super Protection
+                      </Typography>
+                      <Typography variant="caption" color="inherit">
+                        Save 20%
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +300.000VND
+                        </Typography>
+                      </div>
+
+                      <Divider className="my-32" />
+
+                      <div className="flex flex-col">
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Projects
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Pages
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">100</span>
+                          Mb Disk Space
+                        </Typography>
+                      </div>
+                    </CardContent>
+
+                    <div className="flex justify-center pb-32">
+                      <GreenRadio
+                        checked={selectedValue === "super"}
+                        onChange={() => setSelectedValue("super")}
+                        value="super"
+                        name="radio-button-demo"
+                        inputProps={{ "aria-label": "super" }}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       case "Deposit":
@@ -227,17 +343,17 @@ export default function Agreement() {
 
   return (
     <Collapse in={agreement.isOpen}>
-      <Paper elevation={5}>
-        <Typography>Decide your offer</Typography>
-        <AgreementByType />
-        <Button
+      {/* <Paper elevation={5}>
+        <Typography>Decide your offer</Typography> */}
+      <AgreementByType />
+      {/* <Button
           variant="outlined"
           color="default"
           onClick={() => dispatch(closeAgreement())}
         >
           Close
         </Button>
-      </Paper>
+      </Paper> */}
     </Collapse>
   );
 }

@@ -51,7 +51,6 @@ export default function ViewBooking(props) {
     toDate,
     totalPrice,
   } = props.location.state;
-  // const { info } = props;
   const [checkTerms, SetCheckTerms] = useState(false);
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
@@ -69,17 +68,17 @@ export default function ViewBooking(props) {
   };
 
   const bookingReq = {
-    description: bookingChange.location.description,
-    destination: bookingChange.destination.description,
+    description: bookingChange.location.description || "description",
+    destination: bookingChange.destination.description || "destination",
     status: "REQUEST",
-    fromDate: convert(fromDate),
-    toDate: convert(toDate),
-    location: bookingChange.location.description,
-    carId: carDetail.id,
-    price: carDetail.price,
-    lessorId: carDetail.owner.id,
-    renterId: currentUser.id,
-    totalPrice: totalPrice,
+    fromDate: convert(fromDate) || "",
+    toDate: convert(toDate) || "",
+    location: bookingChange.location.description || "",
+    carId: carDetail.id || "",
+    price: carDetail.price || "",
+    lessorId: carDetail.owner.id || "",
+    renterId: currentUser.id || "",
+    totalPrice: totalPrice || "",
   };
 
   console.log("Booking request", bookingReq);
