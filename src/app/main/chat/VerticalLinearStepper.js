@@ -9,7 +9,9 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import ViewBooking from "../booking/ViewBooking";
 import Agreement from "./Agreement";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { createAgreement, submitMessage } from "./chat.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(3),
   },
 }));
-
 function getSteps() {
   return [
     "Select Insurance",
@@ -35,41 +36,17 @@ function getSteps() {
   ];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return (
-        <React.Fragment>
-          <Agreement />
-          <Typography>
-            `For each ad campaign that you create, you can control how much
-            you're willing to spend on clicks and conversions, which networks
-            and geographical locations you want your ads to show on, and more.`
-          </Typography>
-        </React.Fragment>
-      );
-    case 1:
-      return "An ad group contains one or more ads which target a shared set of keywords.";
-    case 2:
-      return `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`;
-    default:
-      return "Unknown step";
-  }
-}
-
 export default function VerticalLinearStepper({ isRenter }) {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [skipped, setSkipped] = useState(new Set());
   const criteria = useSelector((state) => state.chat.criteria);
+  const dispatch = useDispatch();
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
   };
-
+  const [currentAgreement, setCurrentAgreement] = useState();
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
@@ -82,6 +59,40 @@ export default function VerticalLinearStepper({ isRenter }) {
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+    dispatch(createAgreement(1, 100, 1));
+    submitMessage(
+      `${currentAgreement.type}-${currentAgreement.value}`,
+      1,
+      2,
+      currentAgreement.type
+    );
+    console.log(currentAgreement);
+  };
+
+  const getStepContent = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <React.Fragment>
+            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
+            <Typography>
+              `For each ad campaign that you create, you can control how much
+              you're willing to spend on clicks and conversions, which networks
+              and geographical locations you want your ads to show on, and
+              more.`
+            </Typography>
+          </React.Fragment>
+        );
+      case 1:
+        return "An ad group contains one or more ads which target a shared set of keywords.";
+      case 2:
+        return `Try out different ad text to see what brings in the most customers,
+              and learn how to enhance your ads using features like ad extensions.
+              If you run into any problems with your ads, find out how to tell if
+              they're running and how to resolve approval issues.`;
+      default:
+        return "Unknown step";
+    }
   };
 
   const handleSkip = () => {

@@ -142,7 +142,7 @@ export function fetchCriteriaList() {
 
 export function fetchAgreementList(id) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.AGREEMENT_CONTROLLER_GETBYID(id));
+    const request = GET(ENDPOINT.AGREEMENT_CONTROLLER_GETBY_BOOKINGID(id));
     request.then(
       (response) => {
         dispatch(fetchAgreementSuccess(response.success ? response.data : []));
@@ -153,20 +153,20 @@ export function fetchAgreementList(id) {
     );
   };
 }
-export function createAgreement(name, value, bookingId) {
-  const agreement = {
-    approved: true,
-    bookingId: bookingId,
-    criteriaName: name,
-    value: value,
-  };
+export function createAgreement(criteriaId, value, bookingId) {
   return (dispatch) => {
-    console.log(agreement);
-    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
+    const request = POST(
+      ENDPOINT.AGREEMENT_CONTROLLER_GETALL,
+      {},
+      {
+        bookingId,
+        criteriaId,
+        value,
+      }
+    );
     request.then(
       (response) => {
         dispatch(createAgreementSuccess(response.success ? response.data : {}));
-        console.log(response.data);
       },
       (error) => {
         showMessageError(error.message);

@@ -36,6 +36,7 @@ import {
   openAgreement,
   fetchCriteriaList,
   createAgreement,
+  fetchAgreementList,
 } from "./chat.action";
 import StepAgreement from "./StepAgreement";
 // import ViewBooking from "../booking/ViewBooking";
@@ -412,7 +413,7 @@ export const ChatArea = (props) => {
   useEffect(() => {
     dispatch(fetchCriteriaList());
     // dispatch(fetchBookingRequest(26));
-    // dispatch(fetchAgreementList(11));
+    dispatch(fetchAgreementList(1));
   }, [dispatch]);
   return (
     <Grid container>

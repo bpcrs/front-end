@@ -66,8 +66,7 @@ const Message = ({ message, receive, type }) => {
   async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));
     const send = `agree agreement ${type} with ${message}`;
-    submitMessage(send, userLogged.id, selectedUser.id, "DONE");
-    dispatch(createAgreement(name, message, booking.id));
+
     dispatch(closeAgreement());
   }
 

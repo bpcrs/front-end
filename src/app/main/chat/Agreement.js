@@ -20,6 +20,8 @@ import { FuseAnimateGroup } from "@fuse";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
+import { truncate } from "lodash";
+import { useEffect } from "react";
 
 const PrettoSlider = withStyles({
   root: {
@@ -88,11 +90,11 @@ const GreenRadio = withStyles({
   },
   checked: {},
 })((props) => <Radio color="default" {...props} />);
-export default function Agreement() {
+export default function Agreement({ type, onSubmit = () => {} }) {
   const agreement = useSelector((state) => state.chat.agreement);
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const userLogged = useSelector((state) => state.auth.user);
-  const [selectedValue, setSelectedValue] = React.useState("Basic");
+  const [selectedValue, setSelectedValue] = React.useState("basic");
 
   // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
@@ -100,13 +102,20 @@ export default function Agreement() {
   const handleChange = (event, newValue) => {
     setScope(newValue);
   };
+  useEffect(() => {
+    function setAgreementValue() {
+      onSubmit(agreement);
+    }
+    setAgreementValue();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValue, scope]);
   const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
     submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
   const classes = useStyles();
   const AgreementByType = () => {
-    switch (agreement.type) {
+    switch (type) {
       case "Mileage limit":
         return (
           <Box className="px-24 py-24">
@@ -342,7 +351,7 @@ export default function Agreement() {
   };
 
   return (
-    <Collapse in={agreement.isOpen}>
+    <Collapse in={true}>
       {/* <Paper elevation={5}>
         <Typography>Decide your offer</Typography> */}
       <AgreementByType />
