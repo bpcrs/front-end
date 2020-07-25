@@ -71,14 +71,7 @@ export function changeChip(name, value, bookingId) {
 export function initChip(criteras) {
   return {
     type: INIT_CHIP,
-    payload:
-      criteras &&
-      criteras.map((data) => ({
-        name: data.name,
-        approved: false,
-        value: 30,
-        criteriaId: data.id,
-      })),
+    payload: criteras,
   };
 }
 export function updateChip(chips) {
@@ -90,12 +83,7 @@ export function updateChip(chips) {
 export function fetchCriteriaSuccess(critera) {
   return {
     type: FETCH_CRITERIA_SUCCESS,
-    payload: critera.map((data) => ({
-      name: data.name,
-      approved: false,
-      value: 30,
-      criteriaId: data.id,
-    })),
+    payload: critera,
   };
 }
 export function fetchAgreementSuccess(agreements) {

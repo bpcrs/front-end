@@ -9,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import ViewBooking from "../booking/ViewBooking";
 import Agreement from "./Agreement";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,12 +60,12 @@ function getStepContent(step) {
   }
 }
 
-export default function VerticalLinearStepper() {
+export default function VerticalLinearStepper({ isRenter }) {
   const classes = useStyles();
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const [skipped, setSkipped] = React.useState(new Set());
-  
+  const criteria = useSelector((state) => state.chat.criteria);
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
   };
