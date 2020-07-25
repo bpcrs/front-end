@@ -7,6 +7,8 @@ import {
   Grid,
   Collapse,
   Button,
+  Tooltip,
+  Drawer,
 } from "@material-ui/core";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/styles";
@@ -169,36 +171,27 @@ const Chat = () => {
                   className: classes.bootstrapFormLabel,
                 }}
               />
-              <p>
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  accept="image/*"
-                  name="image"
-                  id="file"
-                  onChange={onImgSubmit}
-                />
-              </p>
-              {/* <IconButton>
-                <label htmlFor="file">Img</label>
-                <Icon className="text-24" htmlFor="file">
-                  attach_file
-                </Icon>
-              </IconButton> */}
-              <Button
-                variant="contained"
-                color="secondary"
-                htmlFor="file"
-                startIcon={<Icon htmlFor="file">attach_file</Icon>}
-              >
-                <label htmlFor="file">Image</label>
-              </Button>
-              <IconButton
-                className="absolute pin-r pin-t"
-                onClick={() => onMessageSubmit()}
-              >
-                <Icon className="text-24">send</Icon>
-              </IconButton>
+              <Tooltip title="Send an attachment">
+                <Button component="label" className="pr-0">
+                  <Icon>attach_file</Icon>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={onImgSubmit}
+                  />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Send a message">
+                <Button
+                  onClick={() => onMessageSubmit()}
+                  disabled={!sendMessage}
+                >
+                  <Icon className="text-24">send</Icon>
+                </Button>
+              </Tooltip>
             </Paper>
           </div>
         </Collapse>
