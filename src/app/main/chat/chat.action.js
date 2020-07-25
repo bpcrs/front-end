@@ -1,6 +1,7 @@
 import firebase from "../../firebase/firebase";
 import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, POST } from "../../services/api";
+import { use } from "marked";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
@@ -15,11 +16,19 @@ export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
 export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
+export const FETCH_BOOKING_PENDING = "BOOKING FETCH BOOKING PENDING";
+export const SET_SELECTED_BOOKING = "[CHAT] SET SELECTED BOOKING";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function fetchPendingBookingSuccess(bookings) {
+  return {
+    type: FETCH_BOOKING_PENDING,
+    payload: bookings,
   };
 }
 export function getImgUrlFromFirebase(url) {
@@ -38,6 +47,12 @@ export function setSelectedUser(user) {
   return {
     type: SET_SELECTED_USER,
     payload: user,
+  };
+}
+export function setSelectedBooking(booking) {
+  return {
+    type: SET_SELECTED_BOOKING,
+    payload: booking,
   };
 }
 export function openAgreement(type) {
@@ -205,4 +220,25 @@ export function storeImage(img, send, receive) {
       submitMessage(url, send, receive, "IMG");
     });
   });
+}
+
+export function fetchPendingBooking(user, page, size, status) {
+  return (dispatch) => {
+    const params = { page, size, status };
+    const request = GET(
+      ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(user),
+      { ...params },
+      {}
+    );
+    request.then(
+      (response) => {
+        dispatch(
+          fetchPendingBookingSuccess(response.success ? response.data.data : [])
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }

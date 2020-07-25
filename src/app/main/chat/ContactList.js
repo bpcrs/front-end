@@ -14,21 +14,24 @@ import {
   // getRequestFirebase,
   getBookingRequest,
   updateChip,
+  setSelectedBooking,
+  fetchPendingBooking,
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
+import BookingStatus from "../user/BookingStatus";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
   },
-  contactButton: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 8,
-    content: "''",
-    width: 4,
-  },
+  // contactButton: {
+  //   position: "absolute",
+  //   top: 0,
+  //   right: 0,
+  //   bottom: 8,
+  //   content: "''",
+  //   width: 4,
+  // },
 
   unreadBadge: {
     position: "absolute",
@@ -117,58 +120,61 @@ const StyledBadge = withStyles((theme) => ({
 const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const { info, renter, chipList } = props || {};
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
-  const setSelectedContact = (id, email, isRental) => {
-    // const isRental = email === userLogged.email;
-    console.log("isRental ", isRental);
-    // console.log(id, userLogged.id);
-    dispatch(setSelectedUser(users.find((u) => u.id === id)));
-    const ref = firebase
-      .firestore()
-      .collection("notification")
-      .doc(!isRental ? `${userLogged.email}` : `${email}`)
-      .collection("requests");
+  const pendingBookings = useSelector((state) => state.chat.pendingBookings);
+  console.log(pendingBookings);
+  const checkContact = () => {
+    // pendingBookings.map(())
+  };
 
-    const query = ref
-      .where(
-        "renter.email",
-        "==",
-        !isRental ? `${email}` : `${userLogged.email}`
-      )
-      .get()
-      .then(function (querySnapshot) {
-        console.log(querySnapshot.docs[0].data().bookingId);
-        dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    console.log(query);
-    if (isRental) {
-      dispatch(
-        updateChip(
-          chipList.filter(
-            (item) =>
-              item.name !== "Insurance" && item.name !== "Indemnification"
-          )
-        )
-      );
-    } else {
-      dispatch(
-        updateChip(
-          chipList &&
-            chipList.filter(
-              (item) =>
-                item.name !== "Mileage limit" &&
-                item.name !== "Extra" &&
-                item.name !== "Deposit"
-            )
-        )
-      );
-    }
+  const setSelectedContact = (booking) => {
+    dispatch(setSelectedBooking(booking));
+    // const ref = firebase
+    //   .firestore()
+    //   .collection("notification")
+    //   .doc(!isRental ? `${userLogged.email}` : `${email}`)
+    //   .collection("requests");
+
+    // const query = ref
+    //   .where(
+    //     "renter.email",
+    //     "==",
+    //     !isRental ? `${email}` : `${userLogged.email}`
+    //   )
+    //   .get()
+    //   .then(function (querySnapshot) {
+    //     console.log(querySnapshot.docs[0].data().bookingId);
+    //     dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    // console.log(query);
+    // if (isRental) {
+    //   dispatch(
+    //     updateChip(
+    //       chipList.filter(
+    //         (item) =>
+    //           item.name !== "Insurance" && item.name !== "Indemnification"
+    //       )
+    //     )
+    //   );
+    // } else {
+    //   dispatch(
+    //     updateChip(
+    //       chipList &&
+    //         chipList.filter(
+    //           (item) =>
+    //             item.name !== "Mileage limit" &&
+    //             item.name !== "Extra" &&
+    //             item.name !== "Deposit"
+    //         )
+    //     )
+    //   );
+    // }
   };
 
   useEffect(() => {
@@ -178,19 +184,18 @@ const ContactList = (props) => {
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-  }, [userLogged.id, info]);
+    dispatch(fetchPendingBooking(userLogged.id, 1, 10, "PENDING"));
+  }, [userLogged.id, info, dispatch]);
+
   const ContactButton = ({
-    displayName,
-    email,
-    photoURL,
-    id,
-    isActive,
-    isRental,
+    booking,
+    // isActive,
   }) => (
     <Box
-      onClick={() => setSelectedContact(id, email, isRental)}
-      className={isActive ? classes.contactButton : ""}
+      onClick={() => setSelectedContact(booking)}
+      className={classes.contactButton}
     >
+      {console.log(booking)}
       <Grid container className="px-8 py-8">
         <Grid item lg>
           <StyledBadge
@@ -201,20 +206,26 @@ const ContactList = (props) => {
             }}
             variant="dot"
           >
-            <Avatar src={photoURL} />
+            <Avatar src={booking.lessor.imageUrl} />
           </StyledBadge>
         </Grid>
-        <Grid lg={10} item>
-          <Typography component="span" className="normal-case font-600 flex">
-            {displayName}
+        <Grid lg={8} item>
+          {/* <Grid container lg={4}> */}
+          <Typography variant="subtitle2">
+            {booking.car.name} - {booking.lessor.fullName}
           </Typography>
           <Typography
             className="text-11"
             color="textSecondary"
             variant="caption"
           >
-            {email}
+            Booking Id : {booking.id}
           </Typography>
+
+          {/* </Grid> */}
+        </Grid>
+        <Grid item>
+          <BookingStatus name={booking.status} />
         </Grid>
       </Grid>
     </Box>
@@ -222,60 +233,22 @@ const ContactList = (props) => {
 
   return (
     <div style={{ width: "100%" }}>
-      {info !== undefined ? (
-        <Grid>
-          {users
-            .filter(
-              (user) =>
-                user.email !== userLogged.email && user.id === info.owner.id
-            )
-            .map((user, index) => (
-              <Grid
-                key={user.id}
-                item
-                lg={12}
-                className="py-8"
-                style={{
-                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
-                }}
-              >
-                <ContactButton
-                  {...user}
-                  isActive={user.id === selectedUser.id}
-                  isRental={true}
-                />
-              </Grid>
-            ))}
-          {/* {chipList.filter((item) => item.name !== "Extra")} */}
-          {/* {console.log(chipList)} */}
-        </Grid>
-      ) : (
-        <Grid>
-          {users
-            .filter((user) => user.email !== userLogged.email)
-            .map((user, index) => (
-              <Grid
-                key={user.id}
-                item
-                lg={12}
-                className="py-8"
-                style={{
-                  backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
-                }}
-              >
-                <ContactButton
-                  {...user}
-                  isActive={user.id === selectedUser.id}
-                  isRental={false}
-                />
-                {/* {dispatch(initChip(chipList))} */}
-              </Grid>
-            ))}
-          {/* {setChipData} */}
-          {/* {chipList.filter((item) => item.name !== "Extra")} */}
-          {/* {console.log(chipList)} */}
-        </Grid>
-      )}
+      <Grid>
+        {pendingBookings &&
+          pendingBookings.map((booking, index) => (
+            <Grid
+              key={index}
+              item
+              lg={12}
+              className="py-8"
+              style={{
+                backgroundColor: index % 2 === 0 ? "#F6F6F6" : "#FFFFFF",
+              }}
+            >
+              <ContactButton booking={booking} />
+            </Grid>
+          ))}
+      </Grid>
     </div>
   );
 };

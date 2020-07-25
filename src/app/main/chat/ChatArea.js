@@ -22,6 +22,7 @@ import {
   DialogTitle,
   DialogContentText,
   DialogContent,
+  Box,
   Stepper,
   Step,
   StepLabel,
@@ -38,6 +39,8 @@ import {
   createAgreement,
 } from "./chat.action";
 import StepAgreement from "./StepAgreement";
+import BookingStatus from "../user/BookingStatus";
+
 // import ViewBooking from "../booking/ViewBooking";
 // import { fetchBookingRequest } from "../booking/booking.action";
 // import { data } from "autoprefixer";
@@ -118,33 +121,47 @@ const User = ({ displayName, email, photoURL }) => {
   );
 };
 
-const UserSelected = ({ displayName, email, photoURL }) => {
-  const booking = useSelector((state) => state.chat.booking);
+const UserSelected = ({ booking }) => {
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   return (
-    <Grid container className="px-8 py-8">
-      <Grid item lg>
-        <StyledBadge
-          overlap="circle"
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          variant="dot"
-        >
-          <Avatar src={photoURL} />
-        </StyledBadge>
+    <Box
+    // onClick={() => setSelectedContact(booking)}
+    // className={classes.contactButton}
+    >
+      {/* {console.log(booking)} */}
+      <Grid container className="px-8 py-8">
+        <Grid item lg>
+          <StyledBadge
+            overlap="circle"
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            variant="dot"
+          >
+            <Avatar src={selectedBooking.lessor.imageUrl} />
+          </StyledBadge>
+        </Grid>
+        <Grid lg={10} item>
+          {/* <Grid container lg={4}> */}
+          <Typography variant="subtitle2">
+            {selectedBooking.car.name} - {selectedBooking.lessor.fullName}
+          </Typography>
+          <Typography
+            className="text-11"
+            color="textSecondary"
+            variant="caption"
+          >
+            Booking Id : {selectedBooking.id}
+          </Typography>
+
+          {/* </Grid> */}
+        </Grid>
+        <Grid item>
+          <BookingStatus name={selectedBooking.status} />
+        </Grid>
       </Grid>
-      <Grid lg={10} item>
-        <Typography component="span" className="normal-case font-600 flex">
-          {displayName}
-        </Typography>
-        <Typography className="text-11" color="textSecondary" variant="caption">
-          {email}
-        </Typography>
-        {/* {id === userLogged.id} */}
-        <ViewBookingDialog info={booking} />
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 
@@ -404,6 +421,7 @@ export const ChatArea = (props) => {
   const selectedUser = useSelector((state) => state.chat.selectedUser);
   const { carDetail, notification } = props.location.state || {};
   const chip = useSelector((state) => state.chat.chip);
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
   const handleOpenAgreement = (type) => {
     dispatch(openAgreement(type));
@@ -444,7 +462,7 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedUser.id && <UserSelected {...selectedUser} />}
+            {selectedBooking.id && <UserSelected {...selectedBooking} />}
             {/* <ViewBookingDialog info={booking} /> */}
           </Grid>
           <Grid

@@ -78,11 +78,11 @@ const Chat = () => {
   useEffect(() => {
     setMsg([]);
     async function getMsgFromFirebase() {
-      const arr = [userLogged.id, selectedUser.id].sort();
+      // const arr = [userLogged.id, selectedUser.id].sort();
       await firebase
         .firestore()
         .collection("chatRooms")
-        .doc(`${arr[0]}v${arr[1]}`)
+        .doc(`${selectedUser.id}`)
         .collection("messages")
         .orderBy("createAt", "asc")
         .limitToLast(20)
@@ -92,7 +92,7 @@ const Chat = () => {
         });
     }
     getMsgFromFirebase();
-  }, [selectedUser.id, userLogged.id]);
+  }, [selectedUser]);
 
   const onMessageSubmit = () => {
     if (sendMessage.length === 0) {
