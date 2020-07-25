@@ -95,7 +95,7 @@ export const ENDPOINT = {
   BOOKING_CONTROLLER_GETALL: "/booking",
   BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
   BOOKING_CONTROLLER_OWNER_GETBYID: (id) => `/booking/car/${id}`,
-  BOOKING_CONTROLLER_RENTER_GETBYID: (id) => `/booking/renter/${id}`,
+  BOOKING_CONTROLLER_USER_GETBYID: (id) => `/booking/user/${id}`,
 
   CRITERIA_CONTROLLER_GETALL: "/criteria",
 

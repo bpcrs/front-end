@@ -16,13 +16,20 @@ export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
 export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
-export const FETCH_BOOKING_PENDING = "BOOKING FETCH BOOKING PENDING";
+export const FETCH_BOOKING_PENDING = "[BOOKING] FETCH BOOKING PENDING";
 export const SET_SELECTED_BOOKING = "[CHAT] SET SELECTED BOOKING";
+export const SET_IS_RENTER_BOOKING = "[BOOKING] SET USER ROLE";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function setIsRenterBooking(isRenter) {
+  return {
+    type: SET_IS_RENTER_BOOKING,
+    payload: isRenter,
   };
 }
 export function fetchPendingBookingSuccess(bookings) {
@@ -221,11 +228,11 @@ export function storeImage(img, booking, fromRenter) {
   });
 }
 
-export function fetchPendingBooking(user, page, size, status) {
+export function fetchPendingBooking(user, page, size, status, isRenter) {
   return (dispatch) => {
-    const params = { page, size, status };
+    const params = { isRenter, page, size, status };
     const request = GET(
-      ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(user),
+      ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(user),
       { ...params },
       {}
     );

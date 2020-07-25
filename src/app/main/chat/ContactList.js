@@ -125,56 +125,11 @@ const ContactList = (props) => {
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   const pendingBookings = useSelector((state) => state.chat.pendingBookings);
-  console.log(pendingBookings);
-  const checkContact = () => {
-    // pendingBookings.map(())
-  };
+  // console.log(pendingBookings);
+  const isRenter = useSelector((state) => state.chat.isRenter);
 
   const setSelectedContact = (booking) => {
     dispatch(setSelectedBooking(booking));
-    // const ref = firebase
-    //   .firestore()
-    //   .collection("notification")
-    //   .doc(!isRental ? `${userLogged.email}` : `${email}`)
-    //   .collection("requests");
-
-    // const query = ref
-    //   .where(
-    //     "renter.email",
-    //     "==",
-    //     !isRental ? `${email}` : `${userLogged.email}`
-    //   )
-    //   .get()
-    //   .then(function (querySnapshot) {
-    //     console.log(querySnapshot.docs[0].data().bookingId);
-    //     dispatch(getBookingRequest(querySnapshot.docs[0].data().bookingId));
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    // console.log(query);
-    // if (isRental) {
-    //   dispatch(
-    //     updateChip(
-    //       chipList.filter(
-    //         (item) =>
-    //           item.name !== "Insurance" && item.name !== "Indemnification"
-    //       )
-    //     )
-    //   );
-    // } else {
-    //   dispatch(
-    //     updateChip(
-    //       chipList &&
-    //         chipList.filter(
-    //           (item) =>
-    //             item.name !== "Mileage limit" &&
-    //             item.name !== "Extra" &&
-    //             item.name !== "Deposit"
-    //         )
-    //     )
-    //   );
-    // }
   };
 
   useEffect(() => {
@@ -184,8 +139,8 @@ const ContactList = (props) => {
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-    dispatch(fetchPendingBooking(userLogged.id, 1, 10, "PENDING"));
-  }, [userLogged.id, info, dispatch]);
+    dispatch(fetchPendingBooking(userLogged.id, 1, 10, "PENDING", isRenter));
+  }, [userLogged.id, info, dispatch, isRenter]);
 
   const ContactButton = ({
     booking,
@@ -206,13 +161,16 @@ const ContactList = (props) => {
             }}
             variant="dot"
           >
-            <Avatar src={booking.lessor.imageUrl} />
+            <Avatar
+              src={isRenter ? booking.lessor.imageUrl : booking.renter.imageUrl}
+            />
           </StyledBadge>
         </Grid>
         <Grid lg={8} item>
           {/* <Grid container lg={4}> */}
           <Typography variant="subtitle2">
-            {booking.car.name} - {booking.lessor.fullName}
+            {booking.car.name} -{" "}
+            {isRenter ? booking.lessor.fullName : booking.renter.fullName}
           </Typography>
           <Typography
             className="text-11"

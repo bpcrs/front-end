@@ -12,6 +12,7 @@ const initialState = {
   responseAgreement: {},
   pendingBookings: [],
   selectedBooking: {},
+  isRenter: true,
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
@@ -20,6 +21,12 @@ const chatReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         selectedBooking: payload,
+      };
+    }
+    case Actions.SET_IS_RENTER_BOOKING: {
+      return {
+        ...state,
+        isRenter: payload,
       };
     }
     case Actions.FETCH_BOOKING_PENDING: {
