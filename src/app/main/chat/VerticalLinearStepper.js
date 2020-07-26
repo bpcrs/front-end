@@ -54,7 +54,7 @@ export default function VerticalLinearStepper({ isRenter }) {
         setActiveStep((activeStep) => activeStep + 1);
       }
     });
-  }, [agreements]);
+  }, [agreements, dispatch, selectedBooking.id]);
 
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
