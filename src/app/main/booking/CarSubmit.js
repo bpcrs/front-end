@@ -26,6 +26,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { orange } from "@material-ui/core/colors";
 import { processingRegister } from "../user/profile.action";
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -105,6 +107,34 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandsGroupStyle
+      thousandSeparator
+      isNumericString
+    />
+  );
+}
+
+NumberFormatCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -613,6 +643,9 @@ export default function CarSubmit(props) {
                   variant="outlined"
                   type="number"
                   onChange={handleInputChange}
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
                 />
               </Grid>
 

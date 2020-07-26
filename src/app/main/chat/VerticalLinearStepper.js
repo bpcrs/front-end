@@ -118,12 +118,7 @@ export default function VerticalLinearStepper() {
             <Agreement type="Indemnification" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
-      case 2:
-        return (
-          <React.Fragment>
-            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
-          </React.Fragment>
-        );
+
       default:
         return "Unknown step";
     }

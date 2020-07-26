@@ -114,6 +114,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     setExtra(newValue);
     setSelectedValue(newValue);
   };
+  console.log(selectedValue);
   useEffect(() => {
     switch (type) {
       case "Insurance":
@@ -123,6 +124,9 @@ export default function Agreement({ type, onSubmit = () => {} }) {
         break;
       case "Indemnification":
         onSubmit({ type, value: checkboxValue });
+        break;
+      case "Deposit":
+        onSubmit({ type, value: scope });
         break;
       default:
         break;
@@ -305,24 +309,15 @@ export default function Agreement({ type, onSubmit = () => {} }) {
               marks={true}
               onChange={handleChange}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={1}
+              min={10}
+              max={30}
+              valueLabelFormat={(value) => value}
             />
-            <Typography>
-              Deposit: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
+            <Typography variant="subtitle1" color="primary">
+              Deposit: You will offer price {scope + " days"} rent for rental
+              this car.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Deposit")}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Indemnification":
