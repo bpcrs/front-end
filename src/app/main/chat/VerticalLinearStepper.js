@@ -77,31 +77,35 @@ export default function VerticalLinearStepper() {
     return skipped.has(step);
   };
   const handleNext = async () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+    if (activeStep === steps.length - 1) {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    } else {
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-    dispatch(
-      createAgreement(
-        criteria.find((item) => item.name === currentAgreement.type).id,
-        JSON.stringify(currentAgreement.value),
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+      dispatch(
+        createAgreement(
+          criteria.find((item) => item.name === currentAgreement.type).id,
+          JSON.stringify(currentAgreement.value),
+          selectedBooking.id
+        )
+      );
+      await deleteAllMsgByTypeFromFirebase(
+        currentAgreement.type,
         selectedBooking.id
-      )
-    );
-    await deleteAllMsgByTypeFromFirebase(
-      currentAgreement.type,
-      selectedBooking.id
-    );
-    submitMessage(
-      currentAgreement.value,
-      selectedBooking,
-      currentAgreement.type,
-      selectedBooking.renter.id === userLogged.id
-    );
+      );
+      submitMessage(
+        currentAgreement.value,
+        selectedBooking,
+        currentAgreement.type,
+        selectedBooking.renter.id === userLogged.id
+      );
+    }
   };
 
   const getStepContentOwner = (step) => {
