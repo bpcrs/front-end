@@ -488,10 +488,13 @@ export const ChatArea = (props) => {
   };
 
   useEffect(() => {
-    dispatch(fetchCriteriaList());
+    function initDataFromAPI() {
+      dispatch(fetchCriteriaList());
+      dispatch(fetchAgreementList(selectedBooking.id));
+    }
+    initDataFromAPI();
     // dispatch(fetchBookingRequest(26));
-    dispatch(fetchAgreementList(1));
-  }, [dispatch]);
+  }, [dispatch, selectedBooking]);
   return (
     <Grid container>
       <Paper elevation={5} style={{ width: "100%" }}>

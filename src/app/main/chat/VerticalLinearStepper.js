@@ -12,6 +12,7 @@ import Agreement from "./Agreement";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { createAgreement, submitMessage } from "./chat.action";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,15 @@ export default function VerticalLinearStepper({ isRenter }) {
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
+  const agreements = useSelector((state) => state.chat.agreements);
+
+  useEffect(() => {
+    agreements.forEach((item) => {
+      if (item.approved) {
+        setActiveStep((activeStep) => activeStep + 1);
+      }
+    });
+  }, [agreements]);
 
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
@@ -65,16 +75,16 @@ export default function VerticalLinearStepper({ isRenter }) {
     dispatch(
       createAgreement(
         criteria.find((item) => item.name === currentAgreement.type).id,
-        1000,
+        currentAgreement.value,
         selectedBooking.id
       )
     );
-    // submitMessage(
-    //   `${currentAgreement.type}-${currentAgreement.value}`,
-    //   selectedBooking,
-    //   currentAgreement.type,
-    //   true
-    // );
+    submitMessage(
+      currentAgreement.value,
+      selectedBooking,
+      currentAgreement.type,
+      selectedBooking.renter.id === userLogged.id
+    );
   };
 
   const getStepContentOwner = (step) => {
@@ -83,12 +93,12 @@ export default function VerticalLinearStepper({ isRenter }) {
         return (
           <React.Fragment>
             <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
-            <Typography>
+            {/* <Typography>
               `For each ad campaign that you create, you can control how much
               you're willing to spend on clicks and conversions, which networks
               and geographical locations you want your ads to show on, and
               more.`
-            </Typography>
+            </Typography> */}
           </React.Fragment>
         );
       case 1:
@@ -165,13 +175,13 @@ export default function VerticalLinearStepper({ isRenter }) {
               </Typography>
               <div className={classes.actionsContainer}>
                 <div>
-                  <Button
+                  {/* <Button
                     disabled={activeStep === 0}
                     onClick={handleBack}
                     className={classes.button}
                   >
                     Back
-                  </Button>
+                  </Button> */}
                   {isStepOptional(activeStep) && (
                     <Button
                       variant="contained"

@@ -1,6 +1,6 @@
 import firebase from "../../firebase/firebase";
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, POST } from "../../services/api";
+import { GET, ENDPOINT, POST, PUT } from "../../services/api";
 import { use } from "marked";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
@@ -114,6 +114,12 @@ export function fetchAgreementSuccess(agreements) {
     payload: agreements,
   };
 }
+export function acceptedAgreementSuccess(agreement) {
+  return {
+    type: FETCH_AGREEMENT_SUCCESS,
+    payload: agreement,
+  };
+}
 export function createAgreementSuccess(agreement) {
   return {
     type: CREATE_AGREEMENT_SUCCESS,
@@ -188,6 +194,25 @@ export function createAgreement(criteriaId, value, bookingId) {
     request.then(
       (response) => {
         dispatch(createAgreementSuccess(response.success ? response.data : {}));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function acceptAgreement(criteriaId, bookingId) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {
+      criteriaId,
+      bookingId,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          acceptedAgreementSuccess(response.success ? response.data : {})
+        );
       },
       (error) => {
         showMessageError(error.message);
