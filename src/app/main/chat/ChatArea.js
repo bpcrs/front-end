@@ -32,19 +32,17 @@ import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
-// import CarItem from ".././booking/CarItem";
 import {
   openAgreement,
   fetchCriteriaList,
   createAgreement,
   fetchAgreementList,
+  setIsRenterBooking,
 } from "./chat.action";
 import StepAgreement from "./StepAgreement";
 import BookingStatus from "../user/BookingStatus";
-
-// import ViewBooking from "../booking/ViewBooking";
-// import { fetchBookingRequest } from "../booking/booking.action";
-// import { data } from "autoprefixer";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +63,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: 0,
     marginRight: 0,
+  },
+  paper: {
+    display: "flex",
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: "wrap",
+  },
+  divider: {
+    margin: theme.spacing(1, 0.5),
   },
 }));
 const StyledBadge = withStyles((theme) => ({
@@ -95,6 +101,57 @@ const StyledBadge = withStyles((theme) => ({
     },
   },
 }))(Badge);
+
+const StyledToggleButtonGroup = withStyles((theme) => ({
+  grouped: {
+    margin: theme.spacing(0.5),
+    border: "none",
+    "&:not(:first-child)": {
+      borderRadius: theme.shape.borderRadius,
+    },
+    "&:first-child": {
+      borderRadius: theme.shape.borderRadius,
+    },
+  },
+}))(ToggleButtonGroup);
+
+export default function ToggleButtons() {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  // const [alignment, setAlignment] = React.useState("left");
+  const isRenter = useSelector((state) => state.chat.isRenter);
+
+  const handleAlignment = (event, role) => {
+    // setAlignment(newAlignment);
+    dispatch(setIsRenterBooking(role));
+  };
+
+  return (
+    <div>
+      <Paper elevation={0} className={classes.paper}>
+        <StyledToggleButtonGroup
+          size="small"
+          value={isRenter}
+          exclusive
+          onChange={handleAlignment}
+          aria-label="text alignment"
+        >
+          <ToggleButton value={true} aria-label="left aligned">
+            <Typography variant="caption" color="inherit">
+              Renter
+            </Typography>
+          </ToggleButton>
+          <ToggleButton value={false} aria-label="right aligned">
+            <Typography variant="caption" color="inherit">
+              Owner
+            </Typography>
+          </ToggleButton>
+        </StyledToggleButtonGroup>
+      </Paper>
+    </div>
+  );
+}
+
 const User = ({ displayName, email, photoURL }) => {
   return (
     <Grid container className="px-8 py-8">
@@ -117,6 +174,9 @@ const User = ({ displayName, email, photoURL }) => {
         <Typography className="text-11" color="textSecondary" variant="caption">
           {email}
         </Typography>
+      </Grid>
+      <Grid lg={5} item>
+        <ToggleButtons />
       </Grid>
     </Grid>
   );
