@@ -44,6 +44,7 @@ export default function VerticalLinearStepper({ isRenter }) {
   const criteria = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
+  const userLogged = useSelector((state) => state.auth.user);
 
   const isStepOptional = (step) => {
     return step === 0 || step === 1;
@@ -76,12 +77,37 @@ export default function VerticalLinearStepper({ isRenter }) {
     // );
   };
 
-  const getStepContent = (step) => {
+  const getStepContentOwner = (step) => {
     switch (step) {
       case 0:
         return (
           <React.Fragment>
             <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
+            <Typography>
+              `For each ad campaign that you create, you can control how much
+              you're willing to spend on clicks and conversions, which networks
+              and geographical locations you want your ads to show on, and
+              more.`
+            </Typography>
+          </React.Fragment>
+        );
+      case 1:
+        return "An ad group contains one or more ads which target a shared set of keywords.";
+      case 2:
+        return `Try out different ad text to see what brings in the most customers,
+              and learn how to enhance your ads using features like ad extensions.
+              If you run into any problems with your ads, find out how to tell if
+              they're running and how to resolve approval issues.`;
+      default:
+        return "Unknown step";
+    }
+  };
+
+  const getStepContentRenter = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <React.Fragment>
             <Typography>
               `For each ad campaign that you create, you can control how much
               you're willing to spend on clicks and conversions, which networks
@@ -132,7 +158,11 @@ export default function VerticalLinearStepper({ isRenter }) {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
-              <Typography>{getStepContent(index)}</Typography>
+              <Typography>
+                {selectedBooking.renter.id === userLogged.id
+                  ? getStepContentRenter(index)
+                  : getStepContentOwner(index)}
+              </Typography>
               <div className={classes.actionsContainer}>
                 <div>
                   <Button
