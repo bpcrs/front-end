@@ -237,11 +237,25 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.car.owner.fullName} in deposit with ${message} days rent`
+                    : `${selectedBooking.renter.fullName} offers you in deposit with ${message} days rent`}
                 </Typography>
               </CardContent>
             </CardActionArea>
+            {!isRevice ? (
+              <div className="flex justify-center pb-32">
+                <Button
+                  size="small"
+                  color="default"
+                  variant="outlined"
+                  onClick={() => {
+                    handAgreementAccepted(type);
+                  }}
+                >
+                  Agree
+                </Button>
+              </div>
+            ) : null}
           </Card>
         );
       case "Indemnification":
