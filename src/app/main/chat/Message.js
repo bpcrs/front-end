@@ -8,16 +8,12 @@ import {
   CardContent,
   CardActions,
   Button,
+  Divider,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import {
-  closeAgreement,
-  changeChip,
-  createAgreement,
-  submitMessage,
-} from "./chat.action";
+import { closeAgreement, changeChip, acceptAgreement } from "./chat.action";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,17 +31,33 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.getContrastText(theme.palette.grey[300]),
     },
   },
+  header: {
+    height: 600,
+    background:
+      "linear-gradient(to right, " +
+      theme.palette.primary.dark +
+      " 0%, " +
+      theme.palette.primary.main +
+      " 100%)",
+    color: theme.palette.primary.contrastText,
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.primary[800],
+    color: theme.palette.getContrastText(theme.palette.primary[800]),
+  },
 }));
 
 const Message = ({ message, receive, type }) => {
   // console.log("Create At ", createAt);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
   const booking = useSelector((state) => state.chat.booking);
   const newAgreement = useSelector((state) => state.chat.newAgreement);
   const [openImg, setOpenImg] = useState(false);
+  const criteria = useSelector((state) => state.chat.criteria);
+
   // const [insurance, setInsurance] = useState(false);
   // console.log(insurance);
 
@@ -70,6 +82,15 @@ const Message = ({ message, receive, type }) => {
     dispatch(closeAgreement());
   }
 
+  const handAgreementAccepted = (type) => {
+    dispatch(
+      acceptAgreement(
+        criteria && criteria.find((item) => item.name === type).id,
+        selectedBooking.id
+      )
+    );
+  };
+
   const MessageByType = () => {
     switch (type) {
       case "Mileage limit":
@@ -82,8 +103,8 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -114,8 +135,8 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -129,9 +150,9 @@ const Message = ({ message, receive, type }) => {
                 >
                   Agree
                 </Button>
-                <Button size="small" color="primary">
+                {/* <Button size="small" color="primary">
                   Let me think
-                </Button>
+                </Button> */}
               </CardActions>
             ) : null}
           </Card>
@@ -141,34 +162,69 @@ const Message = ({ message, receive, type }) => {
           <Card className="w-1/2">
             <CardActionArea>
               <CardContent>
-                <Typography gutterBottom variant="subtitle1">
-                  Insurance
+                <Typography gutterBottom variant="overline">
+                  Insurance Offer: {message} plan to{" "}
+                  {selectedBooking.renter.fullName}
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
+                <Card raised square>
+                  <div
+                    className={classNames(classes.cardHeader, "px-24 py-16")}
+                  >
+                    <Typography variant="subtitle1" color="inherit">
+                      Basic Protection
+                    </Typography>
+                    <Typography variant="caption" color="inherit">
+                      Save 15%
+                    </Typography>
+                  </div>
+
+                  <CardContent className="p-32">
+                    <div className="flex justify-center">
+                      <Typography variant="h6" color="textSecondary">
+                        +200.000VND
+                      </Typography>
+                    </div>
+
+                    <Divider className="my-32" />
+
+                    <div className="flex flex-col">
+                      <Typography variant="subtitle1" className="">
+                        <span className="font-bold mr-4">10</span>
+                        Projects
+                      </Typography>
+                      <Typography variant="subtitle1" className="">
+                        <span className="font-bold mr-4">10</span>
+                        Pages
+                      </Typography>
+                      <Typography variant="subtitle1" className="">
+                        <span className="font-bold mr-4">100</span>
+                        Mb Disk Space
+                      </Typography>
+                    </div>
+                  </CardContent>
+                  {!isRevice ? (
+                    <div className="flex justify-center pb-32">
+                      <Button
+                        size="small"
+                        color="default"
+                        variant="outlined"
+                        onClick={() => {
+                          handAgreementAccepted(type);
+                        }}
+                      >
+                        Agree
+                      </Button>
+                    </div>
+                  ) : null}
+                </Card>
+
+                {/* <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
-                </Typography>
+                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
+                </Typography> */}
               </CardContent>
             </CardActionArea>
-
-            {!isRevice ? (
-              <CardActions>
-                <Button
-                  size="small"
-                  color="default"
-                  variant="outlined"
-                  onClick={() => {
-                    handleChangeChip("Insurance");
-                  }}
-                >
-                  Agree
-                </Button>
-                <Button size="small" color="primary">
-                  Let me think
-                </Button>
-              </CardActions>
-            ) : null}
           </Card>
         );
       case "Deposit":
@@ -181,8 +237,8 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -213,8 +269,8 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedUser.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedUser.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
+                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -272,7 +328,7 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {!isRevice
-                    ? `${selectedUser.displayName} ${message} `
+                    ? `${selectedBooking.displayName} ${message} `
                     : `You ${message} `}
                 </Typography>
               </CardContent>
