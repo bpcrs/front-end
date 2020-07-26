@@ -37,7 +37,7 @@ function getSteps() {
   ];
 }
 
-export default function VerticalLinearStepper({ isRenter }) {
+export default function VerticalLinearStepper() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const steps = getSteps();
@@ -75,7 +75,7 @@ export default function VerticalLinearStepper({ isRenter }) {
     dispatch(
       createAgreement(
         criteria.find((item) => item.name === currentAgreement.type).id,
-        currentAgreement.value,
+        JSON.stringify(currentAgreement.value),
         selectedBooking.id
       )
     );
@@ -102,7 +102,11 @@ export default function VerticalLinearStepper({ isRenter }) {
           </React.Fragment>
         );
       case 1:
-        return "An ad group contains one or more ads which target a shared set of keywords.";
+        return (
+          <React.Fragment>
+            <Agreement type="Indemnification" onSubmit={setCurrentAgreement} />
+          </React.Fragment>
+        );
       case 2:
         return `Try out different ad text to see what brings in the most customers,
               and learn how to enhance your ads using features like ad extensions.

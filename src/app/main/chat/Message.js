@@ -9,6 +9,10 @@ import {
   CardActions,
   Button,
   Divider,
+  FormControlLabel,
+  Checkbox,
+  Box,
+  FormGroup,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
@@ -161,23 +165,19 @@ const Message = ({ message, receive, type }) => {
         return (
           <Card className="w-1/2">
             <CardActionArea>
+              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+                <Typography variant="subtitle1" color="inherit">
+                  Insurance Offer
+                </Typography>
+                {/* <Typography variant="caption" color="inherit">
+                  Save 15%
+                </Typography> */}
+              </div>
               <CardContent>
                 <Typography gutterBottom variant="overline">
-                  Insurance Offer: {message} plan to{" "}
-                  {selectedBooking.renter.fullName}
+                  Package infomation
                 </Typography>
                 <Card raised square>
-                  <div
-                    className={classNames(classes.cardHeader, "px-24 py-16")}
-                  >
-                    <Typography variant="subtitle1" color="inherit">
-                      Basic Protection
-                    </Typography>
-                    <Typography variant="caption" color="inherit">
-                      Save 15%
-                    </Typography>
-                  </div>
-
                   <CardContent className="p-32">
                     <div className="flex justify-center">
                       <Typography variant="h6" color="textSecondary">
@@ -217,12 +217,6 @@ const Message = ({ message, receive, type }) => {
                     </div>
                   ) : null}
                 </Card>
-
-                {/* <Typography variant="body2" color="textSecondary" component="p">
-                  {isRevice
-                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
-                </Typography> */}
               </CardContent>
             </CardActionArea>
           </Card>
@@ -263,32 +257,58 @@ const Message = ({ message, receive, type }) => {
         return (
           <Card className="w-1/2">
             <CardActionArea>
+              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+                <Typography variant="subtitle1" color="inherit">
+                  Indemnification Offer
+                </Typography>
+              </div>
               <CardContent>
-                <Typography gutterBottom variant="subtitle1">
-                  Indemnification
+                <Typography gutterBottom variant="overline">
+                  Checked list
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {isRevice
-                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
-                </Typography>
+                <Card raised square>
+                  <Box className="px-24 py-24">
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={message.carDamage}
+                            name="carDamage"
+                          />
+                        }
+                        label="Car damage"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={message.overdue} name="overdue" />
+                        }
+                        label="Overdue return time"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={message.violate} name="violate" />
+                        }
+                        label="Violate transport"
+                      />
+                    </FormGroup>
+                  </Box>
+                </Card>
               </CardContent>
+              {!isRevice ? (
+                <div className="flex justify-center pb-8 w-100">
+                  <Button
+                    size="small"
+                    color="default"
+                    variant="outlined"
+                    onClick={() => {
+                      handAgreementAccepted(type);
+                    }}
+                  >
+                    Agree
+                  </Button>
+                </div>
+              ) : null}
             </CardActionArea>
-            {!isRevice ? (
-              <CardActions>
-                <Button
-                  size="small"
-                  color="default"
-                  variant="outlined"
-                  onClick={() => handleChangeChip("Indemnification")}
-                >
-                  Agree
-                </Button>
-                <Button size="small" color="primary">
-                  Let me think
-                </Button>
-              </CardActions>
-            ) : null}
           </Card>
         );
       case "IMG":
