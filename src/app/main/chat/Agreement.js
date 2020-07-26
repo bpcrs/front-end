@@ -11,6 +11,9 @@ import {
   Divider,
   Grid,
   Radio,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { closeAgreement, submitMessage } from "./chat.action";
@@ -94,6 +97,11 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   const agreement = useSelector((state) => state.chat.agreement);
   const userLogged = useSelector((state) => state.auth.user);
   const [selectedValue, setSelectedValue] = React.useState("basic");
+  const [checkboxValue, setCheckboxValue] = useState({
+    carDamage: false,
+    overdue: false,
+    violate: false,
+  });
 
   // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
@@ -102,14 +110,27 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     setScope(newValue);
   };
   useEffect(() => {
-    function setAgreementValue() {
-      onSubmit({ type, value: selectedValue });
+    switch (type) {
+      case "Insurance":
+        onSubmit({ type, value: selectedValue });
+        break;
+      case "Indemnification":
+        onSubmit({ type, value: checkboxValue });
+        break;
+      default:
+        break;
     }
-    setAgreementValue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValue, scope]);
+  }, [selectedValue, scope, checkboxValue]);
   const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
+  };
+
+  const handleChangeCheckbox = (event) => {
+    setCheckboxValue({
+      ...checkboxValue,
+      [event.target.name]: event.target.checked,
+    });
   };
   const classes = useStyles();
   const AgreementByType = () => {
@@ -316,31 +337,38 @@ export default function Agreement({ type, onSubmit = () => {} }) {
       case "Indemnification":
         return (
           <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
-            />
-            <Typography>
-              Indemnification: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Indemnification")}
-            >
-              Send
-            </Button>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.carDamage}
+                    onChange={handleChangeCheckbox}
+                    name="carDamage"
+                  />
+                }
+                label="Car damage"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.overdue}
+                    onChange={handleChangeCheckbox}
+                    name="overdue"
+                  />
+                }
+                label="Overdue return time"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.violate}
+                    onChange={handleChangeCheckbox}
+                    name="violate"
+                  />
+                }
+                label="Violate transport"
+              />
+            </FormGroup>
           </Box>
         );
       default:
