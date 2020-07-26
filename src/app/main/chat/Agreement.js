@@ -95,7 +95,6 @@ const GreenRadio = withStyles({
 })((props) => <Radio color="default" {...props} />);
 export default function Agreement({ type, onSubmit = () => {} }) {
   const agreement = useSelector((state) => state.chat.agreement);
-  const userLogged = useSelector((state) => state.auth.user);
   const [selectedValue, setSelectedValue] = React.useState("basic");
   const [checkboxValue, setCheckboxValue] = useState({
     carDamage: false,
@@ -106,8 +105,14 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
+  const [extra, setExtra] = useState(2000);
   const handleChange = (event, newValue) => {
     setScope(newValue);
+    setSelectedValue(newValue);
+  };
+  const handleExtra = (event, newValue) => {
+    setExtra(newValue);
+    setSelectedValue(newValue);
   };
   useEffect(() => {
     switch (type) {
@@ -145,24 +150,16 @@ export default function Agreement({ type, onSubmit = () => {} }) {
               marks={true}
               onChange={handleChange}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={50}
+              min={100}
+              max={500}
+              valueLabelFormat={(value) => (value === 15 ? "Unlimited" : value)}
             />
-            <Typography>
+            <Typography variant="subtitle1" color="primary">
               Mileage limit: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              {scope === 15 ? 100 + " km" : scope + " km"} not exceeded
               destination registered.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope(agreement.type)}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Extra":
@@ -171,28 +168,20 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             <PrettoSlider
               valueLabelDisplay="on"
               aria-labelledby="continuous-slider"
-              value={scope}
+              value={extra}
               marks={true}
-              onChange={handleChange}
+              onChange={handleExtra}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={1000}
+              min={2000}
+              max={15000}
+              valueLabelFormat={(value) => value}
             />
-            <Typography>
-              Extra: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
+            <Typography variant="subtitle2" color="inherit">
+              You will be charged {extra + " đ"} for every km you travel above.
+              If required, please select a higher limit. All fuel bills will be
+              reimbursed on a fair usage basis.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Extra")}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Insurance":

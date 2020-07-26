@@ -253,6 +253,21 @@ export function storeImage(img, booking, fromRenter) {
   });
 }
 
+export async function deleteAllMsgByTypeFromFirebase(type, bookingId) {
+  await firebase
+    .firestore()
+    .collection("chatRooms")
+    .doc(`booking-${bookingId}`)
+    .collection("messages")
+    .where("type", "==", type)
+    .get()
+    .then((response) =>
+      response.docs.forEach((item) => {
+        item.ref.delete();
+      })
+    );
+}
+
 export function fetchPendingBooking(user, page, size, status, isRenter) {
   return (dispatch) => {
     const params = { isRenter, page, size, status };
