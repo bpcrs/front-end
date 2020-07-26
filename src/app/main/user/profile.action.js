@@ -149,9 +149,15 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
   };
 }
 
-export function fetchBookingRequest(renterId, status, page, size) {
+export function fetchBookingRequest(
+  renterId,
+  status,
+  page,
+  size,
+  isRenter = true
+) {
   return (dispatch) => {
-    const params = { page, size, status: status && status.join(",") };
+    const params = { page, size, status: status && status.join(","), isRenter };
     const request = GET(ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(renterId), {
       ...params,
     });
