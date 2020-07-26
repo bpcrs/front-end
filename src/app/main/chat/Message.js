@@ -242,21 +242,6 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
               </CardContent>
             </CardActionArea>
-            {!isRevice ? (
-              <CardActions>
-                <Button
-                  size="small"
-                  color="default"
-                  variant="outlined"
-                  onClick={() => handleChangeChip("Deposit")}
-                >
-                  Agree
-                </Button>
-                <Button size="small" color="primary">
-                  Let me think
-                </Button>
-              </CardActions>
-            ) : null}
           </Card>
         );
       case "Indemnification":

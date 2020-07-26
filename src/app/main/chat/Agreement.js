@@ -117,6 +117,8 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   useEffect(() => {
     switch (type) {
       case "Insurance":
+      case "Mileage limit":
+      case "Extra":
         onSubmit({ type, value: selectedValue });
         break;
       case "Indemnification":
