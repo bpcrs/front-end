@@ -200,13 +200,13 @@ const UserSelected = ({ booking }) => {
             }}
             variant="dot"
           >
-            <Avatar src={selectedBooking.lessor.imageUrl} />
+            <Avatar src={selectedBooking.car.owner.imageUrl} />
           </StyledBadge>
         </Grid>
         <Grid lg={10} item>
           {/* <Grid container lg={4}> */}
           <Typography variant="subtitle2">
-            {selectedBooking.car.name} - {selectedBooking.lessor.fullName}
+            {selectedBooking.car.name} - {selectedBooking.car.owner.fullName}
           </Typography>
           <Typography
             className="text-11"

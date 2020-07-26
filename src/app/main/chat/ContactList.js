@@ -162,7 +162,9 @@ const ContactList = (props) => {
             variant="dot"
           >
             <Avatar
-              src={isRenter ? booking.lessor.imageUrl : booking.renter.imageUrl}
+              src={
+                isRenter ? booking.car.owner.imageUrl : booking.renter.imageUrl
+              }
             />
           </StyledBadge>
         </Grid>
@@ -170,7 +172,7 @@ const ContactList = (props) => {
           {/* <Grid container lg={4}> */}
           <Typography variant="subtitle2">
             {booking.car.name} -{" "}
-            {isRenter ? booking.lessor.fullName : booking.renter.fullName}
+            {isRenter ? booking.car.owner.fullName : booking.renter.fullName}
           </Typography>
           <Typography
             className="text-11"

@@ -134,10 +134,10 @@ export function submitMessage(message, booking, type, fromRenter) {
     .doc(`booking-${booking.id}`)
     .collection("messages")
     .add({
-      send: fromRenter ? booking.renter.id : booking.lessor.id,
+      send: fromRenter ? booking.renter.id : booking.car.owner.id,
       createAt: new Date().getTime(),
       message: message,
-      receive: !fromRenter ? booking.renter.id : booking.lessor.id,
+      receive: !fromRenter ? booking.renter.id : booking.car.owner.id,
       type,
     });
 }
