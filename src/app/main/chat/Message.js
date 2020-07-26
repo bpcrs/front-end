@@ -13,7 +13,13 @@ import {
 import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { closeAgreement, changeChip, acceptAgreement } from "./chat.action";
+import {
+  closeAgreement,
+  changeChip,
+  acceptAgreement,
+  deleteAllMsgByTypeFromFirebase,
+  submitMessage,
+} from "./chat.action";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -82,13 +88,15 @@ const Message = ({ message, receive, type }) => {
     dispatch(closeAgreement());
   }
 
-  const handAgreementAccepted = (type) => {
+  const handAgreementAccepted = async (type) => {
     dispatch(
       acceptAgreement(
         criteria && criteria.find((item) => item.name === type).id,
         selectedBooking.id
       )
     );
+    await deleteAllMsgByTypeFromFirebase(type, selectedBooking.id);
+    submitMessage(type, selectedBooking, "DONE", true);
   };
 
   const MessageByType = () => {
@@ -103,25 +111,24 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.car.owner.fullName} in mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`
+                    : `${selectedBooking.renter.fullName} offers you mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`}
                 </Typography>
               </CardContent>
             </CardActionArea>
             {!isRevice ? (
-              <CardActions>
+              <div className="flex justify-center pb-32">
                 <Button
                   size="small"
                   color="default"
                   variant="outlined"
-                  onClick={() => handleChangeChip("Mileage limit")}
+                  onClick={() => {
+                    handAgreementAccepted(type);
+                  }}
                 >
                   Agree
                 </Button>
-                <Button size="small" color="primary">
-                  Let me think
-                </Button>
-              </CardActions>
+              </div>
             ) : null}
           </Card>
         );
@@ -135,25 +142,24 @@ const Message = ({ message, receive, type }) => {
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
-                    ? `You offer ${selectedBooking.displayName} with scope: ${message} km not exceeded`
-                    : `${selectedBooking.displayName} offer you scope: ${message} not exceeded`}
+                    ? `You offer ${selectedBooking.car.owner.fullName} in extra fees with ${message} đ/km`
+                    : `${selectedBooking.renter.fullName} offers you in extra fees with ${message} đ/km`}
                 </Typography>
               </CardContent>
             </CardActionArea>
             {!isRevice ? (
-              <CardActions>
+              <div className="flex justify-center pb-32">
                 <Button
                   size="small"
                   color="default"
                   variant="outlined"
-                  onClick={() => handleChangeChip("Extra")}
+                  onClick={() => {
+                    handAgreementAccepted(type);
+                  }}
                 >
                   Agree
                 </Button>
-                {/* <Button size="small" color="primary">
-                  Let me think
-                </Button> */}
-              </CardActions>
+              </div>
             ) : null}
           </Card>
         );
@@ -327,9 +333,7 @@ const Message = ({ message, receive, type }) => {
                   Agree Success
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
-                  {!isRevice
-                    ? `${selectedBooking.displayName} ${message} `
-                    : `You ${message} `}
+                  Agreement {message} has completed
                 </Typography>
               </CardContent>
             </CardActionArea>

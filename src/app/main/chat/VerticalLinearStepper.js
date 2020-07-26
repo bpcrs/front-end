@@ -11,7 +11,11 @@ import ViewBooking from "../booking/ViewBooking";
 import Agreement from "./Agreement";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { createAgreement, submitMessage } from "./chat.action";
+import {
+  createAgreement,
+  submitMessage,
+  deleteAllMsgByTypeFromFirebase,
+} from "./chat.action";
 import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,17 +40,26 @@ function getSteps() {
     "Commit your side",
   ];
 }
+function getStepsRenter() {
+  return [
+    "Select Mileage limit",
+    "Select Extra",
+    "Choose Deposit",
+    "Commit your side",
+  ];
+}
 
-export default function VerticalLinearStepper({ isRenter }) {
+export default function VerticalLinearStepper() {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
-  const steps = getSteps();
   const [skipped, setSkipped] = useState(new Set());
   const criteria = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
   const agreements = useSelector((state) => state.chat.agreements);
+  const steps =
+    selectedBooking.renter.id === userLogged.id ? getStepsRenter() : getSteps();
 
   useEffect(() => {
     agreements.forEach((item) => {
@@ -63,7 +76,7 @@ export default function VerticalLinearStepper({ isRenter }) {
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
-  const handleNext = () => {
+  const handleNext = async () => {
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -78,6 +91,10 @@ export default function VerticalLinearStepper({ isRenter }) {
         currentAgreement.value,
         selectedBooking.id
       )
+    );
+    await deleteAllMsgByTypeFromFirebase(
+      currentAgreement.type,
+      selectedBooking.id
     );
     submitMessage(
       currentAgreement.value,
@@ -118,16 +135,15 @@ export default function VerticalLinearStepper({ isRenter }) {
       case 0:
         return (
           <React.Fragment>
-            <Typography>
-              `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and
-              more.`
-            </Typography>
+            <Agreement type="Mileage limit" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
       case 1:
-        return "An ad group contains one or more ads which target a shared set of keywords.";
+        return (
+          <React.Fragment>
+            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
+          </React.Fragment>
+        );
       case 2:
         return `Try out different ad text to see what brings in the most customers,
               and learn how to enhance your ads using features like ad extensions.
@@ -198,7 +214,7 @@ export default function VerticalLinearStepper({ isRenter }) {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                    {activeStep === steps.length - 1 ? "Finish" : "Send"}
                   </Button>
                 </div>
               </div>
