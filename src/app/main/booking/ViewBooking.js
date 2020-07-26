@@ -76,7 +76,6 @@ export default function ViewBooking(props) {
     location: bookingChange.location.description || "",
     carId: carDetail.id || "",
     price: carDetail.price || "",
-    lessorId: carDetail.owner.id || "",
     renterId: currentUser.id || "",
     totalPrice: totalPrice || "",
   };

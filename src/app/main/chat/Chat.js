@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 const Chat = () => {
   const [sendMessage, setSendMessage] = useState("");
   const classes = useStyles();
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
+  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
   const [msg, setMsg] = useState([]);
   const [sizeMsg, setSizeMsg] = useState(20);
@@ -78,11 +78,11 @@ const Chat = () => {
   useEffect(() => {
     setMsg([]);
     async function getMsgFromFirebase() {
-      const arr = [userLogged.id, selectedUser.id].sort();
+      // const arr = [userLogged.id, selectedUser.id].sort();
       await firebase
         .firestore()
         .collection("chatRooms")
-        .doc(`${arr[0]}v${arr[1]}`)
+        .doc(`booking-${selectedBooking.id}`)
         .collection("messages")
         .orderBy("createAt", "asc")
         .limitToLast(20)
@@ -92,13 +92,18 @@ const Chat = () => {
         });
     }
     getMsgFromFirebase();
-  }, [selectedUser.id, userLogged.id]);
+  }, [selectedBooking]);
 
   const onMessageSubmit = () => {
     if (sendMessage.length === 0) {
       return;
     }
-    submitMessage(sendMessage, userLogged.id, selectedUser.id, "MSG");
+    submitMessage(
+      sendMessage,
+      selectedBooking,
+      "MSG",
+      userLogged.id === selectedBooking.renter.id
+    );
     setSendMessage("");
     setSizeMsg(sizeMsg + 1);
   };
@@ -106,7 +111,11 @@ const Chat = () => {
   const onImgSubmit = (event) => {
     //  const image = document.getElementById("output");
     //  image.src = URL.createObjectURL(event.target.files[0]);
-    storeImage(event.target.files[0], userLogged.id, selectedUser.id);
+    storeImage(
+      event.target.files[0],
+      selectedBooking,
+      userLogged.id === selectedBooking.renter.id
+    );
     setSendMessage("");
     setSizeMsg(sizeMsg + 1);
   };
@@ -152,7 +161,7 @@ const Chat = () => {
                 autoFocus={false}
                 // id={message}
                 onChange={(e) => setSendMessage(e.currentTarget.value)}
-                disabled={!selectedUser}
+                disabled={!selectedBooking}
                 style={{ width: "100%" }}
                 InputProps={{
                   disableUnderline: true,
@@ -160,11 +169,7 @@ const Chat = () => {
                     root: "ml-16 mr-8 my-8",
                     input: "",
                   },
-                  placeholder: `${
-                    selectedUser.displayName
-                      ? "Type your message to " + selectedUser.displayName
-                      : "Select person to get started"
-                  }`,
+                  placeholder: "Type your message ...",
                 }}
                 InputLabelProps={{
                   shrink: false,

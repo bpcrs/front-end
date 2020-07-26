@@ -152,7 +152,7 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
 export function fetchBookingRequest(renterId, status, page, size) {
   return (dispatch) => {
     const params = { page, size, status: status && status.join(",") };
-    const request = GET(ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(renterId), {
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(renterId), {
       ...params,
     });
     request.then(
@@ -195,7 +195,7 @@ export function notificationBooking(booking) {
     .add({
       status: booking.status,
       car: booking.car,
-      owner: booking.lessor,
+      owner: booking.car.owner,
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),

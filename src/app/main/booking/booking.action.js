@@ -542,12 +542,12 @@ export function notificationBooking(booking) {
   firebase
     .firestore()
     .collection("notification")
-    .doc(`${booking.lessor.email}`)
+    .doc(`${booking.car.owner.email}`)
     .collection("requests")
     .add({
       status: booking.status,
       car: booking.car,
-      owner: booking.lessor,
+      owner: booking.car.owner,
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
