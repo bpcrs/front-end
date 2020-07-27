@@ -131,7 +131,7 @@ function RegisterCar() {
   };
 
   return (
-    <div>
+    <React.Fragment>
       <Grid item lg={2}>
         <Button
           variant="text"
@@ -169,7 +169,7 @@ function RegisterCar() {
           </Button>
         </DialogActions> */}
       </Dialog>
-    </div>
+    </React.Fragment>
   );
 }
 

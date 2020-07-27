@@ -99,11 +99,11 @@ const Notification = () => {
         .onSnapshot((ns) => {
           setNotification(
             ns.docs.map((noti) => {
-              dispatch(
-                showMessage({
-                  message: "Your have new notification",
-                })
-              );
+              // dispatch(
+              //   showMessage({
+              //     message: "Your have new notification",
+              //   })
+              // );
               return noti.data();
             })
           );

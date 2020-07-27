@@ -19,6 +19,7 @@ export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
 export const FETCH_BOOKING_PENDING = "[BOOKING] FETCH BOOKING PENDING";
 export const SET_SELECTED_BOOKING = "[CHAT] SET SELECTED BOOKING";
 export const SET_IS_RENTER_BOOKING = "[BOOKING] SET USER ROLE";
+export const ACCEPT_AGREEMENT_SUCCESS = "[AGREEMENT] ACCEPT AGREEMENT SUCCESS";
 
 export function getRequestFirebase(request) {
   return {
@@ -116,7 +117,7 @@ export function fetchAgreementSuccess(agreements) {
 }
 export function acceptedAgreementSuccess(agreement) {
   return {
-    type: FETCH_AGREEMENT_SUCCESS,
+    type: ACCEPT_AGREEMENT_SUCCESS,
     payload: agreement,
   };
 }
