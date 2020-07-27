@@ -643,9 +643,9 @@ export default function CarSubmit(props) {
                   variant="outlined"
                   type="number"
                   onChange={handleInputChange}
-                  InputProps={{
-                    inputComponent: NumberFormatCustom,
-                  }}
+                  // InputProps={{
+                  //   inputComponent: NumberFormatCustom,
+                  // }}
                 />
               </Grid>
 
