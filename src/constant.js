@@ -34,3 +34,8 @@ export const APP_PATH = {
   CHECKING: "/checking",
   CAR_CHECKING: "/car-check",
 };
+export const BOOKING_STATUS = {
+  PENDING: "PENDING",
+  OWNER_ACCEPTED: "OWNER_ACCEPTED",
+  CONFIRM: "CONFIRM",
+};

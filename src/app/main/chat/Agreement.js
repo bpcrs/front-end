@@ -117,6 +117,9 @@ export default function Agreement({ type, onSubmit = () => {} }) {
       case "Indemnification":
         onSubmit({ type, value: checkboxValue });
         break;
+      case "Deposit":
+        onSubmit({ type, value: scope });
+        break;
       default:
         break;
     }
@@ -334,7 +337,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       className={classNames(classes.cardHeader, "px-24 py-16")}
                     >
                       <Typography variant="subtitle1" color="inherit">
-                        Deposit Checklist
+                        Deposit
                       </Typography>
                     </div>
 

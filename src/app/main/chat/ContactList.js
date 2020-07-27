@@ -19,6 +19,7 @@ import {
 } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import BookingStatus from "../user/BookingStatus";
+import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,7 +140,19 @@ const ContactList = (props) => {
       usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
     }
     getImagesContact();
-    dispatch(fetchPendingBooking(userLogged.id, 1, 10, "PENDING", isRenter));
+    dispatch(
+      fetchPendingBooking(
+        userLogged.id,
+        1,
+        10,
+        [
+          BOOKING_STATUS.PENDING,
+          BOOKING_STATUS.CONFIRM,
+          BOOKING_STATUS.OWNER_ACCEPTED,
+        ],
+        isRenter
+      )
+    );
   }, [userLogged.id, info, dispatch, isRenter]);
 
   const ContactButton = ({

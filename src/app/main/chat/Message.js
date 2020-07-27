@@ -109,31 +109,48 @@ const Message = ({ message, receive, type }) => {
         return (
           <Card className="w-1/2">
             <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="subtitle1">
+              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+                <Typography variant="subtitle1" color="inherit">
                   Mileage limit
                 </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {isRevice
-                    ? `You offer ${selectedBooking.car.owner.fullName} in mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`
-                    : `${selectedBooking.renter.fullName} offers you mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`}
-                </Typography>
+                {/* <Typography variant="caption" color="inherit">
+                  Save 15%
+                </Typography> */}
+              </div>
+              <CardContent>
+                <Card raised square>
+                  <CardContent className="p-32">
+                    <CardActionArea>
+                      <CardContent>
+                        <Typography
+                          variant="body2"
+                          color="textSecondary"
+                          component="p"
+                        >
+                          {isRevice
+                            ? `You offer ${selectedBooking.car.owner.fullName} in mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`
+                            : `${selectedBooking.renter.fullName} offers you mileage limit with ${message} km not exceeded for car ${selectedBooking.car.name} in booking ${selectedBooking.id}`}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                    {!isRevice ? (
+                      <div className="flex justify-center pb-32">
+                        <Button
+                          size="small"
+                          color="default"
+                          variant="outlined"
+                          onClick={() => {
+                            handAgreementAccepted(type);
+                          }}
+                        >
+                          Agree
+                        </Button>
+                      </div>
+                    ) : null}
+                  </CardContent>
+                </Card>
               </CardContent>
             </CardActionArea>
-            {!isRevice ? (
-              <div className="flex justify-center pb-32">
-                <Button
-                  size="small"
-                  color="default"
-                  variant="outlined"
-                  onClick={() => {
-                    handAgreementAccepted(type);
-                  }}
-                >
-                  Agree
-                </Button>
-              </div>
-            ) : null}
           </Card>
         );
       case "Extra":

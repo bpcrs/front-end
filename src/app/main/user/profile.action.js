@@ -11,7 +11,7 @@ export const FETCH_CAR_INFORMATION_OWNER_FAILURE =
   "[CAR_INFORMATION] FETCH DATA FAILURE";
 
 export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
-export const APPROVE_BOOKING_REQUEST = "[BOOKING] APPROVE BOOKING SUCCESS";
+export const CHANGE_BOOKING_REQUEST = "[BOOKING] CHANGE BOOKING SUCCESS";
 export const ADD_CAR_REGISTER = "[CAR] ADD DATA SUCCESS";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const REGISTER_SUCCESS = "[OPEN] REGISTER SUCCESS";
@@ -88,9 +88,9 @@ export function fetchBookingRentalCarSuccess(bookings) {
     payload: bookings,
   };
 }
-export function approveBookingRequestSuccess(booking) {
+export function changeBookingStatusRequestSuccess(booking) {
   return {
-    type: APPROVE_BOOKING_REQUEST,
+    type: CHANGE_BOOKING_REQUEST,
     payload: booking,
   };
 }
@@ -174,16 +174,19 @@ export function fetchBookingRequest(
   };
 }
 
-export function approveBookingRequest(bookingId, status) {
+export function changeBookingStatusRequest(bookingId, status) {
   return (dispatch) => {
     const request = PUT(ENDPOINT.BOOKING_CONTROLLER_GETBYID(bookingId), {
       status,
     });
     request.then(
       (response) => {
-        dispatch(approveBookingRequestSuccess(response.data));
-        notificationBooking(response.data);
-        console.log(response.success ? response.data : "");
+        if (response.success) {
+          dispatch(changeBookingStatusRequestSuccess(response.data));
+          notificationBooking(response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));

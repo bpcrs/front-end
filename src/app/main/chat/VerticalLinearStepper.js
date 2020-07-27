@@ -16,6 +16,8 @@ import {
   deleteAllMsgByTypeFromFirebase,
 } from "./chat.action";
 import { useEffect } from "react";
+import { changeBookingStatusRequest } from "../user/profile.action";
+import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +43,7 @@ function getSteps() {
   ];
 }
 function getStepsRenter() {
-  return ["Select Mileage limit", "Select Insurance"];
+  return ["Select Mileage limit", "Select Insurance", "Commplete agreement"];
 }
 
 export default function VerticalLinearStepper() {
@@ -73,7 +75,14 @@ export default function VerticalLinearStepper() {
   };
   const handleNext = async () => {
     if (activeStep === steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      dispatch(
+        changeBookingStatusRequest(
+          selectedBooking.id,
+          selectedBooking.renter.id !== userLogged.id
+            ? BOOKING_STATUS.OWNER_ACCEPTED
+            : BOOKING_STATUS.CONFIRM
+        )
+      );
     } else {
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
@@ -144,6 +153,8 @@ export default function VerticalLinearStepper() {
             <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
+      case 2:
+        return <React.Fragment>You comfirm agreement</React.Fragment>;
       default:
         return "Unknown step";
     }

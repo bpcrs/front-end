@@ -83,7 +83,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
         loading: false,
       };
     }
-    case Actions.APPROVE_BOOKING_REQUEST: {
+    case Actions.CHANGE_BOOKING_REQUEST: {
       return {
         ...state,
         bookings: {
