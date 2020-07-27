@@ -97,7 +97,6 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   });
 
   // const criterias = useSelector((state) => state.chat.criteria);
-  const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
   const [extra, setExtra] = useState(2000);
   const handleChange = (event, newValue) => {
@@ -135,46 +134,84 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     switch (type) {
       case "Mileage limit":
         return (
-          <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={50}
-              min={100}
-              max={500}
-              valueLabelFormat={(value) => (value === 15 ? "Unlimited" : value)}
-            />
-            <Typography variant="subtitle1" color="primary">
-              Mileage limit: You will offer{" "}
-              {scope === 15 ? 100 + " km" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={12} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Mileage Limit
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <PrettoSlider
+                        valueLabelDisplay="on"
+                        aria-labelledby="continuous-slider"
+                        value={scope}
+                        marks={true}
+                        onChange={handleChange}
+                        onDragStop={(e) => console.log(e)}
+                        step={50}
+                        min={100}
+                        max={500}
+                        valueLabelFormat={(value) =>
+                          value === 15 ? "Unlimited" : value
+                        }
+                      />
+                      <Typography variant="subtitle1" color="primary">
+                        Mileage limit: You will offer{" "}
+                        {scope === 15 ? 100 + " km" : scope + " km"} not
+                        exceeded destination registered.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       case "Extra":
         return (
-          <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={extra}
-              marks={true}
-              onChange={handleExtra}
-              onDragStop={(e) => console.log(e)}
-              step={1000}
-              min={2000}
-              max={15000}
-              valueLabelFormat={(value) => value}
-            />
-            <Typography variant="subtitle2" color="inherit">
-              You will be charged {extra + " đ"} for every km you travel above.
-              If required, please select a higher limit. All fuel bills will be
-              reimbursed on a fair usage basis.
-            </Typography>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={12} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Extra Charge Cost
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <PrettoSlider
+                        valueLabelDisplay="on"
+                        aria-labelledby="continuous-slider"
+                        value={extra}
+                        marks={true}
+                        onChange={handleExtra}
+                        onDragStop={(e) => console.log(e)}
+                        step={1000}
+                        min={2000}
+                        max={15000}
+                        valueLabelFormat={(value) => value}
+                      />
+                      <Typography variant="subtitle2" color="inherit">
+                        You will be charged {extra + " đ"} for every km you
+                        travel above. If required, please select a higher limit.
+                        All fuel bills will be reimbursed on a fair usage basis.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       case "Insurance":
@@ -288,62 +325,96 @@ export default function Agreement({ type, onSubmit = () => {} }) {
         );
       case "Deposit":
         return (
-          <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
-            />
-            <Typography>
-              Deposit: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={12} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Deposit Checklist
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <PrettoSlider
+                        valueLabelDisplay="on"
+                        aria-labelledby="continuous-slider"
+                        value={scope}
+                        marks={true}
+                        onChange={handleChange}
+                        onDragStop={(e) => console.log(e)}
+                        step={1}
+                        min={10}
+                        max={30}
+                        valueLabelFormat={(value) => value}
+                      />
+                      <Typography variant="subtitle1" color="primary">
+                        Deposit: You will offer price {scope + " days"} rent for
+                        rental this car.
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       case "Indemnification":
         return (
-          <Box className="px-24 py-24">
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkboxValue.carDamage}
-                    onChange={handleChangeCheckbox}
-                    name="carDamage"
-                  />
-                }
-                label="Car damage"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkboxValue.overdue}
-                    onChange={handleChangeCheckbox}
-                    name="overdue"
-                  />
-                }
-                label="Overdue return time"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={checkboxValue.violate}
-                    onChange={handleChangeCheckbox}
-                    name="violate"
-                  />
-                }
-                label="Violate transport"
-              />
-            </FormGroup>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={12} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Indemnification Checklist
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={checkboxValue.carDamage}
+                              onChange={handleChangeCheckbox}
+                              name="carDamage"
+                            />
+                          }
+                          label="Car damage"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={checkboxValue.overdue}
+                              onChange={handleChangeCheckbox}
+                              name="overdue"
+                            />
+                          }
+                          label="Overdue return time"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={checkboxValue.violate}
+                              onChange={handleChangeCheckbox}
+                              name="violate"
+                            />
+                          }
+                          label="Violate transport"
+                        />
+                      </FormGroup>
+                    </CardContent>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       default:

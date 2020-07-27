@@ -34,8 +34,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 function getSteps() {
   return [
-    "Choose Indemnification plan",
     "Select Extra",
+    "Choose Indemnification plan",
     "Choose Deposit",
     "Commplete agreement",
   ];
@@ -65,7 +65,7 @@ export default function VerticalLinearStepper() {
   }, [agreements, dispatch, selectedBooking.id]);
 
   const isStepOptional = (step) => {
-    return step === 0 || step === 1;
+    return step === 0 || step === 1 || step === 2;
   };
   const [currentAgreement, setCurrentAgreement] = useState();
   const isStepSkipped = (step) => {

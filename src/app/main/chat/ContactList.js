@@ -150,7 +150,6 @@ const ContactList = (props) => {
       onClick={() => setSelectedContact(booking)}
       className={classes.contactButton}
     >
-      {console.log(booking)}
       <Grid container className="px-8 py-8">
         <Grid item lg>
           <StyledBadge
