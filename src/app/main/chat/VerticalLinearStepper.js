@@ -7,7 +7,6 @@ import StepContent from "@material-ui/core/StepContent";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import ViewBooking from "../booking/ViewBooking";
 import Agreement from "./Agreement";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
@@ -165,13 +164,13 @@ export default function VerticalLinearStepper() {
     });
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  // };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <div className={classes.root}>
@@ -226,7 +225,6 @@ export default function VerticalLinearStepper() {
           </Button> */}
         </Paper>
       )}
-      {/* <ViewBooking /> */}
     </div>
   );
 }
