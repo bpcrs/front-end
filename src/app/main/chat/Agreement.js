@@ -1,8 +1,5 @@
 import React from "react";
 import {
-  Button,
-  Paper,
-  Collapse,
   Box,
   Slider,
   Typography,
@@ -15,15 +12,13 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
-import { closeAgreement, submitMessage } from "./chat.action";
+import { useDispatch } from "react-redux";
+import { closeAgreement } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
-import { FuseAnimateGroup } from "@fuse";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
-import { truncate } from "lodash";
 import { useEffect } from "react";
 
 const PrettoSlider = withStyles({
@@ -94,7 +89,6 @@ const GreenRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 export default function Agreement({ type, onSubmit = () => {} }) {
-  const agreement = useSelector((state) => state.chat.agreement);
   const [selectedValue, setSelectedValue] = React.useState("basic");
   const [checkboxValue, setCheckboxValue] = useState({
     carDamage: false,
@@ -114,7 +108,6 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     setExtra(newValue);
     setSelectedValue(newValue);
   };
-  console.log(selectedValue);
   useEffect(() => {
     switch (type) {
       case "Insurance":
@@ -125,17 +118,11 @@ export default function Agreement({ type, onSubmit = () => {} }) {
       case "Indemnification":
         onSubmit({ type, value: checkboxValue });
         break;
-      case "Deposit":
-        onSubmit({ type, value: scope });
-        break;
       default:
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedValue, scope, checkboxValue]);
-  const handleSubmitScope = (type) => {
-    dispatch(closeAgreement());
-  };
 
   const handleChangeCheckbox = (event) => {
     setCheckboxValue({
@@ -309,14 +296,16 @@ export default function Agreement({ type, onSubmit = () => {} }) {
               marks={true}
               onChange={handleChange}
               onDragStop={(e) => console.log(e)}
-              step={1}
-              min={10}
-              max={30}
-              valueLabelFormat={(value) => value}
+              step={5}
+              min={15}
+              valueLabelFormat={(value) =>
+                value === 100 ? "Unlimited" : value
+              }
             />
-            <Typography variant="subtitle1" color="primary">
-              Deposit: You will offer price {scope + " days"} rent for rental
-              this car.
+            <Typography>
+              Deposit: You will offer{" "}
+              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              destination registered.
             </Typography>
           </Box>
         );
@@ -362,19 +351,5 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     }
   };
 
-  return (
-    <Collapse in={true}>
-      {/* <Paper elevation={5}>
-        <Typography>Decide your offer</Typography> */}
-      <AgreementByType />
-      {/* <Button
-          variant="outlined"
-          color="default"
-          onClick={() => dispatch(closeAgreement())}
-        >
-          Close
-        </Button>
-      </Paper> */}
-    </Collapse>
-  );
+  return <AgreementByType />;
 }

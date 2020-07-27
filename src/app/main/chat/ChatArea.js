@@ -182,7 +182,7 @@ const User = ({ displayName, email, photoURL }) => {
   );
 };
 
-const UserSelected = ({ booking }) => {
+const UserSelected = () => {
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   return (
     <Box
@@ -213,14 +213,13 @@ const UserSelected = ({ booking }) => {
             color="textSecondary"
             variant="caption"
           >
-            Booking Id : {selectedBooking.id}
+            Booking Id : {selectedBooking.id} -{" "}
+            <BookingStatus name={selectedBooking.status} />
           </Typography>
 
           {/* </Grid> */}
         </Grid>
-        <Grid item>
-          <BookingStatus name={selectedBooking.status} />
-        </Grid>
+        <Grid item></Grid>
       </Grid>
     </Box>
   );

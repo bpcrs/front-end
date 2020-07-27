@@ -35,18 +35,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 function getSteps() {
   return [
-    "Select Insurance",
     "Choose Indemnification plan",
-    "Commit your side",
+    "Select Extra",
+    "Choose Deposit",
+    "Commplete agreement",
   ];
 }
 function getStepsRenter() {
-  return [
-    "Select Mileage limit",
-    "Select Extra",
-    "Choose Deposit",
-    "Commit your side",
-  ];
+  return ["Select Mileage limit", "Select Insurance"];
 }
 
 export default function VerticalLinearStepper() {
@@ -113,7 +109,7 @@ export default function VerticalLinearStepper() {
       case 0:
         return (
           <React.Fragment>
-            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
+            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
       case 1:
@@ -122,7 +118,14 @@ export default function VerticalLinearStepper() {
             <Agreement type="Indemnification" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
-
+      case 2:
+        return (
+          <React.Fragment>
+            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
+          </React.Fragment>
+        );
+      case 3:
+        return <React.Fragment>You comfirm agreement</React.Fragment>;
       default:
         return "Unknown step";
     }
@@ -139,13 +142,7 @@ export default function VerticalLinearStepper() {
       case 1:
         return (
           <React.Fragment>
-            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
-          </React.Fragment>
-        );
-      case 2:
-        return (
-          <React.Fragment>
-            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
+            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
       default:
