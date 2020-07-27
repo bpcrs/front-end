@@ -107,11 +107,11 @@ function Row(props) {
         <DialogContent>
           <CarEdit carId={car.id} />
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Save changes
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );
@@ -147,11 +147,11 @@ function RegisterCar() {
         <DialogContent>
           <CarSubmit />
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
+        {/* <DialogActions>
+          <Button autoFocus onClick={() =>} color="primary">
             Save changes
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
       <Dialog open={loading} scroll="body">
         <DialogContent>
@@ -160,7 +160,7 @@ function RegisterCar() {
               <CircularProgress color="secondary" size="25px" />
             </Grid>
           </Grid>
-          <Typography variant="h6" color="initial">
+          <Typography variant="subtitle2" color="initial">
             Checking information...
           </Typography>
         </DialogContent>
@@ -180,34 +180,6 @@ const MyCar = (props) => {
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.profile.cars);
   const currentUser = useSelector((state) => state.auth.user);
-//   const history = useHistory();
-//   const [isDetail, setIsDetail] = useState(false);
-//   const [detail, setDetail] = useState();
-//   const [name, setName] = useState();
-
-//   console.log("user: " , currentUser);
-//   console.log("cars: ", cars);
-//   const handleCickSetting = (carId) => {
-//     history.push({
-//       pathname: APP_PATH.CAR_EDIT + "/" + carId,
-//       state: {
-//         carId,
-//       },
-//     });
-//     // window.open
-//   };
-
-//   const handleAddCar = () => {
-//     history.push({
-//       pathname: APP_PATH.CAR_SUBMIT,
-//     });
-//   };
-
-//   const handleClickBooked = (carId, carName) => {
-//     setIsDetail(true);
-//     setDetail(carId);
-//     setName(carName);
-//   };
   const isDetail = useSelector((state) => state.profile.isDetail);
   const [currentPage, setCurrentPage] = useState(1);
   const request = useSelector((state) => state.profile.request);
@@ -248,38 +220,6 @@ const MyCar = (props) => {
             <TableBody>
               {cars.data &&
                 cars.data.map((car, index) => (
-                  // <Grid item xs={12} xl={12} lg={12}>
-                  // <TableRow
-                  //   className="h-64 cursor-pointer"
-                  //   hover
-                  //   // role="checkbox"
-                  //   // aria-checked={isSelected}
-                  //   tabIndex={-1}
-                  //   key={index}
-                  //   // selected={isSelected}
-                  // >
-                  //   <TableCell component="th" scope="row">
-                  //     {car.name}
-                  //   </TableCell>
-                  //   <TableCell component="th" scope="row">
-                  //     {car.plateNum}
-                  //   </TableCell>
-                  //   <TableCell component="th" scope="row">
-                  //     <CarStatus name={car.status} />
-                  //   </TableCell>
-                  //   <TableCell component="th" scope="row">
-                  //     <IconButton onClick={() => {}}>
-                  //       <Icon>settings</Icon>
-                  //     </IconButton>
-                  //   </TableCell>
-                  //   <TableCell component="th" scope="row">
-                  //     <IconButton
-                  //       onClick={() => handleClickBooked(car.id, car.name)}
-                  //     >
-                  //       <Icon style={{ color: "purple" }}>details</Icon>
-                  //     </IconButton>
-                  //   </TableCell>
-                  // </TableRow>
                   <Row key={index} car={car} />
                   // </Grid>
                 ))}
