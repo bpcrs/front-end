@@ -33,4 +33,5 @@ export const APP_PATH = {
   LANDING_MOBILE: "/landing-mobile",
   CHECKING: "/checking",
   CAR_CHECKING: "/car-check",
+  USER_CHECK_LICENSE: "/user-check-license",
 };

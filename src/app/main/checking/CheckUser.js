@@ -50,6 +50,15 @@ export default function CheckUser() {
             return "red";
         }
     };
+
+    const handleCickSetting = (userId) => {
+        history.push({
+            pathname: APP_PATH.USER_CHECK_LICENSE + "/" + userId,
+            state: {
+                userId,
+            }
+        });
+    };
     
     return (
         <TableContainer>
@@ -98,7 +107,7 @@ export default function CheckUser() {
 
                                         <Grid item xs={1} lg={1}>
                                             <div >
-                                                <SettingIcon style={{ marginTop: "50%" }} />
+                                                <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(user.id)}/>
                                             </div>
                                         </Grid>
                                     </Grid>

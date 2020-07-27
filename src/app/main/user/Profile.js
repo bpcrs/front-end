@@ -28,6 +28,7 @@ import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
 import BookingRequest from "./BookingRequest";
+import MyLicense from "../submitLicense/MyLicense";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -126,7 +127,7 @@ const Profile = (props) => {
                 <div className="hidden md:flex flex-col ml-12 items-start">
                   <Typography
                     variant="h5"
-                    // className="normal-case font-1000 flex"
+                  // className="normal-case font-1000 flex"
                   >
                     {userLogged.displayName}
                   </Typography>
@@ -137,6 +138,15 @@ const Profile = (props) => {
                   >
                     {userLogged.role}
                   </Typography>
+
+                  <Typography
+                    className="text-11 capitalize"
+                    color="textSecondary"
+                  // variant="overline"
+                  >
+                    <MyLicense />
+                  </Typography>
+
                 </div>
               </Grid>
               <Grid item lg={1}>

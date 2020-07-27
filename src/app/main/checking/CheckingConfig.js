@@ -1,6 +1,7 @@
 import { APP_PATH } from "../../../constant";
 import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 import CarCheck from "./CarDetailChecking";
+import UserCheckLicense from "./UserDetailChecking";
 
 export const CheckingConfig = {
     settings: {
@@ -34,6 +35,10 @@ export const CheckingConfig = {
         {
             path: APP_PATH.CAR_CHECKING + "/:id",
             component: CarCheck,
+        },
+        {
+            path: APP_PATH.USER_CHECK_LICENSE + "/:id",
+            component: UserCheckLicense,
         }
         
     ]
