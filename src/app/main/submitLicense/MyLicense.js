@@ -51,7 +51,7 @@ const MyLicense = (props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button autoFocus onClick={handleClose} color="primary">
-                        Save changes
+                        Close
           </Button>
                 </DialogActions>
             </Dialog>

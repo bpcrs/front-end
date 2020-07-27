@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Button, TextField, Grid, makeStyles, Typography, } from "@material-ui/core";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import Layout from "../../layout";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,6 +9,7 @@ import firebase from "../../firebase/firebase";
 import Slide from "@material-ui/core/Slide";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { useDispatch, useSelector } from "react-redux";
+import { updateUserLicense, updateUserLicenseLoading } from "./license.action";
 
 
 // import event from '';
@@ -57,12 +56,35 @@ const useStyles = makeStyles((theme) => ({
 export default function SubmitLicense(props) {
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.license.loading);
+  const [license, setLicense] = useState({});
 
   var [imageLicenseArr, setImageLicenseArr] = useState([]);
+  var linkImageArr = new Array();
+
+  const handleInputChange = (event) => {
+    setLicense({
+      ...license,
+      [event.target.name]: event.target.value
+    })
+  };
+
+
+  const updateLicense = () => {
+    dispatch(updateUserLicense(currentUser.id, {
+      phone: license.phone,
+      identification: license.identification,
+      imageUrlLicense1: linkImageArr[0],
+      imageUrlLicense2: linkImageArr[1],
+      imageUrlLicense3: linkImageArr[2],
+      imageUrlLicense4: linkImageArr[3]
+    }))
+  };
 
   let uploadFile = () => {
     if (imageLicenseArr.length > 0) {
-
+      dispatch(updateUserLicenseLoading());
       // Create the file metadata
       var metadata = {
         contentType: "image/jpeg",
@@ -124,11 +146,14 @@ export default function SubmitLicense(props) {
                 break;
             }
           },
-          function () {
+          async function () {
             if (flag) {
               flag = false;
               if (count == 0) {
                 console.log("start get link download!!!");
+                await new Promise((resolve, reject) =>
+                  setTimeout(resolve, 3000)
+                );
                 downloadFile(date);
               } else {
                 console.log("check lai cho nay");
@@ -146,6 +171,8 @@ export default function SubmitLicense(props) {
   var downloadFile = (date) => {
     var storage = firebase.storage();
     var storageRef = storage.ref("License");
+    var count = 0;
+    var flag2 = false;
 
     for (let i = 0; i < imageLicenseArr.length; i++) {
       // Create a reference to the file we want to download
@@ -159,6 +186,20 @@ export default function SubmitLicense(props) {
         .then(function (url) {
           // Insert url into an <img> tag to "download"
           console.log("test vi tri: " + (i + 1) + "-" + url);
+          linkImageArr.push(url);
+
+          count = count + 1;
+          if (count == imageLicenseArr.length) {
+            count = 0;
+
+            flag2 = true;
+            if (flag2) {
+              flag2 = false;
+              console.log("length link download image: " + linkImageArr.length);
+              console.log("Starting store car info to DB...");
+              updateLicense();
+            }
+          }
         })
         .catch(function (error) {
           // A full list of error codes is available at
@@ -225,7 +266,28 @@ export default function SubmitLicense(props) {
 
   return (
     <Grid spacing={1} container justify="center" alignItems="center">
-      
+
+
+      <div>
+        <Dialog
+          open={loading}
+          TransitionComponent={Transition}
+          keepMounted
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Updating Profile"}
+          </DialogTitle>
+          <DialogContent>
+            <div align="center" className={classes.progressBar}>
+              <CircularProgress color="secondary" />
+              <p>We are update your information, please wait...</p>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
       <Typography variant="h6" color="initial" className={classes.head}>
         Update Information
         </Typography>
@@ -237,6 +299,8 @@ export default function SubmitLicense(props) {
             className={classes.textField}
             id="phone"
             name="phone"
+            value={license.phone}
+            onChange={handleInputChange}
             label="Phone Number"
             variant="outlined"
           />
@@ -248,6 +312,8 @@ export default function SubmitLicense(props) {
             className={classes.textField}
             id="identification"
             name="identification"
+            onChange={handleInputChange}
+            value={license.identification}
             label="Identification Number"
             variant="outlined"
           />
@@ -382,7 +448,7 @@ export default function SubmitLicense(props) {
             color="secondary"
             onClick={uploadFile}
           >
-            Submit
+            Save Change
           </Button>
         </Grid>
       </Grid>
@@ -390,24 +456,3 @@ export default function SubmitLicense(props) {
     </Grid>
   );
 }
-{/* 
-      <div>
-        <Dialog
-          open={open}
-          TransitionComponent={Transition}
-          keepMounted
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            {"We are updating your profile"}
-          </DialogTitle>
-          <DialogContent>
-            <div align="center" className={classes.progressBar}>
-              <CircularProgress color="secondary" />
-              <p>Processing...</p>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div> */}

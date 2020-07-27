@@ -90,6 +90,9 @@ export const ENDPOINT = {
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
   ACCOUNT_CONTROLLER_GETALL: "/account",
+  ACCOUNT_CONTROLLER_GETBYID: (id) => `/account/${id}`,
+  ACCOUNT_LICENSE_UPDATE: (id) => `/account/license/${id}`,
+  
   IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",

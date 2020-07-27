@@ -11,6 +11,7 @@ import { APP_PATH } from "../../../constant";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
+import { fetchUserDetailChecking, putAcceptUserLicence } from "./checking.action";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +50,35 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserDetailChecking(props) {
     const classes = useStyles();
-    
+    const history = useHistory();
+    const dispatch = useDispatch();
+    const userDetail = useSelector((state) => state.checking.userDetail);
+    const [currentUser, setCurrentUser] = useState({});
+    const changePage = useSelector((state) => state.checking.changePage);
+
+
+    useEffect(() => {
+        const { userId } = props.location.state;
+
+        const fetchUser = () => {
+            dispatch(fetchUserDetailChecking(userId));
+            setCurrentUser(userDetail);
+        };
+        fetchUser();
+
+        if (changePage) {
+            history.push({
+                pathname: APP_PATH.CHECKING,
+            });
+        }
+    }, [userDetail.id, changePage])
+
+    const handleAcceptUserLicense = () => {
+        dispatch(putAcceptUserLicence(currentUser.id, {
+            licenseCheck: true,
+        }))
+    };
+
     return (
         <Layout name="User checking form">
             <Grid spacing={1} container justify="center" alignItems="center">
@@ -66,6 +95,7 @@ export default function UserDetailChecking(props) {
                                         className={classes.textField}
                                         label="Full Name"
                                         variant="outlined"
+                                        value={currentUser.fullName ? currentUser.fullName : ""}
                                         disabled
                                     />
                                 </Grid>
@@ -75,6 +105,7 @@ export default function UserDetailChecking(props) {
                                         className={classes.textField}
                                         label="Email"
                                         variant="outlined"
+                                        value={currentUser.email ? currentUser.email : ""}
                                         disabled
                                     />
                                 </Grid>
@@ -86,6 +117,7 @@ export default function UserDetailChecking(props) {
                                     className={classes.textField}
                                     disabled
                                     label="Phone"
+                                    value={currentUser.phone ? currentUser.phone : ""}
                                     variant="outlined"
                                 />
                             </Grid>
@@ -95,6 +127,7 @@ export default function UserDetailChecking(props) {
                                 <TextField
                                     className={classes.textField}
                                     disabled
+                                    value={currentUser.identification ? currentUser.identification : ""}
                                     label="Identification"
                                     variant="outlined"
                                 />
@@ -106,7 +139,42 @@ export default function UserDetailChecking(props) {
                 <Grid item xs={12} lg={7}>
                     <Card className={classes.card}>
                         <div className="mt-20">
-                            this is image
+                            <Grid item xs={12} lg={6} >
+                                <div style={{ textAlign: "center" }}>
+                                    <p>Picture 1</p>
+                                    <p>
+                                        <img src={currentUser.imageUrlLicense1} id="output" width="200" height="200" />
+                                    </p>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={12} lg={6}>
+                                <div style={{ textAlign: "center" }}>
+                                    <p>Picture 2</p>
+                                    <p>
+                                        <img src={currentUser.imageUrlLicense2} id="output" width="200" height="200" />
+                                    </p>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={12} lg={6} >
+                                <div style={{ textAlign: "center" }}>
+                                    <p>Picture 3</p>
+                                    <p>
+                                        <img src={currentUser.imageUrlLicense3} id="output" width="200" height="200" />
+                                    </p>
+                                </div>
+                            </Grid>
+
+                            <Grid item xs={12} lg={6}>
+                                <div style={{ textAlign: "center" }}>
+                                    <p>Picture 4</p>
+                                    <p>
+                                        <img src={currentUser.imageUrlLicense4} id="output" width="200" height="200" />
+                                    </p>
+                                </div>
+                            </Grid>
+
                             {/* <Grid container>
                                 {
                                     currentCar.images &&
@@ -134,6 +202,7 @@ export default function UserDetailChecking(props) {
                         color="primary"
                         startIcon={<PublishIcon />}
                         style={{ marginLeft: "30%" }}
+                        onClick={handleAcceptUserLicense}
                     >
                         Accept
     </Button>

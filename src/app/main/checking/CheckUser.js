@@ -102,7 +102,7 @@ export default function CheckUser() {
                                                 textAlign: "center",
                                                 marginTop: "1%",
                                             }}>
-                                            <p style={{color:handleColorStateUser(user.active)}} >{handleStateUser(user.active)}</p>
+                                            <p style={{color:handleColorStateUser(user.licenseCheck)}} >{handleStateUser(user.licenseCheck)}</p>
                                         </Grid>
 
                                         <Grid item xs={1} lg={1}>
