@@ -40,7 +40,7 @@ export default function CarCompare(props) {
     createData("Price", carDetail1.info.price, carDetail2.info.price),
     createData("Seats", carDetail1.info.seat, carDetail2.info.seat),
     createData("Year", carDetail1.info.year, carDetail2.info.year),
-    createData("Sound", carDetail1.info.sound, carDetail2.info.sound),
+    // createData("Sound", carDetail1.info.sound, carDetail2.info.sound),
     createData(
       "Auto Drive",
       carDetail1.info.auto_driver ? "Automatic" : "Manual",

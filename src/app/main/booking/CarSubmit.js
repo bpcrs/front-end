@@ -14,6 +14,12 @@ import {
   Tabs,
   Tab,
   Icon,
+  Stepper,
+  Step,
+  StepButton,
+  StepLabel,
+  withStyles,
+  StepConnector,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import firebase from "../../firebase/firebase";
@@ -22,12 +28,14 @@ import {
   fetchBrandList,
   fetchModelList,
   postCar,
+  fetchCarDetail,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
-import { orange } from "@material-ui/core/colors";
+import { orange, green } from "@material-ui/core/colors";
 import { processingRegister } from "../user/profile.action";
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,10 +51,14 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     height: "50px",
     width: "50px",
-    // marginRight: 10,
   },
   formControl: {
     width: 250,
+    margin: theme.spacing(1),
+    maxHeight: 150,
+  },
+  formScreen: {
+    width: "100%",
     margin: theme.spacing(1),
     maxHeight: 150,
   },
@@ -54,10 +66,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     margin: theme.spacing(1),
   },
-  smallTextField: {
-    // width: "100%",
+  priceField: {
+    width: "95%",
     margin: theme.spacing(1),
-    // paddingLeft: theme.spacing(1),
+  },
+
+  smallTextField: {
+    margin: theme.spacing(1),
   },
   card: {
     margin: 20,
@@ -65,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: theme.spacing(1),
+    marginTop: theme.spacing(3),
   },
   head: {
     marginTop: theme.spacing(2),
@@ -80,7 +96,8 @@ const useStyles = makeStyles((theme) => ({
     width: 128,
     height: 128,
     display: "flex",
-
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
     rounded: 4,
@@ -108,93 +125,56 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
+const touchScreens = [
+  "Boss Audio Touch Screen Car Stereo",
+  "Jensen Multimedia Touch Screen Stereo",
+  "Pioneer In-Dash DVD Receiver Car Stereo",
+  "Boss Audio Single Din Touch Screen Car Stereo",
+  "Kenwood 2 Din Receiver with HD Radio",
+  "Pioneer AVH4200NEX Double Din Receiver",
+  "Regetek 7 Inch Touch Screen Car Stereo",
+  "JVC In-Dash 6.2-Inch Car Stereo",
+  "Other",
+];
 
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      thousandsGroupStyle
-      thousandSeparator
-      isNumericString
-    />
-  );
+function getSteps() {
+  return ["Fill information", "Upload image of car", "Upload license of car"];
 }
 
-NumberFormatCustom.propTypes = {
-  inputRef: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
-};
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-function a11yProps(index) {
-  return {
-    id: `vertical-tab-${index}`,
-    "aria-controls": `vertical-tabpanel-${index}`,
-  };
-}
-
-export default function CarSubmit(props) {
-  const classes = useStyles();
-  const [tabValue, setTabValue] = useState(0);
-  const [images, setImages] = useState([]);
+function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
+  const dispatch = useDispatch();
   const now = new Date().getUTCFullYear();
+  const classes = useStyles();
+  const brands = useSelector((state) => state.booking.brands);
+  const models = useSelector((state) => state.booking.models);
+  const [currentCar, setCurrentCar] = useState({});
+  const [brand, setBrand] = React.useState("");
+  const [imageCarArr, setImageCarArr] = useState([]);
+  const [licenses, setLicenses] = useState([]);
+  const [linkLicenses, setLinkLicenses] = useState([]);
+
   const years = Array(now - (now - 10))
     .fill("")
     .map((v, idx) => now - idx);
 
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchBrandList());
-    dispatch(fetchModelList());
-  }, [dispatch]);
-
-  const brands = useSelector((state) => state.booking.brands);
-  const models = useSelector((state) => state.booking.models);
-  const userLogged = useSelector((state) => state.auth.user);
-  const [currentCar, setCurrentCar] = useState({});
-  const handleInputChange = (event) => {
-    setCurrentCar({
-      ...currentCar,
-      [event.target.name]: event.target.value,
-    });
+  const uploadLicences = (event) => {
+    setLicenses([...licenses, ...event.target.files]);
   };
-
-  const [brand, setBrand] = React.useState("");
+  const uploadImage = (event) => {
+    console.log(event.target.files);
+    setImageCarArr([...imageCarArr, ...event.target.files]);
+  };
   const handleChangeBrand = (event) => {
     setBrand(event.target.value);
     setCurrentCar({
       ...currentCar,
       brandId: event.target.value.id,
+    });
+  };
+  const handleInputChange = (event) => {
+    setCurrentCar({
+      ...currentCar,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -222,31 +202,451 @@ export default function CarSubmit(props) {
       autoDriver: event.target.value,
     });
   };
-  var linkImageArr = new Array();
-  const linkLicen = new Array();
-  var [imageCarArr, setImageCarArr] = useState([]);
-  const [licenses, setLicenses] = useState([]);
-  const [linkLicenses, setLinkLicenses] = useState([]);
 
-  const uploadLicences = (event) => {
-    setLicenses([...licenses, ...event.target.files]);
+  useEffect(() => {
+    console.log(brands);
+    if (brands.length === 0) dispatch(fetchBrandList());
+    if (models.length === 0) dispatch(fetchModelList());
+
+    onSubmit(currentCar);
+    onSubmitImage(imageCarArr);
+    onSubmitLicense(licenses);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentCar, imageCarArr, licenses]);
+  switch (step) {
+    case 0:
+      return (
+        <Grid>
+          <Grid container>
+            <Grid item xs={6} lg={6}>
+              <FormControl
+                required
+                className={classes.formControl}
+                variant="outlined"
+              >
+                <InputLabel id="demo-simple-select-required-label">
+                  Brand
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-required-label"
+                  id="demo-simple-select-required"
+                  value={brand}
+                  onChange={handleChangeBrand}
+                  label="Brand"
+                >
+                  {brands.map((brand) => (
+                    <MenuItem key={brand.name} value={brand}>
+                      <Typography>
+                        <img
+                          className={classes.icon}
+                          src={brand.logoLink}
+                          alt=""
+                        />
+                        {brand.name}
+                      </Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} lg={6}>
+              <FormControl
+                required
+                className={classes.formControl}
+                variant="outlined"
+              >
+                <InputLabel id="demo-simple-select-required-label">
+                  Model
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-required-label"
+                  id="demo-simple-select-required"
+                  value={model}
+                  onChange={handleChangeModel}
+                  label="Brand"
+                >
+                  {models.map((model) => (
+                    <MenuItem key={model.name} value={model}>
+                      <Typography>{model.name}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={6} lg={6}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Year
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={year}
+                  onChange={handleChangeYear}
+                  label="Year"
+                >
+                  {years.map((year) => (
+                    <MenuItem key={year} value={year}>
+                      <Typography>{year}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={6} lg={6}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formControl}
+              >
+                <InputLabel
+                  id="demo-simple-select-outlined-label"
+                  // variant="outlined"
+                >
+                  Auto Drive
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  onChange={handleChangeAutoDriver}
+                  className={classes.selectEmpty}
+                  label="Auto Drive"
+                >
+                  <MenuItem key="true" value="true">
+                    Yes
+                  </MenuItem>
+                  <MenuItem key="false" value="false">
+                    No
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid container>
+            <Grid item xs={3} lg={3}>
+              <TextField
+                required
+                className={classes.smallTextField}
+                id="seat"
+                name="seat"
+                value={currentCar.seat}
+                label="Seat"
+                type="number"
+                variant="outlined"
+                onChange={handleInputChange}
+              />
+            </Grid>
+
+            <Grid item xs={9} lg={9}>
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formScreen}
+              >
+                <InputLabel id="demo-simple-select-outlined-label">
+                  TouchScreen
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={currentCar.screen}
+                  onChange={handleInputChange}
+                  label="TouchScreen"
+                  name="screen"
+                >
+                  {touchScreens.map((screen, index) => (
+                    <MenuItem key={index} value={screen}>
+                      <Typography>{screen}</Typography>
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} lg={12}>
+            <TextField
+              required
+              className={classes.textField}
+              id="name"
+              value={currentCar.name}
+              label="Name"
+              name="name"
+              variant="outlined"
+              onChange={handleInputChange}
+            />
+          </Grid>
+          <Grid container>
+            <Grid item xs={7} lg={7}>
+              <TextField
+                required
+                className={classes.priceField}
+                id="vin"
+                name="vin"
+                value={currentCar.vin}
+                label="Vin number"
+                variant="outlined"
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={5} lg={5}>
+              <TextField
+                required
+                className={classes.textField}
+                variant="outlined"
+                label="Price (per day)"
+                value={currentCar.price}
+                onChange={handleInputChange}
+                name="price"
+                id="formatted-numberformat-input"
+                InputProps={{
+                  inputComponent: NumberFormatCustom,
+                }}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} lg={12}>
+            <TextField
+              required
+              className={classes.textField}
+              id="plateNum"
+              name="plateNum"
+              value={currentCar.plateNum}
+              label="Plate number"
+              variant="outlined"
+              onChange={handleInputChange}
+            />
+          </Grid>
+        </Grid>
+      );
+    case 1:
+      return (
+        <Grid>
+          <Grid container item lg={12} spacing={2}>
+            <div className="flex justify-center sm:justify-start flex-wrap">
+              <Grid item lg={3}>
+                <label className={classes.productImageItem} variant="outlined">
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={uploadImage}
+                  />
+                  <span aria-hidden="true">
+                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                  </span>
+                </label>
+              </Grid>
+              {imageCarArr &&
+                imageCarArr.map((image, index) => (
+                  <Grid item lg={3}>
+                    <div className={classes.productImageItem} key={index}>
+                      {/* <Icon className={classes.productImageFeaturedStar}>
+                            star
+                          </Icon> */}
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt="img"
+                        style={{ width: "90%", height: "90%" }}
+                      />
+                    </div>
+                  </Grid>
+                ))}
+            </div>
+          </Grid>
+        </Grid>
+      );
+    case 2:
+      return (
+        <Grid>
+          <Grid container item lg={12} spacing={2}>
+            <div className="flex justify-center sm:justify-start flex-wrap">
+              <Grid item lg={3}>
+                <label className={classes.productImageItem}>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={uploadLicences}
+                  />
+                  <span aria-hidden="true">
+                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                  </span>
+                </label>
+              </Grid>
+              {licenses &&
+                licenses.map((image, index) => (
+                  <Grid item lg={3}>
+                    <div className={classes.productImageItem} key={index}>
+                      <Icon className={classes.productImageFeaturedStar}>
+                        star
+                      </Icon>
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt="img"
+                        style={{ width: "90%", height: "90%" }}
+                      />
+                    </div>
+                  </Grid>
+                ))}
+            </div>
+          </Grid>
+        </Grid>
+      );
+    default:
+      return "Unknown step";
+  }
+}
+
+const ColorlibConnector = withStyles({
+  alternativeLabel: {
+    top: 22,
+  },
+  active: {
+    "& $line": {
+      backgroundColor: green[600],
+    },
+  },
+  completed: {
+    "& $line": {
+      backgroundColor: green[600],
+    },
+  },
+  line: {
+    height: 3,
+    border: 0,
+    backgroundColor: "#eaeaf0",
+    borderRadius: 1,
+  },
+})(StepConnector);
+
+const useColorlibStepIconStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: "#ccc",
+    zIndex: 1,
+    color: "#fff",
+    width: 50,
+    height: 50,
+    display: "flex",
+    borderRadius: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  active: {
+    backgroundColor: theme.palette.primary.dark,
+    boxShadow: "0 4px 10px 0 rgba(0,0,0,.25)",
+  },
+  completed: {
+    backgroundColor: green[600],
+  },
+}));
+
+function ColorlibStepIcon(props) {
+  const classes = useColorlibStepIconStyles();
+  const { active, completed } = props;
+
+  const icons = {
+    1: <Icon>playlist_add</Icon>,
+    2: <Icon>cloud_upload</Icon>,
+    3: <Icon>event_note</Icon>,
   };
 
-  const uploadImage = (event) => {
-    console.log(event.target.files);
-    setImageCarArr([...imageCarArr, ...event.target.files]);
-  };
-  console.log(imageCarArr);
+  return (
+    <div
+      className={clsx(classes.root, {
+        [classes.active]: active,
+        [classes.completed]: completed,
+      })}
+    >
+      {icons[String(props.icon)]}
+    </div>
+  );
+}
 
-  var getLinkImageFromFireBase = (date) => {
+ColorlibStepIcon.propTypes = {
+  /**
+   * Whether this step is active.
+   */
+  active: PropTypes.bool,
+  /**
+   * Mark the step as completed. Is passed to child components.
+   */
+  completed: PropTypes.bool,
+  /**
+   * The label displayed in the step icon.
+   */
+  icon: PropTypes.node,
+};
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      // prefix="$"
+      suffix=" ₫"
+    />
+  );
+}
+
+export default function CarSubmit(props) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const steps = getSteps();
+  const handleStepNext = () => {
+    // if (activeStep === steps.length - 1) submitCarInfor();
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const [currentCar, setCurrentCar] = useState({});
+  const [carImages, setCarImages] = useState([]);
+  const [carLicense, setCarLicenses] = useState([]);
+  console.log(currentCar);
+  console.log(carImages);
+  console.log(carLicense);
+
+  const handleStepBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleStepReset = () => {
+    setActiveStep(0);
+  };
+
+  const getLinkImageFromFireBase = (date) => {
     var storage = firebase.storage();
     var storageRef = storage.ref("Car");
     var count = 0;
     var flag2 = false;
 
-    for (let i = 0; i < imageCarArr.length; i++) {
+    for (let i = 0; i < carImages.length; i++) {
       // Create a reference to the file we want to download
-      var starsRef = storageRef.child(date + "/" + imageCarArr[i].name);
+      var starsRef = storageRef.child(date + "/" + carImages[i].name);
 
       // Get the download URL
       starsRef
@@ -258,13 +658,13 @@ export default function CarSubmit(props) {
           linkImageArr.push(url);
 
           count = count + 1;
-          if (count == imageCarArr.length) {
+          if (count == carImages.length) {
             count = 0;
 
             flag2 = true;
             if (flag2) {
               flag2 = false;
-              console.log("length link download image: " + linkImageArr.length);
+              console.log("length link download image: " + carImages.length);
               console.log("Starting store car info to DB...");
               storeLicenseToFirebase();
             }
@@ -293,31 +693,8 @@ export default function CarSubmit(props) {
     }
   };
 
-  const storeLicenseToFirebase = () => {
-    const metadata = {
-      contentType: "image/jpeg",
-    };
-    const date = new Date().getTime();
-    // eslint-disable-next-line array-callback-return
-    licenses.map((img) => {
-      const uploadTask = firebase
-        .storage()
-        .ref("Img/License" + date)
-        .child(img.name);
-      uploadTask.put(img, metadata).then(function (result) {
-        uploadTask.getDownloadURL().then(function (url) {
-          console.log("file available at ", url);
-          linkLicen.push(url);
-          // setLinkLicenses([...linkLicenses, url]);
-        });
-      });
-    });
-    console.log("link licenses", linkLicen);
-    submitCarToDB();
-  };
-
-  var storeImageToFireBase = () => {
-    if (imageCarArr.length > 0) {
+  const storeImageToFireBase = () => {
+    if (carImages.length > 0) {
       dispatch(postCar());
 
       var metadata = {
@@ -335,12 +712,12 @@ export default function CarSubmit(props) {
       var flag = false;
       // var vinCarNumber = document.getElementById("vin").value;
 
-      for (let i = 0; i < imageCarArr.length; i++) {
+      for (let i = 0; i < carImages.length; i++) {
         var uploadTask = firebase
           .storage()
           .ref("Car/" + date + "/")
-          .child(imageCarArr[i].name)
-          .put(imageCarArr[i], metadata);
+          .child(carImages[i].name)
+          .put(carImages[i], metadata);
         uploadTask.on(
           firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
           function (snapshot) {
@@ -361,7 +738,7 @@ export default function CarSubmit(props) {
               count = count + 1;
             }
 
-            if (count == imageCarArr.length) {
+            if (count == carImages.length) {
               count = 0;
               flag = true;
             }
@@ -401,383 +778,137 @@ export default function CarSubmit(props) {
       return;
     }
   };
+  const linkImageArr = new Array();
+  const linkLicen = new Array();
 
-  var submitCarToDB = () => {
+  const submitCarToDB = () => {
     dispatch(postCarSubmit(currentCar, linkImageArr, linkLicen));
-    // console.log("Owner info ", userLogged);
-
-    // handleChangePage();
   };
 
-  var submitCarInfor = () => {
+  const submitCarInfor = () => {
     dispatch(processingRegister());
     storeImageToFireBase();
-    // storeLicenseToFirebase();
-    // submitCarToDB();
-  };
-  const handleChangeTab = (event, newValue) => {
-    setTabValue(newValue);
   };
 
-  // function RegisterInfo() {
-  //   return (
+  const storeLicenseToFirebase = () => {
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    // eslint-disable-next-line array-callback-return
+    carLicense.map((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/License" + date)
+        .child(img.name);
+      uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.getDownloadURL().then(function (url) {
+          console.log("file available at ", url);
+          linkLicen.push(url);
+          // setLinkLicenses([...linkLicenses, url]);
+        });
+      });
+    });
+    console.log("link licenses", carLicense);
+    submitCarToDB();
+  };
 
-  //   );
-  // }
+  const handleSubmit = () => {
+    submitCarInfor();
+  };
 
   return (
-    <Grid>
-      <Grid spacing={1} container justify="center" alignItems="center">
-        <Typography variant="h6" color="initial" className={classes.head}>
-          Register Car
-        </Typography>
-
-        {
-          <Tabs
-            value={tabValue}
-            onChange={handleChangeTab}
-            indicatorColor="secondary"
-            textColor="secondary"
-            variant="scrollable"
-            scrollButtons="auto"
-            classes={{ root: "w-full h-64" }}
-          >
-            <Tab
-              className="h-64 normal-case"
-              label="Car Information"
-              {...a11yProps(0)}
-            />
-            <Tab
-              className="h-64 normal-case"
-              label="Upload image"
-              {...a11yProps(1)}
-            />
-            <Tab
-              className="h-64 normal-case"
-              label="Upload license"
-              {...a11yProps(2)}
-            />
-          </Tabs>
-        }
-        <Grid>
-          <TabPanel value={tabValue} index={0}>
-            <Grid>
-              <Grid container>
-                <Grid item xs={6} lg={6}>
-                  <FormControl
-                    className={classes.formControl}
-                    variant="outlined"
-                  >
-                    <InputLabel id="demo-simple-select-required-label">
-                      Brand
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-required-label"
-                      id="demo-simple-select-required"
-                      value={brand}
-                      onChange={handleChangeBrand}
-                      label="Brand"
-                    >
-                      {brands.map((brand) => (
-                        <MenuItem key={brand.name} value={brand}>
-                          <Typography>
-                            <img
-                              className={classes.icon}
-                              src={brand.logoLink}
-                              alt=""
-                            />
-                            {brand.name}
-                          </Typography>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6} lg={6}>
-                  <FormControl
-                    className={classes.formControl}
-                    variant="outlined"
-                  >
-                    <InputLabel id="demo-simple-select-required-label">
-                      Model
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-required-label"
-                      id="demo-simple-select-required"
-                      value={model}
-                      onChange={handleChangeModel}
-                      label="Brand"
-                    >
-                      {models.map((model) => (
-                        <MenuItem key={model.name} value={model}>
-                          <Typography>{model.name}</Typography>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={6} lg={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel id="demo-simple-select-outlined-label">
-                      Year
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={year}
-                      onChange={handleChangeYear}
-                      label="Year"
-                    >
-                      {years.map((year) => (
-                        <MenuItem key={year} value={year}>
-                          <Typography>{year}</Typography>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={6} lg={6}>
-                  <FormControl
-                    variant="outlined"
-                    className={classes.formControl}
-                  >
-                    <InputLabel
-                      id="demo-simple-select-outlined-label"
-                      // variant="outlined"
-                    >
-                      Auto Drive
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      onChange={handleChangeAutoDriver}
-                      className={classes.selectEmpty}
-                      label="Auto Drive"
-                    >
-                      <MenuItem key="true" value="true">
-                        Yes
-                      </MenuItem>
-                      <MenuItem key="false" value="false">
-                        No
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                {/* </Card> */}
-              </Grid>
-
-              <Grid container>
-                <Grid item xs={4} lg={4}>
-                  <TextField
-                    className={classes.smallTextField}
-                    id="seat"
-                    name="seat"
-                    value={currentCar.seat}
-                    label="Seat"
-                    type="number"
-                    variant="outlined"
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={4} lg={4}>
-                  <TextField
-                    className={classes.smallTextField}
-                    id="sound"
-                    name="sound"
-                    value={currentCar.sound}
-                    label="Sound"
-                    variant="outlined"
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-                <Grid item xs={4} lg={4}>
-                  <TextField
-                    className={classes.smallTextField}
-                    id="screen"
-                    name="screen"
-                    value={currentCar.screen}
-                    label="Screen"
-                    variant="outlined"
-                    onChange={handleInputChange}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  className={classes.textField}
-                  id="name"
-                  value={currentCar.name}
-                  label="Name"
-                  name="name"
-                  variant="outlined"
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  className={classes.textField}
-                  id="vin"
-                  name="vin"
-                  value={currentCar.vin}
-                  label="Vin number"
-                  variant="outlined"
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  className={classes.textField}
-                  id="price"
-                  name="price"
-                  value={currentCar.price}
-                  label="Price (per day)"
-                  variant="outlined"
-                  type="number"
-                  onChange={handleInputChange}
-                  // InputProps={{
-                  //   inputComponent: NumberFormatCustom,
-                  // }}
-                />
-              </Grid>
-
-              <Grid item xs={12} lg={12}>
-                <TextField
-                  className={classes.textField}
-                  id="plateNum"
-                  name="plateNum"
-                  value={currentCar.plateNum}
-                  label="Plate number"
-                  variant="outlined"
-                  onChange={handleInputChange}
-                />
-              </Grid>
-            </Grid>
-          </TabPanel>
-
-          <TabPanel value={tabValue} index={1}>
-            <Grid>
-              <Grid container item lg={12} spacing={2}>
-                <div className="flex justify-center sm:justify-start flex-wrap">
-                  <Grid item lg={3}>
-                    <label
-                      className={classes.productImageItem}
-                      variant="outlined"
-                    >
-                      <input
-                        type="file"
-                        style={{ display: "none" }}
-                        multiple
-                        accept="image/*"
-                        name="image"
-                        id="file"
-                        onChange={uploadImage}
-                      />
-                      <span aria-hidden="true">
-                        <Icon>cloud_upload</Icon>
-                      </span>
-                    </label>
-                  </Grid>
-                  {imageCarArr &&
-                    imageCarArr.map((image, index) => (
-                      <Grid item lg={3}>
-                        <div className={classes.productImageItem} key={index}>
-                          {/* <Icon className={classes.productImageFeaturedStar}>
-                            star
-                          </Icon> */}
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt="img"
-                            style={{ width: "90%", height: "90%" }}
-                          />
-                        </div>
-                      </Grid>
-                    ))}
-                </div>
-              </Grid>
-            </Grid>
-          </TabPanel>
-          <TabPanel value={tabValue} index={2}>
-            <Grid>
-              <Grid container item lg={12} spacing={2}>
-                <div className="flex justify-center sm:justify-start flex-wrap">
-                  <Grid item lg={3}>
-                    <label className={classes.productImageItem}>
-                      <input
-                        type="file"
-                        style={{ display: "none" }}
-                        multiple
-                        accept="image/*"
-                        name="image"
-                        id="file"
-                        onChange={uploadLicences}
-                      />
-                      <span aria-hidden="true">
-                        <Icon>cloud_upload</Icon>
-                      </span>
-                    </label>
-                  </Grid>
-                  {licenses &&
-                    licenses.map((image, index) => (
-                      <Grid item lg={3}>
-                        <div className={classes.productImageItem} key={index}>
-                          <Icon className={classes.productImageFeaturedStar}>
-                            star
-                          </Icon>
-                          <img
-                            src={URL.createObjectURL(image)}
-                            alt="img"
-                            style={{ width: "90%", height: "90%" }}
-                          />
-                        </div>
-                      </Grid>
-                    ))}
-                </div>
-              </Grid>
-            </Grid>
-          </TabPanel>
-          <Grid container justify="center">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={submitCarInfor}
-              startIcon={<PublishIcon />}
-            >
-              Submit
+    <Grid className={classes.root}>
+      <Stepper
+        alternativeLabel
+        activeStep={activeStep}
+        connector={<ColorlibConnector />}
+      >
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+      <div>
+        {activeStep === steps.length ? (
+          <div>
+            <Typography className={classes.instructions}>
+              All steps completed - you&apos;re finished
+            </Typography>
+            <Button onClick={handleStepReset} className={classes.button}>
+              Reset
             </Button>
-          </Grid>
-        </Grid>
-      </Grid>
+          </div>
+        ) : (
+          <div>
+            <Grid>
+              {GetStepContent(
+                activeStep,
+                setCurrentCar,
+                setCarImages,
+                setCarLicenses
+              )}
+            </Grid>
+            <div>
+              <Button
+                disabled={activeStep === 0}
+                onClick={handleStepBack}
+                className={classes.button}
+              >
+                Back
+              </Button>
+              {activeStep === steps.length - 1 ? (
+                // <Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSubmit}
+                  className={classes.button}
+                  disabled={
+                    !currentCar.name ||
+                    !currentCar.brandId ||
+                    !currentCar.modelId ||
+                    !currentCar.year ||
+                    !currentCar.seat ||
+                    !currentCar.screen ||
+                    !currentCar.vin ||
+                    !currentCar.price > 0 ||
+                    !currentCar.plateNum ||
+                    !carImages ||
+                    !carLicense
+                  }
+                >
+                  Submit
+                </Button>
+              ) : (
+                // </Grid>
+                // <Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleStepNext}
+                  className={classes.button}
+                  disabled={
+                    !currentCar.name ||
+                    !currentCar.brandId ||
+                    !currentCar.modelId ||
+                    !currentCar.year ||
+                    !currentCar.seat ||
+                    !currentCar.screen ||
+                    !currentCar.vin ||
+                    !currentCar.price > 0 ||
+                    !currentCar.plateNum
+                  }
+                >
+                  Next
+                </Button>
+                // </Grid>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </Grid>
-    // <Layout name="Car renting form">
-    //   <div>
-    //     <Dialog
-    //       open={loading}
-    //       TransitionComponent={Transition}
-    //       keepMounted
-    //       aria-labelledby="alert-dialog-slide-title"
-    //       aria-describedby="alert-dialog-slide-description"
-    //     >
-    //       <DialogTitle id="alert-dialog-slide-title">
-    //         {"Uploading Car"}
-    //       </DialogTitle>
-    //       <DialogContent>
-    //         <div align="center" className={classes.progressBar}>
-    //           <CircularProgress color="secondary" />
-    //           <p>We are upload your car, please wait...</p>
-    //         </div>
-    //       </DialogContent>
-    //     </Dialog>
-    //   </div>
-
-    // </Layout>
   );
 }
