@@ -27,6 +27,7 @@ import {
   chooseCar,
 } from "./profile.action";
 import { useHistory } from "react-router-dom";
+import { APP_PATH } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
@@ -179,6 +180,34 @@ const MyCar = (props) => {
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.profile.cars);
   const currentUser = useSelector((state) => state.auth.user);
+//   const history = useHistory();
+//   const [isDetail, setIsDetail] = useState(false);
+//   const [detail, setDetail] = useState();
+//   const [name, setName] = useState();
+
+//   console.log("user: " , currentUser);
+//   console.log("cars: ", cars);
+//   const handleCickSetting = (carId) => {
+//     history.push({
+//       pathname: APP_PATH.CAR_EDIT + "/" + carId,
+//       state: {
+//         carId,
+//       },
+//     });
+//     // window.open
+//   };
+
+//   const handleAddCar = () => {
+//     history.push({
+//       pathname: APP_PATH.CAR_SUBMIT,
+//     });
+//   };
+
+//   const handleClickBooked = (carId, carName) => {
+//     setIsDetail(true);
+//     setDetail(carId);
+//     setName(carName);
+//   };
   const isDetail = useSelector((state) => state.profile.isDetail);
   const [currentPage, setCurrentPage] = useState(1);
   const request = useSelector((state) => state.profile.request);

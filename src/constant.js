@@ -18,7 +18,7 @@ export const APP_ROLE = {
 
 export const APP_PATH = {
   HOME: "/",
-  ADMIN: "/admin",
+  ADMIN: "/checking",
   LOGIN: "/login",
   PROFILE: "/profile",
   CAR_LIST: "/cars",
@@ -31,4 +31,6 @@ export const APP_PATH = {
   CHAT: "/chat",
   ERORR_404: "/error/404",
   LANDING_MOBILE: "/landing-mobile",
+  CHECKING: "/checking",
+  CAR_CHECKING: "/car-check",
 };
