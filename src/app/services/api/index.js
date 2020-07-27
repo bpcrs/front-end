@@ -83,11 +83,13 @@ export const PUT = (endpoint, params = {}, body = {}) => {
 
 export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
+  CAR_CONTROLLER_ADMIN_GETALL: "/car/available",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
+  ACCOUNT_CONTROLLER_GETALL: "/account",
   IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
