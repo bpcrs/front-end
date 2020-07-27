@@ -25,6 +25,7 @@ import { APP_PATH } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
+import TimeAgo from "react-timeago";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -90,13 +91,15 @@ const BookingRequest = (props) => {
           >
             <TableHead>
               <TableRow>
+                <StyledTableCell>Book time</StyledTableCell>
                 <StyledTableCell>Car Name</StyledTableCell>
                 <StyledTableCell>Time Rental</StyledTableCell>
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
-                {status === "PENDING" ? (
+                <StyledTableCell>Action</StyledTableCell>
+                {/* {booking === "PENDING" ? (
                   <StyledTableCell>Agreement</StyledTableCell>
-                ) : null}
+                ) : null} */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -104,7 +107,7 @@ const BookingRequest = (props) => {
                 <CircularProgress color="inherit" />
               </Backdrop>
               {myBookings.data &&
-                myBookings.data.map((booking, index) => (
+                myBookings.data.reverse().map((booking, index) => (
                   // <Grid item xs={12} xl={12} lg={12}>
                   <TableRow
                     className="h-64 cursor-pointer"
@@ -115,6 +118,9 @@ const BookingRequest = (props) => {
                     key={index}
                     // selected={isSelected}
                   >
+                    <TableCell component="th" scope="row">
+                      <TimeAgo date={booking.createdDate} />
+                    </TableCell>
                     <TableCell component="th" scope="row">
                       {booking.car.name}
                     </TableCell>
@@ -132,7 +138,7 @@ const BookingRequest = (props) => {
                     <TableCell component="th" scope="row">
                       <BookingStatus name={booking.status} />
                     </TableCell>
-                    {status === "PENDING" ? (
+                    {booking.status === "PENDING" ? (
                       <TableCell component="th" scope="row">
                         <IconButton onClick={() => handleAgreement()}>
                           <Icon style={{ color: "blue" }}>send</Icon>

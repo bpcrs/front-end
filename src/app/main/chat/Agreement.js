@@ -6,11 +6,26 @@ import {
   Box,
   Slider,
   Typography,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Radio,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { closeAgreement, submitMessage } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
+import { FuseAnimateGroup } from "@fuse";
+import classNames from "classnames";
+import { makeStyles } from "@material-ui/core/styles";
+import { green } from "@material-ui/core/colors";
+import { truncate } from "lodash";
+import { useEffect } from "react";
+
 const PrettoSlider = withStyles({
   root: {
     height: 6,
@@ -53,23 +68,84 @@ const PrettoSlider = withStyles({
     backgroundColor: "currentColor",
   },
 })(Slider);
-export default function Agreement() {
+const useStyles = makeStyles((theme) => ({
+  header: {
+    height: 600,
+    background:
+      "linear-gradient(to right, " +
+      theme.palette.primary.dark +
+      " 0%, " +
+      theme.palette.primary.main +
+      " 100%)",
+    color: theme.palette.primary.contrastText,
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.primary[800],
+    color: theme.palette.getContrastText(theme.palette.primary[800]),
+  },
+}));
+const GreenRadio = withStyles({
+  root: {
+    color: green[400],
+    "&$checked": {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+export default function Agreement({ type, onSubmit = () => {} }) {
   const agreement = useSelector((state) => state.chat.agreement);
-  const selectedUser = useSelector((state) => state.chat.selectedUser);
-  const userLogged = useSelector((state) => state.auth.user);
+  const [selectedValue, setSelectedValue] = React.useState("basic");
+  const [checkboxValue, setCheckboxValue] = useState({
+    carDamage: false,
+    overdue: false,
+    violate: false,
+  });
+
   // const criterias = useSelector((state) => state.chat.criteria);
   const dispatch = useDispatch();
   const [scope, setScope] = useState(15);
+  const [extra, setExtra] = useState(2000);
   const handleChange = (event, newValue) => {
     setScope(newValue);
+    setSelectedValue(newValue);
   };
+  const handleExtra = (event, newValue) => {
+    setExtra(newValue);
+    setSelectedValue(newValue);
+  };
+  console.log(selectedValue);
+  useEffect(() => {
+    switch (type) {
+      case "Insurance":
+      case "Mileage limit":
+      case "Extra":
+        onSubmit({ type, value: selectedValue });
+        break;
+      case "Indemnification":
+        onSubmit({ type, value: checkboxValue });
+        break;
+      case "Deposit":
+        onSubmit({ type, value: scope });
+        break;
+      default:
+        break;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedValue, scope, checkboxValue]);
   const handleSubmitScope = (type) => {
     dispatch(closeAgreement());
-    submitMessage(scope, userLogged.id, selectedUser.id, type);
   };
-  // const
+
+  const handleChangeCheckbox = (event) => {
+    setCheckboxValue({
+      ...checkboxValue,
+      [event.target.name]: event.target.checked,
+    });
+  };
+  const classes = useStyles();
   const AgreementByType = () => {
-    switch (agreement.type) {
+    switch (type) {
       case "Mileage limit":
         return (
           <Box className="px-24 py-24">
@@ -80,24 +156,16 @@ export default function Agreement() {
               marks={true}
               onChange={handleChange}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={50}
+              min={100}
+              max={500}
+              valueLabelFormat={(value) => (value === 15 ? "Unlimited" : value)}
             />
-            <Typography>
+            <Typography variant="subtitle1" color="primary">
               Mileage limit: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
+              {scope === 15 ? 100 + " km" : scope + " km"} not exceeded
               destination registered.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope(agreement.type)}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Extra":
@@ -106,58 +174,129 @@ export default function Agreement() {
             <PrettoSlider
               valueLabelDisplay="on"
               aria-labelledby="continuous-slider"
-              value={scope}
+              value={extra}
               marks={true}
-              onChange={handleChange}
+              onChange={handleExtra}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={1000}
+              min={2000}
+              max={15000}
+              valueLabelFormat={(value) => value}
             />
-            <Typography>
-              Extra: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
+            <Typography variant="subtitle2" color="inherit">
+              You will be charged {extra + " đ"} for every km you travel above.
+              If required, please select a higher limit. All fuel bills will be
+              reimbursed on a fair usage basis.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Extra")}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Insurance":
         return (
-          <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
-            />
-            <Typography>
-              Insurance: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Insurance")}
-            >
-              Send
-            </Button>
+          <Box>
+            <Grid container spacing={1}>
+              <Grid lg={6} item>
+                <div className="w-full">
+                  <Card raised square>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Basic Protection
+                      </Typography>
+                      <Typography variant="caption" color="inherit">
+                        Save 15%
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +200.000VND
+                        </Typography>
+                      </div>
+
+                      <Divider className="my-32" />
+
+                      <div className="flex flex-col">
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Projects
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Pages
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">100</span>
+                          Mb Disk Space
+                        </Typography>
+                      </div>
+                    </CardContent>
+
+                    <div className="flex justify-center pb-32">
+                      <GreenRadio
+                        checked={selectedValue === "basic"}
+                        onChange={() => setSelectedValue("basic")}
+                        value="basic"
+                        name="radio-button-demo"
+                        inputProps={{ "aria-label": "basic" }}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </Grid>
+              <Grid lg={6} item>
+                <div className="w-full">
+                  <Card square raised>
+                    <div
+                      className={classNames(classes.cardHeader, "px-24 py-16")}
+                    >
+                      <Typography variant="subtitle1" color="inherit">
+                        Super Protection
+                      </Typography>
+                      <Typography variant="caption" color="inherit">
+                        Save 20%
+                      </Typography>
+                    </div>
+
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +300.000VND
+                        </Typography>
+                      </div>
+
+                      <Divider className="my-32" />
+
+                      <div className="flex flex-col">
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Projects
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">10</span>
+                          Pages
+                        </Typography>
+                        <Typography variant="subtitle1" className="">
+                          <span className="font-bold mr-4">100</span>
+                          Mb Disk Space
+                        </Typography>
+                      </div>
+                    </CardContent>
+
+                    <div className="flex justify-center pb-32">
+                      <GreenRadio
+                        checked={selectedValue === "super"}
+                        onChange={() => setSelectedValue("super")}
+                        value="super"
+                        name="radio-button-demo"
+                        inputProps={{ "aria-label": "super" }}
+                      />
+                    </div>
+                  </Card>
+                </div>
+              </Grid>
+            </Grid>
           </Box>
         );
       case "Deposit":
@@ -170,54 +309,52 @@ export default function Agreement() {
               marks={true}
               onChange={handleChange}
               onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
+              step={1}
+              min={10}
+              max={30}
+              valueLabelFormat={(value) => value}
             />
-            <Typography>
-              Deposit: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
+            <Typography variant="subtitle1" color="primary">
+              Deposit: You will offer price {scope + " days"} rent for rental
+              this car.
             </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Deposit")}
-            >
-              Send
-            </Button>
           </Box>
         );
       case "Indemnification":
         return (
           <Box className="px-24 py-24">
-            <PrettoSlider
-              valueLabelDisplay="on"
-              aria-labelledby="continuous-slider"
-              value={scope}
-              marks={true}
-              onChange={handleChange}
-              onDragStop={(e) => console.log(e)}
-              step={5}
-              min={15}
-              valueLabelFormat={(value) =>
-                value === 100 ? "Unlimited" : value
-              }
-            />
-            <Typography>
-              Indemnification: You will offer{" "}
-              {scope === 100 ? "unlimited" : scope + " km"} not exceeded
-              destination registered.
-            </Typography>
-            <Button
-              variant="outlined"
-              color="inherit"
-              onClick={() => handleSubmitScope("Indemnification")}
-            >
-              Send
-            </Button>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.carDamage}
+                    onChange={handleChangeCheckbox}
+                    name="carDamage"
+                  />
+                }
+                label="Car damage"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.overdue}
+                    onChange={handleChangeCheckbox}
+                    name="overdue"
+                  />
+                }
+                label="Overdue return time"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={checkboxValue.violate}
+                    onChange={handleChangeCheckbox}
+                    name="violate"
+                  />
+                }
+                label="Violate transport"
+              />
+            </FormGroup>
           </Box>
         );
       default:
@@ -226,18 +363,18 @@ export default function Agreement() {
   };
 
   return (
-    <Collapse in={agreement.isOpen}>
-      <Paper elevation={5}>
-        <Typography>Decide your offer</Typography>
-        <AgreementByType />
-        <Button
+    <Collapse in={true}>
+      {/* <Paper elevation={5}>
+        <Typography>Decide your offer</Typography> */}
+      <AgreementByType />
+      {/* <Button
           variant="outlined"
           color="default"
           onClick={() => dispatch(closeAgreement())}
         >
           Close
         </Button>
-      </Paper>
+      </Paper> */}
     </Collapse>
   );
 }

@@ -13,6 +13,7 @@ import {
   Box,
   Tabs,
   Tab,
+  Icon,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import firebase from "../../firebase/firebase";
@@ -23,10 +24,10 @@ import {
   postCar,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-
-import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { orange } from "@material-ui/core/colors";
+import { processingRegister } from "../user/profile.action";
+import NumberFormat from "react-number-format";
+import PropTypes from "prop-types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,7 +69,72 @@ const useStyles = makeStyles((theme) => ({
   head: {
     marginTop: theme.spacing(2),
   },
+  productImageFeaturedStar: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    color: orange[400],
+    opacity: 0,
+  },
+  productImageItem: {
+    width: 128,
+    height: 128,
+    display: "flex",
+
+    justifyContent: "center",
+    alignItems: "center",
+    rounded: 4,
+    mr: 16,
+    mb: 16,
+    transitionProperty: "box-shadow",
+    transitionDuration: theme.transitions.duration.short,
+    transitionTimingFunction: theme.transitions.easing.easeInOut,
+    "&:hover": {
+      boxShadow: theme.shadows[5],
+      "& $productImageFeaturedStar": {
+        opacity: 0.8,
+      },
+    },
+    "&.featured": {
+      pointerEvents: "none",
+      boxShadow: theme.shadows[3],
+      "& $productImageFeaturedStar": {
+        opacity: 1,
+      },
+      "&:hover $productImageFeaturedStar": {
+        opacity: 1,
+      },
+    },
+  },
 }));
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandsGroupStyle
+      thousandSeparator
+      isNumericString
+    />
+  );
+}
+
+NumberFormatCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -100,15 +166,7 @@ function a11yProps(index) {
 export default function CarSubmit(props) {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0);
-  const history = useHistory();
-  const close = false;
-  const handleChangePage = () => {
-    history.push({
-      pathname: APP_PATH.PROFILE,
-      state: { close },
-    });
-  };
-
+  const [images, setImages] = useState([]);
   const now = new Date().getUTCFullYear();
   const years = Array(now - (now - 10))
     .fill("")
@@ -165,46 +223,20 @@ export default function CarSubmit(props) {
     });
   };
   var linkImageArr = new Array();
+  const linkLicen = new Array();
   var [imageCarArr, setImageCarArr] = useState([]);
+  const [licenses, setLicenses] = useState([]);
+  const [linkLicenses, setLinkLicenses] = useState([]);
 
-  var loadFile = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      if (imageCarArr.length > 0) {
-        imageCarArr[0] = event.target.files[0];
-      } else {
-        setImageCarArr([...imageCarArr, event.target.files[0]]);
-      }
-    }
+  const uploadLicences = (event) => {
+    setLicenses([...licenses, ...event.target.files]);
   };
 
-  var loadFile2 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output2");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      //fileArr.push(event.target.files[0]);
-      imageCarArr[1] = event.target.files[0];
-    }
+  const uploadImage = (event) => {
+    console.log(event.target.files);
+    setImageCarArr([...imageCarArr, ...event.target.files]);
   };
-
-  var loadFile3 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output3");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      // fileArr.push(event.target.files[0]);
-      imageCarArr[2] = event.target.files[0];
-    }
-  };
-
-  var loadFile4 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output4");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      // fileArr.push(event.target.files[0]);
-      imageCarArr[3] = event.target.files[0];
-    }
-  };
+  console.log(imageCarArr);
 
   var getLinkImageFromFireBase = (date) => {
     var storage = firebase.storage();
@@ -234,7 +266,7 @@ export default function CarSubmit(props) {
               flag2 = false;
               console.log("length link download image: " + linkImageArr.length);
               console.log("Starting store car info to DB...");
-              submitCarToDB();
+              storeLicenseToFirebase();
             }
           }
         })
@@ -259,6 +291,29 @@ export default function CarSubmit(props) {
           }
         });
     }
+  };
+
+  const storeLicenseToFirebase = () => {
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    // eslint-disable-next-line array-callback-return
+    licenses.map((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/License" + date)
+        .child(img.name);
+      uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.getDownloadURL().then(function (url) {
+          console.log("file available at ", url);
+          linkLicen.push(url);
+          // setLinkLicenses([...linkLicenses, url]);
+        });
+      });
+    });
+    console.log("link licenses", linkLicen);
+    submitCarToDB();
   };
 
   var storeImageToFireBase = () => {
@@ -348,14 +403,17 @@ export default function CarSubmit(props) {
   };
 
   var submitCarToDB = () => {
-    dispatch(postCarSubmit(currentCar, linkImageArr));
-    console.log("Owner info ", userLogged);
+    dispatch(postCarSubmit(currentCar, linkImageArr, linkLicen));
+    // console.log("Owner info ", userLogged);
 
     // handleChangePage();
   };
 
   var submitCarInfor = () => {
+    dispatch(processingRegister());
     storeImageToFireBase();
+    // storeLicenseToFirebase();
+    // submitCarToDB();
   };
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
@@ -394,11 +452,11 @@ export default function CarSubmit(props) {
               label="Upload image"
               {...a11yProps(1)}
             />
-            {/* <Tab
+            <Tab
               className="h-64 normal-case"
-              label="History booking"
+              label="Upload license"
               {...a11yProps(2)}
-            /> */}
+            />
           </Tabs>
         }
         <Grid>
@@ -585,6 +643,9 @@ export default function CarSubmit(props) {
                   variant="outlined"
                   type="number"
                   onChange={handleInputChange}
+                  InputProps={{
+                    inputComponent: NumberFormatCustom,
+                  }}
                 />
               </Grid>
 
@@ -603,133 +664,86 @@ export default function CarSubmit(props) {
           </TabPanel>
 
           <TabPanel value={tabValue} index={1}>
-            <Grid container>
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <p>Picture 1</p>
-                  <p>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      name="image"
-                      id="file"
-                      onChange={loadFile}
-                    />
-                  </p>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    <label htmlFor="file">Choose File</label>
-                  </Button>
-                  <p>
-                    <img
-                      src={imageCarArr[0]}
-                      id="output"
-                      width="200"
-                      height="200"
-                    />
-                  </p>
-                </div>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <p>Picture 2</p>
-                  <p>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      name="image"
-                      id="file2"
-                      onChange={loadFile2}
-                    />
-                  </p>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    <label htmlFor="file2">Choose File</label>
-                  </Button>
-                  <p>
-                    <img
-                      src={imageCarArr[1]}
-                      id="output2"
-                      width="200"
-                      height="200"
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                </div>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <p>Picture 3</p>
-                  <p>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      name="image"
-                      id="file3"
-                      onChange={loadFile3}
-                    />
-                  </p>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    <label htmlFor="file3">Choose File</label>
-                  </Button>
-                  <p>
-                    <img
-                      src={imageCarArr[2]}
-                      id="output3"
-                      width="200"
-                      height="200"
-                      onChange={handleInputChange}
-                    />
-                  </p>
-                </div>
-              </Grid>
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <p>Picture 4</p>
-                  <p>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      accept="image/*"
-                      name="image"
-                      id="file4"
-                      onChange={loadFile4}
-                    />
-                  </p>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<CloudUploadIcon />}
-                  >
-                    <label htmlFor="file4">Choose File</label>
-                  </Button>
-                  <p>
-                    <img
-                      src={imageCarArr[3]}
-                      id="output4"
-                      width="200"
-                      height="200"
-                      onChange={handleInputChange}
-                    />
-                  </p>
+            <Grid>
+              <Grid container item lg={12} spacing={2}>
+                <div className="flex justify-center sm:justify-start flex-wrap">
+                  <Grid item lg={3}>
+                    <label
+                      className={classes.productImageItem}
+                      variant="outlined"
+                    >
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple
+                        accept="image/*"
+                        name="image"
+                        id="file"
+                        onChange={uploadImage}
+                      />
+                      <span aria-hidden="true">
+                        <Icon>cloud_upload</Icon>
+                      </span>
+                    </label>
+                  </Grid>
+                  {imageCarArr &&
+                    imageCarArr.map((image, index) => (
+                      <Grid item lg={3}>
+                        <div className={classes.productImageItem} key={index}>
+                          {/* <Icon className={classes.productImageFeaturedStar}>
+                            star
+                          </Icon> */}
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt="img"
+                            style={{ width: "90%", height: "90%" }}
+                          />
+                        </div>
+                      </Grid>
+                    ))}
                 </div>
               </Grid>
             </Grid>
           </TabPanel>
-
+          <TabPanel value={tabValue} index={2}>
+            <Grid>
+              <Grid container item lg={12} spacing={2}>
+                <div className="flex justify-center sm:justify-start flex-wrap">
+                  <Grid item lg={3}>
+                    <label className={classes.productImageItem}>
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple
+                        accept="image/*"
+                        name="image"
+                        id="file"
+                        onChange={uploadLicences}
+                      />
+                      <span aria-hidden="true">
+                        <Icon>cloud_upload</Icon>
+                      </span>
+                    </label>
+                  </Grid>
+                  {licenses &&
+                    licenses.map((image, index) => (
+                      <Grid item lg={3}>
+                        <div className={classes.productImageItem} key={index}>
+                          <Icon className={classes.productImageFeaturedStar}>
+                            star
+                          </Icon>
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt="img"
+                            style={{ width: "90%", height: "90%" }}
+                          />
+                        </div>
+                      </Grid>
+                    ))}
+                </div>
+              </Grid>
+            </Grid>
+          </TabPanel>
           <Grid container justify="center">
             <Button
               variant="contained"

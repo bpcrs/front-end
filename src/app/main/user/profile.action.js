@@ -14,6 +14,36 @@ export const FETCH_BOOKING_RENTAL_CAR = "[BOOKING_RENTAL] FETCH DATA SUCCESS";
 export const APPROVE_BOOKING_REQUEST = "[BOOKING] APPROVE BOOKING SUCCESS";
 export const ADD_CAR_REGISTER = "[CAR] ADD DATA SUCCESS";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
+export const REGISTER_SUCCESS = "[OPEN] REGISTER SUCCESS";
+export const PROCESS_REGISTER = "[PROCESS] PROCESSING REGISTER";
+export const OPEN_DETAIL = "[DETAIL] CHANGE";
+export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
+
+export function chooseCar(carId, name) {
+  return {
+    type: CHOOSE_CAR,
+    payload: {
+      carId,
+      name,
+    },
+  };
+}
+export function openDetail(state) {
+  return {
+    type: OPEN_DETAIL,
+    payload: state,
+  };
+}
+export function registerSuccess() {
+  return {
+    type: REGISTER_SUCCESS,
+  };
+}
+export function processingRegister() {
+  return {
+    type: PROCESS_REGISTER,
+  };
+}
 export function fetchCarInformationOwnerSuccess(cars) {
   return {
     type: FETCH_CAR_INFORMATION_OWNER_SUCCESS,
@@ -78,9 +108,12 @@ export function fetchAccountAddress(id) {
   };
 }
 
-export function fetchCarInformationOwner(ownerId) {
+export function fetchCarInformationOwner(ownerId, page, size) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.CAR_INFORMATION_OWNER_GETBYID(ownerId));
+    const params = { page, size };
+    const request = GET(ENDPOINT.CAR_INFORMATION_OWNER_GETBYID(ownerId), {
+      ...params,
+    });
     request.then(
       (response) => {
         if (response.success) {
@@ -116,10 +149,16 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
   };
 }
 
-export function fetchBookingRequest(renterId, status, page, size) {
+export function fetchBookingRequest(
+  renterId,
+  status,
+  page,
+  size,
+  isRenter = true
+) {
   return (dispatch) => {
-    const params = { page, size, status: status && status.join(",") };
-    const request = GET(ENDPOINT.BOOKING_CONTROLLER_RENTER_GETBYID(renterId), {
+    const params = { page, size, status: status && status.join(","), isRenter };
+    const request = GET(ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(renterId), {
       ...params,
     });
     request.then(
@@ -162,7 +201,7 @@ export function notificationBooking(booking) {
     .add({
       status: booking.status,
       car: booking.car,
-      owner: booking.lessor,
+      owner: booking.car.owner,
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
