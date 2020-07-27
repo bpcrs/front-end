@@ -1,5 +1,5 @@
 import React from "react";
-import { Drawer, Button, Grid, Typography } from "@material-ui/core";
+import { Drawer, Button, Grid, Typography, Icon } from "@material-ui/core";
 import { useState } from "react";
 import VerticalLinearStepper from "./VerticalLinearStepper";
 
@@ -8,7 +8,13 @@ export default function StepAgreement() {
 
   return (
     <div>
-      <Button onClick={() => setDrawerOpen(true)}>Agreements</Button>
+      <Button
+        variant="outlined"
+        onClick={() => setDrawerOpen(true)}
+        startIcon={<Icon>event</Icon>}
+      >
+        Agreements
+      </Button>
       <Drawer
         anchor={"right"}
         open={drawerOpen}

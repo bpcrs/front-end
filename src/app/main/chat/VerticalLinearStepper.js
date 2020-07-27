@@ -7,7 +7,6 @@ import StepContent from "@material-ui/core/StepContent";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import ViewBooking from "../booking/ViewBooking";
 import Agreement from "./Agreement";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
@@ -17,6 +16,8 @@ import {
   deleteAllMsgByTypeFromFirebase,
 } from "./chat.action";
 import { useEffect } from "react";
+import { changeBookingStatusRequest } from "../user/profile.action";
+import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,18 +36,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 function getSteps() {
   return [
-    "Select Insurance",
+    "Select Extra",
     "Choose Indemnification plan",
-    "Commit your side",
+    "Choose Deposit",
+    "Commplete agreement",
   ];
 }
 function getStepsRenter() {
-  return [
-    "Select Mileage limit",
-    "Select Extra",
-    "Choose Deposit",
-    "Commit your side",
-  ];
+  return ["Select Mileage limit", "Select Insurance", "Commplete agreement"];
 }
 
 export default function VerticalLinearStepper() {
@@ -70,7 +67,7 @@ export default function VerticalLinearStepper() {
   }, [agreements, dispatch, selectedBooking.id]);
 
   const isStepOptional = (step) => {
-    return step === 0 || step === 1;
+    return step === 0 || step === 1 || step === 2;
   };
   const [currentAgreement, setCurrentAgreement] = useState();
   const isStepSkipped = (step) => {
@@ -78,7 +75,14 @@ export default function VerticalLinearStepper() {
   };
   const handleNext = async () => {
     if (activeStep === steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      dispatch(
+        changeBookingStatusRequest(
+          selectedBooking.id,
+          selectedBooking.renter.id !== userLogged.id
+            ? BOOKING_STATUS.OWNER_ACCEPTED
+            : BOOKING_STATUS.CONFIRM
+        )
+      );
     } else {
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
@@ -113,7 +117,7 @@ export default function VerticalLinearStepper() {
       case 0:
         return (
           <React.Fragment>
-            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
+            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
       case 1:
@@ -122,7 +126,14 @@ export default function VerticalLinearStepper() {
             <Agreement type="Indemnification" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
-
+      case 2:
+        return (
+          <React.Fragment>
+            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
+          </React.Fragment>
+        );
+      case 3:
+        return <React.Fragment>You comfirm agreement</React.Fragment>;
       default:
         return "Unknown step";
     }
@@ -139,15 +150,11 @@ export default function VerticalLinearStepper() {
       case 1:
         return (
           <React.Fragment>
-            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
+            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
           </React.Fragment>
         );
       case 2:
-        return (
-          <React.Fragment>
-            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
-          </React.Fragment>
-        );
+        return <React.Fragment>You comfirm agreement</React.Fragment>;
       default:
         return "Unknown step";
     }
@@ -168,13 +175,13 @@ export default function VerticalLinearStepper() {
     });
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  // const handleBack = () => {
+  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  // };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  // const handleReset = () => {
+  //   setActiveStep(0);
+  // };
 
   return (
     <div className={classes.root}>
@@ -229,7 +236,6 @@ export default function VerticalLinearStepper() {
           </Button> */}
         </Paper>
       )}
-      {/* <ViewBooking /> */}
     </div>
   );
 }
