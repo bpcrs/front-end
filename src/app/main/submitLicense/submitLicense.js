@@ -1,8 +1,5 @@
-import React from "react";
-import { Button, TextField, Grid, makeStyles } from "@material-ui/core";
-
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
-import Layout from "../../layout";
+import React, { useState, useEffect } from "react";
+import { Button, TextField, Grid, makeStyles, Typography, } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,6 +7,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import firebase from "../../firebase/firebase";
 import Slide from "@material-ui/core/Slide";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUserLicense, updateUserLicenseLoading } from "./license.action";
+
+
 // import event from '';
 const ITEM_HEIGHT = 48;
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -43,30 +45,46 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
     padding: 20,
   },
-  progressBar: {
-    display: "flex",
-    "& > * + *": {
-      marginLeft: theme.spacing(2),
-    },
+  smallTextField: {
+    margin: theme.spacing(1),
+  },
+  head: {
+    marginTop: theme.spacing(2),
   },
 }));
 
 export default function SubmitLicense(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const currentUser = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.license.loading);
+  const [license, setLicense] = useState({});
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  var [imageLicenseArr, setImageLicenseArr] = useState([]);
+  var linkImageArr = new Array();
+
+  const handleInputChange = (event) => {
+    setLicense({
+      ...license,
+      [event.target.name]: event.target.value
+    })
   };
 
-  const handleClose = () => {
-    setOpen(false);
+
+  const updateLicense = () => {
+    dispatch(updateUserLicense(currentUser.id, {
+      phone: license.phone,
+      identification: license.identification,
+      imageUrlLicense1: linkImageArr[0],
+      imageUrlLicense2: linkImageArr[1],
+      imageUrlLicense3: linkImageArr[2],
+      imageUrlLicense4: linkImageArr[3]
+    }))
   };
 
-  var fileArr = new Array();
   let uploadFile = () => {
-    if (fileArr.length > 0) {
-      handleClickOpen();
+    if (imageLicenseArr.length > 0) {
+      dispatch(updateUserLicenseLoading());
       // Create the file metadata
       var metadata = {
         contentType: "image/jpeg",
@@ -81,14 +99,13 @@ export default function SubmitLicense(props) {
         today.getDate();
       var count = 0;
       var flag = false;
-      var identityCard = document.getElementById("txtIdentityCard").value;
 
-      for (let i = 0; i < fileArr.length; i++) {
+      for (let i = 0; i < imageLicenseArr.length; i++) {
         var uploadTask = firebase
           .storage()
-          .ref("License/" + date + "/" + identityCard)
-          .child("Picture " + (i + 1))
-          .put(fileArr[i], metadata);
+          .ref("License/" + date + "/" + currentUser.email)
+          .child(imageLicenseArr[i].name)
+          .put(imageLicenseArr[i], metadata);
 
         uploadTask.on(
           firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -108,9 +125,8 @@ export default function SubmitLicense(props) {
               console.log("count: " + count);
               count = count + 1;
             }
-            if (count == fileArr.length) {
+            if (count == imageLicenseArr.length) {
               count = 0;
-              handleClose();
               flag = true;
             }
           },
@@ -130,12 +146,15 @@ export default function SubmitLicense(props) {
                 break;
             }
           },
-          function () {
+          async function () {
             if (flag) {
               flag = false;
               if (count == 0) {
                 console.log("start get link download!!!");
-                downloadFile(date, identityCard);
+                await new Promise((resolve, reject) =>
+                  setTimeout(resolve, 3000)
+                );
+                downloadFile(date);
               } else {
                 console.log("check lai cho nay");
               }
@@ -149,15 +168,16 @@ export default function SubmitLicense(props) {
     }
   };
 
-  var downloadFile = (date, identityCard) => {
+  var downloadFile = (date) => {
     var storage = firebase.storage();
     var storageRef = storage.ref("License");
+    var count = 0;
+    var flag2 = false;
 
-    for (let i = 0; i < fileArr.length; i++) {
+    for (let i = 0; i < imageLicenseArr.length; i++) {
       // Create a reference to the file we want to download
       var starsRef = storageRef.child(
-        date + "/" + identityCard + "/" + "Picture " + (i + 1)
-      );
+        date + "/" + currentUser.email + "/" + imageLicenseArr[i].name);
 
       // Get the download URL
       console.log("state download: " + starsRef.state);
@@ -166,6 +186,20 @@ export default function SubmitLicense(props) {
         .then(function (url) {
           // Insert url into an <img> tag to "download"
           console.log("test vi tri: " + (i + 1) + "-" + url);
+          linkImageArr.push(url);
+
+          count = count + 1;
+          if (count == imageLicenseArr.length) {
+            count = 0;
+
+            flag2 = true;
+            if (flag2) {
+              flag2 = false;
+              console.log("length link download image: " + linkImageArr.length);
+              console.log("Starting store car info to DB...");
+              updateLicense();
+            }
+          }
         })
         .catch(function (error) {
           // A full list of error codes is available at
@@ -189,21 +223,15 @@ export default function SubmitLicense(props) {
         });
     }
   };
-  var refreshPage = function () {
-    // if (flag) {
-    window.alert("UpLoad file succcess");
-    window.location.reload();
-    // flag = false;
-    //}
-  };
+
   var loadFile = function (event) {
     if (event.target.files[0]) {
       var image = document.getElementById("output");
       image.src = URL.createObjectURL(event.target.files[0]);
-      if (fileArr.length > 0) {
-        fileArr[0] = event.target.files[0];
+      if (imageLicenseArr.length > 0) {
+        imageLicenseArr[0] = event.target.files[0];
       } else {
-        fileArr.push(event.target.files[0]);
+        setImageLicenseArr([...imageLicenseArr, event.target.files[0]]);
       }
     }
   };
@@ -213,7 +241,7 @@ export default function SubmitLicense(props) {
       var image = document.getElementById("output2");
       image.src = URL.createObjectURL(event.target.files[0]);
       //fileArr.push(event.target.files[0]);
-      fileArr[1] = event.target.files[0];
+      imageLicenseArr[1] = event.target.files[0];
     }
   };
 
@@ -222,7 +250,7 @@ export default function SubmitLicense(props) {
       var image = document.getElementById("output3");
       image.src = URL.createObjectURL(event.target.files[0]);
       // fileArr.push(event.target.files[0]);
-      fileArr[2] = event.target.files[0];
+      imageLicenseArr[2] = event.target.files[0];
     }
   };
 
@@ -231,158 +259,186 @@ export default function SubmitLicense(props) {
       var image = document.getElementById("output4");
       image.src = URL.createObjectURL(event.target.files[0]);
       // fileArr.push(event.target.files[0]);
-      fileArr[3] = event.target.files[0];
+      imageLicenseArr[3] = event.target.files[0];
     }
   };
 
+
   return (
-    <Layout name="License form">
-      <h1 className="text-center">Update your License</h1>
+    <Grid spacing={1} container justify="center" alignItems="center">
+
 
       <div>
         <Dialog
-          open={open}
+          open={loading}
           TransitionComponent={Transition}
           keepMounted
-          onClose={handleClose}
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
         >
           <DialogTitle id="alert-dialog-slide-title">
-            {"We are updating your profile"}
+            {"Updating Profile"}
           </DialogTitle>
           <DialogContent>
             <div align="center" className={classes.progressBar}>
               <CircularProgress color="secondary" />
-              <p>Processing...</p>
+              <p>We are update your information, please wait...</p>
             </div>
           </DialogContent>
         </Dialog>
       </div>
-      <Grid container spacing={1} component={Paper}>
-        <TextField
-          className={classes.textField}
-          label="Full name"
-          id="txtFullName"
-        />
-        <TextField
-          className={classes.textField}
-          label="Mobile number"
-          id="txtPhone"
-        />
-        <TextField className={classes.textField} label="Email" id="txtEmail" />
-        <TextField
-          className={classes.textField}
-          label="Identity Card Number"
-          id="txtIdentityCard"
-        />
 
-        <Grid item xs={12} lg={6}>
-          <p>
-            <label>
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                startIcon={<AccountBoxIcon />}
-              >
-                Front citizen identification
-              </Button>
-            </label>
-          </p>
-          <p>
-            <input
-              type="file"
-              accept="image/*"
-              name="image"
-              id="file"
-              onChange={loadFile}
-            />
-          </p>
-          <p>
-            <img id="output" width="200" height="200" />
-          </p>
+      <Typography variant="h6" color="initial" className={classes.head}>
+        Update Information
+        </Typography>
+
+      <Grid container component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
+
+        <Grid item xs={12} lg={12}>
+          <TextField
+            className={classes.textField}
+            id="phone"
+            name="phone"
+            value={license.phone}
+            onChange={handleInputChange}
+            label="Phone Number"
+            variant="outlined"
+          />
+        </Grid>
+
+
+        <Grid item xs={12} lg={12}>
+          <TextField
+            className={classes.textField}
+            id="identification"
+            name="identification"
+            onChange={handleInputChange}
+            value={license.identification}
+            label="Identification Number"
+            variant="outlined"
+          />
         </Grid>
 
         <Grid item xs={12} lg={6}>
-          <p>
-            <label>
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                startIcon={<AccountBoxIcon />}
-              >
-                Backside citizen identification
-              </Button>
-            </label>
-          </p>
-          <p>
-            <input
-              type="file"
-              accept="image/*"
-              name="image"
-              id="file2"
-              onChange={loadFile2}
-            />
-          </p>
-          <p>
-            <img id="output2" width="200" height="200" />
-          </p>
+          <div style={{ textAlign: "center" }}>
+            <h2>Front citizen identification</h2>
+            <p>
+              <input
+                type="file"
+                style={{ display: "none" }}
+                accept="image/*"
+                name="image"
+                id="file"
+                onChange={loadFile}
+              />
+            </p>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<CloudUploadIcon />}
+            >
+              <label htmlFor="file">Choose File</label>
+            </Button>
+            <p>
+              <img
+                id="output"
+                width="200"
+                height="200"
+              />
+            </p>
+          </div>
         </Grid>
 
         <Grid item xs={12} lg={6}>
-          <p>
-            <label>
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                startIcon={<AccountBoxIcon />}
-              >
-                Front citizen identification with your face
-              </Button>
-            </label>
-          </p>
-          <p>
-            <input
-              type="file"
-              accept="image/*"
-              name="image"
-              id="file3"
-              onChange={loadFile3}
-            />
-          </p>
-          <p>
-            <img id="output3" width="200" height="200" />
-          </p>
+          <div style={{ textAlign: "center" }}>
+            <h2>Front License</h2>
+            <p>
+              <input
+                type="file"
+                style={{ display: "none" }}
+                accept="image/*"
+                name="image"
+                id="file2"
+                onChange={loadFile2}
+              />
+            </p>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<CloudUploadIcon />}
+            >
+              <label htmlFor="file2">Choose File</label>
+            </Button>
+            <p>
+              <img
+                id="output2"
+                width="200"
+                height="200"
+              />
+            </p>
+          </div>
         </Grid>
 
+
         <Grid item xs={12} lg={6}>
-          <p>
-            <label>
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                startIcon={<AccountBoxIcon />}
-              >
-                License
-              </Button>
-            </label>
-          </p>
-          <p>
-            <input
-              type="file"
-              accept="image/*"
-              name="image"
-              id="file4"
-              onChange={loadFile4}
-            />
-          </p>
-          <p>
-            <img id="output4" width="200" height="200" />
-          </p>
+          <div style={{ textAlign: "center" }}>
+            <h2>Backside citizen identification</h2>
+            <p>
+              <input
+                type="file"
+                style={{ display: "none" }}
+                accept="image/*"
+                name="image"
+                id="file3"
+                onChange={loadFile3}
+              />
+            </p>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<CloudUploadIcon />}
+            >
+              <label htmlFor="file3">Choose File</label>
+            </Button>
+            <p>
+              <img
+                id="output3"
+                width="200"
+                height="200"
+              />
+            </p>
+          </div>
+        </Grid>
+
+
+        <Grid item xs={12} lg={6}>
+          <div style={{ textAlign: "center" }}>
+            <h2>Backside License</h2>
+            <p>
+              <input
+                type="file"
+                style={{ display: "none" }}
+                accept="image/*"
+                name="image"
+                id="file4"
+                onChange={loadFile4}
+              />
+            </p>
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<CloudUploadIcon />}
+            >
+              <label htmlFor="file4">Choose File</label>
+            </Button>
+            <p>
+              <img
+                id="output4"
+                width="200"
+                height="200"
+              />
+            </p>
+          </div>
         </Grid>
 
         <Grid container justify="center">
@@ -392,10 +448,11 @@ export default function SubmitLicense(props) {
             color="secondary"
             onClick={uploadFile}
           >
-            Submit
+            Save Change
           </Button>
         </Grid>
       </Grid>
-    </Layout>
+
+    </Grid>
   );
 }

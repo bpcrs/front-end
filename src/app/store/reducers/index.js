@@ -6,6 +6,7 @@ import chat from '../../main/chat/chat.reducer';
 import profile from '../../main/user/profile.reducer';
 import booking from '../../main/booking/booking.reducer';
 import checking from '../../main/checking/checking.reducer';
+import license from '../../main/submitLicense/license.reducer';
 
 const createReducer = (asyncReducers) =>
     combineReducers({
@@ -16,6 +17,7 @@ const createReducer = (asyncReducers) =>
         booking,
         profile,
         checking,
+        license,
         ...asyncReducers
     });
 
