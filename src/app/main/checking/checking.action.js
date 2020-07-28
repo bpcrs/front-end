@@ -133,32 +133,6 @@ export function putUserDetailFailure(error) {
   };
 }
 
-export function fetchCarCheckingAdmin(isAvailable, page, size) {
-  return (dispatch) => {
-    // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
-    const request = GET(ENDPOINT.CAR_CONTROLLER_ADMIN_GETALL, {
-      isAvailable,
-      page,
-      size,
-    });
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(
-            fetchCarCheckingSuccess(response.success ? response.data : [])
-          );
-        } else {
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(fetchCarCheckingFailure(error));
-        dispatch(showMessageError(error.message));
-      }
-    );
-  };
-}
-
 export function fetchCarDetailCheck(carId) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(carId));
