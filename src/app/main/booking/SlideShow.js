@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   img: {
-    height: 400,
+    height: 300,
     display: "block",
     maxWidth: "100%",
     overflow: "hidden",
@@ -106,8 +106,8 @@ function SwipeableTextMobileStepper(props) {
             {theme.direction === "rtl" ? (
               <KeyboardArrowLeft />
             ) : (
-                <KeyboardArrowRight />
-              )}
+              <KeyboardArrowRight />
+            )}
           </Button>
         }
         backButton={
@@ -115,8 +115,8 @@ function SwipeableTextMobileStepper(props) {
             {theme.direction === "rtl" ? (
               <KeyboardArrowRight />
             ) : (
-                <KeyboardArrowLeft />
-              )}
+              <KeyboardArrowLeft />
+            )}
             Back
           </Button>
         }
