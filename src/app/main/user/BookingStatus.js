@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import _ from "@lodash";
+import { BOOKING_STATUS } from "../../../constant";
 
 export const bookingStatus = [
   {
@@ -26,6 +27,16 @@ export const bookingStatus = [
   {
     id: 5,
     name: "PENDING",
+    color: "bg-yellow text-white",
+  },
+  {
+    id: 6,
+    name: BOOKING_STATUS.OWNER_ACCEPTED,
+    color: "bg-yellow text-white",
+  },
+  {
+    id: 7,
+    name: BOOKING_STATUS.CONFIRM,
     color: "bg-yellow text-white",
   },
 ];

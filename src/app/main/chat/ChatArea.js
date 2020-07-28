@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Avatar,
@@ -6,36 +6,14 @@ import {
   Badge,
   makeStyles,
   Paper,
-  Chip,
-  Icon,
-  Button,
-  Slide,
-  Dialog,
-  AppBar,
-  Toolbar,
-  IconButton,
-  Card,
-  CardContent,
-  FormControl,
-  TextField,
-  DialogActions,
-  DialogTitle,
-  DialogContentText,
-  DialogContent,
   Box,
-  Stepper,
-  Step,
-  StepLabel,
 } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
 import {
-  openAgreement,
   fetchCriteriaList,
-  createAgreement,
   fetchAgreementList,
   setIsRenterBooking,
 } from "./chat.action";
@@ -113,6 +91,9 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
       borderRadius: theme.shape.borderRadius,
     },
   },
+  root: {
+    width: "100%",
+  },
 }))(ToggleButtonGroup);
 
 export default function ToggleButtons() {
@@ -128,7 +109,7 @@ export default function ToggleButtons() {
 
   return (
     <div>
-      <Paper elevation={0} className={classes.paper}>
+      <Paper elevation={1} className={classes.paper}>
         <StyledToggleButtonGroup
           size="small"
           value={isRenter}
@@ -136,13 +117,21 @@ export default function ToggleButtons() {
           onChange={handleAlignment}
           aria-label="text alignment"
         >
-          <ToggleButton value={true} aria-label="left aligned">
-            <Typography variant="caption" color="inherit">
+          <ToggleButton
+            value={true}
+            aria-label="left aligned"
+            className="w-1/2"
+          >
+            <Typography variant="caption" color="error">
               Renter
             </Typography>
           </ToggleButton>
-          <ToggleButton value={false} aria-label="right aligned">
-            <Typography variant="caption" color="inherit">
+          <ToggleButton
+            value={false}
+            aria-label="right aligned"
+            className="w-1/2"
+          >
+            <Typography variant="caption" color="secondary">
               Owner
             </Typography>
           </ToggleButton>
@@ -175,14 +164,14 @@ const User = ({ displayName, email, photoURL }) => {
           {email}
         </Typography>
       </Grid>
-      <Grid lg={5} item>
+      <Grid lg={12} item>
         <ToggleButtons />
       </Grid>
     </Grid>
   );
 };
 
-const UserSelected = ({ booking }) => {
+const UserSelected = () => {
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   return (
     <Box
@@ -213,279 +202,27 @@ const UserSelected = ({ booking }) => {
             color="textSecondary"
             variant="caption"
           >
-            Booking Id : {selectedBooking.id}
+            Booking Id : {selectedBooking.id} -{" "}
+            <BookingStatus name={selectedBooking.status} />
           </Typography>
 
           {/* </Grid> */}
         </Grid>
-        <Grid item>
-          <BookingStatus name={selectedBooking.status} />
-        </Grid>
+        <Grid item></Grid>
       </Grid>
     </Box>
   );
 };
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-export function ViewBookingDialog(props) {
-  const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  // const booking = useSelector((state) => state.chat.booking);
-  const { info } = props;
-  // console.log(info);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        View booking info
-      </Button>
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={handleClose}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            {/* <Typography variant="h6" className={classes.title}>
-              Sound
-            </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
-              save
-            </Button> */}
-          </Toolbar>
-        </AppBar>
-        <div>
-          <Card>
-            <CardContent>
-              {/* <ViewBooking info = { booking } /> */}
-              <Grid container>
-                <Grid item xs={12} xl={6}>
-                  <Typography variant="subtitle1">
-                    PICK UP & DESTINAION
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} xl={6} justify="flex-end" container>
-                  <FormControl fullWidth className={classes.spacingCard}>
-                    <TextField
-                      id="pickup-basic"
-                      label="Pickup"
-                      variant="outlined"
-                      fullWidth
-                      disabled
-                      // value="61 Hang Tre"
-                      value={
-                        info.description ? info.description : "61 Hang Tre"
-                      }
-                    />
-                  </FormControl>
-                  <FormControl fullWidth className={classes.spacingCard}>
-                    <TextField
-                      id="destinaion-basic"
-                      label="Destinaion"
-                      variant="outlined"
-                      fullWidth
-                      disabled
-                      // value="TP HCM"
-                      value={info.destination ? info.destination : "TP HCM"}
-                    />
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </div>
-        <div className={classes.spacingCard}>
-          <Card>
-            <CardContent>
-              <Grid container>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1">
-                    TRIP DURATION{" ("}
-                    {Math.round(
-                      (new Date(info.toDate) - new Date(info.fromDate)) /
-                        (1000 * 60 * 60 * 24)
-                    ) + 1}{" "}
-                    days)
-                  </Typography>
-                </Grid>
-
-                <Grid item xl={5} lg={5} container direction="row" spacing={1}>
-                  <Grid
-                    item
-                    xs={6}
-                    xl={6}
-                    lg={6}
-                    style={{ textAlign: "right" }}
-                  >
-                    <Typography variant="h4">
-                      {new Date(info.fromDate).getDate()}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={6} xl={6} lg={6}>
-                    <Grid>
-                      <Typography variant="caption">
-                        {`${new Date(info.fromDate).toLocaleString("default", {
-                          month: "short",
-                        })}-${new Date(info.fromDate).getFullYear()}`}
-                      </Typography>
-                      <Typography variant="caption" component="p">
-                        7:00 AM
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-
-                <Grid
-                  item
-                  xs={12}
-                  xl={2}
-                  lg={2}
-                  container
-                  justify="center"
-                  alignItems="center"
-                  spacing={1}
-                >
-                  <Grid item>
-                    <Typography variant="overline">To</Typography>
-                  </Grid>
-                </Grid>
-                <Grid item xl={5} lg={5} container direction="row" spacing={1}>
-                  <Grid
-                    item
-                    xs={6}
-                    xl={6}
-                    lg={6}
-                    style={{ textAlign: "right" }}
-                  >
-                    <Typography variant="h4">
-                      {new Date(info.toDate).getDate()}
-                    </Typography>
-                    {/* <p className="text-base sm:text-3xl md:text-3xl lg:text-3xl xl:text-3xl">09</p> */}
-                  </Grid>
-                  <Grid item xs={6} xl={6} lg={6}>
-                    <Grid>
-                      <Typography variant="caption">{`${new Date(
-                        info.toDate
-                      ).toLocaleString("default", {
-                        month: "short",
-                      })}-${new Date(info.toDate).getFullYear()}`}</Typography>
-                      <Typography variant="caption" component="p">
-                        7:00 PM
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </div>
-        <div className={classes.spacingCard}>
-          {/* <Grid container className={classes.root} spacing={2}>
-            <Grid item xs={12} lg={4} xl={4} className={classes.paper}>
-              <CarItem isAction={false} info={carDetail} />
-            </Grid>
-          </Grid> */}
-        </div>
-      </Dialog>
-    </div>
-  );
-}
-
-export function CloseAgreementDialog(props) {
-  const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
-  const { agreement } = props;
-  // console.log(agreement);
-  // const agreeAgreements =  props
-
-  const handleUpdateAgreement = () => {
-    // console.log("Agreements will be created", chip);
-    dispatch(createAgreement(agreement));
-    handleClose();
-    // dispatch(updateAgreement(11, updateAgreements));
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  return (
-    <div>
-      <Chip
-        icon={<Icon>done</Icon>}
-        label="Done"
-        clickable
-        color="primary"
-        size="medium"
-        // onChange={() => handleChip(chip.type)}
-        style={{
-          backgroundColor: "green",
-        }}
-        onClick={handleClickOpen}
-      />
-      <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle id="alert-dialog-slide-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Agree all agreement ? This booking will start after you click agree
-            button. Please check carefully
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
-          </Button>
-          <Button onClick={handleUpdateAgreement} color="primary">
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
-}
-
 export const ChatArea = (props) => {
-  const classes = useStyles();
   const userLogged = useSelector((state) => state.auth.user);
   const { carDetail, notification } = props.location.state || {};
   const chip = useSelector((state) => state.chat.chip);
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
-  const handleOpenAgreement = (type) => {
-    dispatch(openAgreement(type));
-  };
+  // const handleOpenAgreement = (type) => {
+  //   dispatch(openAgreement(type));
+  // };
 
   useEffect(() => {
     function initDataFromAPI() {
@@ -493,7 +230,6 @@ export const ChatArea = (props) => {
       dispatch(fetchAgreementList(selectedBooking.id));
     }
     initDataFromAPI();
-    // dispatch(fetchBookingRequest(26));
   }, [dispatch, selectedBooking]);
   return (
     <Grid container>
@@ -532,44 +268,12 @@ export const ChatArea = (props) => {
             item
             container
             lg={4}
-            // direction="column"
+            direction="column"
+            justify="center"
+            alignContent="center"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedBooking.id && (
-              <>
-                <StepAgreement />
-
-                {/* <Grid>
-                  {chip && chip.length !== 0 ? (
-                    <div className={classes.root}>
-                      {chip.map((data) => {
-                        // console.log(data);
-                        // console.log(chip);
-                        return (
-                          <Chip
-                            icon={
-                              <Icon>{data.approved ? "done" : "error"}</Icon>
-                            }
-                            label={data.name}
-                            clickable
-                            color="primary"
-                            // onChange={() => handleChip(chip.type)}
-                            style={{
-                              backgroundColor: data.approved
-                                ? "green"
-                                : "primary",
-                            }}
-                            onClick={() => handleOpenAgreement(data.name)}
-                          />
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <></>
-                  )}
-                </Grid> */}
-              </>
-            )}
+            {selectedBooking.id && <StepAgreement />}
           </Grid>
         </Grid>
         <Grid

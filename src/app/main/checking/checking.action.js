@@ -20,6 +20,11 @@ export const FETCH_USER_DETAIL_CHECKING_FAILURE =
 export const PUT_CAR_EDIT_CHECK_SUCCESS = "[CAR_EDIT_CHECK] PUT DATA SUCCESS";
 export const PUT_CAR_EDIT_CHECK_FAILURE = "[CAR_EDIT_CHECK] PUT DATA FAILURE";
 
+export const PUT_USER_DETAIL_CHECKING_SUCCESS =
+  "[USER_DETAIL_CHECKING] PUT DATA SUCCESS";
+export const PUT_USER_DETAIL_CHECKING_FAILURE =
+  "[USER_DETAIL_CHECKING] PUT DATA FAILURE";
+
 export function fetchCarCheckingSuccess(cars) {
   return {
     type: FETCH_CAR_CHECKING_SUCCESS,
@@ -114,6 +119,45 @@ export function fetchCarCheckingAdmin(page, size) {
     );
   };
 }
+export function putUserDetailSuccess(user) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_SUCCESS,
+    payload: user,
+  };
+}
+
+export function putUserDetailFailure(error) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_FAILURE,
+    payload: error,
+  };
+}
+
+export function fetchCarCheckingAdmin(isAvailable, page, size) {
+  return (dispatch) => {
+    // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
+    const request = GET(ENDPOINT.CAR_CONTROLLER_ADMIN_GETALL, {
+      isAvailable,
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(
+            fetchCarCheckingSuccess(response.success ? response.data : [])
+          );
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(fetchCarCheckingFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
 
 export function fetchCarDetailCheck(carId) {
   return (dispatch) => {
@@ -165,6 +209,46 @@ export function putCarUpdate(id, car) {
         }
       },
       (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchUserDetailChecking(userId) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(fetchUserDetailCheckingSuccess(response.data));
+        } else {
+          dispatch(fetchUserDetailCheckingFailure(response.message));
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(fetchUserDetailCheckingFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function putAcceptUserLicence(id, user) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putUserDetailSuccess(response.data));
+        } else {
+          dispatch(putUserDetailFailure(response.message));
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(putUserDetailFailure(error.message));
         dispatch(showMessageError(error.message));
       }
     );

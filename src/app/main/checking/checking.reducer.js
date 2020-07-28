@@ -7,6 +7,7 @@ const initialState = {
     users: [],
     loading: false,
     changePage: false,
+    userDetail: {},
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
@@ -31,6 +32,18 @@ const CheckingReducer = (state = initialState, { type, payload }) => {
         }
         case Actions.PUT_CAR_EDIT_CHECK_SUCCESS:{
             return {
+                ...state,
+                changePage: true,
+            }
+        }
+        case Actions.FETCH_USER_DETAIL_CHECKING_SUCCESS:{
+            return{
+                ...state,
+                userDetail: payload,
+            }
+        }
+        case Actions.PUT_USER_DETAIL_CHECKING_SUCCESS:{
+            return{
                 ...state,
                 changePage: true,
             }

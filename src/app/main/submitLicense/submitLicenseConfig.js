@@ -1,5 +1,8 @@
 import {authRoles} from 'app/auth';
 import submitLicense from './submitLicense'
+import MyLicense from './MyLicense';
+import { APP_PATH } from "../../../constant";
+import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 
 export const SubmitLicenseConfig = {
     settings: {
@@ -26,8 +29,12 @@ export const SubmitLicenseConfig = {
     auth    : authRoles.onlyGuest,
     routes  : [
         {
-            path     : '/submitLicense',
+            path     : APP_PATH.LICENSE_SUBMIT,
             component: submitLicense
+        },
+        {
+            path : "/MyLicense",
+            component: MyLicense,
         }
     ]
 };

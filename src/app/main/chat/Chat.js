@@ -8,7 +8,7 @@ import {
   Collapse,
   Button,
   Tooltip,
-  Drawer,
+  Box,
 } from "@material-ui/core";
 import classNames from "classnames";
 import { makeStyles } from "@material-ui/styles";
@@ -176,18 +176,26 @@ const Chat = () => {
                   className: classes.bootstrapFormLabel,
                 }}
               />
+
               <Tooltip title="Send an attachment">
-                <Button component="label" className="pr-0">
-                  <Icon>attach_file</Icon>
+                <Box>
                   <input
-                    type="file"
-                    style={{ display: "none" }}
                     accept="image/*"
-                    name="image"
-                    id="file"
+                    style={{ display: "none" }}
+                    id="icon-button-file"
+                    type="file"
                     onChange={onImgSubmit}
                   />
-                </Button>
+                  <label htmlFor="icon-button-file">
+                    <IconButton
+                      color="primary"
+                      aria-label="upload picture"
+                      component="span"
+                    >
+                      <Icon>attach_file</Icon>
+                    </IconButton>
+                  </label>
+                </Box>
               </Tooltip>
               <Tooltip title="Send a message">
                 <Button

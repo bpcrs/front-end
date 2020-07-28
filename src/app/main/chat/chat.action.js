@@ -271,7 +271,7 @@ export async function deleteAllMsgByTypeFromFirebase(type, bookingId) {
 
 export function fetchPendingBooking(user, page, size, status, isRenter) {
   return (dispatch) => {
-    const params = { isRenter, page, size, status };
+    const params = { isRenter, page, size, status: status.join(",") };
     const request = GET(
       ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(user),
       { ...params },
