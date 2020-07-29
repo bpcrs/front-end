@@ -19,6 +19,7 @@ import { APP_PATH } from "../../../constant";
 import { useDispatch, useSelector } from "react-redux";
 import { postBookingRequest } from "./booking.action";
 import { useState } from "react";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,6 +41,29 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 0,
   },
 }));
+
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      // prefix="$"
+      suffix=" ₫"
+    />
+  );
+}
 
 export default function ViewBooking(props) {
   const history = useHistory();
@@ -110,34 +134,24 @@ export default function ViewBooking(props) {
               </Grid>
               <Grid item xs={12} xl={6} justify="flex-end" container>
                 <FormControl fullWidth className={classes.spacingCard}>
-                  <TextField
-                    id="pickup-basic"
-                    label="Pickup"
-                    variant="outlined"
-                    fullWidth
-                    disabled
-                    value={bookingChange.location.description}
-                  />
+                  <Grid container justify="space-between">
+                    <Typography variant="h6" color="primary" display="initial">
+                      Pickup:
+                    </Typography>
+                    <Typography variant="body2" color="primary">
+                      {bookingChange.location.description}
+                    </Typography>
+                  </Grid>
                 </FormControl>
                 <FormControl fullWidth className={classes.spacingCard}>
-                  <TextField
-                    id="destinaion-basic"
-                    label="Destinaion"
-                    variant="outlined"
-                    fullWidth
-                    disabled
-                    value={bookingChange.destination.description}
-                  />
-                </FormControl>
-                <FormControl fullWidth className={classes.spacingCard}>
-                  <TextField
-                    id="destinaion-basic"
-                    label="Estimate price"
-                    variant="outlined"
-                    fullWidth
-                    disabled
-                    value={bookingReq.totalPrice}
-                  />
+                  <Grid container justify="space-between">
+                    <Typography variant="h6" color="primary" display="initial">
+                      Destinaion:
+                    </Typography>
+                    <Typography variant="body2" color="primary">
+                      {bookingChange.destination.description}
+                    </Typography>
+                  </Grid>
                 </FormControl>
               </Grid>
             </Grid>
@@ -230,6 +244,42 @@ export default function ViewBooking(props) {
                     <Typography variant="subtitle1">
                       GUILINES & POLICIES
                     </Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Grid container alignItems="flex-start">
+                  <Grid item xs={12}>
+                    <FormControl fullWidth className={classes.spacingCard}>
+                      <Grid container justify="space-between">
+                        <Typography
+                          variant="h6"
+                          color="primary"
+                          display="initial"
+                        >
+                          Estimate price:
+                        </Typography>
+                        <NumberFormat
+                          value={bookingReq.totalPrice}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          suffix={" đ"}
+                        />
+                      </Grid>
+                      {/* <TextField
+                        id="formatted-numberformat-input"
+                        label="Estimate price"
+                        variant="outlined"
+                        fullWidth
+                        disabled
+                        value={bookingReq.totalPrice}
+                        InputProps={{
+                          inputComponent: NumberFormatCustom,
+                        }}
+                      /> */}
+                    </FormControl>
                   </Grid>
                 </Grid>
               </CardContent>

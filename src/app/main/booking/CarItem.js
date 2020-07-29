@@ -56,20 +56,20 @@ export default function CarItem(props = { isAction: true }) {
   return (
     <Card className={classes.card}>
       <CardHeader
-        avatar={
-          <Avatar
-            aria-label="Owner"
-            className={classes.avatar}
-            src={info.owner.imageUrl}
-          >
-            {info.owner.fullName[0]}
-          </Avatar>
-        }
-        action={
-          <IconButton>
-            <MoreVertIcon />
-          </IconButton>
-        }
+        // avatar={
+        //   <Avatar
+        //     aria-label="Owner"
+        //     className={classes.avatar}
+        //     src={info.owner.imageUrl}
+        //   >
+        //     {info.owner.fullName[0]}
+        //   </Avatar>
+        // }
+        // action={
+        //   <IconButton>
+        //     <MoreVertIcon />
+        //   </IconButton>
+        // }
         title={info.name}
         subheader={info.model.name + " " + info.year}
       />

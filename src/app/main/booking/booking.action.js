@@ -1,5 +1,5 @@
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT, POST } from "../../services/api";
+import { GET, ENDPOINT, PUT, POST, DELETE } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
 import {
@@ -58,11 +58,18 @@ export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
 export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
+export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
 
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
     payload: booking,
+  };
+}
+export function deleteImageCar(image) {
+  return {
+    type: DELETE_IMAGE_CAR,
+    payload: image,
   };
 }
 export function fetchCarSuccess(cars) {
@@ -592,6 +599,21 @@ export function updateCarStatus(id, status) {
     request.then(
       (response) => {
         dispatch(updateCarStatusSuccess(response.success ? response.data : ""));
+        dispatch(showMessageSuccess("Update status success"));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function deleteImage(image) {
+  return (dispatch) => {
+    const request = DELETE(ENDPOINT.IMAGE_CONTROLLER_GETBYID(image.id));
+    request.then(
+      (response) => {
+        dispatch(deleteImageCar(image));
       },
       (error) => {
         showMessageError(error.message);

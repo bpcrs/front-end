@@ -25,6 +25,17 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         },
       };
     }
+    case Actions.DELETE_IMAGE_CAR: {
+      return {
+        ...state,
+        carDetail: {
+          ...state.carDetail,
+          images: state.carDetail.images.filter(
+            (item) => item.id !== payload.id
+          ),
+        },
+      };
+    }
     case Actions.CREATE_BOOKING_REQUEST: {
       return {
         ...state,

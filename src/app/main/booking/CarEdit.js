@@ -29,7 +29,9 @@ import {
   putCarUpdate,
   fetchImageList,
   updateCarStatus,
+  deleteImage,
 } from "./booking.action";
+import { blue, green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import CarStatus from "../user/CarStatus";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -51,6 +53,13 @@ const useStyles = makeStyles((theme) => ({
     width: 50,
     marginRight: 10,
   },
+  productImageFeaturedStar: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    color: blue[400],
+    opacity: 0,
+  },
   formControl: {
     width: "100%",
     maxHeight: ITEM_HEIGHT * 4.5,
@@ -71,6 +80,10 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: 20,
     padding: 20,
+  },
+  button: {
+    margin: theme.spacing(1),
+    marginTop: theme.spacing(2),
   },
   switchButton: {
     marginLeft: theme.spacing(2),
@@ -333,6 +346,18 @@ export default function CarEdits(props) {
   const updateCar = () => {
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
+  const [imagesCar, setImagesCar] = useState([]);
+  const uploadImage = (event) => {
+    setImagesCar([...imagesCar, ...event.target.files]);
+  };
+  const handleRemoveItem = (image) => {
+    console.log(imagesCar);
+    setImagesCar(imagesCar.filter((item) => item.name !== image.name));
+  };
+  const handleRemoveImage = (image) => {
+    console.log(image.id);
+    dispatch(deleteImage(image));
+  };
 
   useEffect(() => {
     const fetchCar = () => {
@@ -341,7 +366,7 @@ export default function CarEdits(props) {
     };
     fetchCar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carDetail.id, carDetail.status]);
+  }, [carDetail.id, carDetail.status, carDetail.images]);
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -526,9 +551,34 @@ export default function CarEdits(props) {
           <TabPanel value={tabValue} index={1}>
             {currentCar.images ? (
               <Grid container item lg={12}>
+                <Grid item lg={3}>
+                  <label
+                    className={classes.productImageItem}
+                    variant="outlined"
+                  >
+                    <input
+                      type="file"
+                      style={{ display: "none" }}
+                      multiple
+                      accept="image/*"
+                      name="image"
+                      id="file"
+                      onChange={uploadImage}
+                    />
+                    <span aria-hidden="true">
+                      <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                    </span>
+                  </label>
+                </Grid>
                 {currentCar.images.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveImage(image)}
+                      >
+                        remove_circle
+                      </Icon>
                       <img
                         src={image.link}
                         alt="img"
@@ -537,12 +587,39 @@ export default function CarEdits(props) {
                     </div>
                   </Grid>
                 ))}
+                {imagesCar &&
+                  imagesCar.map((image, index) => (
+                    <Grid item lg={3}>
+                      <div className={classes.productImageItem} key={index}>
+                        <Icon
+                          className={classes.productImageFeaturedStar}
+                          onClick={() => handleRemoveItem(image)}
+                        >
+                          remove_circle
+                        </Icon>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="img"
+                          style={{ width: "90%", height: "90%" }}
+                        />
+                      </div>
+                    </Grid>
+                  ))}
               </Grid>
             ) : (
               <Grid>
                 <Typography>The car dont have images</Typography>
               </Grid>
             )}
+            <Grid container item justify="center">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Update
+              </Button>
+            </Grid>
           </TabPanel>
         </Grid>
       </Grid>

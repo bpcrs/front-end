@@ -49,6 +49,18 @@ export const POST = (endpoint, params = {}, body = {}) => {
       return errResponse;
     });
 };
+export const DELETE = (endpoint, params = {}, body = {}) => {
+  return request(endpoint, "DELETE", params, body)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errResponse =
+        (error && error.response && error.response.data) ||
+        (error && error.message);
+      return errResponse;
+    });
+};
 export const request = (endpoint, method, params = {}, body = {}) => {
   return axios({
     url: APP_CONST.API_URL + endpoint,
@@ -95,6 +107,7 @@ export const ENDPOINT = {
   ACCOUNT_LICENSE_UPDATE: (id) => `/account/license/${id}`,
 
   IMAGE_CONTROLLER_GETALL: "/image",
+  IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
 
