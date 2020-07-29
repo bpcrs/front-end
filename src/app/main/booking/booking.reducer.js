@@ -16,6 +16,15 @@ const initialState = {
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.UPDATE_CAR_STATUS: {
+      return {
+        ...state,
+        carDetail: {
+          ...state.carDetail,
+          status: payload,
+        },
+      };
+    }
     case Actions.CREATE_BOOKING_REQUEST: {
       return {
         ...state,

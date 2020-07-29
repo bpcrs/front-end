@@ -109,6 +109,7 @@ const Notification = () => {
           );
         });
     };
+
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);

@@ -57,6 +57,7 @@ export const CREATE_BOOKING_REQUEST = "[BOOKING] CREATE BOOKING";
 export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
+export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
 
 export function createBooking(booking) {
   return {
@@ -224,6 +225,12 @@ export function fetchBookingSuccess(booking) {
   return {
     type: FETCH_BOOKING_SUCCESS,
     payload: booking,
+  };
+}
+export function updateCarStatusSuccess(car) {
+  return {
+    type: UPDATE_CAR_STATUS,
+    payload: car.status,
   };
 }
 
@@ -572,4 +579,22 @@ export function storeImageToFirebase(imgs) {
       });
     });
   });
+}
+
+export function updateCarStatus(id, status) {
+  return (dispatch) => {
+    const request = PUT(
+      ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id),
+      { status },
+      {}
+    );
+    request.then(
+      (response) => {
+        dispatch(updateCarStatusSuccess(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }

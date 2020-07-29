@@ -86,6 +86,7 @@ export const ENDPOINT = {
   CAR_CONTROLLER_ADMIN_GETALL: "/car/admin",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
+  CAR_CONTROLLER_STATUS_GETBYID: (id) => `/car/status/${id}`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
