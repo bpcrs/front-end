@@ -58,6 +58,9 @@ const useStyles = makeStyles((theme) => ({
   status: {
     margin: theme.spacing(1),
   },
+  updateButton: {
+    marginTop: theme.spacing(3),
+  },
   smallText: {
     marginRight: theme.spacing(1),
   },
@@ -228,13 +231,18 @@ export default function CarEdits(props) {
                 </Typography>
               </DialogContent>
               <DialogActions>
-                <Button color="primary" onClick={handleChangeStatus}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleChangeStatus}
+                >
                   Yes
                 </Button>
                 <Button
                   autoFocus
                   onClick={() => setOpen(false)}
-                  color="primary"
+                  color="secondary"
+                  variant="contained"
                 >
                   No
                 </Button>
@@ -253,6 +261,7 @@ export default function CarEdits(props) {
                   autoFocus
                   onClick={() => setOpen(false)}
                   color="primary"
+                  variant="contained"
                 >
                   Ok
                 </Button>
@@ -262,12 +271,66 @@ export default function CarEdits(props) {
         </Dialog>
       </React.Fragment>
     );
-    // setCurrentCar({ ...currentCar, available: event.target.checked });
+  }
+
+  function HandlePrice() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <React.Fragment>
+        <Grid container justify="space-between" alignItems="baseline">
+          <Grid item lg={5}>
+            <TextField
+              // className={classes.textField}
+              variant="outlined"
+              label="Price (per day)"
+              value={currentCar.price}
+              onChange={handleInputChange}
+              name="price"
+              id="formatted-numberformat-input"
+              InputProps={{
+                inputComponent: NumberFormatCustom,
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              className={classes.updateButton}
+              color="primary"
+              variant="contained"
+              onClick={() => setOpen(true)}
+            >
+              Update
+            </Button>
+          </Grid>
+        </Grid>
+        <Dialog open={open} scroll="body">
+          <DialogContent>
+            <Grid container justify="center"></Grid>
+            <Typography variant="subtitle1" color="initial">
+              Are you want to update price of your car is {currentCar.price} per
+              day ?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" variant="contained" onClick={updateCar}>
+              Yes
+            </Button>
+            <Button
+              autoFocus
+              onClick={() => setOpen(false)}
+              color="secondary"
+              variant="outlined"
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
+    );
   }
 
   const updateCar = () => {
-    // console.log("Name car : ", currentCar.name);
-
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
 
@@ -379,7 +442,9 @@ export default function CarEdits(props) {
                       name={carDetail.status ? carDetail.status : "AVAILABLE"}
                     />
                     <HandleAvailable />
+                    <HandlePrice />
                   </Grid>
+
                   <TextField
                     className={classes.textField}
                     id="brand"

@@ -375,6 +375,7 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
+          dispatch(showMessageSuccess("Update price success"));
         } else {
           dispatch(showMessageError(response.message));
         }
