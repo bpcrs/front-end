@@ -49,6 +49,18 @@ export const POST = (endpoint, params = {}, body = {}) => {
       return errResponse;
     });
 };
+export const DELETE = (endpoint, params = {}, body = {}) => {
+  return request(endpoint, "DELETE", params, body)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      const errResponse =
+        (error && error.response && error.response.data) ||
+        (error && error.message);
+      return errResponse;
+    });
+};
 export const request = (endpoint, method, params = {}, body = {}) => {
   return axios({
     url: APP_CONST.API_URL + endpoint,
@@ -86,6 +98,7 @@ export const ENDPOINT = {
   CAR_CONTROLLER_ADMIN_GETALL: "/car/admin",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
+  CAR_CONTROLLER_STATUS_GETBYID: (id) => `/car/status/${id}`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
@@ -94,6 +107,7 @@ export const ENDPOINT = {
   ACCOUNT_LICENSE_UPDATE: (id) => `/account/license/${id}`,
 
   IMAGE_CONTROLLER_GETALL: "/image",
+  IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
 

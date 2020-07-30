@@ -49,11 +49,11 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
   },
   icon: {
-    height: "50px",
-    width: "50px",
+    height: "20px",
+    width: "20px",
   },
   formControl: {
-    width: 250,
+    width: 275,
     margin: theme.spacing(1),
     maxHeight: 150,
   },
@@ -92,10 +92,16 @@ const useStyles = makeStyles((theme) => ({
     color: orange[400],
     opacity: 0,
   },
+  imgContainer: {
+    display: "flex",
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
+  },
   productImageItem: {
     width: 128,
     height: 128,
     display: "flex",
+    position: "relative",
     border: `1px solid ${theme.palette.divider}`,
     flexWrap: "wrap",
     justifyContent: "center",
@@ -469,7 +475,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
       return (
         <Grid>
           <Grid container item lg={12} spacing={2}>
-            <div className="flex justify-center sm:justify-start flex-wrap">
+            <div className={classes.imgContainer}>
               <Grid item lg={3}>
                 <label className={classes.productImageItem}>
                   <input
@@ -865,21 +871,9 @@ export default function CarSubmit(props) {
                   color="primary"
                   onClick={handleSubmit}
                   className={classes.button}
-                  disabled={
-                    !currentCar.name ||
-                    !currentCar.brandId ||
-                    !currentCar.modelId ||
-                    !currentCar.year ||
-                    !currentCar.seat ||
-                    !currentCar.screen ||
-                    !currentCar.vin ||
-                    !currentCar.price > 0 ||
-                    !currentCar.plateNum ||
-                    !carImages ||
-                    !carLicense
-                  }
+                  disabled={carImages.length === 0 || carLicense.length === 0}
                 >
-                  Submit
+                  Register
                 </Button>
               ) : (
                 // </Grid>

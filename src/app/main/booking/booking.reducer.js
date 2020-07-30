@@ -12,10 +12,36 @@ const initialState = {
   models: [],
   agreemnts: [],
   booking: {},
+  change: false,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    // case Actions.GET_IMAGE_LINK: {
+
+    // }
+    case Actions.UPDATE_CAR_STATUS: {
+      return {
+        ...state,
+        carDetail: {
+          ...state.carDetail,
+          status: payload,
+        },
+      };
+    }
+    case Actions.DELETE_IMAGE_CAR:
+    case Actions.CHANGE_IMAGE_TYPE: {
+      return {
+        ...state,
+        carDetail: {
+          ...state.carDetail,
+          images: state.carDetail.images.filter(
+            (item) => item.id !== payload.id
+          ),
+        },
+        change: true,
+      };
+    }
     case Actions.CREATE_BOOKING_REQUEST: {
       return {
         ...state,

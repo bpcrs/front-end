@@ -1,5 +1,5 @@
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT, POST } from "../../services/api";
+import { GET, ENDPOINT, PUT, POST, DELETE } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
 import {
@@ -9,6 +9,7 @@ import {
   processingRegister,
 } from "../user/profile.action";
 import { showMessageSuccess } from "../../store/actions/fuse";
+import { useState } from "react";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -57,11 +58,33 @@ export const CREATE_BOOKING_REQUEST = "[BOOKING] CREATE BOOKING";
 export const FETCH_BOOKING_SUCCESS = "[BOOKING] FETCH BOOKING SUCCESS";
 
 export const CREATE_AGREEMENT_SUCCESS = "[AGREEMENT] CREATE AGREEMENT SUCCESS";
+export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
+export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
+export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
+export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
     payload: booking,
+  };
+}
+export function getImageDownloadURL(urls) {
+  return {
+    type: GET_IMAGE_LINK,
+    payload: urls,
+  };
+}
+export function changeImageType(image) {
+  return {
+    type: CHANGE_IMAGE_TYPE,
+    payload: image,
+  };
+}
+export function deleteImageCar(image) {
+  return {
+    type: DELETE_IMAGE_CAR,
+    payload: image,
   };
 }
 export function fetchCarSuccess(cars) {
@@ -226,6 +249,12 @@ export function fetchBookingSuccess(booking) {
     payload: booking,
   };
 }
+export function updateCarStatusSuccess(car) {
+  return {
+    type: UPDATE_CAR_STATUS,
+    payload: car.status,
+  };
+}
 
 export function fetchCarList(page, size) {
   return (dispatch) => {
@@ -368,6 +397,7 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
+          dispatch(showMessageSuccess("Update price success"));
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -379,12 +409,13 @@ export function putCarUpdate(id, car) {
   };
 }
 
-export function fetchImageList(page, size, carId) {
+export function fetchImageList(page, size, carId, type) {
   return (dispatch) => {
     const request = GET(ENDPOINT.IMAGE_CONTROLLER_GETALL, {
+      carId,
       page,
       size,
-      carId,
+      type,
     });
     request.then(
       (response) => {
@@ -551,10 +582,12 @@ export function notificationBooking(booking) {
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
+      isSeen: false,
     });
 }
 
 export function storeImageToFirebase(imgs) {
+  // const [imgs, setImgs] = useState([]);
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -568,8 +601,81 @@ export function storeImageToFirebase(imgs) {
     uploadTask.put(img, metadata).then(function (result) {
       uploadTask.getDownloadURL().then(function (url) {
         console.log("file available at ", url);
+        // getImageDownloadURL(url);
         // submitMessage(url, send, receive, "IMG");
       });
     });
   });
+}
+
+export function updateImageCar(images, carId, type) {
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const date = new Date().getTime();
+  images.map(
+    (img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/" + date)
+        .child(img.name);
+
+      uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.getDownloadURL().then(function (url) {
+          console.log("file available at ", url);
+          // return (dispatch) =>;
+          // dispatch(postImageCar(url, carId, type));
+          // getImageDownloadURL(url);
+        });
+      });
+    }
+    // return(url);
+  );
+}
+
+export function updateCarStatus(id, status) {
+  return (dispatch) => {
+    const request = PUT(
+      ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id),
+      { status },
+      {}
+    );
+    request.then(
+      (response) => {
+        dispatch(updateCarStatusSuccess(response.success ? response.data : ""));
+        dispatch(showMessageSuccess("Update status success"));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function deleteImage(image) {
+  return (dispatch) => {
+    const request = DELETE(ENDPOINT.IMAGE_CONTROLLER_GETBYID(image.id));
+    request.then(
+      (response) => {
+        dispatch(deleteImageCar(image));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function changeImageByType(image, type) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.IMAGE_CONTROLLER_GETBYID(image.id), { type });
+    request.then(
+      (response) => {
+        dispatch(changeImageType(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }
