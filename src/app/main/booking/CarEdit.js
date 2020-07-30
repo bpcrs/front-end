@@ -31,13 +31,13 @@ import {
   updateCarStatus,
   changeImageByType,
   fetchImageList,
-  storeImageToFirebase,
   postImageCar,
 } from "./booking.action";
 import { blue, green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import CarStatus from "../user/CarStatus";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import GoogleMaps from "../landing/GoogleMaps";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -352,6 +352,7 @@ export default function CarEdits(props) {
       </React.Fragment>
     );
   }
+  const [location, setLocation] = useState();
 
   const updateCar = () => {
     dispatch(putCarUpdate(currentCar.id, currentCar));
@@ -402,6 +403,7 @@ export default function CarEdits(props) {
       dispatch(fetchCarDetail(carId));
       dispatch(fetchImageList(1, 20, carId, "CAR"));
       setCurrentCar(carDetail);
+      // setLocation(carDetail.location);
     };
     fetchCar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -508,7 +510,22 @@ export default function CarEdits(props) {
                     <HandleAvailable />
                     <HandlePrice />
                   </Grid>
-
+                  <Typography>
+                    {carDetail.location
+                      ? carDetail.location
+                      : "61 Hang Tre, Quan 9"}
+                  </Typography>
+                  <GoogleMaps
+                    className={classes.textField}
+                    label="Location"
+                    name="location"
+                    value={
+                      carDetail.location
+                        ? carDetail.location
+                        : "61 Hàng Tre, Quân 9, Ho Chi Minh City"
+                    }
+                    onChange={(value) => setLocation(value)}
+                  />
                   <TextField
                     className={classes.textField}
                     id="brand"

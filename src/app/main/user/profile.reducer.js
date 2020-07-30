@@ -5,6 +5,7 @@ const initialState = {
   rentHistory: [],
   leaseHistory: [],
   cars: {
+    count: 0,
     data: [],
   },
   bookings: {
@@ -18,6 +19,7 @@ const initialState = {
     carId: 0,
     name: "",
   },
+  change: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -69,6 +71,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
           data: [...state.cars.data, payload],
         },
         loading: false,
+        change: !state.change,
       };
     }
     case Actions.FETCH_CAR_INFORMATION_OWNER_SUCCESS: {
