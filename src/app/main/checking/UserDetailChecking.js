@@ -60,15 +60,21 @@ export default function UserDetailChecking(props) {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState();
 
+    const [linkImage, setLinkImage] = useState([]);
+    console.log(linkImage);
     useEffect(() => {
         const { userId } = props.location.state;
 
-        const fetchUser = () => {
-            dispatch(fetchUserDetailChecking(userId));
+        const fetchUser = async () => {
+            dispatch(await fetchUserDetailChecking(userId));
             setCurrentUser(userDetail);
+
+            if (userDetail.imageLicense) {
+                console.log("asdasdasdasdsa" ,userDetail.imageLicense.length);
+                setLinkImage(JSON.parse(userDetail.imageLicense));
+            }
         };
         fetchUser();
-
         if (changePage) {
             history.push({
                 pathname: APP_PATH.CHECKING,
@@ -76,10 +82,12 @@ export default function UserDetailChecking(props) {
         }
     }, [userDetail.id, changePage])
 
+
     const handleAcceptUserLicense = () => {
+        notificationUser("Your license have benn accepted", currentUser.email, true);
         dispatch(putAcceptUserLicence(currentUser.id, {
             licenseCheck: true,
-        }))
+        }));
     };
 
     const handleSendNotificationCheckLicense = () => {
@@ -162,63 +170,24 @@ export default function UserDetailChecking(props) {
 
                 <Grid item xs={12} lg={7}>
                     <Card className={classes.card}>
-                        <div className="mt-20">
+                        
                             <Grid container>
-
-
-                                <Grid item xs={12} lg={6} >
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 1</p>
-                                        <p>
-                                            <img src={currentUser.imageUrlLicense1} id="output" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 2</p>
-                                        <p>
-                                            <img src={currentUser.imageUrlLicense2} id="output" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6} >
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 3</p>
-                                        <p>
-                                            <img src={currentUser.imageUrlLicense3} id="output" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                                <Grid item xs={12} lg={6}>
-                                    <div style={{ textAlign: "center" }}>
-                                        <p>Picture 4</p>
-                                        <p>
-                                            <img src={currentUser.imageUrlLicense4} id="output" width="200" height="200" />
-                                        </p>
-                                    </div>
-                                </Grid>
-
-                            </Grid>
-                            {/* <Grid container>
                                 {
-                                    currentCar.images &&
-                                    currentCar.images.map((image, index) => (
-                                        <Grid item xs={12} lg={6} key={index}>
+                                    linkImage &&
+                                    linkImage.map((image, index) => (
+                                        <Grid item xs={12} lg={6}>
                                             <div style={{ textAlign: "center" }}>
                                                 <p>Picture {index + 1}</p>
                                                 <p>
-                                                    <img src="" id="output" width="200" height="200" />
+                                                    <img src={image} id="output" width="200" height="200" />
                                                 </p>
                                             </div>
                                         </Grid>
                                     ))
                                 }
-                            </Grid> */}
-                        </div>
+
+                            </Grid>
+                      
                     </Card>
                 </Grid>
             </Grid>
@@ -259,10 +228,22 @@ export default function UserDetailChecking(props) {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button color="primary"
-                                onClick={handleSendNotificationCheckLicense}>
-                                Send
+                            <Grid container>
+                                <Grid xs={6} lg={6}>
+                                    <Button color="primary"
+                                        onClick={() => { setOpen(false) }}>
+                                        Cancel
                             </Button>
+                                </Grid>
+
+                                <Grid item xs={6} lg={6}>
+                                    <Button color="primary"
+                                        onClick={handleSendNotificationCheckLicense}>
+                                        Send
+                            </Button>
+                                </Grid>
+                            </Grid>
+
                         </DialogActions>
                     </Dialog>
                 </Grid>

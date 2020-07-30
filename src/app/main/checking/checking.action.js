@@ -190,9 +190,9 @@ export function putCarUpdate(id, car) {
     };
 }
 
-export function fetchUserDetailChecking(userId) {
+export async function fetchUserDetailChecking(userId) {
     return (dispatch) => {
-        const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
+        const request =  GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
         request.then(
             (response) => {
                 if (response.success) {
@@ -212,6 +212,7 @@ export function fetchUserDetailChecking(userId) {
 
 export function putAcceptUserLicence(id, user) {
     return (dispatch) => {
+      console.log(user);
         const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
         request.then(
             (response) => {
