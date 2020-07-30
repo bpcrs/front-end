@@ -50,7 +50,7 @@ export default function CheckCar() {
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.checking.cars);
   const [currentPage, setCurrentPage] = useState(1);
-  const size = 2;
+  const size = 10;
   useEffect(() => {
     dispatch(fetchCarCheckingAdmin(currentPage, size));
   }, [currentPage, dispatch]);

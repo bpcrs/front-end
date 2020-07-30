@@ -67,19 +67,14 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-
     if (changePage) {
       history.push({
         pathname: APP_PATH.CHECKING,
       });
     }
   }, [
-    carDetail,
     carDetail.id,
     changePage,
-    dispatch,
-    history,
-    props.location.state,
   ]);
 
   const handleValueAutoDrive = (state) => {
@@ -221,7 +216,10 @@ export default function CarDetailChecking(props) {
         <Grid item xs={12} lg={8} sm={12}>
           <Card className={classes.card}>
             <SwipeableTextMobileStepper
-              images={currentCar.images ? currentCar.images : [fakeImg]}
+              images={currentCar.images ? currentCar.images.filter(image => image.type == "CAR") : [fakeImg]}
+            />
+            <SwipeableTextMobileStepper
+              images={currentCar.images ? currentCar.images.filter(image => image.type == "LICENSE") : [fakeImg]}
             />
           </Card>
         </Grid>
