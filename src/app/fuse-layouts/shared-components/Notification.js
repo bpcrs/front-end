@@ -3,15 +3,11 @@ import {
   Button,
   Icon,
   Popover,
-  MenuItem,
   Typography,
   Grid,
-  Box,
   Chip,
-  Paper,
   Card,
   CardActionArea,
-  IconButton,
   Badge,
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
@@ -20,10 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
-import { showMessage } from "../../store/actions/fuse";
-import { fetchNotification } from "../../main/user/profile.action";
-import SimpleGrow from "./SimpleGrow";
-import { yellow, blue, grey, green, red } from "@material-ui/core/colors";
+import { blue, grey, green, red } from "@material-ui/core/colors";
 import ReactTimeago from "react-timeago";
 // import { theme } from "@chakra-ui/core";
 // import { blue } from "@material-ui/core/colors";
@@ -47,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Notification = () => {
   // const [notificationMenu, setNotificationMenu] = useState(null);
-  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,11 +51,20 @@ const Notification = () => {
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClick = (state) => {
+  const handleClick = (state, id) => {
     const path = !state ? APP_PATH.CHAT : APP_PATH.PROFILE;
     history.push({
       pathname: path,
     });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("requests")
+      .doc(id)
+      .update({
+        isSeen: true,
+      });
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
@@ -78,8 +79,8 @@ const Notification = () => {
               setShadow(0);
               setHoving(0);
             }}
-            // style={{ backgroundColor: blue[50] }}
             elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -96,8 +97,10 @@ const Notification = () => {
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">Header</Typography>
-                  <Typography variant="subtitle2" style={{ color: grey[500] }}>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} has been confirmed.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
                     ></ReactTimeago>
@@ -113,7 +116,7 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={notify.isRead}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
@@ -131,8 +134,8 @@ const Notification = () => {
               setShadow(0);
               setHoving(0);
             }}
-            // style={{ backgroundColor: blue[50] }}
             elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -149,8 +152,10 @@ const Notification = () => {
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">Header</Typography>
-                  <Typography variant="subtitle2" style={{ color: grey[500] }}>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} has been denied.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
                     ></ReactTimeago>
@@ -166,15 +171,12 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={notify.isRead}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
             </CardActionArea>
           </Card>
-          // <Typography>
-          //   {notify.owner.fullName} has denied your booking request{" "}
-          // </Typography>
         );
       case BOOKING_STATUS.REQUEST:
         return (
@@ -187,8 +189,8 @@ const Notification = () => {
               setShadow(0);
               setHoving(0);
             }}
-            // style={{ backgroundColor: blue[50] }}
             elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -205,8 +207,10 @@ const Notification = () => {
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">Header</Typography>
-                  <Typography variant="subtitle2" style={{ color: grey[500] }}>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} has been requested.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
                     ></ReactTimeago>
@@ -222,7 +226,7 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={notify.isRead}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
@@ -240,8 +244,8 @@ const Notification = () => {
               setShadow(0);
               setHoving(0);
             }}
-            // style={{ backgroundColor: blue[50] }}
             elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -253,13 +257,15 @@ const Notification = () => {
                   alignItems="center"
                 >
                   <Chip
-                    label={<strong>WARNING</strong>}
-                    style={{ backgroundColor: yellow[200], color: yellow[900] }}
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[200], color: green[900] }}
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">Header</Typography>
-                  <Typography variant="subtitle2" style={{ color: grey[500] }}>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} was accepted.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
                     ></ReactTimeago>
@@ -275,15 +281,12 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={notify.isRead}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
             </CardActionArea>
           </Card>
-          // <Typography onClick={() => handleClick(true)}>
-          //   {notify.renter.fullName} neogating your car {notify.car.name}{" "}
-          // </Typography>
         );
       case BOOKING_STATUS.OWNER_ACCEPTED:
         return (
@@ -296,8 +299,8 @@ const Notification = () => {
               setShadow(0);
               setHoving(0);
             }}
-            // style={{ backgroundColor: blue[50] }}
             elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -309,13 +312,15 @@ const Notification = () => {
                   alignItems="center"
                 >
                   <Chip
-                    label={<strong>WARNING</strong>}
-                    style={{ backgroundColor: yellow[200], color: yellow[900] }}
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[200], color: green[900] }}
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">Header</Typography>
-                  <Typography variant="subtitle2" style={{ color: grey[500] }}>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} already for trip.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
                     ></ReactTimeago>
@@ -331,15 +336,12 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={notify.isRead}
+                    invisible={!notify.isSeen}
                   />
                 </Grid>
               </Grid>
             </CardActionArea>
           </Card>
-          // <Typography onClick={() => handleClick(true)}>
-          //   {notify.renter.fullName} neogating your car {notify.car.name}{" "}
-          // </Typography>
         );
       default:
         console.log(notify);
@@ -370,7 +372,9 @@ const Notification = () => {
               //     message: "Your have new notification",
               //   })
               // );
-              return noti.data();
+              const data = noti.data();
+              data["id"] = noti.id;
+              return data;
             })
           );
         });
