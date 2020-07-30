@@ -155,14 +155,32 @@ function RegisterCar() {
       </Dialog>
       <Dialog open={loading} scroll="body">
         <DialogContent>
-          <Grid container justify="center">
-            <Grid item className={classes.progress}>
+          <Grid container justify="center" alignItems="center">
+            <Grid item lg={12} container justify="center" alignItems="center">
+              <img
+                src="assets/images/car-loading.jpg"
+                alt="CarSubmiLoading"
+                // width="300px"
+                height="300px"
+              ></img>
+            </Grid>
+            <Grid
+              lg={12}
+              item
+              className={classes.progress}
+              style={{ textAlign: "center" }}
+            >
               <CircularProgress color="secondary" size="25px" />
             </Grid>
+            <Grid item style={{ textAlign: "center" }}>
+              <Typography variant="subtitle1" color="initial">
+                Checking information
+              </Typography>
+              <Typography variant="caption">
+                We uploading your car, please wait a minutes...
+              </Typography>
+            </Grid>
           </Grid>
-          <Typography variant="subtitle2" color="initial">
-            Checking information...
-          </Typography>
         </DialogContent>
         {/* <DialogActions>
           <Button autoFocus onClick={handleRegisterClose} color="primary">
