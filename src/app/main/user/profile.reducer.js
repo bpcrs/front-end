@@ -4,7 +4,9 @@ const initialState = {
   payment: {},
   rentHistory: [],
   leaseHistory: [],
-  cars: [],
+  cars: {
+    data: [],
+  },
   bookings: {
     data: [],
   },
