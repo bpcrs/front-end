@@ -39,7 +39,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
             (item) => item.id !== payload.id
           ),
         },
-        change: true,
+        change: !state.change,
       };
     }
     case Actions.CREATE_BOOKING_REQUEST: {

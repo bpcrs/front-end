@@ -20,11 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MyBooking = () => {
   const [statusFilter, setStatusFilter] = useState();
-  const [tabValue, setTabValue] = useState(0);
-  const classes = useStyles();
-  const handleChangeTab = (event, newValue) => {
-    setTabValue(newValue);
-  };
 
   return (
     <Grid container>

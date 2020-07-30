@@ -201,10 +201,10 @@ const MyCar = (props) => {
   const isDetail = useSelector((state) => state.profile.isDetail);
   const [currentPage, setCurrentPage] = useState(1);
   const request = useSelector((state) => state.profile.request);
-
+  const change = useSelector((state) => state.profile.change);
   useEffect(() => {
     dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
-  }, [currentUser.id, dispatch, currentPage]);
+  }, [currentUser.id, dispatch, currentPage, change]);
 
   return !isDetail ? (
     <Grid>
