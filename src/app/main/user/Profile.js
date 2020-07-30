@@ -127,7 +127,7 @@ const Profile = (props) => {
                 <div className="hidden md:flex flex-col ml-12 items-start">
                   <Typography
                     variant="h5"
-                  // className="normal-case font-1000 flex"
+                    // className="normal-case font-1000 flex"
                   >
                     {userLogged.displayName}
                   </Typography>
@@ -138,18 +138,16 @@ const Profile = (props) => {
                   >
                     {userLogged.role}
                   </Typography>
-
-                  <Typography
-                    className="text-11 capitalize"
-                    color="textSecondary"
-                  // variant="overline"
-                  >
-                    <MyLicense />
-                  </Typography>
-
                 </div>
               </Grid>
-              <Grid item lg={1}>
+              <Grid item lg={2}>
+                <Typography
+                  className="text-11 capitalize"
+                  color="textSecondary"
+                  // variant="overline"
+                >
+                  <MyLicense />
+                </Typography>
                 <Button
                   variant="text"
                   style={{ textTransform: "none", color: "red" }}

@@ -37,6 +37,8 @@ export const APP_PATH = {
 };
 export const BOOKING_STATUS = {
   PENDING: "PENDING",
+  REQUEST: "REQUEST",
+  DENY: "DENY",
   OWNER_ACCEPTED: "OWNER_ACCEPTED",
   CONFIRM: "CONFIRM",
 };
