@@ -59,12 +59,26 @@ export default function VerticalLinearStepper() {
     selectedBooking.renter.id === userLogged.id ? getStepsRenter() : getSteps();
 
   useEffect(() => {
-    agreements.forEach((item) => {
-      if (item.approved) {
-        setActiveStep((activeStep) => activeStep + 1);
-      }
-    });
-  }, [agreements, dispatch, selectedBooking.id]);
+    console.log(agreements.length === steps.length - 1);
+    if (
+      agreements.length === steps.length - 1 &&
+      selectedBooking.status === BOOKING_STATUS.CONFIRM
+    ) {
+      setActiveStep(steps.length);
+    } else {
+      agreements.forEach((item) => {
+        if (item.approved) {
+          setActiveStep((activeStep) => activeStep + 1);
+        }
+      });
+    }
+  }, [
+    agreements,
+    dispatch,
+    selectedBooking.id,
+    selectedBooking.status,
+    steps.length,
+  ]);
 
   const isStepOptional = (step) => {
     return step === 0 || step === 1 || step === 2;
