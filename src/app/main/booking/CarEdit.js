@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import firebase from "../../firebase/firebase";
 import {
   FormControl,
   Button,
@@ -11,24 +12,32 @@ import {
   IconButton,
   Icon,
   CardMedia,
+  Dialog,
+  DialogContent,
+  DialogActions,
   Box,
   Tabs,
   Tab,
   InputLabel,
   Select,
   MenuItem,
+  FormControlLabel,
 } from "@material-ui/core";
-import PublishIcon from "@material-ui/icons/Publish";
-import ImageUploading from "react-images-uploading";
-import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Layout from "../../layout";
 import { withStyles } from "@material-ui/core/styles";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchCarDetail, putCarUpdate, fetchImageList } from "./booking.action";
+import {
+  fetchCarDetail,
+  putCarUpdate,
+  updateCarStatus,
+  changeImageByType,
+  fetchImageList,
+  storeImageToFirebase,
+  postImageCar,
+} from "./booking.action";
+import { blue, green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
+import CarStatus from "../user/CarStatus";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -43,13 +52,29 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
   },
   icon: {
-    height: "100%",
+    height: "1.5em",
     width: 50,
     marginRight: 10,
+  },
+  productImageFeaturedStar: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    color: blue[400],
+    opacity: 0,
   },
   formControl: {
     width: "100%",
     maxHeight: ITEM_HEIGHT * 4.5,
+  },
+  status: {
+    margin: theme.spacing(1),
+  },
+  updateButton: {
+    marginTop: theme.spacing(3),
+  },
+  smallText: {
+    marginRight: theme.spacing(1),
   },
   textField: {
     width: "100%",
@@ -59,8 +84,44 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
     padding: 20,
   },
+  button: {
+    margin: theme.spacing(1),
+    marginTop: theme.spacing(2),
+  },
   switchButton: {
     marginLeft: theme.spacing(2),
+  },
+  productImageItem: {
+    width: 128,
+    height: 128,
+    display: "flex",
+    position: "relative",
+    border: `1px solid ${theme.palette.divider}`,
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    rounded: 4,
+    mr: 16,
+    mb: 16,
+    transitionProperty: "box-shadow",
+    transitionDuration: theme.transitions.duration.short,
+    transitionTimingFunction: theme.transitions.easing.easeInOut,
+    "&:hover": {
+      boxShadow: theme.shadows[5],
+      "& $productImageFeaturedStar": {
+        opacity: 0.8,
+      },
+    },
+    "&.featured": {
+      pointerEvents: "none",
+      boxShadow: theme.shadows[3],
+      "& $productImageFeaturedStar": {
+        opacity: 1,
+      },
+      "&:hover $productImageFeaturedStar": {
+        opacity: 1,
+      },
+    },
   },
 }));
 
@@ -128,8 +189,7 @@ export default function CarEdits(props) {
 
   const carDetail = useSelector((state) => state.booking.carDetail);
 
-  const [editState, setEditState] = useState(false);
-
+  const change = useSelector((state) => state.booking.change);
   const [currentCar, setCurrentCar] = useState({});
 
   const handleInputChange = (event) => {
@@ -139,24 +199,213 @@ export default function CarEdits(props) {
     });
   };
 
-  const handleAvailable = (event) => {
-    setCurrentCar({ ...currentCar, available: event.target.checked });
-  };
+  function HandleAvailable() {
+    const [open, setOpen] = useState(false);
+
+    const handleChangeStatus = () => {
+      const nextStatus =
+        carDetail.status === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
+      console.log(nextStatus);
+      dispatch(updateCarStatus(carDetail.id, nextStatus));
+      setOpen(false);
+    };
+
+    return (
+      <React.Fragment>
+        {/* <Grid> */}
+        {carDetail.status === "AVAILABLE" ||
+        carDetail.status === "UNAVAILABLE" ? (
+          <Grid
+            spacing={1}
+            container
+            justify="space-between"
+            alignItems="baseline"
+          >
+            <Typography variant="subtitle2" color="inherit">
+              Turn off your car
+            </Typography>
+
+            <FormControlLabel
+              classes={classes.switchButton}
+              control={
+                <IOSSwitch
+                  id="staus"
+                  checked={carDetail.status === "AVAILABLE"}
+                  onChange={() => setOpen(true)}
+                  name="staus"
+                />
+              }
+            />
+          </Grid>
+        ) : (
+          <Grid></Grid>
+        )}
+        {/* </Grid> */}
+        <Dialog open={open} scroll="body">
+          {carDetail.status === "AVAILABLE" ||
+          carDetail.status === "UNAVAILABLE" ? (
+            <Grid>
+              <DialogContent>
+                <Grid container justify="center"></Grid>
+                <Typography variant="subtitle1" color="initial">
+                  Are you sure to{" "}
+                  {carDetail.status === "AVAILABLE" ? "turn off" : "turn on"}{" "}
+                  your car?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleChangeStatus}
+                >
+                  Yes
+                </Button>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                  variant="contained"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Grid>
+          ) : (
+            <Grid>
+              <DialogContent>
+                <Grid container justify="center"></Grid>
+                <Typography variant="subtitle1" color="initial">
+                  Can not turn on/off when car is {carDetail.status}
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  color="primary"
+                  variant="contained"
+                >
+                  Ok
+                </Button>
+              </DialogActions>
+            </Grid>
+          )}
+        </Dialog>
+      </React.Fragment>
+    );
+  }
+
+  function HandlePrice() {
+    const [open, setOpen] = useState(false);
+
+    return (
+      <React.Fragment>
+        <Grid container justify="space-between" alignItems="baseline">
+          <Grid item lg={5}>
+            <TextField
+              // className={classes.textField}
+              variant="outlined"
+              label="Price (per day)"
+              value={currentCar.price}
+              onChange={handleInputChange}
+              name="price"
+              id="formatted-numberformat-input"
+              InputProps={{
+                inputComponent: NumberFormatCustom,
+              }}
+            />
+          </Grid>
+          <Grid item>
+            <Button
+              className={classes.updateButton}
+              color="primary"
+              variant="contained"
+              onClick={() => setOpen(true)}
+            >
+              Update
+            </Button>
+          </Grid>
+        </Grid>
+        <Dialog open={open} scroll="body">
+          <DialogContent>
+            <Grid container justify="center"></Grid>
+            <Typography variant="subtitle1" color="initial">
+              Are you want to update price of your car is {currentCar.price} per
+              day ?
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" variant="contained" onClick={updateCar}>
+              Yes
+            </Button>
+            <Button
+              autoFocus
+              onClick={() => setOpen(false)}
+              color="secondary"
+              variant="outlined"
+            >
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
+    );
+  }
 
   const updateCar = () => {
-    // console.log("Name car : ", currentCar.name);
-
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
-
+  const [imagesCar, setImagesCar] = useState([]);
+  const [linkImagesCar, setLinkImagesCar] = useState([]);
+  const uploadImage = (event) => {
+    // storeImageToFirebase(event.target.files);
+    setImagesCar([...imagesCar, ...event.target.files]);
+    postImg(event.target.files);
+    console.log(event.target.files);
+  };
+  const postImg = (images) => {
+    // console.log(imagesCar);
+    console.log(images);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    Array.from(images).forEach((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/" + date)
+        .child(img.name);
+      setLinkImagesCar((linkImagesCar) => [
+        ...linkImagesCar,
+        uploadTask.put(img, metadata).then(function (result) {
+          uploadTask.getDownloadURL().then(function (url) {
+            const link = [url];
+            dispatch(postImageCar(link, carId, "CAR"));
+          });
+        }),
+      ]);
+    });
+  };
+  const handleRemoveItem = (image) => {
+    console.log(imagesCar);
+    setImagesCar(imagesCar.filter((item) => item.name !== image.name));
+  };
+  const handleRemoveImage = (image) => {
+    console.log(image.id);
+    // dispatch(deleteImage(image));
+    dispatch(changeImageByType(image, "DELETE"));
+  };
+  const images = useSelector((state) => state.booking.images);
   useEffect(() => {
     const fetchCar = () => {
       dispatch(fetchCarDetail(carId));
+      dispatch(fetchImageList(1, 20, carId, "CAR"));
       setCurrentCar(carDetail);
     };
     fetchCar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carDetail.id]);
+  }, [carDetail.id, carDetail.status, change]);
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -249,18 +498,41 @@ export default function CarEdits(props) {
             <Grid>
               <Grid container>
                 <Grid item xs={12} lg={12}>
-                  <Typography>
-                    <img
-                      className={classes.icon}
-                      src={
-                        currentCar.brand
-                          ? currentCar.brand.logoLink
-                          : "https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
-                      }
-                      alt=""
+                  <Grid container className={classes.status}>
+                    <Typography className={classes.smallText}>
+                      Car Status:
+                    </Typography>
+                    <CarStatus
+                      name={carDetail.status ? carDetail.status : "AVAILABLE"}
                     />
-                    {currentCar.brand ? currentCar.brand.name : ""}
-                  </Typography>
+                    <HandleAvailable />
+                    <HandlePrice />
+                  </Grid>
+
+                  <TextField
+                    className={classes.textField}
+                    id="brand"
+                    value={currentCar.brand ? currentCar.brand.name : ""}
+                    label="Brand"
+                    name="brand"
+                    variant="outlined"
+                    disabled
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <img
+                            className={classes.icon}
+                            src={
+                              currentCar.brand
+                                ? currentCar.brand.logoLink
+                                : "https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
+                            }
+                            alt=""
+                          />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
                   <TextField
                     className={classes.textField}
                     id="model"
@@ -276,6 +548,7 @@ export default function CarEdits(props) {
                     id="name"
                     value={currentCar.name ? currentCar.name : ""}
                     label="Name"
+                    disabled
                     name="name"
                     variant="outlined"
                     onChange={handleInputChange}
@@ -285,13 +558,107 @@ export default function CarEdits(props) {
                     id="year"
                     value={currentCar.year ? currentCar.year : ""}
                     label="Year"
+                    disabled
                     name="year"
+                    variant="outlined"
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    id="plateNum"
+                    value={currentCar.plateNum ? currentCar.plateNum : ""}
+                    label="Plate Number"
+                    disabled
+                    name="plateNum"
+                    variant="outlined"
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    id="vin"
+                    value={currentCar.vin ? currentCar.vin : ""}
+                    label="Vin Number"
+                    disabled
+                    name="vin"
                     variant="outlined"
                     onChange={handleInputChange}
                   />
                 </Grid>
               </Grid>
             </Grid>
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            {images.data ? (
+              <Grid container item lg={12}>
+                <Grid item lg={3}>
+                  <label
+                    className={classes.productImageItem}
+                    variant="outlined"
+                  >
+                    <input
+                      type="file"
+                      style={{ display: "none" }}
+                      multiple
+                      accept="image/*"
+                      name="image"
+                      id="file"
+                      onChange={uploadImage}
+                    />
+                    <span aria-hidden="true">
+                      <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                    </span>
+                  </label>
+                </Grid>
+                {images.data.map((image, index) => (
+                  <Grid item lg={3}>
+                    <div className={classes.productImageItem} key={index}>
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveImage(image)}
+                      >
+                        remove_circle
+                      </Icon>
+                      <img
+                        src={image.link}
+                        alt="img"
+                        style={{ width: "90%", height: "90%" }}
+                      />
+                    </div>
+                  </Grid>
+                ))}
+                {imagesCar &&
+                  imagesCar.map((image, index) => (
+                    <Grid item lg={3}>
+                      <div className={classes.productImageItem} key={index}>
+                        <Icon
+                          className={classes.productImageFeaturedStar}
+                          onClick={() => handleRemoveItem(image)}
+                        >
+                          remove_circle
+                        </Icon>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="img"
+                          style={{ width: "90%", height: "90%" }}
+                        />
+                      </div>
+                    </Grid>
+                  ))}
+              </Grid>
+            ) : (
+              <Grid>
+                <Typography>The car dont have images</Typography>
+              </Grid>
+            )}
+            {/* <Grid container item justify="center">
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Update
+              </Button>
+            </Grid> */}
           </TabPanel>
         </Grid>
       </Grid>

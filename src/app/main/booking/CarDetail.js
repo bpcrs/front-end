@@ -268,12 +268,10 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>fullscreen</Icon>
+                            <Icon fontSize={"default"}>gps_fixed</Icon>
                           </Grid>
                           <Grid item container justify="center">
-                            <Typography variant="caption">
-                              {carDetail.screen}
-                            </Typography>
+                            <Typography variant="caption">GPS</Typography>
                           </Grid>
                         </Grid>
                         <Grid
@@ -284,10 +282,12 @@ export default function CarDetails(props) {
                           alignItems="center"
                           justify="space-around"
                         >
-                          <Grid item container justify="center">
-                            <Icon fontSize={"default"}>surround_sound</Icon>
+                          <Grid justify="center" container>
+                            <Icon fontSize={"default"}>usb</Icon>
                           </Grid>
-                          <Grid item container justify="center"></Grid>
+                          <Grid item container justify="center">
+                            <Typography variant="caption">USB</Typography>
+                          </Grid>
                         </Grid>
 
                         <Grid
@@ -372,7 +372,7 @@ export default function CarDetails(props) {
             <Card square>
               <CardContent>
                 <Grid spacing={1} container alignItems="baseline">
-                  <Icon>gps_fixed</Icon>
+                  <Icon className={classes.review}>info</Icon>
                   <Typography variant="h6">Info</Typography>
                 </Grid>
                 <div className={classes.paper}></div>

@@ -1,4 +1,5 @@
 import * as Actions from "./chat.action";
+import { PUT } from "../../services/api";
 
 const initialState = {
   selectedUser: {},

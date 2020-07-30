@@ -358,6 +358,12 @@ const Notification = () => {
             </CardActionArea>
           </Card>
         );
+      case "DENYCAR":
+        return (
+          <Typography onClick={() => handleClick(true)}>
+            {notify.message}
+          </Typography>
+        );
       default:
         console.log(notify);
     }
@@ -394,6 +400,29 @@ const Notification = () => {
           );
         });
     };
+    // const fetchNotiCar = () => {
+    //   firebase
+    //     .firestore()
+    //     .collection("notification")
+    //     .doc(`${userLogged.email}`)
+    //     .collection("Car")
+    //     .orderBy("createAt", "desc")
+    //     .limitToLast(10)
+    //     .onSnapshot((ns) => {
+    //       setNotification([
+    //         ...notification,
+    //         ns.docs.map((noti) => {
+    //           dispatch(
+    //             showMessage({
+    //               message: "Your have new notification",
+    //             })
+    //           );
+    //           return noti.data();
+    //         }),
+    //       ]);
+    //     });
+    // };
+    // fetchNotiCar();
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);

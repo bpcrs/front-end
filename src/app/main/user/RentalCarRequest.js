@@ -51,14 +51,6 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-// const useRowStyles = makeStyles({
-//   root: {
-//     "& > *": {
-//       borderBottom: "unset",
-//     },
-//   },
-// });
-
 function Row(props) {
   const { booking } = props;
   const [open, setOpen] = useState(false);
@@ -265,44 +257,52 @@ const RentalCarRequest = (props) => {
 
   return (
     <Grid>
-      <TableContainer>
-        <Table
-          className={classes.table}
-          aria-label="customized table"
-          width="100%"
-        >
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Renter Name</StyledTableCell>
-              <StyledTableCell>Time Rental</StyledTableCell>
-              <StyledTableCell>Start date</StyledTableCell>
-              <StyledTableCell>Detail</StyledTableCell>
-              {handleTableRowStatusBooking(bookingStatus)}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <Backdrop className={classes.backdrop} open={loading}>
-              <CircularProgress color="inherit" />
-            </Backdrop>
-            {rentalBookings.data &&
-              rentalBookings.data.map((booking, index) => (
-                <Row key={index} booking={booking} />
-              ))}
-            <Grid xs={12} lg={12} item container justify="flex-end">
-              <Pagination
-                count={
-                  rentalBookings.count !== 0 &&
-                  rentalBookings.count % size === 0
-                    ? Math.floor(rentalBookings.count / size)
-                    : Math.floor(rentalBookings.count / size) + 1
-                }
-                color="primary"
-                onChange={(e, page) => setCurrentPage(page)}
-              />
-            </Grid>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {rentalBookings.data.length > 0 ? (
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-label="customized table"
+            width="100%"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Renter Name</StyledTableCell>
+                <StyledTableCell>Time Rental</StyledTableCell>
+                <StyledTableCell>Start date</StyledTableCell>
+                <StyledTableCell>Detail</StyledTableCell>
+                {handleTableRowStatusBooking(bookingStatus)}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <Backdrop className={classes.backdrop} open={loading}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
+              {rentalBookings.data &&
+                rentalBookings.data.map((booking, index) => (
+                  <Row key={index} booking={booking} />
+                ))}
+              <Grid xs={12} lg={12} item container justify="flex-end">
+                <Pagination
+                  count={
+                    rentalBookings.count !== 0 &&
+                    rentalBookings.count % size === 0
+                      ? Math.floor(rentalBookings.count / size)
+                      : Math.floor(rentalBookings.count / size) + 1
+                  }
+                  color="primary"
+                  onChange={(e, page) => setCurrentPage(page)}
+                />
+              </Grid>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Grid>
+          <Typography variant="body2" color="error">
+            Your car don't have any request
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 };
