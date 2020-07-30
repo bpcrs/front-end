@@ -83,7 +83,7 @@ export const PUT = (endpoint, params = {}, body = {}) => {
 
 export const ENDPOINT = {
   CAR_CONTROLLER_GETALL: "/car",
-  CAR_CONTROLLER_ADMIN_GETALL: "/car/available",
+  CAR_CONTROLLER_ADMIN_GETALL: "/car/admin",
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
 
@@ -92,7 +92,7 @@ export const ENDPOINT = {
   ACCOUNT_CONTROLLER_GETALL: "/account",
   ACCOUNT_CONTROLLER_GETBYID: (id) => `/account/${id}`,
   ACCOUNT_LICENSE_UPDATE: (id) => `/account/license/${id}`,
-  
+
   IMAGE_CONTROLLER_GETALL: "/image",
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
@@ -100,11 +100,10 @@ export const ENDPOINT = {
   BOOKING_CONTROLLER_GETALL: "/booking",
   BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
   BOOKING_CONTROLLER_OWNER_GETBYID: (id) => `/booking/car/${id}`,
-  BOOKING_CONTROLLER_RENTER_GETBYID: (id) => `/booking/renter/${id}`,
+  BOOKING_CONTROLLER_USER_GETBYID: (id) => `/booking/user/${id}`,
 
   CRITERIA_CONTROLLER_GETALL: "/criteria",
 
   AGREEMENT_CONTROLLER_GETALL: "/agreement",
-  AGREEMENT_CONTROLLER_PUTBYID: (id) => `/agreement/${id}`,
-  AGREEMENT_CONTROLLER_GETBYID: (id) => `/agreement/get/${id}`,
+  AGREEMENT_CONTROLLER_GETBY_BOOKINGID: (id) => `/agreement/booking/${id}`,
 };

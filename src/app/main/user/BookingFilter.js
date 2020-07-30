@@ -123,7 +123,6 @@ export default function BookingFilter(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [value, setValue] = React.useState(labels);
   const [pendingValue, setPendingValue] = React.useState([]);
-  const theme = useTheme();
 
   useEffect(() => {
     props.onFilter(value);

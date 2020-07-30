@@ -2,7 +2,13 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
-import { addNewCarRegister, changeOpen } from "../user/profile.action";
+import {
+  addNewCarRegister,
+  changeOpen,
+  registerSuccess,
+  processingRegister,
+} from "../user/profile.action";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -391,17 +397,24 @@ export function fetchImageList(page, size, carId) {
   };
 }
 
-export function postCarSubmit(car, listImage) {
+export function postCarSubmit(car, listImage, listLicense) {
   return (dispatch) => {
+    // console.log(listImage);
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
           // dispatch(postCarSubmitSuccess(response.data));
+          dispatch(postImageCar(listImage, response.data.id, "CAR"));
+          dispatch(postImageCar(listLicense, response.data.id, "LICENSE"));
           dispatch(addNewCarRegister(response.data));
-          dispatch(changeOpen(false));
-          dispatch(postImageCar(listImage, response.data.id));
           console.log("Success submit car ", response.data);
+          // dispatch(registerSuccess);
+          dispatch(
+            showMessageSuccess(
+              "Register successfully ! Your car will be checked and available soon"
+            )
+          );
         } else {
           dispatch(showMessageError(response.message));
           console.log("Success submit car error");
@@ -415,11 +428,12 @@ export function postCarSubmit(car, listImage) {
   };
 }
 
-export function postImageCar(link, carId) {
+export function postImageCar(link, carId, type) {
   return (dispatch) => {
+    // const params = { carId, link, type };
     const request = POST(
       ENDPOINT.IMAGE_CONTROLLER_GETALL,
-      {},
+      { type },
       {
         carId,
         link,
@@ -429,7 +443,7 @@ export function postImageCar(link, carId) {
       (response) => {
         if (response.success) {
           dispatch(postImageCarSubmitSuccess(response.data));
-          console.log("Success submit image car");
+          console.log("Success submit image car", response.data);
         } else {
           dispatch(showMessageError(response.message));
           console.log("Success submit image car error");
@@ -528,16 +542,34 @@ export function notificationBooking(booking) {
   firebase
     .firestore()
     .collection("notification")
-    .doc(`${booking.lessor.email}`)
+    .doc(`${booking.car.owner.email}`)
     .collection("requests")
     .add({
       status: booking.status,
       car: booking.car,
-      owner: booking.lessor,
+      owner: booking.car.owner,
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
     });
 }
 
-export function fetchBookingRequest(id) {}
+export function storeImageToFirebase(imgs) {
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+  const date = new Date().getTime();
+  imgs.map((img) => {
+    const uploadTask = firebase
+      .storage()
+      .ref("Img/" + date)
+      .child(img.name);
+
+    uploadTask.put(img, metadata).then(function (result) {
+      uploadTask.getDownloadURL().then(function (url) {
+        console.log("file available at ", url);
+        // submitMessage(url, send, receive, "IMG");
+      });
+    });
+  });
+}

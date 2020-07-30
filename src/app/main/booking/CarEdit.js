@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  FormControl,
   Button,
   TextField,
   Card,
@@ -10,6 +11,12 @@ import {
   IconButton,
   Icon,
   CardMedia,
+  Box,
+  Tabs,
+  Tab,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@material-ui/core";
 import PublishIcon from "@material-ui/icons/Publish";
 import ImageUploading from "react-images-uploading";
@@ -21,7 +28,7 @@ import { withStyles } from "@material-ui/core/styles";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCarDetail, putCarUpdate, fetchImageList } from "./booking.action";
-// import { useDispatch, useSelector } from "react-redux";
+import NumberFormat from "react-number-format";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -57,19 +64,69 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      // prefix="$"
+      suffix=" ₫"
+    />
+  );
+}
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
+  };
+}
+
 export default function CarEdits(props) {
   const maxNumber = 10;
   const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
-
+  const { carId } = props;
+  const [tabValue, setTabValue] = useState(0);
+  const handleChangeTab = (event, newValue) => {
+    setTabValue(newValue);
+  };
   const dispatch = useDispatch();
 
   const classes = useStyles();
 
   const carDetail = useSelector((state) => state.booking.carDetail);
-
-  // const imageList = useSelector((state) => state.booking.images);
-
-  // console.log(imageList[0]);
 
   const [editState, setEditState] = useState(false);
 
@@ -93,15 +150,11 @@ export default function CarEdits(props) {
   };
 
   useEffect(() => {
-    const { carId } = props.location.state;
-    console.log("check carID 02: " + carId)
-
     const fetchCar = () => {
       dispatch(fetchCarDetail(carId));
       setCurrentCar(carDetail);
     };
     fetchCar();
-    // dispatch(fetchImageList(1, 10, carId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [carDetail.id]);
 
@@ -159,267 +212,89 @@ export default function CarEdits(props) {
   });
 
   return (
-    <Layout name="Vinfast SA 2.0">
-      <Grid container justify="center">
-        <Grid item xs={12} sm={6} lg={10}>
-          <Grid spacing={1} container justify="center" alignItems="center">
-            <CardMedia
-              className={classes.media}
-              image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-            />
-          </Grid>
-
-          <Card className={classes.card}>
-            <Grid
-              spacing={1}
-              container
-              justify="flex-end"
-              alignItems="flex-end"
-            >
-              <IconButton onClick={() => setEditState(false)}>
-                <Icon>edit</Icon>
-              </IconButton>
-              <IconButton onClick={() => setEditState(true)}>
-                <Icon>done</Icon>
-              </IconButton>
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                id="input-with-icon-textfield"
-                label="Brand"
-                className={classes.textField}
-                value={currentCar.branch ? currentCar.branch : ""}
-                disabled
-                variant="outlined"
-                InputProps={{
-                  startAdornment: (
-                    <img
-                      alt=""
-                      className={classes.icon}
-                      src="https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
-                    />
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                id="input-with-icon-textfield"
-                label="Model"
-                variant="outlined"
-                value={currentCar.model ? currentCar.model : ""}
-                className={classes.textField}
-                disabled
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="name"
-                value={currentCar.name ? currentCar.name : ""}
-                label="Name"
-                name="name"
-                variant="outlined"
-                onChange={handleInputChange}
-                disabled={editState}
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <Typography variant="h6"></Typography>
-              <FormControlLabel
-                classes={classes.switchButton}
-                control={
-                  <IOSSwitch
-                    id="isAvailable"
-                    checked={currentCar.available}
-                    onChange={handleAvailable}
-                    name="isAvailable"
-                  />
-                }
-                label="Available"
-              />
-            </Grid>
-
-            <div className="mt-20">
-              <ImageUploading
-                onChange={classes.onChange}
-                maxNumber={maxNumber}
-                multiple
-                maxFileSize={maxMbFileSize}
-                acceptType={["jpg", "gif", "png"]}
-              >
-                {({ imageList, onImageUpload }) => (
-                  <div>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={onImageUpload}
-                      component="span"
-                      startIcon={<DriveEtaIcon />}
-                    >
-                      Change Image
-                    </Button>
-                    {imageList.map((image) => (
-                      <div key={image.key} className="mt-20">
-                        <Grid container spacing={1}>
-                          <Grid item xs={9} sm={9}>
-                            <img
-                              alt=""
-                              src={image.dataURL}
-                              className={classes.imageUploading}
-                            />
-                          </Grid>
-                          <Grid item xs={3} sm={3}>
-                            <Button
-                              startIcon={<EditIcon />}
-                              onClick={image.onUpdate}
-                            >
-                              Update
-                            </Button>
-                            <Button
-                              startIcon={<DeleteIcon />}
-                              onClick={image.onRemove}
-                            >
-                              Delete
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </ImageUploading>
-            </div>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} lg={10}>
-          <Card className={classes.card}>
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="vin"
-                name="vin"
-                value={currentCar.vin ? currentCar.vin : ""}
-                label="Vin number"
-                variant="outlined"
-                onChange={handleInputChange}
-                disabled={editState}
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="seat"
-                name="seat"
-                value={currentCar.seat ? currentCar.seat : 0}
-                label="Seat"
-                variant="outlined"
-                disabled={editState}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="sound"
-                name="sound"
-                value={currentCar.sound ? currentCar.sound : ""}
-                label="Sound"
-                variant="outlined"
-                disabled={editState}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="price"
-                name="price"
-                value={currentCar.price ? currentCar.price : 0}
-                label="Price (per day)"
-                variant="outlined"
-                disabled={editState}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <TextField
-                className={classes.textField}
-                id="plateNum"
-                name="plateNum"
-                value={currentCar.plateNum ? currentCar.plateNum : ""}
-                label="Plate number"
-                variant="outlined"
-                disabled={editState}
-                onChange={handleInputChange}
-              />
-            </Grid>
-          </Card>
-        </Grid>
-        <Grid container justify="center">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={updateCar}
-            startIcon={<PublishIcon />}
+    <Grid>
+      <Grid spacing={1} container justify="center" alignItems="center">
+        <Typography variant="h6" color="initial" className={classes.head}>
+          Car Information
+        </Typography>
+        {
+          <Tabs
+            value={tabValue}
+            onChange={handleChangeTab}
+            indicatorColor="secondary"
+            textColor="secondary"
+            variant="scrollable"
+            scrollButtons="auto"
+            classes={{ root: "w-full h-64" }}
           >
-            Update
-          </Button>
+            <Tab
+              className="h-64 normal-case"
+              label="Car Information"
+              {...a11yProps(0)}
+            />
+            <Tab
+              className="h-64 normal-case"
+              label="Car's Images"
+              {...a11yProps(1)}
+            />
+            <Tab
+              className="h-64 normal-case"
+              label="Licenses"
+              {...a11yProps(2)}
+            />
+          </Tabs>
+        }
+        <Grid>
+          <TabPanel value={tabValue} index={0}>
+            <Grid>
+              <Grid container>
+                <Grid item xs={12} lg={12}>
+                  <Typography>
+                    <img
+                      className={classes.icon}
+                      src={
+                        currentCar.brand
+                          ? currentCar.brand.logoLink
+                          : "https://static.carmudi.vn/wp-content/uploads/2016/04/Honda-Carmudi.jpg"
+                      }
+                      alt=""
+                    />
+                    {currentCar.brand ? currentCar.brand.name : ""}
+                  </Typography>
+                  <TextField
+                    className={classes.textField}
+                    id="model"
+                    value={currentCar.model ? currentCar.model.name : ""}
+                    label="Model"
+                    name="model"
+                    variant="outlined"
+                    disabled
+                    // onChange={handleInputChange}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    id="name"
+                    value={currentCar.name ? currentCar.name : ""}
+                    label="Name"
+                    name="name"
+                    variant="outlined"
+                    onChange={handleInputChange}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    id="year"
+                    value={currentCar.year ? currentCar.year : ""}
+                    label="Year"
+                    name="year"
+                    variant="outlined"
+                    onChange={handleInputChange}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </TabPanel>
         </Grid>
       </Grid>
-    </Layout>
+    </Grid>
   );
 }

@@ -10,10 +10,31 @@ const initialState = {
   request: {},
   usersRequest: [],
   responseAgreement: {},
+  pendingBookings: [],
+  selectedBooking: {},
+  isRenter: true,
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.SET_SELECTED_BOOKING: {
+      return {
+        ...state,
+        selectedBooking: payload,
+      };
+    }
+    case Actions.SET_IS_RENTER_BOOKING: {
+      return {
+        ...state,
+        isRenter: payload,
+      };
+    }
+    case Actions.FETCH_BOOKING_PENDING: {
+      return {
+        ...state,
+        pendingBookings: payload,
+      };
+    }
     case Actions.SET_SELECTED_USER: {
       return {
         ...state,

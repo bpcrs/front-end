@@ -20,12 +20,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBookingRentalMyCar,
-  approveBookingRequest,
+  changeBookingStatusRequest,
 } from "./profile.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -65,8 +65,13 @@ function Row(props) {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleConfirm = (id, status) => {
-    dispatch(approveBookingRequest(id, !status ? "DENY" : "PENDING"));
+  const handleConfirm = (id, isApprove) => {
+    dispatch(
+      changeBookingStatusRequest(
+        id,
+        !isApprove ? "DENY" : BOOKING_STATUS.PENDING
+      )
+    );
   };
   const agreementChat = () => {
     history.push({
@@ -86,7 +91,7 @@ function Row(props) {
             </IconButton>
           </TableCell>
         );
-      case "PENDING":
+      case BOOKING_STATUS.PENDING:
         return (
           <TableCell component="th" scope="row">
             <IconButton onClick={() => agreementChat()}>

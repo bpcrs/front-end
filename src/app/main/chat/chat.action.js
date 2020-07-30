@@ -1,6 +1,7 @@
 import firebase from "../../firebase/firebase";
 import { showMessageError } from "../../store/actions/fuse";
-import { GET, ENDPOINT, POST } from "../../services/api";
+import { GET, ENDPOINT, POST, PUT } from "../../services/api";
+import { use } from "marked";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
@@ -15,11 +16,27 @@ export const FETCH_BOOKING_REQUEST = "[BOOKING] FETCH BOOKING REQUEST";
 export const GET_REQUEST_FIREBASE = "[FIREBASE] GET REQUEST";
 export const GET_USERS_REQUEST = "[FIREBASE] GET USERS REQUEST";
 export const GET_IMG_URL = "[FIREBASE] GET IMAGE URL";
+export const FETCH_BOOKING_PENDING = "[BOOKING] FETCH BOOKING PENDING";
+export const SET_SELECTED_BOOKING = "[CHAT] SET SELECTED BOOKING";
+export const SET_IS_RENTER_BOOKING = "[BOOKING] SET USER ROLE";
+export const ACCEPT_AGREEMENT_SUCCESS = "[AGREEMENT] ACCEPT AGREEMENT SUCCESS";
 
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
     payload: request,
+  };
+}
+export function setIsRenterBooking(isRenter) {
+  return {
+    type: SET_IS_RENTER_BOOKING,
+    payload: isRenter,
+  };
+}
+export function fetchPendingBookingSuccess(bookings) {
+  return {
+    type: FETCH_BOOKING_PENDING,
+    payload: bookings,
   };
 }
 export function getImgUrlFromFirebase(url) {
@@ -38,6 +55,12 @@ export function setSelectedUser(user) {
   return {
     type: SET_SELECTED_USER,
     payload: user,
+  };
+}
+export function setSelectedBooking(booking) {
+  return {
+    type: SET_SELECTED_BOOKING,
+    payload: booking,
   };
 }
 export function openAgreement(type) {
@@ -71,12 +94,7 @@ export function changeChip(name, value, bookingId) {
 export function initChip(criteras) {
   return {
     type: INIT_CHIP,
-    payload: criteras.map((data) => ({
-      name: data.name,
-      approved: false,
-      value: 30,
-      criteriaId: data.id,
-    })),
+    payload: criteras,
   };
 }
 export function updateChip(chips) {
@@ -88,18 +106,19 @@ export function updateChip(chips) {
 export function fetchCriteriaSuccess(critera) {
   return {
     type: FETCH_CRITERIA_SUCCESS,
-    payload: critera.map((data) => ({
-      name: data.name,
-      approved: false,
-      value: 30,
-      criteriaId: data.id,
-    })),
+    payload: critera,
   };
 }
 export function fetchAgreementSuccess(agreements) {
   return {
     type: FETCH_AGREEMENT_SUCCESS,
     payload: agreements,
+  };
+}
+export function acceptedAgreementSuccess(agreement) {
+  return {
+    type: ACCEPT_AGREEMENT_SUCCESS,
+    payload: agreement,
   };
 }
 export function createAgreementSuccess(agreement) {
@@ -115,18 +134,17 @@ export function fetchBookingRequest(booking) {
   };
 }
 
-export function submitMessage(message, send, receive, type) {
-  const arr = [send, receive].sort();
+export function submitMessage(message, booking, type, fromRenter) {
   firebase
     .firestore()
     .collection("chatRooms")
-    .doc(`${arr[0]}v${arr[1]}`)
+    .doc(`booking-${booking.id}`)
     .collection("messages")
     .add({
-      send,
+      send: fromRenter ? booking.renter.id : booking.car.owner.id,
       createAt: new Date().getTime(),
       message: message,
-      receive,
+      receive: !fromRenter ? booking.renter.id : booking.car.owner.id,
       type,
     });
 }
@@ -152,7 +170,7 @@ export function fetchCriteriaList() {
 
 export function fetchAgreementList(id) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.AGREEMENT_CONTROLLER_GETBYID(id));
+    const request = GET(ENDPOINT.AGREEMENT_CONTROLLER_GETBY_BOOKINGID(id));
     request.then(
       (response) => {
         dispatch(fetchAgreementSuccess(response.success ? response.data : []));
@@ -163,20 +181,39 @@ export function fetchAgreementList(id) {
     );
   };
 }
-export function createAgreement(name, value, bookingId) {
-  const agreement = {
-    approved: true,
-    bookingId: bookingId,
-    criteriaName: name,
-    value: value,
-  };
+export function createAgreement(criteriaId, value, bookingId) {
   return (dispatch) => {
-    console.log(agreement);
-    const request = POST(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {}, agreement);
+    const request = POST(
+      ENDPOINT.AGREEMENT_CONTROLLER_GETALL,
+      {},
+      {
+        bookingId,
+        criteriaId,
+        value,
+      }
+    );
     request.then(
       (response) => {
         dispatch(createAgreementSuccess(response.success ? response.data : {}));
-        console.log(response.data);
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function acceptAgreement(criteriaId, bookingId) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.AGREEMENT_CONTROLLER_GETALL, {
+      criteriaId,
+      bookingId,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          acceptedAgreementSuccess(response.success ? response.data : {})
+        );
       },
       (error) => {
         showMessageError(error.message);
@@ -199,7 +236,7 @@ export function getBookingRequest(id) {
   };
 }
 
-export function storeImage(img, send, receive) {
+export function storeImage(img, booking, fromRenter) {
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -212,7 +249,43 @@ export function storeImage(img, send, receive) {
   uploadTask.put(img, metadata).then(function (result) {
     uploadTask.getDownloadURL().then(function (url) {
       console.log("file available at ", url);
-      submitMessage(url, send, receive, "IMG");
+      submitMessage(url, booking, "IMG", fromRenter);
     });
   });
+}
+
+export async function deleteAllMsgByTypeFromFirebase(type, bookingId) {
+  await firebase
+    .firestore()
+    .collection("chatRooms")
+    .doc(`booking-${bookingId}`)
+    .collection("messages")
+    .where("type", "==", type)
+    .get()
+    .then((response) =>
+      response.docs.forEach((item) => {
+        item.ref.delete();
+      })
+    );
+}
+
+export function fetchPendingBooking(user, page, size, status, isRenter) {
+  return (dispatch) => {
+    const params = { isRenter, page, size, status: status.join(",") };
+    const request = GET(
+      ENDPOINT.BOOKING_CONTROLLER_USER_GETBYID(user),
+      { ...params },
+      {}
+    );
+    request.then(
+      (response) => {
+        dispatch(
+          fetchPendingBookingSuccess(response.success ? response.data.data : [])
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }

@@ -287,11 +287,7 @@ export default function CarDetails(props) {
                           <Grid item container justify="center">
                             <Icon fontSize={"default"}>surround_sound</Icon>
                           </Grid>
-                          <Grid item container justify="center">
-                            <Typography variant="caption">
-                              {carDetail.sound}
-                            </Typography>
-                          </Grid>
+                          <Grid item container justify="center"></Grid>
                         </Grid>
 
                         <Grid

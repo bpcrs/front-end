@@ -35,3 +35,8 @@ export const APP_PATH = {
   CAR_CHECKING: "/car-check",
   USER_CHECK_LICENSE: "/user-check-license",
 };
+export const BOOKING_STATUS = {
+  PENDING: "PENDING",
+  OWNER_ACCEPTED: "OWNER_ACCEPTED",
+  CONFIRM: "CONFIRM",
+};
