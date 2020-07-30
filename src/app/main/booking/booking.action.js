@@ -551,6 +551,7 @@ export function notificationBooking(booking) {
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
+      isSeen: false,
     });
 }
 
