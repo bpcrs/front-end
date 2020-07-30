@@ -12,10 +12,14 @@ const initialState = {
   models: [],
   agreemnts: [],
   booking: {},
+  change: false,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    // case Actions.GET_IMAGE_LINK: {
+
+    // }
     case Actions.UPDATE_CAR_STATUS: {
       return {
         ...state,
@@ -25,7 +29,8 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         },
       };
     }
-    case Actions.DELETE_IMAGE_CAR: {
+    case Actions.DELETE_IMAGE_CAR:
+    case Actions.CHANGE_IMAGE_TYPE: {
       return {
         ...state,
         carDetail: {
@@ -34,6 +39,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
             (item) => item.id !== payload.id
           ),
         },
+        change: true,
       };
     }
     case Actions.CREATE_BOOKING_REQUEST: {

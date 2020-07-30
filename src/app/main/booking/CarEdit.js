@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import firebase from "../../firebase/firebase";
 import {
   FormControl,
   Button,
@@ -27,9 +28,11 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchCarDetail,
   putCarUpdate,
-  fetchImageList,
   updateCarStatus,
-  deleteImage,
+  changeImageByType,
+  fetchImageList,
+  storeImageToFirebase,
+  postImageCar,
 } from "./booking.action";
 import { blue, green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
@@ -186,8 +189,7 @@ export default function CarEdits(props) {
 
   const carDetail = useSelector((state) => state.booking.carDetail);
 
-  const [editState, setEditState] = useState(false);
-
+  const change = useSelector((state) => state.booking.change);
   const [currentCar, setCurrentCar] = useState({});
 
   const handleInputChange = (event) => {
@@ -210,27 +212,35 @@ export default function CarEdits(props) {
 
     return (
       <React.Fragment>
-        <Grid
-          spacing={1}
-          container
-          justify="space-between"
-          alignItems="baseline"
-        >
-          <Typography variant="subtitle2" color="inherit">
-            Turn off your car
-          </Typography>
-          <FormControlLabel
-            classes={classes.switchButton}
-            control={
-              <IOSSwitch
-                id="staus"
-                checked={carDetail.status === "AVAILABLE"}
-                onChange={() => setOpen(true)}
-                name="staus"
-              />
-            }
-          />
-        </Grid>
+        {/* <Grid> */}
+        {carDetail.status === "AVAILABLE" ||
+        carDetail.status === "UNAVAILABLE" ? (
+          <Grid
+            spacing={1}
+            container
+            justify="space-between"
+            alignItems="baseline"
+          >
+            <Typography variant="subtitle2" color="inherit">
+              Turn off your car
+            </Typography>
+
+            <FormControlLabel
+              classes={classes.switchButton}
+              control={
+                <IOSSwitch
+                  id="staus"
+                  checked={carDetail.status === "AVAILABLE"}
+                  onChange={() => setOpen(true)}
+                  name="staus"
+                />
+              }
+            />
+          </Grid>
+        ) : (
+          <Grid></Grid>
+        )}
+        {/* </Grid> */}
         <Dialog open={open} scroll="body">
           {carDetail.status === "AVAILABLE" ||
           carDetail.status === "UNAVAILABLE" ? (
@@ -347,8 +357,35 @@ export default function CarEdits(props) {
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
   const [imagesCar, setImagesCar] = useState([]);
+  const [linkImagesCar, setLinkImagesCar] = useState([]);
   const uploadImage = (event) => {
+    // storeImageToFirebase(event.target.files);
     setImagesCar([...imagesCar, ...event.target.files]);
+    postImg(event.target.files);
+    console.log(event.target.files);
+  };
+  const postImg = (images) => {
+    // console.log(imagesCar);
+    console.log(images);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    Array.from(images).forEach((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/" + date)
+        .child(img.name);
+      setLinkImagesCar((linkImagesCar) => [
+        ...linkImagesCar,
+        uploadTask.put(img, metadata).then(function (result) {
+          uploadTask.getDownloadURL().then(function (url) {
+            const link = [url];
+            dispatch(postImageCar(link, carId, "CAR"));
+          });
+        }),
+      ]);
+    });
   };
   const handleRemoveItem = (image) => {
     console.log(imagesCar);
@@ -356,17 +393,19 @@ export default function CarEdits(props) {
   };
   const handleRemoveImage = (image) => {
     console.log(image.id);
-    dispatch(deleteImage(image));
+    // dispatch(deleteImage(image));
+    dispatch(changeImageByType(image, "DELETE"));
   };
-
+  const images = useSelector((state) => state.booking.images);
   useEffect(() => {
     const fetchCar = () => {
       dispatch(fetchCarDetail(carId));
+      dispatch(fetchImageList(1, 20, carId, "CAR"));
       setCurrentCar(carDetail);
     };
     fetchCar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carDetail.id, carDetail.status, carDetail.images]);
+  }, [carDetail.id, carDetail.status, change]);
 
   const IOSSwitch = withStyles((theme) => ({
     root: {
@@ -549,7 +588,7 @@ export default function CarEdits(props) {
             </Grid>
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
-            {currentCar.images ? (
+            {images.data ? (
               <Grid container item lg={12}>
                 <Grid item lg={3}>
                   <label
@@ -570,7 +609,7 @@ export default function CarEdits(props) {
                     </span>
                   </label>
                 </Grid>
-                {currentCar.images.map((image, index) => (
+                {images.data.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
                       <Icon
@@ -611,7 +650,7 @@ export default function CarEdits(props) {
                 <Typography>The car dont have images</Typography>
               </Grid>
             )}
-            <Grid container item justify="center">
+            {/* <Grid container item justify="center">
               <Button
                 variant="contained"
                 color="primary"
@@ -619,7 +658,7 @@ export default function CarEdits(props) {
               >
                 Update
               </Button>
-            </Grid>
+            </Grid> */}
           </TabPanel>
         </Grid>
       </Grid>

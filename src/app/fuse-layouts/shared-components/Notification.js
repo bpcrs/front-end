@@ -14,7 +14,7 @@ import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
 import { APP_PATH } from "../../../constant";
 import { showMessage } from "../../store/actions/fuse";
-import { fetchNotification } from "../../main/user/profile.action";
+import { fetchCarInformationOwner } from "../../main/user/profile.action";
 // import { theme } from "@chakra-ui/core";
 // import { blue } from "@material-ui/core/colors";
 
@@ -75,6 +75,12 @@ const Notification = () => {
             {notify.renter.fullName} neogating your car {notify.car.name}{" "}
           </Typography>
         );
+      case "DENYCAR":
+        return (
+          <Typography onClick={() => handleClick(true)}>
+            {notify.message}
+          </Typography>
+        );
       default:
         return "";
     }
@@ -98,18 +104,45 @@ const Notification = () => {
         .limitToLast(10)
         .onSnapshot((ns) => {
           setNotification(
-            ns.docs.map((noti) => {
-              // dispatch(
-              //   showMessage({
-              //     message: "Your have new notification",
-              //   })
-              // );
-              return noti.data();
-            })
+            // ...notification,
+            (notification) => [
+              ...notification,
+              ns.docs.map((noti) => {
+                dispatch(
+                  showMessage({
+                    message: "Your have new notification",
+                  })
+                );
+                // dispatch(fetchCarInformationOwner(userLogged.id, 1, 5));
+                return noti.data();
+              }),
+            ]
           );
         });
     };
-
+    // const fetchNotiCar = () => {
+    //   firebase
+    //     .firestore()
+    //     .collection("notification")
+    //     .doc(`${userLogged.email}`)
+    //     .collection("Car")
+    //     .orderBy("createAt", "desc")
+    //     .limitToLast(10)
+    //     .onSnapshot((ns) => {
+    //       setNotification([
+    //         ...notification,
+    //         ns.docs.map((noti) => {
+    //           dispatch(
+    //             showMessage({
+    //               message: "Your have new notification",
+    //             })
+    //           );
+    //           return noti.data();
+    //         }),
+    //       ]);
+    //     });
+    // };
+    // fetchNotiCar();
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);
