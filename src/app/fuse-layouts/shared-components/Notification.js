@@ -66,6 +66,21 @@ const Notification = () => {
         isSeen: true,
       });
   };
+
+  const handleMarkAllRead = () => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("requests")
+      // .orderBy("createAt", "desc")
+      // .limitToLast(10)
+      .onSnapshot((ns) => {
+        ns.forEach((doc) => {
+          doc.ref.update({ isSeen: true });
+        });
+      });
+  };
   const renderNotification = (notify) => {
     switch (notify.status) {
       case BOOKING_STATUS.CONFIRM:
@@ -385,7 +400,12 @@ const Notification = () => {
   return (
     <React.Fragment>
       <Button onClick={notificationClick}>
-        <Icon>notifications_outlined</Icon>
+        <Badge
+          badgeContent={notification.filter((item) => !item.isSeen).length}
+          color="error"
+        >
+          <Icon>notifications_outlined</Icon>
+        </Badge>
       </Button>
 
       <Popover
@@ -413,12 +433,26 @@ const Notification = () => {
             className={classes.notificationHeader}
           >
             <Grid item lg={6}>
-              <Typography variant="h5">Notifications</Typography>
+              <Typography variant="h6">Notifications</Typography>
             </Grid>
-            <Grid item lg={6}>
-              <Typography style={{ textAlign: "right" }} variant="subtitle2">
+            <Grid item lg={6} container justify="flex-end">
+              <Button
+                variant="text"
+                style={{
+                  textTransform: "none",
+                  color:
+                    notification.filter((item) => !item.isSeen).length === 0
+                      ? grey[500]
+                      : blue[500],
+                }}
+                onClick={handleMarkAllRead}
+                disabled={
+                  notification.filter((item) => !item.isSeen).length === 0
+                }
+                startIcon={<Icon>done_all</Icon>}
+              >
                 Mark all as read
-              </Typography>
+              </Button>
             </Grid>
             {notification.length === 0 ? (
               <React.Fragment>
