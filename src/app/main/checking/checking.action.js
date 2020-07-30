@@ -1,5 +1,6 @@
 import { GET, PUT, ENDPOINT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
+import firebase from "../../firebase/firebase";
 
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
@@ -183,7 +184,7 @@ export function putCarUpdate(id, car) {
     };
 }
 
-export function fetchUserDetailChecking (userId){
+export function fetchUserDetailChecking(userId) {
     return (dispatch) => {
         const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
         request.then(
@@ -209,7 +210,7 @@ export function putAcceptUserLicence(id, user) {
         request.then(
             (response) => {
                 if (response.success) {
-                   dispatch(putUserDetailSuccess(response.data));
+                    dispatch(putUserDetailSuccess(response.data));
                 } else {
                     dispatch(putUserDetailFailure(response.message));
                     dispatch(showMessageError(response.message));
@@ -221,4 +222,17 @@ export function putAcceptUserLicence(id, user) {
             }
         );
     };
+}
+
+export function notificationUser(message, userMail, isAccept) {
+    firebase
+        .firestore()
+        .collection("notification")
+        .doc(`${userMail}`)
+        .collection("Car")
+        .add({
+            message: message,
+            status: isAccept ? "ACCEPTCAR" : "DENYCAR",
+            createAt: new Date().getTime(),
+        });
 }

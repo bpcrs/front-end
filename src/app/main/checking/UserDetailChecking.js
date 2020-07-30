@@ -1,7 +1,9 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import {
     Grid, Card, CardHeader, Avatar, Button,
-    TextField,
+    TextField, Dialog,
+    DialogActions,
+    DialogContent,
 } from "@material-ui/core";
 import SettingIcon from "@material-ui/icons/Settings";
 import React, { useState, useEffect } from "react";
@@ -11,7 +13,7 @@ import { APP_PATH } from "../../../constant";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchUserDetailChecking, putAcceptUserLicence } from "./checking.action";
+import { fetchUserDetailChecking, putAcceptUserLicence, notificationUser } from "./checking.action";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -55,7 +57,8 @@ export default function UserDetailChecking(props) {
     const userDetail = useSelector((state) => state.checking.userDetail);
     const [currentUser, setCurrentUser] = useState({});
     const changePage = useSelector((state) => state.checking.changePage);
-
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState();
 
     useEffect(() => {
         const { userId } = props.location.state;
@@ -79,6 +82,18 @@ export default function UserDetailChecking(props) {
         }))
     };
 
+    const handleSendNotificationCheckLicense = () => {
+        notificationUser(message, currentUser.email, false);
+        setOpen(false);
+
+        history.push({
+            pathname: APP_PATH.CHECKING,
+        });
+    };
+
+    const handleChangeInput = (event) => {
+        setMessage(event.target.value);
+    };
     return (
         <Layout name="User checking form">
             <Grid spacing={1} container justify="center" alignItems="center">
@@ -122,6 +137,15 @@ export default function UserDetailChecking(props) {
                                 />
                             </Grid>
 
+                            <Grid item xs={12} lg={12}>
+                                <TextField
+                                    className={classes.textField}
+                                    disabled
+                                    label="Date Join"
+                                    value={new Date(currentUser.createdDate).toLocaleDateString()}
+                                    variant="outlined"
+                                />
+                            </Grid>
 
                             <Grid item xs={12} lg={12}>
                                 <TextField
@@ -139,42 +163,46 @@ export default function UserDetailChecking(props) {
                 <Grid item xs={12} lg={7}>
                     <Card className={classes.card}>
                         <div className="mt-20">
-                            <Grid item xs={12} lg={6} >
-                                <div style={{ textAlign: "center" }}>
-                                    <p>Picture 1</p>
-                                    <p>
-                                        <img src={currentUser.imageUrlLicense1} id="output" width="200" height="200" />
-                                    </p>
-                                </div>
-                            </Grid>
+                            <Grid container>
 
-                            <Grid item xs={12} lg={6}>
-                                <div style={{ textAlign: "center" }}>
-                                    <p>Picture 2</p>
-                                    <p>
-                                        <img src={currentUser.imageUrlLicense2} id="output" width="200" height="200" />
-                                    </p>
-                                </div>
-                            </Grid>
 
-                            <Grid item xs={12} lg={6} >
-                                <div style={{ textAlign: "center" }}>
-                                    <p>Picture 3</p>
-                                    <p>
-                                        <img src={currentUser.imageUrlLicense3} id="output" width="200" height="200" />
-                                    </p>
-                                </div>
-                            </Grid>
+                                <Grid item xs={12} lg={6} >
+                                    <div style={{ textAlign: "center" }}>
+                                        <p>Picture 1</p>
+                                        <p>
+                                            <img src={currentUser.imageUrlLicense1} id="output" width="200" height="200" />
+                                        </p>
+                                    </div>
+                                </Grid>
 
-                            <Grid item xs={12} lg={6}>
-                                <div style={{ textAlign: "center" }}>
-                                    <p>Picture 4</p>
-                                    <p>
-                                        <img src={currentUser.imageUrlLicense4} id="output" width="200" height="200" />
-                                    </p>
-                                </div>
-                            </Grid>
+                                <Grid item xs={12} lg={6}>
+                                    <div style={{ textAlign: "center" }}>
+                                        <p>Picture 2</p>
+                                        <p>
+                                            <img src={currentUser.imageUrlLicense2} id="output" width="200" height="200" />
+                                        </p>
+                                    </div>
+                                </Grid>
 
+                                <Grid item xs={12} lg={6} >
+                                    <div style={{ textAlign: "center" }}>
+                                        <p>Picture 3</p>
+                                        <p>
+                                            <img src={currentUser.imageUrlLicense3} id="output" width="200" height="200" />
+                                        </p>
+                                    </div>
+                                </Grid>
+
+                                <Grid item xs={12} lg={6}>
+                                    <div style={{ textAlign: "center" }}>
+                                        <p>Picture 4</p>
+                                        <p>
+                                            <img src={currentUser.imageUrlLicense4} id="output" width="200" height="200" />
+                                        </p>
+                                    </div>
+                                </Grid>
+
+                            </Grid>
                             {/* <Grid container>
                                 {
                                     currentCar.images &&
@@ -209,14 +237,35 @@ export default function UserDetailChecking(props) {
                 </Grid>
 
                 <Grid item xs={6} lg={6}>
+
+
                     <Button
                         variant="contained"
                         color="primary"
                         startIcon={<CancelIcon />}
                         style={{ marginLeft: "30%" }}
+                        onClick={() => { setOpen(true) }}
                     >
                         Deny
-    </Button></Grid>
+                     </Button>
+
+                    <Dialog open={open} >
+                        <DialogContent>
+                            <TextField
+                                // className={classes.textField}
+                                label="Notification"
+                                variant="outlined"
+                                onChange={handleChangeInput}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button color="primary"
+                                onClick={handleSendNotificationCheckLicense}>
+                                Send
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </Grid>
             </Grid>
         </Layout>
     );

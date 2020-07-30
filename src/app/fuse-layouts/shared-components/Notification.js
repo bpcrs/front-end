@@ -75,6 +75,18 @@ const Notification = () => {
             {notify.renter.fullName} neogating your car {notify.car.name}{" "}
           </Typography>
         );
+      case "DENYCAR":
+        return (
+          <Typography onClick={() => handleClick(true)}>
+           {notify.message}
+          </Typography>
+        );
+        case "ACCEPTCAR":
+          return (
+            <Typography onClick={() => handleClick(true)}>
+              your car is accept!
+            </Typography>
+          );
       default:
         return "";
     }
@@ -109,6 +121,28 @@ const Notification = () => {
           );
         });
     };
+    const fetchNotiCar = () => {
+      firebase
+        .firestore()
+        .collection("notification")
+        .doc(`${userLogged.email}`)
+        .collection("Car")
+        .orderBy("createAt", "desc")
+        .limitToLast(10)
+        .onSnapshot((ns) => {
+          setNotification(
+            ns.docs.map((noti) => {
+              dispatch(
+                showMessage({
+                  message: "Your have new notification car",
+                })
+              );
+              return noti.data();
+            })
+          );
+        });
+    };
+    fetchNotiCar();
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);
@@ -155,8 +189,8 @@ const Notification = () => {
             <Typography>No new notification</Typography>
           </React.Fragment>
         ) : (
-          ""
-        )}
+            ""
+          )}
       </Popover>
     </React.Fragment>
   );
