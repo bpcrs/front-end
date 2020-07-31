@@ -74,7 +74,7 @@ const Notification = () => {
       .doc(`${userLogged.email}`)
       .collection("requests")
       // .orderBy("createAt", "desc")
-      .limitToLast(10)
+      // .limitToLast(10)
       .onSnapshot((ns) => {
         ns.forEach((doc) => {
           doc.ref.update({ isSeen: true });
