@@ -191,9 +191,10 @@ export default function Cheking() {
         </Grid>
         <Grid item xs={9} sm={9}>
           <TabPanel value={tab} index={0}>
-            <CheckUser />
+            <CheckCar />
           </TabPanel>
           <TabPanel value={tab} index={1}>
+            <CheckUser />
             <CheckCar />
           </TabPanel>
           <TabPanel value={tab} index={2}></TabPanel>
