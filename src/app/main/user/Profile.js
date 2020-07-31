@@ -172,30 +172,6 @@ const Profile = (props) => {
                 <Typography variant="subtitle2">{userLogged.email}</Typography>
               </Grid>
             </Grid>
-            {/* <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                id="standard-helperText"
-                label="Full Name"
-                className={classes.textField}
-                defaultValue={userLogged.displayName}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                id="standard-helperText"
-                label="Email"
-                defaultValue={userLogged.email}
-                className={classes.textField}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </Grid> */}
           </Grid>
 
           <Grid item xs={12} lg={12}>
