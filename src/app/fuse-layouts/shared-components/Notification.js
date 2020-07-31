@@ -74,7 +74,7 @@ const Notification = () => {
       .doc(`${userLogged.email}`)
       .collection("requests")
       // .orderBy("createAt", "desc")
-      // .limitToLast(10)
+      .limitToLast(10)
       .onSnapshot((ns) => {
         ns.forEach((doc) => {
           doc.ref.update({ isSeen: true });
@@ -351,7 +351,7 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={!notify.isSeen}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
