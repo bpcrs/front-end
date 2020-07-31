@@ -79,7 +79,20 @@ const BookingRequest = (props) => {
   return (
     <Grid>
       <Box hidden={myBookings.data && myBookings.data.length !== 0}>
-        <Typography>We did't find any booking</Typography>
+        <Grid container justify="center" alignItems="center">
+          <Grid item>
+            <img
+              src="assets/images/empty.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle2">
+              We did't find any booking right now.
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
 
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
