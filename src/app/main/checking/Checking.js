@@ -195,7 +195,6 @@ export default function Cheking() {
           </TabPanel>
           <TabPanel value={tab} index={1}>
             <CheckUser />
-            <CheckCar />
           </TabPanel>
           <TabPanel value={tab} index={2}></TabPanel>
           <TabPanel value={tab} index={3}></TabPanel>
