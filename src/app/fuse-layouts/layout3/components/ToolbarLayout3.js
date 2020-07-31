@@ -14,19 +14,8 @@ import UserMenu from "app/fuse-layouts/shared-components/UserMenu";
 import Notification from "app/fuse-layouts/shared-components/Notification";
 import { useSelector } from "react-redux";
 
-const useStyles = makeStyles((theme) => ({
-  separator: {
-    width: 1,
-    height: 64,
-    backgroundColor: theme.palette.divider,
-  },
-  notification: {
-    padding: theme.spacing(2),
-  },
-}));
-
 const ToolbarLayout3 = () => {
-  const classes = useStyles();
+  const { success } = useSelector((state) => state.auth.login);
   const toolbarTheme = useSelector((state) => state.fuse.settings.toolbarTheme);
   return (
     <MuiThemeProvider theme={toolbarTheme}>
@@ -45,7 +34,7 @@ const ToolbarLayout3 = () => {
                             <div className={classes.separator}/>
                         </Hidden> */}
             {/* <div className={classes.separator} /> */}
-            <Notification />
+            {success && <Notification />}
             <UserMenu />
             {/* <Grid className={classes.notification}>
               <Icon>notifications_none</Icon>

@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import * as authActions from "app/auth/store/actions";
 import { bindActionCreators } from "redux";
 import { Link } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, APP_ROLE } from "../../../constant";
 
 class UserMenu extends Component {
   state = {
@@ -29,12 +29,19 @@ class UserMenu extends Component {
   };
 
   render() {
-    const { user, logout } = this.props;
-    const { userMenu } = this.state;
+    const { user } = this.props;
 
     return (
       <React.Fragment>
-        <Button className="h-64" component={Link} to={APP_PATH.PROFILE}>
+        <Button
+          className="h-64"
+          component={Link}
+          to={
+            user.role === APP_ROLE.ADMINISTRATOR
+              ? APP_PATH.ADMIN
+              : APP_PATH.PROFILE
+          }
+        >
           {user.photoURL ? (
             <Avatar className="" alt="user photo" src={user.photoURL} />
           ) : (

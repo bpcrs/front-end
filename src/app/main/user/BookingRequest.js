@@ -10,6 +10,10 @@ import {
   IconButton,
   Icon,
   Box,
+  DialogContent,
+  Dialog,
+  DialogActions,
+  Button,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -21,11 +25,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
 import TimeAgo from "react-timeago";
+import { changeBookingStatusRequest } from "../user/profile.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -65,6 +70,114 @@ const BookingRequest = (props) => {
       pathname: APP_PATH.CHAT,
     });
   };
+
+  function StatusAction(props) {
+    // console.log(status);
+    const [open, setOpen] = useState(false);
+    const { booking } = props;
+
+    const handleCancelRequest = () => {
+      console.log(booking.id);
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DENY));
+    };
+
+    switch (booking.status) {
+      case "PENDING":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton onClick={() => handleAgreement()}>
+              <Icon style={{ color: "blue" }}>send</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      case "REQUEST":
+        return (
+          <React.Fragment>
+            <TableCell component="th" scope="row">
+              <IconButton onClick={() => setOpen(true)}>
+                <Icon style={{ color: "red" }}>cancel</Icon>
+              </IconButton>
+            </TableCell>
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                <Typography variant="subtitle1" color="initial">
+                  Are you want to cancel your booking request ?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancelRequest}
+                >
+                  Yes
+                </Button>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                  variant="contained"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        );
+      case "CONFIRM":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton
+            // onClick={() => handleAgreement()}
+            >
+              <Icon style={{ color: "green" }}>assignment</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      case "DONE":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton
+            // onClick={() => handleAgreement()}
+            >
+              <Icon style={{ color: "green" }}>info</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      case "DENY":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton
+            // onClick={() => handleAgreement()}
+            >
+              <Icon style={{ color: "black" }}>error</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      case "CANCEL":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton
+            // onClick={() => handleAgreement()}
+            >
+              <Icon style={{ color: "red" }}>clear</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      case "OWNER_ACCEPTED":
+        return (
+          <TableCell component="th" scope="row">
+            <IconButton
+            // onClick={() => handleAgreement()}
+            >
+              <Icon style={{ color: "purple" }}>send</Icon>
+            </IconButton>
+          </TableCell>
+        );
+      default:
+        return null;
+    }
+  }
   useEffect(() => {
     dispatch(
       fetchBookingRequest(
@@ -79,7 +192,20 @@ const BookingRequest = (props) => {
   return (
     <Grid>
       <Box hidden={myBookings.data && myBookings.data.length !== 0}>
-        <Typography>We did't find any booking</Typography>
+        <Grid container justify="center" alignItems="center">
+          <Grid item>
+            <img
+              src="assets/images/empty.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle2">
+              We did't find any booking right now.
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
 
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
@@ -138,26 +264,30 @@ const BookingRequest = (props) => {
                     <TableCell component="th" scope="row">
                       <BookingStatus name={booking.status} />
                     </TableCell>
-                    {booking.status === "PENDING" ? (
+                    {/* {booking.status === "PENDING" ? (
                       <TableCell component="th" scope="row">
                         <IconButton onClick={() => handleAgreement()}>
                           <Icon style={{ color: "blue" }}>send</Icon>
                         </IconButton>
                       </TableCell>
-                    ) : null}
+                    ) : null} */}
+                    <StatusAction booking={booking} />
                   </TableRow>
                   // </Grid>
                 ))}
               <Grid xs={12} lg={12} item container justify="flex-end">
-                <Pagination
-                  count={
-                    myBookings.count !== 0 && myBookings.count % size === 0
-                      ? Math.floor(myBookings.count / size)
-                      : Math.floor(myBookings.count / size) + 1
-                  }
-                  color="primary"
-                  onChange={(e, page) => setCurrentPage(page)}
-                />
+                <Grid item lg={12}>
+                  <Pagination
+                    size="small"
+                    count={
+                      myBookings.count !== 0 && myBookings.count % size === 0
+                        ? Math.floor(myBookings.count / size)
+                        : Math.floor(myBookings.count / size) + 1
+                    }
+                    color="primary"
+                    onChange={(e, page) => setCurrentPage(page)}
+                  />
+                </Grid>
               </Grid>
             </TableBody>
           </Table>
