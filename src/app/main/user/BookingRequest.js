@@ -86,7 +86,7 @@ const BookingRequest = (props) => {
         return (
           <TableCell component="th" scope="row">
             <IconButton onClick={() => handleAgreement()}>
-              <Icon style={{ color: "blue" }}>send</Icon>
+              <Icon style={{ color: "black" }}>chat</Icon>
             </IconButton>
           </TableCell>
         );
@@ -170,7 +170,7 @@ const BookingRequest = (props) => {
             <IconButton
             // onClick={() => handleAgreement()}
             >
-              <Icon style={{ color: "purple" }}>send</Icon>
+              <Icon style={{ color: "purple" }}>chat</Icon>
             </IconButton>
           </TableCell>
         );

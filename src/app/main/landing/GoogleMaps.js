@@ -87,7 +87,6 @@ export default function GoogleMaps(props) {
         setOptions(newOptions);
       }
     });
-
     return () => {
       active = false;
     };

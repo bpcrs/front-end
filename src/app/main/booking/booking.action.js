@@ -336,20 +336,13 @@ export function fetchReviewList(page, size, carId) {
 }
 
 export function fetchCarDetail(id) {
-  return (dispatch) => {
-    const request = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(fetchCarDetailSuccess(response.data));
-        } else {
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(showMessageError(error.message));
-      }
-    );
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
   };
 }
 
