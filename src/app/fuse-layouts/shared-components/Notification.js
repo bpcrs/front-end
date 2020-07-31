@@ -351,7 +351,7 @@ const Notification = () => {
                   <Badge
                     variant="dot"
                     color="primary"
-                    invisible={!notify.isSeen}
+                    invisible={notify.isSeen}
                   />
                 </Grid>
               </Grid>
