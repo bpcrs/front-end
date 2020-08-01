@@ -13,13 +13,17 @@ const initialState = {
   agreemnts: [],
   booking: {},
   change: false,
+  distance: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    // case Actions.GET_IMAGE_LINK: {
-
-    // }
+    case Actions.POST_DISTANCE_LOCATION: {
+      return {
+        ...state,
+        distance: payload,
+      };
+    }
     case Actions.UPDATE_CAR_STATUS: {
       return {
         ...state,

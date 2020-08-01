@@ -62,6 +62,7 @@ export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
 export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
 export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
+export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 
 export function createBooking(booking) {
   return {
@@ -105,7 +106,12 @@ export function fetchCarsError(error) {
     payload: error,
   };
 }
-
+export function getDistanceLocation(distance) {
+  return {
+    type: POST_DISTANCE_LOCATION,
+    payload: distance,
+  };
+}
 export function fetchReviewSuccess(reviews) {
   return {
     type: FETCH_REVIEW_SUCCESS,
@@ -665,6 +671,25 @@ export function changeImageByType(image, type) {
     request.then(
       (response) => {
         dispatch(changeImageType(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function distanceBetweenTwoLocation(destination, location) {
+  console.log(destination, location);
+  return (dispatch) => {
+    const request = POST(
+      ENDPOINT.MAPS_CONTROLLER_POST,
+      {},
+      { destination, location }
+    );
+    request.then(
+      (response) => {
+        dispatch(getDistanceLocation(response.success ? response.data : ""));
       },
       (error) => {
         showMessageError(error.message);

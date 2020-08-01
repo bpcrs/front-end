@@ -18,9 +18,6 @@ import {
   Box,
   Tabs,
   Tab,
-  InputLabel,
-  Select,
-  MenuItem,
   FormControlLabel,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
@@ -214,9 +211,9 @@ export default function CarEdits(props) {
     const [checkSure, setCheckSure] = useState(false);
     const handleChangeLocation = (value) => {
       // console.log(value.description);
-      setCurrentCar({ ...currentCar, location: value.description });
+      // setCurrentCar({ ...currentCar, location: value.description });
 
-      // setLocation(value.description);
+      setLocation(value);
       // setOpenLocation(true);
     };
     // console.log(location);

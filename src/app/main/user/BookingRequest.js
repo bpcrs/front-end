@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogActions,
   Button,
+  Tooltip,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -71,6 +72,14 @@ const BookingRequest = (props) => {
     });
   };
 
+  const pendingText = `Click to join chat room with car owner`;
+  const cancelText = `Click to view info`;
+  const requestText = `Cancel this booking request`;
+  const confirmText = `View contract`;
+  const doneText = `View completed contract`;
+  const denyText = `View info`;
+  const ownerAcceptedText = `Click to join chat room with car owner`;
+
   function StatusAction(props) {
     // console.log(status);
     const [open, setOpen] = useState(false);
@@ -85,18 +94,22 @@ const BookingRequest = (props) => {
       case "PENDING":
         return (
           <TableCell component="th" scope="row">
-            <IconButton onClick={() => handleAgreement()}>
-              <Icon style={{ color: "black" }}>chat</Icon>
-            </IconButton>
+            <Tooltip title={pendingText}>
+              <IconButton onClick={() => handleAgreement()}>
+                <Icon style={{ color: "black" }}>chat</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "REQUEST":
         return (
           <React.Fragment>
             <TableCell component="th" scope="row">
-              <IconButton onClick={() => setOpen(true)}>
-                <Icon style={{ color: "red" }}>cancel</Icon>
-              </IconButton>
+              <Tooltip title={requestText}>
+                <IconButton onClick={() => setOpen(true)}>
+                  <Icon style={{ color: "red" }}>cancel</Icon>
+                </IconButton>
+              </Tooltip>
             </TableCell>
             <Dialog open={open} scroll="body">
               <DialogContent>
@@ -127,51 +140,61 @@ const BookingRequest = (props) => {
       case "CONFIRM":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "green" }}>assignment</Icon>
-            </IconButton>
+            <Tooltip title={confirmText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "green" }}>assignment</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "DONE":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "green" }}>info</Icon>
-            </IconButton>
+            <Tooltip title={doneText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "green" }}>info</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "DENY":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "black" }}>error</Icon>
-            </IconButton>
+            <Tooltip title={denyText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "black" }}>error</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "CANCEL":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "red" }}>clear</Icon>
-            </IconButton>
+            <Tooltip title={cancelText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "red" }}>clear</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "OWNER_ACCEPTED":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "purple" }}>chat</Icon>
-            </IconButton>
+            <Tooltip title={ownerAcceptedText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "purple" }}>chat</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       default:
