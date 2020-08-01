@@ -62,6 +62,7 @@ export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
 export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
 export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
+export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 
 export function createBooking(booking) {
   return {
@@ -105,7 +106,12 @@ export function fetchCarsError(error) {
     payload: error,
   };
 }
-
+export function getDistanceLocation(distance) {
+  return {
+    type: POST_DISTANCE_LOCATION,
+    payload: distance,
+  };
+}
 export function fetchReviewSuccess(reviews) {
   return {
     type: FETCH_REVIEW_SUCCESS,
@@ -336,20 +342,13 @@ export function fetchReviewList(page, size, carId) {
 }
 
 export function fetchCarDetail(id) {
-  return (dispatch) => {
-    const request = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(fetchCarDetailSuccess(response.data));
-        } else {
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(showMessageError(error.message));
-      }
-    );
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
   };
 }
 
@@ -397,7 +396,7 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
-          dispatch(showMessageSuccess("Update price success"));
+          dispatch(showMessageSuccess("Update success"));
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -672,6 +671,25 @@ export function changeImageByType(image, type) {
     request.then(
       (response) => {
         dispatch(changeImageType(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function distanceBetweenTwoLocation(destination, location) {
+  console.log(destination, location);
+  return (dispatch) => {
+    const request = POST(
+      ENDPOINT.MAPS_CONTROLLER_POST,
+      {},
+      { destination, location }
+    );
+    request.then(
+      (response) => {
+        dispatch(getDistanceLocation(response.success ? response.data : ""));
       },
       (error) => {
         showMessageError(error.message);
