@@ -1,5 +1,6 @@
 import { GET, PUT, ENDPOINT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
+import firebase from "../../firebase/firebase";
 
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
@@ -125,6 +126,24 @@ export function putUserDetailSuccess(user) {
     payload: user,
   };
 }
+
+export function notificationCarAcceptSuccessCarAcceptSuccess(booking) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${booking.car.owner.email}`)
+    .collection("requests")
+    .add({
+      status: booking.status,
+      car: booking.car,
+      owner: booking.car.owner,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
+}
+
 
 export function putUserDetailFailure(error) {
   return {

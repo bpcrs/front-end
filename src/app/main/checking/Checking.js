@@ -146,7 +146,7 @@ export default function Cheking() {
           <Grid item lg={12} container>
             <Grid item lg={2}></Grid>
             <Grid item lg={5}>
-              <Typography variant="subtitle1">PHONE</Typography>
+              <Typography variant="subtitle1">FULL NAME</Typography>
               <Typography variant="subtitle2">
                 {userLogged.displayName}
               </Typography>

@@ -7,6 +7,8 @@ import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import PropTypes from "prop-types";
 import Layout from "../../layout";
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import { fetchCarDetailCheck, putCarUpdate } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
@@ -14,6 +16,11 @@ const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
+  },
+
+  gridList: {
+    width: 500,
+    height: 450,
   },
   media: {
     height: 240,
@@ -58,7 +65,7 @@ export default function CarDetailChecking(props) {
   const carDetail = useSelector((state) => state.checking.carDetail);
   const [currentCar, setCurrentCar] = useState({});
   const changePage = useSelector((state) => state.checking.changePage);
-
+  const { notification } = props.location.state || {};
   useEffect(() => {
     const { carId } = props.location.state;
 
@@ -76,7 +83,6 @@ export default function CarDetailChecking(props) {
     carDetail.id,
     changePage,
   ]);
-
   const handleValueAutoDrive = (state) => {
     if (state) {
       return "TRUE";
@@ -215,12 +221,12 @@ export default function CarDetailChecking(props) {
       <Grid container justify="center">
         <Grid item xs={12} lg={8} sm={12}>
           <Card className={classes.card}>
-            <SwipeableTextMobileStepper
+            {/* <SwipeableTextMobileStepper
               images={currentCar.images ? currentCar.images.filter(image => image.type == "CAR") : [fakeImg]}
             />
             <SwipeableTextMobileStepper
               images={currentCar.images ? currentCar.images.filter(image => image.type == "LICENSE") : [fakeImg]}
-            />
+            /> */}
           </Card>
         </Grid>
       </Grid>
