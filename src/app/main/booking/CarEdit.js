@@ -209,13 +209,12 @@ export default function CarEdits(props) {
     const [open, setOpen] = useState(false);
     const [openLocation, setOpenLocation] = useState(false);
     const [checkSure, setCheckSure] = useState(false);
+    const selectCar = useSelector((state) => state.booking.carDetail);
+    const [upCar, setUpCar] = useState(selectCar);
     const handleChangeLocation = (value) => {
-      // console.log(value.description);
-      // setCurrentCar({ ...currentCar, location: value.description });
-
-      setLocation(value);
-      // setOpenLocation(true);
+      setUpCar({ ...upCar, location: value.description });
     };
+    console.log(upCar);
     // console.log(location);
     const handleChangeStatus = () => {
       const nextStatus =
@@ -224,14 +223,18 @@ export default function CarEdits(props) {
       dispatch(updateCarStatus(carDetail.id, nextStatus));
       setOpen(false);
     };
-    const handleUpdateLocation = async () => {
-      // console.log(location);
-      // await setCurrentCar({ ...currentCar, location: location });
-      // setCheckSure(true);
-      // setOpenLocation(false);
-      dispatch(putCarUpdate(currentCar.id, currentCar));
+    const handleConfirmUpdate = () => {
+      setCheckSure(true);
     };
-    console.log(currentCar);
+    const handleUpdateLocation = () => {
+      setOpenLocation(false);
+      setCheckSure(false);
+      dispatch(putCarUpdate(upCar.id, upCar));
+    };
+
+    // useEffect(() => {
+    //   dispatch(fetchCarDetail(upCar.id));
+    // }, [])
     return (
       <React.Fragment>
         {carDetail.status === "AVAILABLE" ||
@@ -277,7 +280,9 @@ export default function CarEdits(props) {
                 <GoogleMaps
                   label="Location"
                   name="location"
-                  value={carDetail.location}
+                  value={
+                    selectCar.location ? selectCar.location : "Ho Chi Minh City"
+                  }
                   onChange={(value) => handleChangeLocation(value)}
                 />
                 {/* {console.log(openLocation)} */}
@@ -287,7 +292,7 @@ export default function CarEdits(props) {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleUpdateLocation}
+                onClick={handleConfirmUpdate}
               >
                 Yes
               </Button>
@@ -307,12 +312,15 @@ export default function CarEdits(props) {
             <DialogContent>
               <Typography variant="subtitle1" color="initial">
                 Are you sure want to change your car location from{" "}
-                {carDetail.location}
-                to {location} ?
+                {carDetail.location} to {upCar.location} ?
               </Typography>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" color="primary" onClick={updateCar}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleUpdateLocation}
+              >
                 Yes
               </Button>
               <Button
