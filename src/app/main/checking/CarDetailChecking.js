@@ -3,12 +3,13 @@ import { Grid, Card, Button, Typography, TextField } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, BOOKING_STATUS, CAR_STATUS } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import PropTypes from "prop-types";
 import Layout from "../../layout";
 import { fetchCarDetailCheck, putCarUpdate } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { updateCarStatus } from "../booking/booking.action";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -58,28 +59,28 @@ export default function CarDetailChecking(props) {
   const carDetail = useSelector((state) => state.checking.carDetail);
   const [currentCar, setCurrentCar] = useState({});
   const changePage = useSelector((state) => state.checking.changePage);
+  const { carId } = props.location.state;
 
   useEffect(() => {
-    const { carId } = props.location.state;
-
     const fetchCar = () => {
       dispatch(fetchCarDetailCheck(carId));
       setCurrentCar(carDetail);
     };
     fetchCar();
 
-    if (changePage) {
-      history.push({
-        pathname: APP_PATH.CHECKING,
-      });
-    }
+    // if (changePage) {
+    //   history.push({
+    //     pathname: APP_PATH.CHECKING,
+    //   });
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    carDetail,
     carDetail.id,
-    changePage,
-    dispatch,
-    history,
-    props.location.state,
+    // carDetail.id,
+    // changePage,
+    // dispatch,
+    // history,
+    // props.location.state,
   ]);
 
   const handleValueAutoDrive = (state) => {
@@ -91,12 +92,16 @@ export default function CarDetailChecking(props) {
   };
 
   const handleAcceptCar = () => {
-    dispatch(
-      putCarUpdate(currentCar.id, {
-        available: true,
-        status: "AVAILABLE",
-      })
-    );
+    // dispatch(
+    //   putCarUpdate(currentCar.id, {
+    //     available: true,
+    //     status: "AVAILABLE",
+    //   })
+    // );
+    dispatch(updateCarStatus(currentCar.id, CAR_STATUS.UNAVAILABLE));
+    history.push({
+      pathname: APP_PATH.CHECKING,
+    });
   };
 
   return (
