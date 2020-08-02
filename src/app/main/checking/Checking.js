@@ -145,13 +145,12 @@ export default function Cheking() {
           </Grid>
           <Grid item lg={12} container>
             <Grid item lg={2}></Grid>
-            <Grid item lg={5}>
+            {/* <Grid item lg={5}>
               <Typography variant="subtitle1">PHONE</Typography>
               <Typography variant="subtitle2">
                 {userLogged.displayName}
               </Typography>
-              {/* <Typography>{userLogged.displayName}</Typography> */}
-            </Grid>
+            </Grid> */}
             <Grid item lg={5}>
               <Typography variant="subtitle1">EMAIL</Typography>
               <Typography variant="subtitle2">{userLogged.email}</Typography>
