@@ -364,18 +364,12 @@ const Notification = () => {
             {notify.message}
           </Typography>
         );
-      case "DENYCAR":
+      case "ACCEPTCAR":
         return (
           <Typography onClick={() => handleClick(true)}>
-           {notify.message}
+            your car is accept!
           </Typography>
         );
-        case "ACCEPTCAR":
-          return (
-            <Typography onClick={() => handleClick(true)}>
-              your car is accept!
-            </Typography>
-          );
       default:
         console.log(notify);
     }
@@ -514,8 +508,8 @@ const Notification = () => {
                 </Grid>
               </React.Fragment>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
           </Grid>
           {notification.length !== 0 &&
             notification
