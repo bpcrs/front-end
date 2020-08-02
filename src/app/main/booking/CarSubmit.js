@@ -673,8 +673,8 @@ export default function CarSubmit(props) {
               flag2 = false;
               console.log("length link download image: " + carImages.length);
               console.log("Starting store car info to DB...");
-              //storeLicenseToFirebase();
-              submitCarToDB();
+              storeLicenseToFirebase();
+              // submitCarToDB();
             }
           }
         })
@@ -791,7 +791,7 @@ export default function CarSubmit(props) {
 
   const submitCarToDB = () => {
     dispatch(postCarSubmit(currentCar, linkImageArr));
-    storeLicenseToFirebase();
+    // storeLicenseToFirebase();
   };
 
   const submitCarInfor = () => {
@@ -818,7 +818,7 @@ export default function CarSubmit(props) {
         });
       });
     });
-    // submitCarToDB();
+    submitCarToDB();
     // dispatch(postImageCar(linkLicen, ));
   };
   console.log("link licenses", linkLicen);
