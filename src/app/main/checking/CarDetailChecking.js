@@ -1,21 +1,21 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, Button, Typography, TextField } from "@material-ui/core";
+import { Grid, Card, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, TextareaAutosize, DialogActions } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
-import PropTypes from "prop-types";
 import Layout from "../../layout";
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import { fetchCarDetailCheck, putCarUpdate } from "./checking.action";
+import { fetchCarDetailCheck, putCarUpdate, changeOpen } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
+  },
+  textArea: {
+    width: "100%",
   },
 
   gridList: {
@@ -65,7 +65,8 @@ export default function CarDetailChecking(props) {
   const carDetail = useSelector((state) => state.checking.carDetail);
   const [currentCar, setCurrentCar] = useState({});
   const changePage = useSelector((state) => state.checking.changePage);
-  const { notification } = props.location.state || {};
+  const [open, setOpen] = React.useState(false);
+
   useEffect(() => {
     const { carId } = props.location.state;
 
@@ -83,6 +84,7 @@ export default function CarDetailChecking(props) {
     carDetail.id,
     changePage,
   ]);
+
   const handleValueAutoDrive = (state) => {
     if (state) {
       return "TRUE";
@@ -98,10 +100,29 @@ export default function CarDetailChecking(props) {
         status: "AVAILABLE",
       })
     );
+  };
 
+  const handleDenyCar = () => {
+    dispatch(
+      putCarUpdate(currentCar.id, {
+        available: false,
+        status: "UNAVAILABLE",
+        message: currentCar.message
+      })
+    );
+  };
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
+
     <Layout name="Car checking form">
       <Grid container>
         <Grid item xs={12} lg={6} sm={6}>
@@ -222,12 +243,12 @@ export default function CarDetailChecking(props) {
       <Grid container justify="center">
         <Grid item xs={12} lg={8} sm={12}>
           <Card className={classes.card}>
-            {/* <SwipeableTextMobileStepper
+            <SwipeableTextMobileStepper
               images={currentCar.images ? currentCar.images.filter(image => image.type == "CAR") : [fakeImg]}
             />
             <SwipeableTextMobileStepper
               images={currentCar.images ? currentCar.images.filter(image => image.type == "LICENSE") : [fakeImg]}
-            /> */}
+            />
           </Card>
         </Grid>
       </Grid>
@@ -249,11 +270,38 @@ export default function CarDetailChecking(props) {
             color="primary"
             startIcon={<CancelIcon />}
             style={{ marginLeft: "30%" }}
+            onClick={handleClickOpen}
           >
             Deny
           </Button>
         </Grid>
       </Grid>
-    </Layout>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
+        <DialogContent>
+          <TextareaAutosize
+            className={classes.textArea}
+            autoFocus
+            margin="dense"
+            value={currentCar.message}
+            id="reason"
+            name="reason"
+            label="Reason"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDenyCar} color="primary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog >
+    </Layout >
   );
 }
