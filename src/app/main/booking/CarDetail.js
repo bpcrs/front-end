@@ -16,7 +16,11 @@ import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import Chip from "@material-ui/core/Chip";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewList, fetchCarDetail } from "./booking.action";
+import {
+  fetchReviewList,
+  fetchCarDetail,
+  distanceBetweenTwoLocation,
+} from "./booking.action";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -110,6 +114,7 @@ export default function CarDetails(props) {
   const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
+  const distance = useSelector((state) => state.booking.distance);
   const [selectedDate, setDateChange] = useState([
     bookingChange.fromDate,
     bookingChange.toDate,
@@ -144,6 +149,13 @@ export default function CarDetails(props) {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
     dispatch(fetchCarDetail(carId));
+    dispatch(
+      distanceBetweenTwoLocation(
+        bookingChange.location.description,
+        carDetail.location
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, props]);
 
   return (
@@ -311,7 +323,7 @@ export default function CarDetails(props) {
                       </Grid>
                     </CardContent>
                     <CardContent>
-                      <Grid align="center">
+                      {/* <Grid align="center">
                         <Chip label="4.5" style={{ marginBottom: 15 }} />
 
                         <Rating
@@ -320,17 +332,30 @@ export default function CarDetails(props) {
                           precision={0.5}
                           readOnly
                         />
-                      </Grid>
+                      </Grid> */}
 
                       <Grid container>
-                        <Icon>location_on</Icon>
+                        <Icon>location_searching</Icon>
                         <Typography
                           variant="subtitle1"
                           align="center"
                           color="textSecondary"
                           className={classes.platenum}
                         >
-                          Go Vap - Ho Chi Minh City
+                          {/* Distance to pickup: {distance ? distance : "? km"} */}
+                        </Typography>
+                      </Grid>
+                      <Grid container>
+                        <Icon>location_on</Icon>
+                        <Typography
+                          variant="subtitle2"
+                          align="center"
+                          color="inherit"
+                          className={classes.platenum}
+                        >
+                          {carDetail.location
+                            ? carDetail.location
+                            : "Ho Chi Minh City"}
                         </Typography>
                       </Grid>
                       <Grid container>
