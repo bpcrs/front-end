@@ -127,23 +127,6 @@ export function putUserDetailSuccess(user) {
   };
 }
 
-export function notificationCarAcceptSuccessCarAcceptSuccess(booking) {
-  firebase
-    .firestore()
-    .collection("notification")
-    .doc(`${booking.car.owner.email}`)
-    .collection("requests")
-    .add({
-      status: booking.status,
-      car: booking.car,
-      owner: booking.car.owner,
-      renter: booking.renter,
-      bookingId: booking.id,
-      createAt: new Date().getTime(),
-      isSeen: false,
-    });
-}
-
 
 export function putUserDetailFailure(error) {
   return {
@@ -197,6 +180,8 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
+          notificationCarChecking(response.data);
+          console.log("Create success ", response.data);
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -246,4 +231,18 @@ export function putAcceptUserLicence(id, user) {
       }
     );
   };
+}
+
+export function notificationCarChecking(car) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${car.ownerEmail}`)
+    .collection("requests")
+    .add({
+      status: car.status,
+      message: car.message,
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
 }

@@ -98,6 +98,7 @@ export default function CarDetailChecking(props) {
         status: "AVAILABLE",
       })
     );
+
   };
 
   return (
