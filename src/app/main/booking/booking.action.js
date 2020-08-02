@@ -63,7 +63,7 @@ export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
 export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
-
+export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
@@ -261,7 +261,12 @@ export function updateCarStatusSuccess(car) {
     payload: car.status,
   };
 }
-
+export function fetchLicenseCar(images) {
+  return {
+    type: FETCH_LICENSE_CAR,
+    payload: images,
+  };
+}
 export function fetchCarList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
@@ -418,7 +423,9 @@ export function fetchImageList(page, size, carId, type) {
     });
     request.then(
       (response) => {
-        dispatch(fetchImageSuccess(response.success ? response.data : []));
+        type === "CAR"
+          ? dispatch(fetchImageSuccess(response.success ? response.data : []))
+          : dispatch(fetchLicenseCar(response.success ? response.data : []));
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -429,17 +436,14 @@ export function fetchImageList(page, size, carId, type) {
 
 export function postCarSubmit(car, listImage, listLicense) {
   return (dispatch) => {
-    // console.log(listImage);
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
-          // dispatch(postCarSubmitSuccess(response.data));
-          dispatch(postImageCar(listImage, response.data.id, "CAR"));
+          // dispatch(postImageCar(listImage, response.data.id, "CAR"));
           dispatch(postImageCar(listLicense, response.data.id, "LICENSE"));
           dispatch(addNewCarRegister(response.data));
           console.log("Success submit car ", response.data);
-          // dispatch(registerSuccess);
           dispatch(
             showMessageSuccess(
               "Register successfully ! Your car will be checked and available soon"

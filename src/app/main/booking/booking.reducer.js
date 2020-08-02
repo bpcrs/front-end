@@ -5,6 +5,7 @@ const initialState = {
   bookingRequest: {},
   reviews: [],
   images: [],
+  licenses: [],
   loading: false,
   carDetail: {},
   carCompare: [],
@@ -19,6 +20,12 @@ const initialState = {
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_LICENSE_CAR: {
+      return {
+        ...state,
+        licenses: payload,
+      };
+    }
     case Actions.PUT_CAR_EDIT_SUCCESS: {
       return {
         ...state,

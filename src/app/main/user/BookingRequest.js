@@ -230,7 +230,6 @@ const BookingRequest = (props) => {
           </Grid>
         </Grid>
       </Box>
-
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
         <TableContainer>
           <Table
@@ -246,9 +245,6 @@ const BookingRequest = (props) => {
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Action</StyledTableCell>
-                {/* {booking === "PENDING" ? (
-                  <StyledTableCell>Agreement</StyledTableCell>
-                ) : null} */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -287,16 +283,8 @@ const BookingRequest = (props) => {
                     <TableCell component="th" scope="row">
                       <BookingStatus name={booking.status} />
                     </TableCell>
-                    {/* {booking.status === "PENDING" ? (
-                      <TableCell component="th" scope="row">
-                        <IconButton onClick={() => handleAgreement()}>
-                          <Icon style={{ color: "blue" }}>send</Icon>
-                        </IconButton>
-                      </TableCell>
-                    ) : null} */}
                     <StatusAction booking={booking} />
                   </TableRow>
-                  // </Grid>
                 ))}
               <Grid xs={12} lg={12} item container justify="flex-end">
                 <Grid item lg={12}>
