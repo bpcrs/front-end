@@ -34,6 +34,7 @@ export const APP_PATH = {
   CHECKING: "/checking",
   CAR_CHECKING: "/car-check",
   USER_CHECK_LICENSE: "/user-check-license",
+  USER_REVIEW_BOOKING :"/reviewBooking",
 };
 export const BOOKING_STATUS = {
   PENDING: "PENDING",

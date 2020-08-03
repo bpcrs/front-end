@@ -14,6 +14,7 @@ const initialState = {
   agreemnts: [],
   booking: {},
   change: false,
+  disableButton: false,
   distance: {},
 };
 
@@ -140,6 +141,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         reviews: [...state.reviews, payload],
+        disableButton: true,
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {
