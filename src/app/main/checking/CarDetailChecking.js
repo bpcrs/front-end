@@ -3,12 +3,11 @@ import { Grid, Card, Button, Typography, TextField, Dialog, DialogTitle, DialogC
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { APP_PATH, BOOKING_STATUS, CAR_STATUS } from "../../../constant";
+import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchCarDetailCheck, putCarUpdate, changeOpen } from "./checking.action";
+import { fetchCarDetailCheck, putCarUpdate, notificationUser } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { updateCarStatus } from "../booking/booking.action";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   textArea: {
-    width: "100%",
+    width: 500
   },
 
   gridList: {
@@ -56,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const fakeImg =
   "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
 
@@ -65,9 +66,9 @@ export default function CarDetailChecking(props) {
   const dispatch = useDispatch();
   const carDetail = useSelector((state) => state.checking.carDetail);
   const [currentCar, setCurrentCar] = useState({});
-  const changePage = useSelector((state) => state.checking.changePage);
   const [open, setOpen] = React.useState(false);
   const { carId } = props.location.state;
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     const fetchCar = () => {
@@ -75,7 +76,6 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-
     // if (changePage) {
     //   history.push({
     //     pathname: APP_PATH.CHECKING,
@@ -91,6 +91,10 @@ export default function CarDetailChecking(props) {
     // props.location.state,
   ]);
 
+  const handleChangeInput = (event) => {
+    setMessage(event.target.value);
+  };
+
   const handleValueAutoDrive = (state) => {
     if (state) {
       return "TRUE";
@@ -99,35 +103,30 @@ export default function CarDetailChecking(props) {
     }
   };
 
-  const handleInputChange = (event) => {
-    setCurrentCar({
-      ...currentCar,
-      [event.target.name]: event.target.value
-    })
-  };
-
   const handleAcceptCar = () => {
+    notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
     dispatch(
       putCarUpdate(currentCar.id, {
         available: true,
-        status: "AVAILABLE",
-        message: "Car is accepted. Now your car is Available on system and can be rent!"
+        status: "AVAILABLE"
       })
     );
-//     dispatch(updateCarStatus(currentCar.id, CAR_STATUS.UNAVAILABLE));
-//     history.push({
-//       pathname: APP_PATH.CHECKING,
-//     });
+    history.push({
+      pathname: APP_PATH.CHECKING,
+    });
   };
 
   const handleDenyCar = () => {
+    notificationUser(message, currentCar.owner.email, false);
     dispatch(
       putCarUpdate(currentCar.id, {
         available: false,
-        status: "UNAVAILABLE",
-        message: currentCar.message
+        status: "UNAVAILABLE"
       })
     );
+    history.push({
+      pathname: APP_PATH.CHECKING,
+    });
   };
 
 
@@ -138,7 +137,7 @@ export default function CarDetailChecking(props) {
   const handleClose = () => {
     setOpen(false);
   };
-  
+
   return (
 
     <Layout name="Car checking form">
@@ -312,8 +311,7 @@ export default function CarDetailChecking(props) {
             className={classes.textArea}
             autoFocus
             margin="dense"
-            value={currentCar.message}
-            onChange={handleInputChange}
+            onChange={handleChangeInput}
             id="message"
             name="message"
             label="Reason"

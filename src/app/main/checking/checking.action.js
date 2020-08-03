@@ -191,6 +191,7 @@ export function putCarUpdate(id, car) {
     };
 }
 
+
 export async function fetchUserDetailChecking(userId) {
     return (dispatch) => {
         const request =  GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
