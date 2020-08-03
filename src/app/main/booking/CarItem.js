@@ -53,15 +53,20 @@ export default function CarItem(props = { isAction: true }) {
   return (
     <Card className={classes.card}>
       <CardHeader
-        // avatar={
-        //   <Avatar
-        //     aria-label="Owner"
-        //     className={classes.avatar}
-        //     src={info.owner.imageUrl}
-        //   >
-        //     {info.owner.fullName[0]}
-        //   </Avatar>
-        // }
+        avatar={
+          // <Avatar
+          //   aria-label="Owner"
+          //   className={classes.avatar}
+          //   src={<Icon>location_searching</Icon>}
+          // >
+          //   {/* 6.8km */}
+          //   {/* {info.owner.fullName[0]} */}
+          // </Avatar>
+          <Grid>
+            <Icon>location_searching</Icon>
+            <Typography variant="subtitle2">5km</Typography>
+          </Grid>
+        }
         // action={
         //   <IconButton>
         //     <MoreVertIcon />

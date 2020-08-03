@@ -3,11 +3,12 @@ import { Grid, Card, Button, Typography, TextField, Dialog, DialogTitle, DialogC
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, BOOKING_STATUS, CAR_STATUS } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
 import { fetchCarDetailCheck, putCarUpdate, changeOpen } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import { updateCarStatus } from "../booking/booking.action";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -66,23 +67,28 @@ export default function CarDetailChecking(props) {
   const [currentCar, setCurrentCar] = useState({});
   const changePage = useSelector((state) => state.checking.changePage);
   const [open, setOpen] = React.useState(false);
+  const { carId } = props.location.state;
 
   useEffect(() => {
-    const { carId } = props.location.state;
-
     const fetchCar = () => {
       dispatch(fetchCarDetailCheck(carId));
       setCurrentCar(carDetail);
     };
     fetchCar();
-    if (changePage) {
-      history.push({
-        pathname: APP_PATH.CHECKING,
-      });
-    }
+
+    // if (changePage) {
+    //   history.push({
+    //     pathname: APP_PATH.CHECKING,
+    //   });
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     carDetail.id,
-    changePage,
+    // carDetail.id,
+    // changePage,
+    // dispatch,
+    // history,
+    // props.location.state,
   ]);
 
   const handleValueAutoDrive = (state) => {
@@ -108,6 +114,10 @@ export default function CarDetailChecking(props) {
         message: "Car is accepted. Now your car is Available on system and can be rent!"
       })
     );
+//     dispatch(updateCarStatus(currentCar.id, CAR_STATUS.UNAVAILABLE));
+//     history.push({
+//       pathname: APP_PATH.CHECKING,
+//     });
   };
 
   const handleDenyCar = () => {
@@ -252,10 +262,18 @@ export default function CarDetailChecking(props) {
         <Grid item xs={12} lg={8} sm={12}>
           <Card className={classes.card}>
             <SwipeableTextMobileStepper
-              images={currentCar.images ? currentCar.images.filter(image => image.type == "CAR") : [fakeImg]}
+              images={
+                currentCar.images
+                  ? currentCar.images.filter((image) => image.type == "CAR")
+                  : [fakeImg]
+              }
             />
             <SwipeableTextMobileStepper
-              images={currentCar.images ? currentCar.images.filter(image => image.type == "LICENSE") : [fakeImg]}
+              images={
+                currentCar.images
+                  ? currentCar.images.filter((image) => image.type == "LICENSE")
+                  : [fakeImg]
+              }
             />
           </Card>
         </Grid>

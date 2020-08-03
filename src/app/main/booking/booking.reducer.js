@@ -1,4 +1,5 @@
 import * as Actions from "./booking.action";
+import { ca } from "date-fns/locale";
 const initialState = {
   cars: [],
   bookingRequest: {},
@@ -13,13 +14,23 @@ const initialState = {
   agreemnts: [],
   booking: {},
   change: false,
+  distance: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    // case Actions.GET_IMAGE_LINK: {
-
-    // }
+    case Actions.PUT_CAR_EDIT_SUCCESS: {
+      return {
+        ...state,
+        carDetail: payload,
+      };
+    }
+    case Actions.POST_DISTANCE_LOCATION: {
+      return {
+        ...state,
+        distance: payload,
+      };
+    }
     case Actions.UPDATE_CAR_STATUS: {
       return {
         ...state,
