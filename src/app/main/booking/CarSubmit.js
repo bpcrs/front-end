@@ -29,6 +29,7 @@ import {
   fetchModelList,
   postCar,
   fetchCarDetail,
+  postImageCar,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import { orange, green } from "@material-ui/core/colors";
@@ -643,7 +644,7 @@ export default function CarSubmit(props) {
   const handleStepReset = () => {
     setActiveStep(0);
   };
-
+  //2
   const getLinkImageFromFireBase = (date) => {
     var storage = firebase.storage();
     var storageRef = storage.ref("Car");
@@ -673,6 +674,7 @@ export default function CarSubmit(props) {
               console.log("length link download image: " + carImages.length);
               console.log("Starting store car info to DB...");
               storeLicenseToFirebase();
+              // submitCarToDB();
             }
           }
         })
@@ -698,7 +700,7 @@ export default function CarSubmit(props) {
         });
     }
   };
-
+  //1
   const storeImageToFireBase = () => {
     if (carImages.length > 0) {
       dispatch(postCar());
@@ -788,7 +790,8 @@ export default function CarSubmit(props) {
   const linkLicen = new Array();
 
   const submitCarToDB = () => {
-    dispatch(postCarSubmit(currentCar, linkImageArr, linkLicen));
+    dispatch(postCarSubmit(currentCar, linkImageArr));
+    // storeLicenseToFirebase();
   };
 
   const submitCarInfor = () => {
@@ -815,9 +818,10 @@ export default function CarSubmit(props) {
         });
       });
     });
-    console.log("link licenses", carLicense);
     submitCarToDB();
+    // dispatch(postImageCar(linkLicen, ));
   };
+  console.log("link licenses", linkLicen);
 
   const handleSubmit = () => {
     submitCarInfor();
