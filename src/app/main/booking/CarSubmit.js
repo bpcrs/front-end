@@ -6,31 +6,22 @@ import {
   MenuItem,
   Button,
   TextField,
-  Card,
   Grid,
   makeStyles,
   Typography,
-  Box,
-  Tabs,
-  Tab,
   Icon,
   Stepper,
   Step,
-  StepButton,
   StepLabel,
   withStyles,
   StepConnector,
 } from "@material-ui/core";
-import PublishIcon from "@material-ui/icons/Publish";
 import firebase from "../../firebase/firebase";
 import {
   postCarSubmit,
   fetchBrandList,
   fetchModelList,
   postCar,
-  fetchCarDetail,
-  postImageCar,
-  submitImagesCar,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import { orange, green } from "@material-ui/core/colors";

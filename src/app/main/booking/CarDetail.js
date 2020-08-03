@@ -20,6 +20,7 @@ import {
   fetchReviewList,
   fetchCarDetail,
   distanceBetweenTwoLocation,
+  fetchCarDetailWithDistance,
 } from "./booking.action";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -147,13 +148,15 @@ export default function CarDetails(props) {
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
-    dispatch(fetchCarDetail(carId));
     dispatch(
-      distanceBetweenTwoLocation(
-        bookingChange.location.description,
-        carDetail.location
-      )
+      fetchCarDetailWithDistance(carId, bookingChange.location.description)
     );
+    // dispatch(
+    //   distanceBetweenTwoLocation(
+    //     bookingChange.location.description,
+    //     carDetail.location
+    //   )
+    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, props]);
 
@@ -322,26 +325,15 @@ export default function CarDetails(props) {
                       </Grid>
                     </CardContent>
                     <CardContent>
-                      {/* <Grid align="center">
-                        <Chip label="4.5" style={{ marginBottom: 15 }} />
-
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={4.5}
-                          precision={0.5}
-                          readOnly
-                        />
-                      </Grid> */}
-
                       <Grid container>
                         <Icon>location_searching</Icon>
                         <Typography
-                          variant="subtitle1"
+                          variant="subtitle2"
                           align="center"
-                          color="textSecondary"
+                          color="inherit"
                           className={classes.platenum}
                         >
-                          {/* Distance to pickup: {distance ? distance : "? km"} */}
+                          {distance ? distance.distance : "? km"}
                         </Typography>
                       </Grid>
                       <Grid container>

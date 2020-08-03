@@ -21,6 +21,7 @@ export const FETCH_REVIEW_FAILURE = "[REVIEW] FETCH DATA FAILURE";
 
 export const FETCH_CAR_DETAIL_SUCCESS = "[CAR_DETAIL] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_ERROR = "[CAR_DETAIL] FETCH DATA ERROR";
+export const FETCH_CAR_DETAIL = "[CAR_DETAIL] FETCH CAR DETAIL";
 
 export const PUT_CAR_EDIT_SUCCESS = "[CAR_EDIT] PUT DATA SUCCESS";
 export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
@@ -360,6 +361,18 @@ export function fetchCarDetail(id) {
     const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
     if (response.success) {
       dispatch(fetchCarDetailSuccess(response.data));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
+  };
+}
+export function fetchCarDetailWithDistance(id, location) {
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+      console.log(response.data.location);
+      dispatch(distanceBetweenTwoLocation(location, response.data.location));
     } else {
       dispatch(showMessageError(response.message));
     }
