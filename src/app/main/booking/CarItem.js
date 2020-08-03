@@ -67,7 +67,7 @@ export default function CarItem(props = { isAction: true }) {
           // </Avatar>
           <Grid>
             <Icon>location_searching</Icon>
-            <Typography variant="subtitle2">5km</Typography>
+            <Typography variant="subtitle2"></Typography>
           </Grid>
         }
         // action={

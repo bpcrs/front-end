@@ -64,6 +64,8 @@ export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
+export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
+
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
@@ -267,6 +269,13 @@ export function fetchLicenseCar(images) {
     payload: images,
   };
 }
+export function postImagesCar(images) {
+  return {
+    type: POST_IMAGES_CAR,
+    payload: images,
+  };
+}
+
 export function fetchCarList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
@@ -434,16 +443,15 @@ export function fetchImageList(page, size, carId, type) {
   };
 }
 
-export function postCarSubmit(car, listImage, listLicense) {
+export function postCarSubmit(car, listImage) {
   return (dispatch) => {
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
-          // dispatch(postImageCar(listImage, response.data.id, "CAR"));
-          dispatch(postImageCar(listLicense, response.data.id, "LICENSE"));
+          console.log(listImage);
+          dispatch(submitImagesCar(response.data.id, listImage));
           dispatch(addNewCarRegister(response.data));
-          console.log("Success submit car ", response.data);
           dispatch(
             showMessageSuccess(
               "Register successfully ! Your car will be checked and available soon"
@@ -457,6 +465,26 @@ export function postCarSubmit(car, listImage, listLicense) {
       (error) => {
         dispatch(postCarSubmitFailure(error));
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function submitImagesCar(carId, images) {
+  return (dispatch) => {
+    console.log(images);
+    const request = POST(
+      ENDPOINT.IMAGE_CONTROLLER_CAR_GETBYID(carId),
+      {},
+      { images }
+    );
+    request.then(
+      (response) => {
+        console.log(response.data);
+        dispatch(postImagesCar(response.success ? response.data : []));
+      },
+      (error) => {
+        showMessageError(error.message);
       }
     );
   };
