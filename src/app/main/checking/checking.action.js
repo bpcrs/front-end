@@ -180,11 +180,10 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
-          notificationCarChecking(response.data);
-          console.log("Create success ", response.data);
         } else {
           dispatch(showMessageError(response.message));
-        }
+        };
+        notificationCarChecking(response.data);
       },
       (error) => {
         dispatch(showMessageError(error.message));

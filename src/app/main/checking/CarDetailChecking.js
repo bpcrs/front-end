@@ -93,11 +93,19 @@ export default function CarDetailChecking(props) {
     }
   };
 
+  const handleInputChange = (event) => {
+    setCurrentCar({
+      ...currentCar,
+      [event.target.name]: event.target.value
+    })
+  };
+
   const handleAcceptCar = () => {
     dispatch(
       putCarUpdate(currentCar.id, {
         available: true,
         status: "AVAILABLE",
+        message: "Car is accepted. Now your car is Available on system and can be rent!"
       })
     );
   };
@@ -120,7 +128,7 @@ export default function CarDetailChecking(props) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  
   return (
 
     <Layout name="Car checking form">
@@ -287,8 +295,9 @@ export default function CarDetailChecking(props) {
             autoFocus
             margin="dense"
             value={currentCar.message}
-            id="reason"
-            name="reason"
+            onChange={handleInputChange}
+            id="message"
+            name="message"
             label="Reason"
             fullWidth
           />

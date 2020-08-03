@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
-  TextField,
   Avatar,
   Tabs,
   Tab,
@@ -10,24 +9,15 @@ import {
   Box,
   Button,
   Icon,
-  Divider,
 } from "@material-ui/core";
-import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import PaymentIcon from "@material-ui/icons/Payment";
-import HistoryIcon from "@material-ui/icons/History";
-import UpdateIcon from "@material-ui/icons/Update";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import Layout from "../../layout";
-import SaveIcon from "@material-ui/icons/Save";
-import RentalCarRequest from "./RentalCarRequest";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
-import BookingRequest from "./BookingRequest";
 import MyLicense from "../submitLicense/MyLicense";
 
 function TabPanel(props) {
