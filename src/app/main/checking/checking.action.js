@@ -1,7 +1,7 @@
 import { GET, PUT, ENDPOINT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
-
+export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 
@@ -127,6 +127,7 @@ export function putUserDetailSuccess(user) {
   };
 }
 
+
 export function putUserDetailFailure(error) {
   return {
     type: PUT_USER_DETAIL_CHECKING_FAILURE,
@@ -189,6 +190,7 @@ export function putCarUpdate(id, car) {
         );
     };
 }
+
 
 export async function fetchUserDetailChecking(userId) {
     return (dispatch) => {

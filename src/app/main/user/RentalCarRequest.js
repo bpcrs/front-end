@@ -9,13 +9,14 @@ import {
   IconButton,
   Icon,
   Collapse,
+  Table,
   Box,
+  TableBody,
   Typography,
+  TableContainer,
+  CircularProgress,
+
 } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,6 +30,7 @@ import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+
   card: {
     margin: theme.spacing(2),
   },
@@ -113,7 +115,7 @@ function Row(props) {
         // role="checkbox"
         // aria-checked={isSelected}
         tabIndex={-1}
-        // key={index}
+      // key={index}
       >
         <TableCell component="th" scope="row">
           {booking.renter.fullName}
@@ -121,7 +123,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
-              (1000 * 60 * 60 * 24)
+            (1000 * 60 * 60 * 24)
           ) + 1}{" "}
           days
         </TableCell>
@@ -285,7 +287,7 @@ const RentalCarRequest = (props) => {
                 <Pagination
                   count={
                     rentalBookings.count !== 0 &&
-                    rentalBookings.count % size === 0
+                      rentalBookings.count % size === 0
                       ? Math.floor(rentalBookings.count / size)
                       : Math.floor(rentalBookings.count / size) + 1
                   }
@@ -297,12 +299,12 @@ const RentalCarRequest = (props) => {
           </Table>
         </TableContainer>
       ) : (
-        <Grid>
-          <Typography variant="body2" color="error">
-            Your car don't have any request
+          <Grid>
+            <Typography variant="body2" color="error">
+              Your car don't have any request
           </Typography>
-        </Grid>
-      )}
+          </Grid>
+        )}
     </Grid>
   );
 };
