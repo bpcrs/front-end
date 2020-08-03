@@ -32,6 +32,7 @@ import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
+import HorizontalLinearStepper from "../booking/StepperBooking";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -183,6 +184,9 @@ export default function CarDetails(props) {
       </div>
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
+          {/* <Grid container item lg={12} justify="center">
+            <HorizontalLinearStepper step={1} />
+          </Grid> */}
           <Grid item xl={12} xs={12} lg={12}>
             <Card>
               <CardContent>
@@ -200,6 +204,7 @@ export default function CarDetails(props) {
                       variant="h6"
                       component="h2"
                       align="center"
+                      color="primary"
                     >
                       {carDetail.brand ? carDetail.brand.name : ""}{" "}
                       {carDetail.name} {carDetail.year}
@@ -220,7 +225,11 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>
+                            <Icon
+                              fontSize={"default"}
+                              color="primary"
+                              // style={{ color: "primary" }}
+                            >
                               airline_seat_recline_normal_outlined
                             </Icon>
                           </Grid>
@@ -239,7 +248,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>gamepad</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              gamepad
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -257,7 +268,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>directions_car</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              directions_car
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -283,7 +296,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>gps_fixed</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              gps_fixed
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">GPS</Typography>
@@ -298,7 +313,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>usb</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              usb
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">USB</Typography>
@@ -314,7 +331,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>person_outline</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              person_outline
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -325,32 +344,8 @@ export default function CarDetails(props) {
                       </Grid>
                     </CardContent>
                     <CardContent>
-                      <Grid container>
-                        <Icon>location_searching</Icon>
-                        <Typography
-                          variant="subtitle2"
-                          align="center"
-                          color="inherit"
-                          className={classes.platenum}
-                        >
-                          {distance ? distance.distance : "? km"}
-                        </Typography>
-                      </Grid>
-                      <Grid container>
-                        <Icon>location_on</Icon>
-                        <Typography
-                          variant="subtitle2"
-                          align="center"
-                          color="inherit"
-                          className={classes.platenum}
-                        >
-                          {carDetail.location
-                            ? carDetail.location
-                            : "Ho Chi Minh City"}
-                        </Typography>
-                      </Grid>
-                      <Grid container>
-                        <Icon>confirmation_number</Icon>
+                      <Grid container item justify="center">
+                        <Icon color="primary">confirmation_number</Icon>
                         <Typography
                           variant="subtitle1"
                           align="center"
@@ -364,6 +359,38 @@ export default function CarDetails(props) {
                   </Grid>
                 </Grid>
               </CardContent>
+              <Grid
+                container
+                item
+                lg={12}
+                alignItems="center"
+                className={classes.review}
+              >
+                <Grid container>
+                  <Icon color="primary">location_searching</Icon>
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    color="inherit"
+                    className={classes.platenum}
+                  >
+                    {distance ? distance.distance : "? km"}
+                  </Typography>
+                </Grid>
+                <Grid container>
+                  <Icon color="primary">location_on</Icon>
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    color="inherit"
+                    className={classes.platenum}
+                  >
+                    {carDetail.location
+                      ? carDetail.location
+                      : "Ho Chi Minh City"}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Card>
           </Grid>
           <Grid item xl={12} lg={12}>
