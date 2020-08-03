@@ -13,6 +13,7 @@ import {
   DialogActions,
   DialogContent,
   CircularProgress,
+  Badge,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -27,7 +28,7 @@ import {
   chooseCar,
 } from "./profile.action";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import { APP_PATH, CAR_STATUS } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
@@ -99,7 +100,13 @@ function Row(props) {
         </TableCell>
         <TableCell component="th" scope="row">
           <IconButton onClick={() => handleClickBooked(car.id, car.name)}>
-            <Icon style={{ color: "purple" }}>details</Icon>
+            {car.status === CAR_STATUS.REQUEST ? (
+              <Badge color="secondary" badgeContent="?">
+                <Icon style={{ color: "purple" }}>calendar_view_day</Icon>
+              </Badge>
+            ) : (
+              <Icon style={{ color: "purple" }}>calendar_view_day</Icon>
+            )}
           </IconButton>
         </TableCell>
       </TableRow>
@@ -256,9 +263,18 @@ const MyCar = (props) => {
           </Table>
         </TableContainer>
       ) : (
-        <Typography variant="subtitle2" color="error">
-          You haven't registered any cars yet! Please register car.
-        </Typography>
+        <Grid container justify="center" alignItems="center">
+          <Grid item>
+            <img
+              src="assets/images/empty.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
+          <Typography variant="subtitle2" color="error">
+            You haven't registered any cars yet! Please register car.
+          </Typography>
+        </Grid>
       )}
     </Grid>
   ) : (

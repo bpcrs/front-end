@@ -23,6 +23,16 @@ export const carStatus = [
     name: "BOOKED",
     color: "bg-purple text-white",
   },
+  {
+    id: 5,
+    name: "REGISTER",
+    color: "bg-pink text-white",
+  },
+  {
+    id: 6,
+    name: "REQUEST",
+    color: "bg-blue text-white",
+  },
 ];
 
 const CarStatus = ({ name }) => {

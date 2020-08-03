@@ -9,7 +9,7 @@ import firebase from "../../firebase/firebase";
 import Slide from "@material-ui/core/Slide";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserLicense, updateUserLicenseLoading } from "./license.action";
+import { updateUserLicense, updateUserLicenseLoading, fetchUserDetail } from "./license.action";
 
 
 // import event from '';
@@ -55,30 +55,50 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SubmitLicense(props) {
   const classes = useStyles();
-  const currentUser = useSelector((state) => state.auth.user);
+  // const currentUser = useSelector((state) => state.auth.user);
+  const [currentUser, setCurrentUser] = useState({});
+  const userDetail = useSelector((state) => state.license.userDetail);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.license.loading);
-  const [license, setLicense] = useState({});
+  // const [license, setLicense] = useState({});
+  const userLogged = useSelector((state) => state.auth.user);
 
   var [imageLicenseArr, setImageLicenseArr] = useState([]);
   var linkImageArr = new Array();
 
+  const [imageJson, setImageJson] = useState([]);
+  useEffect(() => {
+
+    const fetchUser = () => {
+      dispatch(fetchUserDetail(userLogged.id));
+      setCurrentUser(userDetail);
+    }
+
+    if (userDetail.imageLicense) {
+      setImageJson(JSON.parse(userDetail.imageLicense));
+    }
+    fetchUser();
+  }, [userDetail.id]);
+
   const handleInputChange = (event) => {
-    setLicense({
-      ...license,
-      [event.target.name]: event.target.value
+    // setLicense({
+    //   ...license,
+    //   [event.target.name]: event.target.value
+    // })
+    setCurrentUser({
+      ...currentUser,
+      [event.target.name]: event.target.value,
     })
   };
 
 
   const updateLicense = () => {
+    const imageLicense = JSON.stringify(linkImageArr);
+
     dispatch(updateUserLicense(currentUser.id, {
-      phone: license.phone,
-      identification: license.identification,
-      imageUrlLicense1: linkImageArr[0],
-      imageUrlLicense2: linkImageArr[1],
-      imageUrlLicense3: linkImageArr[2],
-      imageUrlLicense4: linkImageArr[3]
+      phone: currentUser.phone,
+      identification: currentUser.identification,
+      imageLicense: imageLicense,
     }))
   };
 
@@ -292,14 +312,14 @@ export default function SubmitLicense(props) {
         Update Information
         </Typography>
 
-      <Grid container component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
+      <Grid container spacing={2} component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
 
         <Grid item xs={12} lg={12}>
           <TextField
             className={classes.textField}
             id="phone"
             name="phone"
-            value={license.phone}
+            value={currentUser.phone ? currentUser.phone : ""}
             onChange={handleInputChange}
             label="Phone Number"
             variant="outlined"
@@ -313,15 +333,21 @@ export default function SubmitLicense(props) {
             id="identification"
             name="identification"
             onChange={handleInputChange}
-            value={license.identification}
+            value={currentUser.identification ? currentUser.identification : ""}
             label="Identification Number"
             variant="outlined"
           />
         </Grid>
 
+        <Grid item xs={12} lg={12}>
+          <Typography variant="h6" color="initial" className={classes.head}>
+            Upload your two picture License and two picture Identification
+        </Typography>
+        </Grid>
+
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
-            <h2>Front citizen identification</h2>
+            <h2>Picture 1</h2>
             <p>
               <input
                 type="file"
@@ -344,6 +370,7 @@ export default function SubmitLicense(props) {
                 id="output"
                 width="200"
                 height="200"
+                src={imageJson[0]}
               />
             </p>
           </div>
@@ -351,7 +378,7 @@ export default function SubmitLicense(props) {
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
-            <h2>Front License</h2>
+            <h2>Picture 2</h2>
             <p>
               <input
                 type="file"
@@ -374,6 +401,7 @@ export default function SubmitLicense(props) {
                 id="output2"
                 width="200"
                 height="200"
+                src={imageJson[1]}
               />
             </p>
           </div>
@@ -382,7 +410,7 @@ export default function SubmitLicense(props) {
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
-            <h2>Backside citizen identification</h2>
+            <h2>Picture 3</h2>
             <p>
               <input
                 type="file"
@@ -405,6 +433,7 @@ export default function SubmitLicense(props) {
                 id="output3"
                 width="200"
                 height="200"
+                src={imageJson[2]}
               />
             </p>
           </div>
@@ -413,7 +442,7 @@ export default function SubmitLicense(props) {
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
-            <h2>Backside License</h2>
+            <h2>Picture 4</h2>
             <p>
               <input
                 type="file"
@@ -436,6 +465,7 @@ export default function SubmitLicense(props) {
                 id="output4"
                 width="200"
                 height="200"
+                src={imageJson[3]}
               />
             </p>
           </div>

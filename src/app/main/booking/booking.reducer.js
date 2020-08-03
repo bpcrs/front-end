@@ -5,6 +5,7 @@ const initialState = {
   bookingRequest: {},
   reviews: [],
   images: [],
+  licenses: [],
   loading: false,
   carDetail: {},
   carCompare: [],
@@ -14,11 +15,18 @@ const initialState = {
   agreemnts: [],
   booking: {},
   change: false,
+  disableButton: false,
   distance: {},
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_LICENSE_CAR: {
+      return {
+        ...state,
+        licenses: payload,
+      };
+    }
     case Actions.PUT_CAR_EDIT_SUCCESS: {
       return {
         ...state,
@@ -140,6 +148,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         reviews: [...state.reviews, payload],
+        disableButton: true,
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {

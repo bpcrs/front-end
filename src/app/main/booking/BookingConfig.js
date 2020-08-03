@@ -3,6 +3,8 @@ import CarDetail from "./CarDetail";
 import CarEdit from "./CarEdit";
 import CarCompare from "./CarCompare";
 import { APP_PATH } from "../../../constant";
+import Review from "./Review";
+
 export const BookingConfig = {
   settings: {
     layout: {
@@ -61,6 +63,10 @@ export const BookingConfig = {
       component: FuseLoadable({
         loader: () => import("../submitLicense/submitLicense")
       }),
+    },
+    {
+      path: APP_PATH.USER_REVIEW_BOOKING,
+      component: Review,
     },
   ],
 };

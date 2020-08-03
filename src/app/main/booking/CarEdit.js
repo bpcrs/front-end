@@ -487,14 +487,13 @@ export default function CarEdits(props) {
     dispatch(changeImageByType(image, "DELETE"));
   };
   const images = useSelector((state) => state.booking.images);
-
+  const licenses = useSelector((state) => state.booking.licenses);
   useEffect(() => {
     const fetchCar = () => {
       dispatch(fetchCarDetail(carId));
       dispatch(fetchImageList(1, 20, carId, "CAR"));
+      dispatch(fetchImageList(1, 20, carId, "LICENSE"));
       setCurrentCar(carDetail);
-      // setPrice(carDetail.price);
-      // setLocation(carDetail.location);
     };
     fetchCar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -748,15 +747,60 @@ export default function CarEdits(props) {
                 <Typography>The car dont have images</Typography>
               </Grid>
             )}
-            {/* <Grid container item justify="center">
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                Update
-              </Button>
-            </Grid> */}
+          </TabPanel>
+          <TabPanel value={tabValue} index={2}>
+            <Grid container item lg={12}>
+              <Grid item lg={3}>
+                <label className={classes.productImageItem} variant="outlined">
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={uploadImage}
+                  />
+                  <span aria-hidden="true">
+                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                  </span>
+                </label>
+              </Grid>
+
+              {licenses.data &&
+                licenses.data.map((image, index) => (
+                  <Grid item lg={3}>
+                    <div className={classes.productImageItem} key={index}>
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveImage(image)}
+                      >
+                        remove_circle
+                      </Icon>
+                      <img
+                        src={image.link}
+                        alt="img"
+                        style={{ width: "90%", height: "90%" }}
+                      />
+                    </div>
+                  </Grid>
+                ))}
+
+              {/* <Grid container justify="center" alignItems="center">
+                  <Grid item>
+                    <img
+                      src="assets/images/empty.jpg"
+                      alt="No resourse"
+                      height="100px"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle2">
+                      We did't find any license right now.
+                    </Typography>
+                  </Grid>
+                </Grid> */}
+            </Grid>
           </TabPanel>
         </Grid>
       </Grid>
