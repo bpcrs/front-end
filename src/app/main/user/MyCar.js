@@ -189,11 +189,6 @@ function RegisterCar() {
             </Grid>
           </Grid>
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleRegisterClose} color="primary">
-            Close
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );

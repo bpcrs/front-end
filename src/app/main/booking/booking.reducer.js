@@ -17,10 +17,17 @@ const initialState = {
   change: false,
   disableButton: false,
   distance: {},
+  loadingBooking: false,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.LOADING_CREATE_BOOKING: {
+      return {
+        ...state,
+        loadingBooking: !state.loadingBooking,
+      };
+    }
     case Actions.FETCH_LICENSE_CAR: {
       return {
         ...state,
@@ -66,6 +73,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         booking: payload,
         loading: false,
+        // loadingBooking: true,
       };
     }
     case Actions.FETCH_CARS_SUCCESS: {
@@ -129,6 +137,12 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         // loading: false,
         bookingRequest: payload,
+      };
+    }
+    case Actions.POST_BOOKING_FAILURE: {
+      return {
+        ...state,
+        loadingBooking: true,
       };
     }
     case Actions.POST_IMAGE_CAR_SUBMIT_SUCCESS: {

@@ -66,11 +66,17 @@ export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
+export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
 
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
     payload: booking,
+  };
+}
+export function changeLoadingBooking() {
+  return {
+    type: LOADING_CREATE_BOOKING,
   };
 }
 export function getImageDownloadURL(urls) {
@@ -238,6 +244,11 @@ export function postBookingSuccess(booking) {
   return {
     type: POST_BOOKING_SUCCESS,
     payload: booking,
+  };
+}
+export function postBookingError() {
+  return {
+    type: POST_BOOKING_FAILURE,
   };
 }
 export function putBookingSuccess(booking) {
@@ -567,9 +578,15 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(postBookingSuccess(response.success ? response.data : {}));
-        notificationBooking(response.data);
-        console.log("Create success ", response.data);
+        if (!response.success) {
+          dispatch(postBookingError());
+        } else {
+          dispatch(postBookingSuccess(response.data));
+          notificationBooking(response.data);
+          // dispatch(changeLoadingBooking());
+          dispatch(showMessageSuccess("Book success"));
+          console.log("Create success ", response.data);
+        }
       },
       (error) => {
         showMessageError(error.message);
