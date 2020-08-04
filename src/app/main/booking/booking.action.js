@@ -21,6 +21,7 @@ export const FETCH_REVIEW_FAILURE = "[REVIEW] FETCH DATA FAILURE";
 
 export const FETCH_CAR_DETAIL_SUCCESS = "[CAR_DETAIL] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_ERROR = "[CAR_DETAIL] FETCH DATA ERROR";
+export const FETCH_CAR_DETAIL = "[CAR_DETAIL] FETCH CAR DETAIL";
 
 export const PUT_CAR_EDIT_SUCCESS = "[CAR_EDIT] PUT DATA SUCCESS";
 export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
@@ -64,6 +65,8 @@ export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
+export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
+
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
@@ -267,6 +270,13 @@ export function fetchLicenseCar(images) {
     payload: images,
   };
 }
+export function postImagesCar(images) {
+  return {
+    type: POST_IMAGES_CAR,
+    payload: images,
+  };
+}
+
 export function fetchCarList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
@@ -356,6 +366,18 @@ export function fetchCarDetail(id) {
     }
   };
 }
+export function fetchCarDetailWithDistance(id, location) {
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+      console.log(response.data.location);
+      dispatch(distanceBetweenTwoLocation(location, response.data.location));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
+  };
+}
 
 export function fetchCarCompare(id1, id2) {
   return (dispatch) => {
@@ -434,16 +456,15 @@ export function fetchImageList(page, size, carId, type) {
   };
 }
 
-export function postCarSubmit(car, listImage, listLicense) {
+export function postCarSubmit(car, listImage) {
   return (dispatch) => {
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
-          // dispatch(postImageCar(listImage, response.data.id, "CAR"));
-          dispatch(postImageCar(listLicense, response.data.id, "LICENSE"));
+          console.log(listImage);
+          dispatch(submitImagesCar(response.data.id, listImage));
           dispatch(addNewCarRegister(response.data));
-          console.log("Success submit car ", response.data);
           dispatch(
             showMessageSuccess(
               "Register successfully ! Your car will be checked and available soon"
@@ -457,6 +478,26 @@ export function postCarSubmit(car, listImage, listLicense) {
       (error) => {
         dispatch(postCarSubmitFailure(error));
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function submitImagesCar(carId, images) {
+  return (dispatch) => {
+    console.log(images);
+    const request = POST(
+      ENDPOINT.IMAGE_CONTROLLER_CAR_GETBYID(carId),
+      {},
+      { images }
+    );
+    request.then(
+      (response) => {
+        console.log(response.data);
+        dispatch(postImagesCar(response.success ? response.data : []));
+      },
+      (error) => {
+        showMessageError(error.message);
       }
     );
   };

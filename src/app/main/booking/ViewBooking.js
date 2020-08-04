@@ -9,9 +9,10 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
+  Link,
 } from "@material-ui/core";
 import CarItem from "./CarItem";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Layout from "../../layout";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
@@ -240,17 +241,6 @@ export default function ViewBooking(props) {
               <CardContent>
                 <Grid container alignItems="flex-start">
                   <Grid item xs={12}>
-                    <Typography variant="subtitle1">
-                      GUILINES & POLICIES
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent>
-                <Grid container alignItems="flex-start">
-                  <Grid item xs={12}>
                     <FormControl fullWidth className={classes.spacingCard}>
                       <Grid container justify="space-between">
                         <Typography
@@ -267,18 +257,42 @@ export default function ViewBooking(props) {
                           suffix={" đ"}
                         />
                       </Grid>
-                      {/* <TextField
-                        id="formatted-numberformat-input"
-                        label="Estimate price"
-                        variant="outlined"
-                        fullWidth
-                        disabled
-                        value={bookingReq.totalPrice}
-                        InputProps={{
-                          inputComponent: NumberFormatCustom,
-                        }}
-                      /> */}
                     </FormControl>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <Grid container alignItems="flex-start">
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle1" color="primary">
+                      GUILINES & POLICIES
+                    </Typography>
+                    <li>
+                      Please carry your original driving license along with an
+                      additional ID proof when you come to pick up your vehicle
+                    </li>
+                    <li>
+                      If you plan to travel out-of-state, please ensure that you
+                      take the required state permits
+                    </li>
+                    <li>
+                      Our vehicles have a maximum speed limit of 120 km/hr.
+                      Over-speeding will attract fines. To check our
+                      over-speeding policy,{" "}
+                      <Link href="#" color="inherit">
+                        click here
+                      </Link>
+                    </li>
+                    <li>
+                      Your license must be verified by our system before you
+                      start your trip or else your trip will be cancelled. To
+                      check your license status,{" "}
+                      <Link href="#" color="inherit">
+                        click here
+                      </Link>
+                    </li>
                   </Grid>
                 </Grid>
               </CardContent>

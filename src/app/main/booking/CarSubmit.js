@@ -12,20 +12,16 @@ import {
   Icon,
   Stepper,
   Step,
-  StepButton,
   StepLabel,
   withStyles,
   StepConnector,
 } from "@material-ui/core";
-import PublishIcon from "@material-ui/icons/Publish";
 import firebase from "../../firebase/firebase";
 import {
   postCarSubmit,
   fetchBrandList,
   fetchModelList,
   postCar,
-  fetchCarDetail,
-  postImageCar,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import { orange, green } from "@material-ui/core/colors";
@@ -161,10 +157,11 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
     .map((v, idx) => now - idx);
 
   const uploadLicences = (event) => {
+    // setImageCarArr([...imageCarArr, ...event.target.files]);
     setLicenses([...licenses, ...event.target.files]);
   };
   const uploadImage = (event) => {
-    console.log(event.target.files);
+    // console.log(event.target.files);
     setImageCarArr([...imageCarArr, ...event.target.files]);
   };
   const handleChangeBrand = (event) => {
@@ -622,16 +619,12 @@ export default function CarSubmit(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const handleStepNext = () => {
-    // if (activeStep === steps.length - 1) submitCarInfor();
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const [currentCar, setCurrentCar] = useState({});
   const [carImages, setCarImages] = useState([]);
   const [carLicense, setCarLicenses] = useState([]);
-  console.log(currentCar);
-  console.log(carImages);
-  console.log(carLicense);
 
   const handleStepBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -652,48 +645,26 @@ export default function CarSubmit(props) {
       var starsRef = storageRef.child(date + "/" + carImages[i].name);
 
       // Get the download URL
-      starsRef
-        .getDownloadURL()
-        .then(function (url) {
-          // Insert url into an <img> tag to "download"
-          console.log("test vi tri: " + (i + 1) + "-" + url);
+      starsRef.getDownloadURL().then(function (url) {
+        // Insert url into an <img> tag to "download"
+        console.log("test vi tri: " + (i + 1) + "-" + url);
+        const link = { link: url, type: "CAR" };
+        linkImageArr.push(link);
+        // setLinks([...links, link]);
+        count = count + 1;
+        if (count == carImages.length) {
+          count = 0;
 
-          linkImageArr.push(url);
-
-          count = count + 1;
-          if (count == carImages.length) {
-            count = 0;
-
-            flag2 = true;
-            if (flag2) {
-              flag2 = false;
-              console.log("length link download image: " + carImages.length);
-              console.log("Starting store car info to DB...");
-              storeLicenseToFirebase();
-              // submitCarToDB();
-            }
+          flag2 = true;
+          if (flag2) {
+            flag2 = false;
+            console.log("length link download image: " + carImages.length);
+            console.log("Starting store car info to DB...");
+            storeLicenseToFireBase();
+            // submitCarToDB();
           }
-        })
-        .catch(function (error) {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          switch (error.code) {
-            case "storage/object-not-found":
-              // File doesn't exist
-              console.log("File doesn't exist vi tri: " + (i + 1));
-              break;
-            case "storage/unauthorized":
-              // User doesn't have permission to access the object
-              console.log("User doesn't have permission to access the object");
-              break;
-            case "storage/canceled":
-              // User canceled the upload
-              break;
-            case "storage/unknown":
-              // Unknown error occurred, inspect the server response
-              break;
-          }
-        });
+        }
+      });
     }
   };
   //1
@@ -782,42 +753,136 @@ export default function CarSubmit(props) {
       return;
     }
   };
-  const linkImageArr = new Array();
-  const linkLicen = new Array();
+  const getLinkLicenseFromFireBase = (date) => {
+    var storage = firebase.storage();
+    var storageRef = storage.ref("Car/license");
+    var count = 0;
+    var flag2 = false;
 
+    for (let i = 0; i < carLicense.length; i++) {
+      // Create a reference to the file we want to download
+      var starsRef = storageRef.child(date + "/" + carLicense[i].name);
+
+      // Get the download URL
+      starsRef.getDownloadURL().then(function (url) {
+        // Insert url into an <img> tag to "download"
+        console.log("test vi tri: " + (i + 1) + "-" + url);
+        const link = { link: url, type: "LICENSE" };
+        linkImageArr.push(link);
+        // setLinks([...links, link]);
+        count = count + 1;
+        if (count == carLicense.length) {
+          count = 0;
+
+          flag2 = true;
+          if (flag2) {
+            flag2 = false;
+            // console.log("length link download image: " + carImages.length);
+            // console.log("Starting store car info to DB...");
+            // storeLicenseToFirebase();
+            submitCarToDB();
+          }
+        }
+      });
+    }
+  };
+  //1
+  const storeLicenseToFireBase = () => {
+    if (carLicense.length > 0) {
+      dispatch(postCar());
+
+      var metadata = {
+        contentType: "image/jpeg",
+      };
+
+      var today = new Date();
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      var count = 0;
+      var flag = false;
+      // var vinCarNumber = document.getElementById("vin").value;
+
+      for (let i = 0; i < carLicense.length; i++) {
+        var uploadTask = firebase
+          .storage()
+          .ref("Car/license/" + date + "/")
+          .child(carLicense[i].name)
+          .put(carLicense[i], metadata);
+        uploadTask.on(
+          firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function (snapshot) {
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log("Upload is paused");
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log("Upload is running");
+                break;
+            }
+
+            if (progress == 100) {
+              console.log("count: " + count);
+              count = count + 1;
+            }
+
+            if (count == carImages.length) {
+              count = 0;
+              flag = true;
+            }
+          },
+          function (error) {
+            // Errors list: https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                // User doesn't have permission to access the object
+                break;
+
+              case "storage/canceled":
+                // User canceled the upload
+                break;
+
+              case "storage/unknown":
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          async function () {
+            if (flag) {
+              flag = false;
+              if (count == 0) {
+                console.log("starting get link download image...");
+                await new Promise((resolve, reject) =>
+                  setTimeout(resolve, 3000)
+                );
+                getLinkLicenseFromFireBase(date);
+              }
+            }
+          }
+        );
+      }
+    } else {
+      console.log("khong co file");
+      return;
+    }
+  };
+  const linkImageArr = new Array();
   const submitCarToDB = () => {
+    console.log(linkImageArr);
+    // dispatch(submitImagesCar(40, linkImageArr));
     dispatch(postCarSubmit(currentCar, linkImageArr));
-    // storeLicenseToFirebase();
   };
 
   const submitCarInfor = () => {
     dispatch(processingRegister());
     storeImageToFireBase();
   };
-
-  const storeLicenseToFirebase = () => {
-    const metadata = {
-      contentType: "image/jpeg",
-    };
-    const date = new Date().getTime();
-    // eslint-disable-next-line array-callback-return
-    carLicense.map((img) => {
-      const uploadTask = firebase
-        .storage()
-        .ref("Img/License" + date)
-        .child(img.name);
-      uploadTask.put(img, metadata).then(function (result) {
-        uploadTask.getDownloadURL().then(function (url) {
-          console.log("file available at ", url);
-          linkLicen.push(url);
-          // setLinkLicenses([...linkLicenses, url]);
-        });
-      });
-    });
-    submitCarToDB();
-    // dispatch(postImageCar(linkLicen, ));
-  };
-  console.log("link licenses", linkLicen);
 
   const handleSubmit = () => {
     submitCarInfor();
