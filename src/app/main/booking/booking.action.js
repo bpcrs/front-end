@@ -2,14 +2,8 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST, DELETE } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
-import {
-  addNewCarRegister,
-  changeOpen,
-  registerSuccess,
-  processingRegister,
-} from "../user/profile.action";
+import { addNewCarRegister } from "../user/profile.action";
 import { showMessageSuccess } from "../../store/actions/fuse";
-import { useState } from "react";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";

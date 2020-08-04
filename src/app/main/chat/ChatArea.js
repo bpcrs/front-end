@@ -21,6 +21,7 @@ import StepAgreement from "./StepAgreement";
 import BookingStatus from "../user/BookingStatus";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import { FuseScrollbars } from "../../../@fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,6 +50,16 @@ const useStyles = makeStyles((theme) => ({
   },
   divider: {
     margin: theme.spacing(1, 0.5),
+  },
+  contactList: {
+    // width: 1000,
+    height: 750,
+  },
+  content: {
+    flex: "1 1 auto",
+    height: "100%",
+    overflow: "auto",
+    "-webkit-overflow-scrolling": "touch",
   },
 }));
 const StyledBadge = withStyles((theme) => ({
@@ -220,9 +231,7 @@ export const ChatArea = (props) => {
   const chip = useSelector((state) => state.chat.chip);
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
-  // const handleOpenAgreement = (type) => {
-  //   dispatch(openAgreement(type));
-  // };
+  const classes = useStyles();
 
   useEffect(() => {
     function initDataFromAPI() {
@@ -290,12 +299,15 @@ export const ChatArea = (props) => {
             // className="px-8 py-8"
             justify="flex-start"
             alignContent="flex-start"
+            className={classes.contactList}
           >
-            <ContactList
-              info={carDetail}
-              renter={notification}
-              chipList={chip}
-            />
+            <FuseScrollbars className={classes.content}>
+              <ContactList
+                info={carDetail}
+                renter={notification}
+                chipList={chip}
+              />
+            </FuseScrollbars>
           </Grid>
           <Grid
             item
