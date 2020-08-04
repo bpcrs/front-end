@@ -1,20 +1,26 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, Button, Typography, TextField } from "@material-ui/core";
+import { Grid, Card, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, TextareaAutosize, DialogActions } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { APP_PATH, BOOKING_STATUS, CAR_STATUS } from "../../../constant";
+import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
-import PropTypes from "prop-types";
 import Layout from "../../layout";
-import { fetchCarDetailCheck, putCarUpdate } from "./checking.action";
+import { fetchCarDetailCheck, putCarUpdate, notificationUser } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { updateCarStatus } from "../booking/booking.action";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
+  },
+  textArea: {
+    width: 500
+  },
+
+  gridList: {
+    width: 500,
+    height: 450,
   },
   media: {
     height: 240,
@@ -49,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+
 const fakeImg =
   "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
 
@@ -58,8 +66,9 @@ export default function CarDetailChecking(props) {
   const dispatch = useDispatch();
   const carDetail = useSelector((state) => state.checking.carDetail);
   const [currentCar, setCurrentCar] = useState({});
-  const changePage = useSelector((state) => state.checking.changePage);
+  const [open, setOpen] = React.useState(false);
   const { carId } = props.location.state;
+  const [message, setMessage] = useState();
 
   useEffect(() => {
     const fetchCar = () => {
@@ -67,7 +76,6 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-
     // if (changePage) {
     //   history.push({
     //     pathname: APP_PATH.CHECKING,
@@ -83,6 +91,10 @@ export default function CarDetailChecking(props) {
     // props.location.state,
   ]);
 
+  const handleChangeInput = (event) => {
+    setMessage(event.target.value);
+  };
+
   const handleValueAutoDrive = (state) => {
     if (state) {
       return "TRUE";
@@ -92,19 +104,42 @@ export default function CarDetailChecking(props) {
   };
 
   const handleAcceptCar = () => {
-    // dispatch(
-    //   putCarUpdate(currentCar.id, {
-    //     available: true,
-    //     status: "AVAILABLE",
-    //   })
-    // );
-    dispatch(updateCarStatus(currentCar.id, CAR_STATUS.UNAVAILABLE));
+    notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
+    dispatch(
+      putCarUpdate(currentCar.id, {
+        available: true,
+        status: "AVAILABLE"
+      })
+    );
     history.push({
       pathname: APP_PATH.CHECKING,
     });
   };
 
+  const handleDenyCar = () => {
+    notificationUser(message, currentCar.owner.email, false);
+    dispatch(
+      putCarUpdate(currentCar.id, {
+        available: false,
+        status: "UNAVAILABLE"
+      })
+    );
+    history.push({
+      pathname: APP_PATH.CHECKING,
+    });
+  };
+
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
+
     <Layout name="Car checking form">
       <Grid container>
         <Grid item xs={12} lg={6} sm={6}>
@@ -260,11 +295,38 @@ export default function CarDetailChecking(props) {
             color="primary"
             startIcon={<CancelIcon />}
             style={{ marginLeft: "30%" }}
+            onClick={handleClickOpen}
           >
             Deny
           </Button>
         </Grid>
       </Grid>
-    </Layout>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
+        <DialogContent>
+          <TextareaAutosize
+            className={classes.textArea}
+            autoFocus
+            margin="dense"
+            onChange={handleChangeInput}
+            id="message"
+            name="message"
+            label="Reason"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDenyCar} color="primary">
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog >
+    </Layout >
   );
 }

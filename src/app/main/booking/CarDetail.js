@@ -32,7 +32,11 @@ import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
+<<<<<<< HEAD
 import HorizontalLinearStepper from "../booking/StepperBooking";
+=======
+import ReviewComponent from "./Review";
+>>>>>>> master
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -405,6 +409,7 @@ export default function CarDetails(props) {
                   reviews.map((review) => (
                     <Review key={review.id} {...review} />
                   ))}
+                  <ReviewComponent carId={carDetail.id} />
               </CardContent>
             </Card>
           </Grid>
