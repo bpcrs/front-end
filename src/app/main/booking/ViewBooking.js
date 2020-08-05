@@ -360,7 +360,11 @@ export default function ViewBooking(props) {
               label={
                 <div>
                   <span>I am over 21 years old, I agree to all </span>
-                  <Link href="#" to="/" variant="body2">
+                  <Link
+                    href="https://drivezy.com/terms"
+                    target="_blank"
+                    variant="body2"
+                  >
                     Terms & Conditions
                   </Link>
                 </div>

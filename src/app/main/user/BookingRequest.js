@@ -92,7 +92,7 @@ const BookingRequest = (props) => {
 
     const handleCancelRequest = () => {
       console.log(booking.id);
-      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DENY));
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
     };
 
     switch (booking.status) {
@@ -291,11 +291,6 @@ const BookingRequest = (props) => {
                     <StatusAction booking={booking} />
                   </TableRow>
                 ))}
-              {/* <Grid xs={12} lg={12} item container> */}
-              {/* <Grid item lg={12}> */}
-
-              {/* </Grid> */}
-              {/* </Grid> */}
             </TableBody>
           </Table>
           <Grid item container justify="flex-end">
@@ -310,7 +305,6 @@ const BookingRequest = (props) => {
               onChange={(e, page) => setCurrentPage(page)}
             />
           </Grid>
-          {/* <div className={classes.root}></div> */}
         </TableContainer>
       </Box>
     </Grid>
