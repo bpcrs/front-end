@@ -32,6 +32,7 @@ import { useState } from "react";
 import BookingStatus from "./BookingStatus";
 import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
+import Review from "../booking/Review";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -76,7 +77,8 @@ const BookingRequest = (props) => {
   const cancelText = `Click to view info`;
   const requestText = `Cancel this booking request`;
   const confirmText = `View contract`;
-  const doneText = `View completed contract`;
+  // const doneText = `View completed contract`;
+  const doneText = `Review and Rating this car`;
   const denyText = `View info`;
   const ownerAcceptedText = `Click to join chat room with car owner`;
 
@@ -151,15 +153,36 @@ const BookingRequest = (props) => {
         );
       case "DONE":
         return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={doneText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "green" }}>info</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
+          <React.Fragment>
+            <TableCell component="th" scope="row">
+              <Tooltip title={doneText}>
+                <IconButton
+                // onClick={() => handleAgreement()}
+                >
+                  <Icon style={{ color: "green" }} onClick={() => { setOpen(true) }}>start</Icon>
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+
+            <Dialog open={open} scroll="body">
+
+              <DialogContent>
+                <Review carId={booking.car.id}/>
+              </DialogContent>
+
+              <DialogActions>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+
+            </Dialog>
+          </React.Fragment>
         );
       case "DENY":
         return (
@@ -261,7 +284,7 @@ const BookingRequest = (props) => {
                     // aria-checked={isSelected}
                     tabIndex={-1}
                     key={index}
-                    // selected={isSelected}
+                  // selected={isSelected}
                   >
                     <TableCell component="th" scope="row">
                       <TimeAgo date={booking.createdDate} />
@@ -273,7 +296,7 @@ const BookingRequest = (props) => {
                       {Math.round(
                         (new Date(booking.toDate) -
                           new Date(booking.fromDate)) /
-                          (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24)
                       ) + 1}{" "}
                       days
                     </TableCell>
