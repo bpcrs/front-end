@@ -399,8 +399,8 @@ export default function CarEdits(props) {
   };
   const images = useSelector((state) => state.booking.images);
   useEffect(() => {
-    const fetchCar = () => {
-      dispatch(fetchCarDetail(carId));
+    const fetchCar = async () => {
+      dispatch(await fetchCarDetail(carId));
       dispatch(fetchImageList(1, 20, carId, "CAR"));
       setCurrentCar(carDetail);
       // setLocation(carDetail.location);
