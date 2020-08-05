@@ -2,14 +2,8 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST, DELETE } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
-import {
-  addNewCarRegister,
-  changeOpen,
-  registerSuccess,
-  processingRegister,
-} from "../user/profile.action";
+import { addNewCarRegister } from "../user/profile.action";
 import { showMessageSuccess } from "../../store/actions/fuse";
-import { useState } from "react";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -66,11 +60,17 @@ export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
 export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
+export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
 
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
     payload: booking,
+  };
+}
+export function changeLoadingBooking() {
+  return {
+    type: LOADING_CREATE_BOOKING,
   };
 }
 export function getImageDownloadURL(urls) {
@@ -240,6 +240,11 @@ export function postBookingSuccess(booking) {
     payload: booking,
   };
 }
+export function postBookingError() {
+  return {
+    type: POST_BOOKING_FAILURE,
+  };
+}
 export function putBookingSuccess(booking) {
   return {
     type: PUT_BOOKING_SUCCESS,
@@ -300,7 +305,8 @@ export function fetchCarFilter(
   modelId = [],
   seat = [],
   fromPrice,
-  toPrice
+  toPrice,
+  locationPickup
 ) {
   return (dispatch) => {
     const params = { page, size };
@@ -320,8 +326,9 @@ export function fetchCarFilter(
         .map((seat) => parseInt(seat.value))
         .join(",")
         .toString(),
-      fromPrice: fromPrice,
-      toPrice: toPrice,
+      fromPrice,
+      toPrice,
+      locationPickup,
     });
     request.then(
       (response) => {
@@ -567,9 +574,16 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(postBookingSuccess(response.success ? response.data : {}));
-        notificationBooking(response.data);
-        console.log("Create success ", response.data);
+        if (!response.success) {
+          dispatch(postBookingError());
+        } else {
+          dispatch(postBookingSuccess(response.data));
+          notificationBooking(response.data);
+          notificationMyBooking(response.data, "BOOKED");
+          // dispatch(changeLoadingBooking());
+          dispatch(showMessageSuccess("Book success"));
+          console.log("Create success ", response.data);
+        }
       },
       (error) => {
         showMessageError(error.message);
@@ -621,6 +635,22 @@ export function notificationBooking(booking) {
     .collection("requests")
     .add({
       status: booking.status,
+      car: booking.car,
+      owner: booking.car.owner,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
+}
+export function notificationMyBooking(booking, status) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${booking.renter.email}`)
+    .collection("requests")
+    .add({
+      status: status,
       car: booking.car,
       owner: booking.car.owner,
       renter: booking.renter,

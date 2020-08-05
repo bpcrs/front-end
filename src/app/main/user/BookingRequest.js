@@ -34,7 +34,12 @@ import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    "& > *": {
+      marginTop: theme.spacing(2),
+      width: "100%",
+    },
+  },
   card: {
     margin: theme.spacing(2),
   },
@@ -87,7 +92,7 @@ const BookingRequest = (props) => {
 
     const handleCancelRequest = () => {
       console.log(booking.id);
-      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DENY));
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
     };
 
     switch (booking.status) {
@@ -286,22 +291,20 @@ const BookingRequest = (props) => {
                     <StatusAction booking={booking} />
                   </TableRow>
                 ))}
-              <Grid xs={12} lg={12} item container justify="flex-end">
-                <Grid item lg={12}>
-                  <Pagination
-                    size="small"
-                    count={
-                      myBookings.count !== 0 && myBookings.count % size === 0
-                        ? Math.floor(myBookings.count / size)
-                        : Math.floor(myBookings.count / size) + 1
-                    }
-                    color="primary"
-                    onChange={(e, page) => setCurrentPage(page)}
-                  />
-                </Grid>
-              </Grid>
             </TableBody>
           </Table>
+          <Grid item container justify="flex-end">
+            <Pagination
+              size="small"
+              count={
+                myBookings.count !== 0 && myBookings.count % size === 0
+                  ? Math.floor(myBookings.count / size)
+                  : Math.floor(myBookings.count / size) + 1
+              }
+              color="primary"
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Grid>
         </TableContainer>
       </Box>
     </Grid>

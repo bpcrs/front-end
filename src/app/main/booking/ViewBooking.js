@@ -10,6 +10,10 @@ import {
   FormControlLabel,
   Checkbox,
   Link,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  CircularProgress,
 } from "@material-ui/core";
 import CarItem from "./CarItem";
 // import { Link } from "react-router-dom";
@@ -17,9 +21,10 @@ import Layout from "../../layout";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { useDispatch, useSelector } from "react-redux";
-import { postBookingRequest } from "./booking.action";
+import { postBookingRequest, changeLoadingBooking } from "./booking.action";
 import { useState } from "react";
 import NumberFormat from "react-number-format";
+import SubmitLicense from "../submitLicense/submitLicense";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,29 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function NumberFormatCustom(props) {
-  const { inputRef, onChange, ...other } = props;
-
-  return (
-    <NumberFormat
-      {...other}
-      getInputRef={inputRef}
-      onValueChange={(values) => {
-        onChange({
-          target: {
-            name: props.name,
-            value: values.value,
-          },
-        });
-      }}
-      thousandSeparator
-      isNumericString
-      // prefix="$"
-      suffix=" ₫"
-    />
-  );
-}
-
 export default function ViewBooking(props) {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -78,6 +60,11 @@ export default function ViewBooking(props) {
   const [checkTerms, SetCheckTerms] = useState(false);
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
+  const loadingBooking = useSelector((state) => state.booking.loadingBooking);
+  // const bookingRequest = useSelector((state) =>)
+  const [open, setOpen] = useState(false);
+  const [check, setCheck] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleCheckBox = () => {
     SetCheckTerms(!checkTerms);
@@ -86,8 +73,6 @@ export default function ViewBooking(props) {
     var date = new Date(str),
       mnth = ("0" + (date.getMonth() + 1)).slice(-2),
       day = ("0" + date.getDate()).slice(-2);
-    // hours = ("0" + date.getHours()).slice(-2),
-    // minutes = ("0" + date.getMinutes()).slice(-2);
     return [date.getFullYear(), mnth, day].join("-");
   };
 
@@ -104,26 +89,86 @@ export default function ViewBooking(props) {
     totalPrice: totalPrice || "",
   };
 
-  console.log("Booking request", bookingReq);
+  console.log(bookingReq);
 
-  const handleBooking = () => {
-    createBookingRequest();
-    history.push({
-      pathname: APP_PATH.PROFILE,
-      state: {
-        // bookingInStore,
-      },
-    });
+  const handleUpdate = () => {
+    // setCheck(false);
+    // setOpen(false);
+    dispatch(changeLoadingBooking());
+    setOpenUpdate(true);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    dispatch(changeLoadingBooking());
+    // setCheck(false);
+  };
+
+  const handleUpdateClose = () => {
+    setOpenUpdate(false);
+  };
+
+  const handleBooking = () => {
+    // setOpen(true);
+    createBookingRequest();
+    // history.push({
+    //   pathname: APP_PATH.PROFILE,
+    //   state: {},
+    // });
+  };
   const createBookingRequest = () => {
-    // console.log("Booking Request: ", bookingReq);
     dispatch(postBookingRequest(bookingReq, carDetail.name, currentUser));
+    // loadingBooking
   };
 
   return (
     <Layout name="Review Plan">
       <div>
+        <Dialog open={loadingBooking} scroll="body" onClose={handleClose}>
+          <DialogContent>
+            <Grid container justify="center" alignItems="center">
+              <Grid item lg={12} container justify="center" alignItems="center">
+                <img
+                  src="assets/images/car-loading.jpg"
+                  alt="CarSubmiLoading"
+                  // width="300px"
+                  height="300px"
+                ></img>
+              </Grid>
+              <Grid item style={{ textAlign: "center" }}>
+                <Typography variant="subtitle1" color="initial">
+                  Please update phone number and your license before book !
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleUpdate}
+                >
+                  Update
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="outlined" color="primary" onClick={handleClose}>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={openUpdate} scroll="body" onClose={handleUpdateClose}>
+          <DialogContent>
+            <SubmitLicense />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpdateClose}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Card>
           <CardContent>
             <Grid container>
@@ -315,7 +360,11 @@ export default function ViewBooking(props) {
               label={
                 <div>
                   <span>I am over 21 years old, I agree to all </span>
-                  <Link href="#" to="/" variant="body2">
+                  <Link
+                    href="https://drivezy.com/terms"
+                    target="_blank"
+                    variant="body2"
+                  >
                     Terms & Conditions
                   </Link>
                 </div>

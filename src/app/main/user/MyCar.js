@@ -189,11 +189,6 @@ function RegisterCar() {
             </Grid>
           </Grid>
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleRegisterClose} color="primary">
-            Close
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );
@@ -248,19 +243,19 @@ const MyCar = (props) => {
                   <Row key={index} car={car} />
                   // </Grid>
                 ))}
-              <Grid xs={12} lg={12} item container justify="flex-end">
-                <Pagination
-                  count={
-                    cars.count !== 0 && cars.count % size === 0
-                      ? Math.floor(cars.count / size)
-                      : Math.floor(cars.count / size) + 1
-                  }
-                  color="primary"
-                  onChange={(e, page) => setCurrentPage(page)}
-                />
-              </Grid>
             </TableBody>
           </Table>
+          <Grid xs={12} lg={12} item container justify="flex-end">
+            <Pagination
+              count={
+                cars.count !== 0 && cars.count % size === 0
+                  ? Math.floor(cars.count / size)
+                  : Math.floor(cars.count / size) + 1
+              }
+              color="primary"
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Grid>
         </TableContainer>
       ) : (
         <Grid container justify="center" alignItems="center">

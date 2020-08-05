@@ -20,6 +20,7 @@ import {
 import { withStyles } from "@material-ui/styles";
 import BookingStatus from "../user/BookingStatus";
 import { BOOKING_STATUS } from "../../../constant";
+import { FuseScrollbars } from "../../../@fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -144,7 +145,7 @@ const ContactList = (props) => {
       fetchPendingBooking(
         userLogged.id,
         1,
-        10,
+        100,
         [
           BOOKING_STATUS.PENDING,
           BOOKING_STATUS.CONFIRM,
