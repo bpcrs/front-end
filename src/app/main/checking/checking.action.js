@@ -233,18 +233,18 @@ export function putAcceptUserLicence(id, user) {
   };
 }
 
-export function notificationUser(message, userMail, isAccept) {
-  firebase
-    .firestore()
-    .collection("notification")
-    .doc(`${userMail}`)
-    .collection("Car")
-    .add({
-      message: message,
-      status: isAccept ? "ACCEPTCAR" : "DENYCAR",
-      createAt: new Date().getTime(),
-    });
-}
+// export function notificationUser(message, userMail, isAccept) {
+//   firebase
+//     .firestore()
+//     .collection("notification")
+//     .doc(`${userMail}`)
+//     .collection("Car")
+//     .add({
+//       message: message,
+//       status: isAccept ? "ACCEPTCAR" : "DENYCAR",
+//       createAt: new Date().getTime(),
+//     });
+// }
 
 export function notificationLicenseUser(message, userMail, isAccept) {
   firebase
@@ -256,6 +256,7 @@ export function notificationLicenseUser(message, userMail, isAccept) {
       message: message,
       status: isAccept ? "ACCEPTLICENSE" : "DENYLICENSE",
       createAt: new Date().getTime(),
+      isSeen: false,
     });
 }
 
@@ -270,5 +271,6 @@ export function notificationUserCar(message, userMail, isAccept, car) {
       status: isAccept ? "ACCEPTCAR" : "DENYCAR",
       createAt: new Date().getTime(),
       car: car,
+      isSeen: false,
     });
 }

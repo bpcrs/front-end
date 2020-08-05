@@ -67,6 +67,68 @@ const Notification = () => {
       });
   };
 
+  const handleClickNotiLicense = (id) => {
+    const path = APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("License")
+      .doc(id)
+      .update({
+        isSeen: true,
+      });
+  };
+
+  const handleClickNotiCar = (id) => {
+    const path = APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("Car")
+      .doc(id)
+      .update({
+        isSeen: true,
+      });
+  };
+
+  const handleMarkAllNotiCarRead = () => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("Car")
+      // .orderBy("createAt", "desc")
+      // .limitToLast(10)
+      .onSnapshot((ns) => {
+        ns.forEach((doc) => {
+          doc.ref.update({ isSeen: true });
+        });
+      });
+  };
+
+  const handleMarkAllNotiLicenseRead = () => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("License")
+      // .orderBy("createAt", "desc")
+      // .limitToLast(10)
+      .onSnapshot((ns) => {
+        ns.forEach((doc) => {
+          doc.ref.update({ isSeen: true });
+        });
+      });
+  };
+
   const handleMarkAllRead = () => {
     firebase
       .firestore()
@@ -80,6 +142,9 @@ const Notification = () => {
           doc.ref.update({ isSeen: true });
         });
       });
+
+      handleMarkAllNotiCarRead();
+      handleMarkAllNotiLicenseRead();
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
@@ -372,7 +437,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-          // onClick={() => handleClick(true, notify.id)}
+            onClick={() => handleClickNotiLicense(notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -430,7 +495,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-          // onClick={() => handleClick(true, notify.id)}
+            onClick={() => handleClickNotiLicense(notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -485,7 +550,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-          // onClick={() => handleClick(true, notify.id)}
+            onClick={() => handleClickNotiCar(notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -543,7 +608,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-          // onClick={() => handleClick(true, notify.id)}
+            onClick={() => handleClickNotiCar(notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
