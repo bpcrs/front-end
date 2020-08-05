@@ -310,7 +310,6 @@ export function fetchCarFilter(
 ) {
   return (dispatch) => {
     const params = { page, size };
-    // console.log(modelId);
 
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
       ...params,

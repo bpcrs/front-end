@@ -21,9 +21,16 @@ const initialState = {
   },
   change: false,
   changeApprove: false,
+  trackings: [],
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_TRACKING_BOOKING: {
+      return {
+        ...state,
+        trackings: payload,
+      };
+    }
     case Actions.CHOOSE_CAR: {
       return {
         ...state,

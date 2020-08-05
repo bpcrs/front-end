@@ -19,6 +19,7 @@ export const REGISTER_SUCCESS = "[OPEN] REGISTER SUCCESS";
 export const PROCESS_REGISTER = "[PROCESS] PROCESSING REGISTER";
 export const OPEN_DETAIL = "[DETAIL] CHANGE";
 export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
+export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
 
 export function chooseCar(carId, name) {
   return {
@@ -27,6 +28,12 @@ export function chooseCar(carId, name) {
       carId,
       name,
     },
+  };
+}
+export function fetchTracking(trackings) {
+  return {
+    type: FETCH_TRACKING_BOOKING,
+    payload: trackings,
   };
 }
 export function openDetail(state) {
@@ -191,6 +198,20 @@ export function changeBookingStatusRequest(bookingId, status) {
       },
       (error) => {
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function getTrackingsByBooking(id) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.TRACKING_CONTROLLER_GETBY_BOOKINGID(id));
+    request.then(
+      (response) => {
+        dispatch(fetchTracking(response.success ? response.data : {}));
+      },
+      (error) => {
+        showMessageError(error.message);
       }
     );
   };

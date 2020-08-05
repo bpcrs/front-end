@@ -13,6 +13,7 @@ import {
   Checkbox,
   Box,
   FormGroup,
+  Icon,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
@@ -362,11 +363,11 @@ const Message = ({ message, receive, type }) => {
         );
       case "DONE":
         return (
-          <Card className="w-1/2">
+          <Card className="w-1/2" style={{ color: "green" }}>
             <CardActionArea>
               <CardContent>
                 <Typography gutterBottom variant="subtitle1">
-                  Agree Success
+                  Agree Success <Icon>done</Icon>
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                   Agreement {message} has completed

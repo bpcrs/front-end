@@ -11,6 +11,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import CompareIcon from "@material-ui/icons/Compare";
 import { Grid, Icon, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
+import Chip from "@material-ui/core/Chip";
 import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
@@ -216,7 +217,7 @@ export default function CarItem(props = { isAction: true }) {
             )}
 
             <Grid item xs={7}>
-              {/* <Button
+              <Button
                 disabled={double}
                 variant="contained"
                 startIcon={<CompareIcon />}
@@ -226,22 +227,27 @@ export default function CarItem(props = { isAction: true }) {
                 }}
               >
                 Compare
-              </Button> */}
+              </Button>
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
               {info ? (
-                <Typography variant="subtitle2">
-                  {
+                // <Typography variant="subtitle1" color="primary">
+                <Chip
+                  label={
                     <NumberFormat
                       value={info.price}
                       displayType={"text"}
                       thousandSeparator={true}
                       // prefix={"$"}
-                      suffix={" đ"}
+                      suffix={" đ/ day"}
                     />
                   }
-                </Typography>
+                  variant="default"
+                  size="medium"
+                  color="primary"
+                />
               ) : (
+                // </Typography>
                 <Skeleton animation="wave" height={10} width="80%" />
               )}
             </Grid>
