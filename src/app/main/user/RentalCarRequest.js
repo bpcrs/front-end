@@ -9,13 +9,13 @@ import {
   IconButton,
   Icon,
   Collapse,
+  Table,
   Box,
+  TableBody,
   Typography,
+  TableContainer,
+  CircularProgress,
 } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -29,6 +29,7 @@ import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+
   card: {
     margin: theme.spacing(2),
   },
@@ -233,18 +234,18 @@ const RentalCarRequest = (props) => {
   const loading = useSelector((state) => state.profile.loading);
   const rentalBookings = useSelector((state) => state.profile.bookings);
   const { carId, bookingStatus } = props;
-  // const [open, setOpen] = useState(false);
+  const changeApprove = useSelector((state) => state.profile.changeApprove);
 
   // const currentUser = useSelector((state) => state.auth.user);
   // const history = useHistory();
 
   const handleTableRowStatusBooking = (booking) => {
     switch (booking) {
-      case "REQUEST":
+      case BOOKING_STATUS.REQUEST:
         return <StyledTableCell>Approve</StyledTableCell>;
-      case "PENDING":
+      case BOOKING_STATUS.PENDING:
         return <StyledTableCell>Agreement</StyledTableCell>;
-      case "CONFIRM":
+      case BOOKING_STATUS.CONFIRM:
         return <StyledTableCell>Status</StyledTableCell>;
       default:
         return null;
@@ -253,7 +254,7 @@ const RentalCarRequest = (props) => {
 
   useEffect(() => {
     dispatch(fetchBookingRentalMyCar(carId, bookingStatus, currentPage, size));
-  }, [currentPage, dispatch, carId, bookingStatus]);
+  }, [currentPage, dispatch, carId, bookingStatus, changeApprove]);
 
   return (
     <Grid>

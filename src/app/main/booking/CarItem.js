@@ -5,12 +5,9 @@ import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CompareIcon from "@material-ui/icons/Compare";
 import { Grid, Icon, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
@@ -18,6 +15,7 @@ import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -45,7 +43,7 @@ export default function CarItem(props = { isAction: true }) {
   const [double, setDouble] = useState(false);
   const history = useHistory();
   const { info } = props;
-  // console.log(info);
+  // const
   const carCompare = useSelector((state) => state.booking.carCompare);
   const clickToAddCompareCar = () => {
     carCompare.push({ info });
@@ -56,22 +54,58 @@ export default function CarItem(props = { isAction: true }) {
   return (
     <Card className={classes.card}>
       <CardHeader
-        // avatar={
-        //   <Avatar
-        //     aria-label="Owner"
-        //     className={classes.avatar}
-        //     src={info.owner.imageUrl}
-        //   >
-        //     {info.owner.fullName[0]}
-        //   </Avatar>
-        // }
+        avatar={
+          // <Avatar
+          //   aria-label="Owner"
+          //   className={classes.avatar}
+          //   src={<Icon>location_searching</Icon>}
+          // >
+          //   {/* 6.8km */}
+          //   {/* {info.owner.fullName[0]} */}
+          // </Avatar>
+          <Grid>
+            {info ? (
+              <Grid>
+                <Icon>location_on</Icon>
+                <Typography variant="subtitle2">
+                  {info.distance ? info.distance : ""}
+                </Typography>
+              </Grid>
+            ) : (
+              <Skeleton
+                animation="wave"
+                variant="circle"
+                width={40}
+                height={40}
+              />
+            )}
+          </Grid>
+        }
         // action={
         //   <IconButton>
         //     <MoreVertIcon />
         //   </IconButton>
         // }
-        title={info.name}
-        subheader={info.model.name + " " + info.year}
+        title={
+          info ? (
+            info.name
+          ) : (
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+          )
+        }
+        // subheader={info.model.name + " " + info.year}
+        subheader={
+          info ? (
+            info.model.name + " " + info.year
+          ) : (
+            <Skeleton animation="wave" height={10} width="40%" />
+          )
+        }
       />
       {info.images.length > 0 ? (
         <CardMedia
@@ -80,11 +114,7 @@ export default function CarItem(props = { isAction: true }) {
           title="Car thumbnail"
         />
       ) : (
-        <CardMedia
-          className={classes.media}
-          image="https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg"
-          title="Car thumbnail"
-        />
+        <Skeleton animation="wave" variant="rect" className={classes.media} />
       )}
 
       <CardContent>
@@ -108,7 +138,11 @@ export default function CarItem(props = { isAction: true }) {
               </Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">{info.seat} people</Typography>
+              {info ? (
+                <Typography variant="caption">{info.seat} people</Typography>
+              ) : (
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
           <Grid
@@ -123,9 +157,13 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>gamepad</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">
-                {info.autoDriver ? "Automatic" : "Manual"}
-              </Typography>
+              {info ? (
+                <Typography variant="caption">
+                  {info.autoDriver ? "Automatic" : "Manual"}
+                </Typography>
+              ) : (
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
 
@@ -141,7 +179,11 @@ export default function CarItem(props = { isAction: true }) {
               <Icon fontSize={"default"}>directions_car</Icon>
             </Grid>
             <Grid item container justify="center">
-              <Typography variant="caption">{info.model.name}</Typography>
+              {info ? (
+                <Typography variant="caption">{info.model.name}</Typography>
+              ) : (
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -154,22 +196,27 @@ export default function CarItem(props = { isAction: true }) {
             spacing={1}
             alignItems="center"
           >
-            <Grid item xs={5}>
-              <Button
-                component={Link}
-                variant="contained"
-                startIcon={<FavoriteIcon />}
-                to={(location) => ({
-                  ...location,
-                  pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
-                  state: { booking: props.booking },
-                })}
-              >
-                View
-              </Button>
-            </Grid>
+            {info ? (
+              <Grid item xs={5}>
+                <Button
+                  component={Link}
+                  variant="contained"
+                  startIcon={<FavoriteIcon />}
+                  to={(location) => ({
+                    ...location,
+                    pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
+                    state: { booking: props.booking },
+                  })}
+                >
+                  View
+                </Button>
+              </Grid>
+            ) : (
+              <Skeleton animation="wave" height={10} width="80%" />
+            )}
+
             <Grid item xs={7}>
-              <Button
+              {/* <Button
                 disabled={double}
                 variant="contained"
                 startIcon={<CompareIcon />}
@@ -179,20 +226,24 @@ export default function CarItem(props = { isAction: true }) {
                 }}
               >
                 Compare
-              </Button>
+              </Button> */}
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
-              <Typography variant="subtitle2">
-                {
-                  <NumberFormat
-                    value={info.price}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    // prefix={"$"}
-                    suffix={" đ"}
-                  />
-                }
-              </Typography>
+              {info ? (
+                <Typography variant="subtitle2">
+                  {
+                    <NumberFormat
+                      value={info.price}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      // prefix={"$"}
+                      suffix={" đ"}
+                    />
+                  }
+                </Typography>
+              ) : (
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
         </CardActions>

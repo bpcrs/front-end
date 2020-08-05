@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogActions,
   Button,
+  Tooltip,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -33,7 +34,12 @@ import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    "& > *": {
+      marginTop: theme.spacing(2),
+      width: "100%",
+    },
+  },
   card: {
     margin: theme.spacing(2),
   },
@@ -71,6 +77,14 @@ const BookingRequest = (props) => {
     });
   };
 
+  const pendingText = `Click to join chat room with car owner`;
+  const cancelText = `Click to view info`;
+  const requestText = `Cancel this booking request`;
+  const confirmText = `View contract`;
+  const doneText = `View completed contract`;
+  const denyText = `View info`;
+  const ownerAcceptedText = `Click to join chat room with car owner`;
+
   function StatusAction(props) {
     // console.log(status);
     const [open, setOpen] = useState(false);
@@ -78,25 +92,29 @@ const BookingRequest = (props) => {
 
     const handleCancelRequest = () => {
       console.log(booking.id);
-      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DENY));
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
     };
 
     switch (booking.status) {
       case "PENDING":
         return (
           <TableCell component="th" scope="row">
-            <IconButton onClick={() => handleAgreement()}>
-              <Icon style={{ color: "blue" }}>send</Icon>
-            </IconButton>
+            <Tooltip title={pendingText}>
+              <IconButton onClick={() => handleAgreement()}>
+                <Icon style={{ color: "black" }}>chat</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "REQUEST":
         return (
           <React.Fragment>
             <TableCell component="th" scope="row">
-              <IconButton onClick={() => setOpen(true)}>
-                <Icon style={{ color: "red" }}>cancel</Icon>
-              </IconButton>
+              <Tooltip title={requestText}>
+                <IconButton onClick={() => setOpen(true)}>
+                  <Icon style={{ color: "red" }}>cancel</Icon>
+                </IconButton>
+              </Tooltip>
             </TableCell>
             <Dialog open={open} scroll="body">
               <DialogContent>
@@ -127,51 +145,61 @@ const BookingRequest = (props) => {
       case "CONFIRM":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "green" }}>assignment</Icon>
-            </IconButton>
+            <Tooltip title={confirmText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "green" }}>assignment</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "DONE":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "green" }}>info</Icon>
-            </IconButton>
+            <Tooltip title={doneText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "green" }}>info</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "DENY":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "black" }}>error</Icon>
-            </IconButton>
+            <Tooltip title={denyText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "black" }}>error</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "CANCEL":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "red" }}>clear</Icon>
-            </IconButton>
+            <Tooltip title={cancelText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "red" }}>clear</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       case "OWNER_ACCEPTED":
         return (
           <TableCell component="th" scope="row">
-            <IconButton
-            // onClick={() => handleAgreement()}
-            >
-              <Icon style={{ color: "purple" }}>send</Icon>
-            </IconButton>
+            <Tooltip title={ownerAcceptedText}>
+              <IconButton
+              // onClick={() => handleAgreement()}
+              >
+                <Icon style={{ color: "purple" }}>chat</Icon>
+              </IconButton>
+            </Tooltip>
           </TableCell>
         );
       default:
@@ -207,7 +235,6 @@ const BookingRequest = (props) => {
           </Grid>
         </Grid>
       </Box>
-
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
         <TableContainer>
           <Table
@@ -223,9 +250,6 @@ const BookingRequest = (props) => {
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Action</StyledTableCell>
-                {/* {booking === "PENDING" ? (
-                  <StyledTableCell>Agreement</StyledTableCell>
-                ) : null} */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -264,33 +288,23 @@ const BookingRequest = (props) => {
                     <TableCell component="th" scope="row">
                       <BookingStatus name={booking.status} />
                     </TableCell>
-                    {/* {booking.status === "PENDING" ? (
-                      <TableCell component="th" scope="row">
-                        <IconButton onClick={() => handleAgreement()}>
-                          <Icon style={{ color: "blue" }}>send</Icon>
-                        </IconButton>
-                      </TableCell>
-                    ) : null} */}
                     <StatusAction booking={booking} />
                   </TableRow>
-                  // </Grid>
                 ))}
-              <Grid xs={12} lg={12} item container justify="flex-end">
-                <Grid item lg={12}>
-                  <Pagination
-                    size="small"
-                    count={
-                      myBookings.count !== 0 && myBookings.count % size === 0
-                        ? Math.floor(myBookings.count / size)
-                        : Math.floor(myBookings.count / size) + 1
-                    }
-                    color="primary"
-                    onChange={(e, page) => setCurrentPage(page)}
-                  />
-                </Grid>
-              </Grid>
             </TableBody>
           </Table>
+          <Grid item container justify="flex-end">
+            <Pagination
+              size="small"
+              count={
+                myBookings.count !== 0 && myBookings.count % size === 0
+                  ? Math.floor(myBookings.count / size)
+                  : Math.floor(myBookings.count / size) + 1
+              }
+              color="primary"
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Grid>
         </TableContainer>
       </Box>
     </Grid>

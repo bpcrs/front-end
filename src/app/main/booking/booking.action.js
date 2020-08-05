@@ -2,14 +2,8 @@ import { showMessageError } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST, DELETE } from "../../services/api";
 // import { fetchBookingRequest } from "../chat/chat.action";
 import firebase from "../../firebase/firebase";
-import {
-  addNewCarRegister,
-  changeOpen,
-  registerSuccess,
-  processingRegister,
-} from "../user/profile.action";
+import { addNewCarRegister } from "../user/profile.action";
 import { showMessageSuccess } from "../../store/actions/fuse";
-import { useState } from "react";
 
 export const FETCH_CARS_SUCCESS = "[CAR] FETCH DATA SUCCESS";
 export const FETCH_CAR_COMPARE_SUCCESS = "[CAR] FETCH DATA SUCCESS";
@@ -21,6 +15,7 @@ export const FETCH_REVIEW_FAILURE = "[REVIEW] FETCH DATA FAILURE";
 
 export const FETCH_CAR_DETAIL_SUCCESS = "[CAR_DETAIL] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_ERROR = "[CAR_DETAIL] FETCH DATA ERROR";
+export const FETCH_CAR_DETAIL = "[CAR_DETAIL] FETCH CAR DETAIL";
 
 export const PUT_CAR_EDIT_SUCCESS = "[CAR_EDIT] PUT DATA SUCCESS";
 export const PUT_CAR_EDIT_FAILURE = "[CAR_EDIT] PUT DATA FAILURE";
@@ -62,11 +57,20 @@ export const UPDATE_CAR_STATUS = "[CAR] UPDATE CAR STATUS";
 export const DELETE_IMAGE_CAR = "[IMAGE] DELETE IMAGE CAR";
 export const CHANGE_IMAGE_TYPE = "[IMAGE] CHANGE IMAGE TYPE";
 export const GET_IMAGE_LINK = "[IMAGE] GET LINK IMAGE";
+export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
+export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
+export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
+export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
 
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
     payload: booking,
+  };
+}
+export function changeLoadingBooking() {
+  return {
+    type: LOADING_CREATE_BOOKING,
   };
 }
 export function getImageDownloadURL(urls) {
@@ -105,7 +109,12 @@ export function fetchCarsError(error) {
     payload: error,
   };
 }
-
+export function getDistanceLocation(distance) {
+  return {
+    type: POST_DISTANCE_LOCATION,
+    payload: distance,
+  };
+}
 export function fetchReviewSuccess(reviews) {
   return {
     type: FETCH_REVIEW_SUCCESS,
@@ -231,6 +240,11 @@ export function postBookingSuccess(booking) {
     payload: booking,
   };
 }
+export function postBookingError() {
+  return {
+    type: POST_BOOKING_FAILURE,
+  };
+}
 export function putBookingSuccess(booking) {
   return {
     type: PUT_BOOKING_SUCCESS,
@@ -253,6 +267,18 @@ export function updateCarStatusSuccess(car) {
   return {
     type: UPDATE_CAR_STATUS,
     payload: car.status,
+  };
+}
+export function fetchLicenseCar(images) {
+  return {
+    type: FETCH_LICENSE_CAR,
+    payload: images,
+  };
+}
+export function postImagesCar(images) {
+  return {
+    type: POST_IMAGES_CAR,
+    payload: images,
   };
 }
 
@@ -279,7 +305,8 @@ export function fetchCarFilter(
   modelId = [],
   seat = [],
   fromPrice,
-  toPrice
+  toPrice,
+  locationPickup
 ) {
   return (dispatch) => {
     const params = { page, size };
@@ -299,8 +326,9 @@ export function fetchCarFilter(
         .map((seat) => parseInt(seat.value))
         .join(",")
         .toString(),
-      fromPrice: fromPrice,
-      toPrice: toPrice,
+      fromPrice,
+      toPrice,
+      locationPickup,
     });
     request.then(
       (response) => {
@@ -336,20 +364,25 @@ export function fetchReviewList(page, size, carId) {
 }
 
 export function fetchCarDetail(id) {
-  return (dispatch) => {
-    const request = GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(fetchCarDetailSuccess(response.data));
-        } else {
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(showMessageError(error.message));
-      }
-    );
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
+  };
+}
+export function fetchCarDetailWithDistance(id, location) {
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.CAR_CONTROLLER_GETBYID(id));
+    if (response.success) {
+      dispatch(fetchCarDetailSuccess(response.data));
+      console.log(response.data.location);
+      dispatch(distanceBetweenTwoLocation(location, response.data.location));
+    } else {
+      dispatch(showMessageError(response.message));
+    }
   };
 }
 
@@ -397,7 +430,7 @@ export function putCarUpdate(id, car) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
-          dispatch(showMessageSuccess("Update price success"));
+          dispatch(showMessageSuccess("Update success"));
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -419,7 +452,9 @@ export function fetchImageList(page, size, carId, type) {
     });
     request.then(
       (response) => {
-        dispatch(fetchImageSuccess(response.success ? response.data : []));
+        type === "CAR"
+          ? dispatch(fetchImageSuccess(response.success ? response.data : []))
+          : dispatch(fetchLicenseCar(response.success ? response.data : []));
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -428,19 +463,15 @@ export function fetchImageList(page, size, carId, type) {
   };
 }
 
-export function postCarSubmit(car, listImage, listLicense) {
+export function postCarSubmit(car, listImage) {
   return (dispatch) => {
-    // console.log(listImage);
     const request = POST(ENDPOINT.CAR_CONTROLLER_GETALL, {}, car);
     request.then(
       (response) => {
         if (response.success) {
-          // dispatch(postCarSubmitSuccess(response.data));
-          dispatch(postImageCar(listImage, response.data.id, "CAR"));
-          dispatch(postImageCar(listLicense, response.data.id, "LICENSE"));
+          console.log(listImage);
+          dispatch(submitImagesCar(response.data.id, listImage));
           dispatch(addNewCarRegister(response.data));
-          console.log("Success submit car ", response.data);
-          // dispatch(registerSuccess);
           dispatch(
             showMessageSuccess(
               "Register successfully ! Your car will be checked and available soon"
@@ -454,6 +485,26 @@ export function postCarSubmit(car, listImage, listLicense) {
       (error) => {
         dispatch(postCarSubmitFailure(error));
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function submitImagesCar(carId, images) {
+  return (dispatch) => {
+    console.log(images);
+    const request = POST(
+      ENDPOINT.IMAGE_CONTROLLER_CAR_GETBYID(carId),
+      {},
+      { images }
+    );
+    request.then(
+      (response) => {
+        console.log(response.data);
+        dispatch(postImagesCar(response.success ? response.data : []));
+      },
+      (error) => {
+        showMessageError(error.message);
       }
     );
   };
@@ -523,9 +574,16 @@ export function postBookingRequest(booking) {
     const request = POST(ENDPOINT.BOOKING_CONTROLLER_GETALL, {}, booking);
     request.then(
       (response) => {
-        dispatch(postBookingSuccess(response.success ? response.data : {}));
-        notificationBooking(response.data);
-        console.log("Create success ", response.data);
+        if (!response.success) {
+          dispatch(postBookingError());
+        } else {
+          dispatch(postBookingSuccess(response.data));
+          notificationBooking(response.data);
+          notificationMyBooking(response.data, "BOOKED");
+          // dispatch(changeLoadingBooking());
+          dispatch(showMessageSuccess("Book success"));
+          console.log("Create success ", response.data);
+        }
       },
       (error) => {
         showMessageError(error.message);
@@ -577,6 +635,22 @@ export function notificationBooking(booking) {
     .collection("requests")
     .add({
       status: booking.status,
+      car: booking.car,
+      owner: booking.car.owner,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
+}
+export function notificationMyBooking(booking, status) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${booking.renter.email}`)
+    .collection("requests")
+    .add({
+      status: status,
       car: booking.car,
       owner: booking.car.owner,
       renter: booking.renter,
@@ -672,6 +746,25 @@ export function changeImageByType(image, type) {
     request.then(
       (response) => {
         dispatch(changeImageType(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function distanceBetweenTwoLocation(destination, location) {
+  console.log(destination, location);
+  return (dispatch) => {
+    const request = POST(
+      ENDPOINT.MAPS_CONTROLLER_POST,
+      {},
+      { destination, location }
+    );
+    request.then(
+      (response) => {
+        dispatch(getDistanceLocation(response.success ? response.data : ""));
       },
       (error) => {
         showMessageError(error.message);

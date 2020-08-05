@@ -1,25 +1,54 @@
 import * as Actions from "./booking.action";
+import { ca } from "date-fns/locale";
 const initialState = {
   cars: [],
   bookingRequest: {},
   reviews: [],
   images: [],
+  licenses: [],
   loading: false,
   carDetail: {},
   carCompare: [],
   brands: [],
-  filterCars: [],
+  filterCars: {
+    // data: new Array(8),
+    count: 8,
+  },
   models: [],
   agreemnts: [],
   booking: {},
   change: false,
+  disableButton: false,
+  distance: {},
+  loadingBooking: false,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
-    // case Actions.GET_IMAGE_LINK: {
-
-    // }
+    case Actions.LOADING_CREATE_BOOKING: {
+      return {
+        ...state,
+        loadingBooking: !state.loadingBooking,
+      };
+    }
+    case Actions.FETCH_LICENSE_CAR: {
+      return {
+        ...state,
+        licenses: payload,
+      };
+    }
+    case Actions.PUT_CAR_EDIT_SUCCESS: {
+      return {
+        ...state,
+        carDetail: payload,
+      };
+    }
+    case Actions.POST_DISTANCE_LOCATION: {
+      return {
+        ...state,
+        distance: payload,
+      };
+    }
     case Actions.UPDATE_CAR_STATUS: {
       return {
         ...state,
@@ -47,6 +76,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         booking: payload,
         loading: false,
+        // loadingBooking: true,
       };
     }
     case Actions.FETCH_CARS_SUCCESS: {
@@ -112,6 +142,12 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         bookingRequest: payload,
       };
     }
+    case Actions.POST_BOOKING_FAILURE: {
+      return {
+        ...state,
+        loadingBooking: true,
+      };
+    }
     case Actions.POST_IMAGE_CAR_SUBMIT_SUCCESS: {
       return {
         ...state,
@@ -129,6 +165,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: false,
         reviews: [...state.reviews, payload],
+        disableButton: true,
       };
     }
     case Actions.POST_REVIEW_SUBMIT: {

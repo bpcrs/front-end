@@ -108,6 +108,7 @@ export const ENDPOINT = {
 
   IMAGE_CONTROLLER_GETALL: "/image",
   IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
+  IMAGE_CONTROLLER_CAR_GETBYID: (id) => `/image/car/${id}`,
   BRAND_CONTROLLER_GETALL: "/brand",
   MODEL_CONTROLLER_GETALL: "/model",
 
@@ -120,4 +121,6 @@ export const ENDPOINT = {
 
   AGREEMENT_CONTROLLER_GETALL: "/agreement",
   AGREEMENT_CONTROLLER_GETBY_BOOKINGID: (id) => `/agreement/booking/${id}`,
+
+  MAPS_CONTROLLER_POST: "/maps",
 };

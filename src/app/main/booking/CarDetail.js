@@ -14,9 +14,12 @@ import {
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
-import Chip from "@material-ui/core/Chip";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchReviewList, fetchCarDetail } from "./booking.action";
+import {
+  fetchReviewList,
+  fetchCarDetail,
+  fetchCarDetailWithDistance,
+} from "./booking.action";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -27,6 +30,8 @@ import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
+// import HorizontalLinearStepper from "../booking/StepperBooking";
+// import ReviewComponent from "./Review";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -109,6 +114,7 @@ export default function CarDetails(props) {
   const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
+  const distance = useSelector((state) => state.booking.distance);
   const [selectedDate, setDateChange] = useState([
     bookingChange.fromDate,
     bookingChange.toDate,
@@ -142,7 +148,16 @@ export default function CarDetails(props) {
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(1, 10, carId));
-    dispatch(fetchCarDetail(carId));
+    dispatch(
+      fetchCarDetailWithDistance(carId, bookingChange.location.description)
+    );
+    // dispatch(
+    //   distanceBetweenTwoLocation(
+    //     bookingChange.location.description,
+    //     carDetail.location
+    //   )
+    // );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, props]);
 
   return (
@@ -168,6 +183,9 @@ export default function CarDetails(props) {
       </div>
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
+          {/* <Grid container item lg={12} justify="center">
+            <HorizontalLinearStepper step={1} />
+          </Grid> */}
           <Grid item xl={12} xs={12} lg={12}>
             <Card>
               <CardContent>
@@ -185,6 +203,7 @@ export default function CarDetails(props) {
                       variant="h6"
                       component="h2"
                       align="center"
+                      color="primary"
                     >
                       {carDetail.brand ? carDetail.brand.name : ""}{" "}
                       {carDetail.name} {carDetail.year}
@@ -205,7 +224,11 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>
+                            <Icon
+                              fontSize={"default"}
+                              color="primary"
+                              // style={{ color: "primary" }}
+                            >
                               airline_seat_recline_normal_outlined
                             </Icon>
                           </Grid>
@@ -224,7 +247,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>gamepad</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              gamepad
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -242,7 +267,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>directions_car</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              directions_car
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -268,7 +295,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>gps_fixed</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              gps_fixed
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">GPS</Typography>
@@ -283,7 +312,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon fontSize={"default"}>usb</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              usb
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">USB</Typography>
@@ -299,7 +330,9 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid item container justify="center">
-                            <Icon fontSize={"default"}>person_outline</Icon>
+                            <Icon fontSize={"default"} color="primary">
+                              person_outline
+                            </Icon>
                           </Grid>
                           <Grid item container justify="center">
                             <Typography variant="caption">
@@ -310,30 +343,8 @@ export default function CarDetails(props) {
                       </Grid>
                     </CardContent>
                     <CardContent>
-                      <Grid align="center">
-                        <Chip label="4.5" style={{ marginBottom: 15 }} />
-
-                        <Rating
-                          name="half-rating-read"
-                          defaultValue={4.5}
-                          precision={0.5}
-                          readOnly
-                        />
-                      </Grid>
-
-                      <Grid container>
-                        <Icon>location_on</Icon>
-                        <Typography
-                          variant="subtitle1"
-                          align="center"
-                          color="textSecondary"
-                          className={classes.platenum}
-                        >
-                          Go Vap - Ho Chi Minh City
-                        </Typography>
-                      </Grid>
-                      <Grid container>
-                        <Icon>confirmation_number</Icon>
+                      <Grid container item justify="center">
+                        <Icon color="primary">confirmation_number</Icon>
                         <Typography
                           variant="subtitle1"
                           align="center"
@@ -347,6 +358,38 @@ export default function CarDetails(props) {
                   </Grid>
                 </Grid>
               </CardContent>
+              <Grid
+                container
+                item
+                lg={12}
+                alignItems="center"
+                className={classes.review}
+              >
+                <Grid container>
+                  <Icon color="primary">location_searching</Icon>
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    color="inherit"
+                    className={classes.platenum}
+                  >
+                    {distance ? distance.distance : "? km"}
+                  </Typography>
+                </Grid>
+                <Grid container>
+                  <Icon color="primary">location_on</Icon>
+                  <Typography
+                    variant="subtitle2"
+                    align="center"
+                    color="inherit"
+                    className={classes.platenum}
+                  >
+                    {carDetail.location
+                      ? carDetail.location
+                      : "Ho Chi Minh City"}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Card>
           </Grid>
           <Grid item xl={12} lg={12}>
@@ -361,6 +404,7 @@ export default function CarDetails(props) {
                   reviews.map((review) => (
                     <Review key={review.id} {...review} />
                   ))}
+                {/* <ReviewComponent carId={carDetail.id} /> */}
               </CardContent>
             </Card>
           </Grid>

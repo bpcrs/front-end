@@ -20,6 +20,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { FilterButton } from "./FilterButton";
 import NumberFormat from "react-number-format";
+import WaveSkeleton from "../booking/WaveSkeleton";
 
 const useStyles = makeStyles((theme) => ({
   rootChip: {
@@ -88,7 +89,7 @@ function CarList(props) {
   const [filter, setFilter] = useState({
     brand: [],
     model: [],
-    seat: []
+    seat: [],
   });
   const showPriceRange = () => {
     return (
@@ -114,7 +115,8 @@ function CarList(props) {
   const handleChangeSlider = (event, newValue) => {
     setValueSlider(newValue);
   };
-
+  console.log(props.location.state);
+  const locationPickup = props.location.state.location.description;
   useEffect(() => {
     dispatch(fetchBrandList());
     dispatch(fetchModelList());
@@ -126,7 +128,8 @@ function CarList(props) {
         filter.model,
         filter.seat,
         valueSlider[0],
-        valueSlider[1]
+        valueSlider[1],
+        locationPickup
       )
     );
 
@@ -137,7 +140,7 @@ function CarList(props) {
       setChipData(tags.flat());
     };
     filterToChip();
-  }, [currentPage, dispatch, filter, valueSlider]);
+  }, [currentPage, dispatch, filter, locationPickup, valueSlider]);
 
   const handleDelete = (chipToDelete) => () => {
     setChipData((chips) =>
@@ -259,6 +262,8 @@ function CarList(props) {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
+      {console.log(filterCars)}
+
       {filterCars.data &&
         filterCars.data.map((car, index) => (
           <Grid
@@ -277,6 +282,14 @@ function CarList(props) {
             />
           </Grid>
         ))}
+      {filterCars.data ? (
+        <Grid></Grid>
+      ) : (
+        <Grid item lg={12}>
+          <WaveSkeleton loading />
+        </Grid>
+      )}
+
       <Grid xs={12} lg={12} item container justify="flex-end">
         <Pagination
           count={

@@ -3,6 +3,7 @@ import * as Actions from "./license.action";
 const initialState = {
     loading: false,
     changePage: false,
+    userDetail: {},
 };
 
 const LicenseReducer = (state = initialState, { type, payload }) => {
@@ -18,6 +19,12 @@ const LicenseReducer = (state = initialState, { type, payload }) => {
             return{
                 ...state,
                 loading: true,
+            }
+        }
+        case Actions.FETCH_USER_DETAIL_SUCCESS: {
+            return{
+                ...state,
+                userDetail: payload,
             }
         }
         default: {

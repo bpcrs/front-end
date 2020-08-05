@@ -109,8 +109,6 @@ const Chat = () => {
   };
 
   const onImgSubmit = (event) => {
-    //  const image = document.getElementById("output");
-    //  image.src = URL.createObjectURL(event.target.files[0]);
     storeImage(
       event.target.files[0],
       selectedBooking,
@@ -119,10 +117,6 @@ const Chat = () => {
     setSendMessage("");
     setSizeMsg(sizeMsg + 1);
   };
-
-  // const storeImgToFirebase = () => {
-
-  // }
 
   return (
     <Grid
