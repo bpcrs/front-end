@@ -15,7 +15,6 @@ import {
   Typography,
   TableContainer,
   CircularProgress,
-
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -115,7 +114,7 @@ function Row(props) {
         // role="checkbox"
         // aria-checked={isSelected}
         tabIndex={-1}
-      // key={index}
+        // key={index}
       >
         <TableCell component="th" scope="row">
           {booking.renter.fullName}
@@ -123,7 +122,7 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
-            (1000 * 60 * 60 * 24)
+              (1000 * 60 * 60 * 24)
           ) + 1}{" "}
           days
         </TableCell>
@@ -235,18 +234,18 @@ const RentalCarRequest = (props) => {
   const loading = useSelector((state) => state.profile.loading);
   const rentalBookings = useSelector((state) => state.profile.bookings);
   const { carId, bookingStatus } = props;
-  // const [open, setOpen] = useState(false);
+  const changeApprove = useSelector((state) => state.profile.changeApprove);
 
   // const currentUser = useSelector((state) => state.auth.user);
   // const history = useHistory();
 
   const handleTableRowStatusBooking = (booking) => {
     switch (booking) {
-      case "REQUEST":
+      case BOOKING_STATUS.REQUEST:
         return <StyledTableCell>Approve</StyledTableCell>;
-      case "PENDING":
+      case BOOKING_STATUS.PENDING:
         return <StyledTableCell>Agreement</StyledTableCell>;
-      case "CONFIRM":
+      case BOOKING_STATUS.CONFIRM:
         return <StyledTableCell>Status</StyledTableCell>;
       default:
         return null;
@@ -255,7 +254,7 @@ const RentalCarRequest = (props) => {
 
   useEffect(() => {
     dispatch(fetchBookingRentalMyCar(carId, bookingStatus, currentPage, size));
-  }, [currentPage, dispatch, carId, bookingStatus]);
+  }, [currentPage, dispatch, carId, bookingStatus, changeApprove]);
 
   return (
     <Grid>
@@ -287,7 +286,7 @@ const RentalCarRequest = (props) => {
                 <Pagination
                   count={
                     rentalBookings.count !== 0 &&
-                      rentalBookings.count % size === 0
+                    rentalBookings.count % size === 0
                       ? Math.floor(rentalBookings.count / size)
                       : Math.floor(rentalBookings.count / size) + 1
                   }
@@ -299,12 +298,12 @@ const RentalCarRequest = (props) => {
           </Table>
         </TableContainer>
       ) : (
-          <Grid>
-            <Typography variant="body2" color="error">
-              Your car don't have any request
+        <Grid>
+          <Typography variant="body2" color="error">
+            Your car don't have any request
           </Typography>
-          </Grid>
-        )}
+        </Grid>
+      )}
     </Grid>
   );
 };

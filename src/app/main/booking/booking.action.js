@@ -305,7 +305,8 @@ export function fetchCarFilter(
   modelId = [],
   seat = [],
   fromPrice,
-  toPrice
+  toPrice,
+  locationPickup
 ) {
   return (dispatch) => {
     const params = { page, size };
@@ -325,8 +326,9 @@ export function fetchCarFilter(
         .map((seat) => parseInt(seat.value))
         .join(",")
         .toString(),
-      fromPrice: fromPrice,
-      toPrice: toPrice,
+      fromPrice,
+      toPrice,
+      locationPickup,
     });
     request.then(
       (response) => {

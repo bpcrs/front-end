@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
   contactList: {
     // width: 1000,
-    height: 750,
+    height: 600,
   },
   content: {
     flex: "1 1 auto",

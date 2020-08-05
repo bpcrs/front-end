@@ -10,7 +10,10 @@ const initialState = {
   carDetail: {},
   carCompare: [],
   brands: [],
-  filterCars: [],
+  filterCars: {
+    // data: new Array(8),
+    count: 8,
+  },
   models: [],
   agreemnts: [],
   booking: {},
