@@ -1,6 +1,7 @@
 import { GET, ENDPOINT, PUT } from "../../services/api";
 import { showMessageError } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
+import { BOOKING_STATUS, MY_NOTIFICATION_STATUS } from "../../../constant";
 
 export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
 export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
@@ -208,5 +209,42 @@ export function notificationBooking(booking) {
       renter: booking.renter,
       bookingId: booking.id,
       createAt: new Date().getTime(),
+    });
+}
+
+export function notiMyNotification(currentUser, status, booking) {
+  // const myStatus = "";
+  switch (status) {
+    case BOOKING_STATUS.PENDING:
+      status = MY_NOTIFICATION_STATUS.ACCEPT;
+      break;
+    case BOOKING_STATUS.DENY:
+      status = MY_NOTIFICATION_STATUS.REFUSE;
+      break;
+    case BOOKING_STATUS.OWNER_ACCEPTED:
+      status = MY_NOTIFICATION_STATUS.YOU_ACCEPTED;
+      break;
+    case BOOKING_STATUS.CONFIRM:
+      status = MY_NOTIFICATION_STATUS.WAITING;
+      break;
+    case BOOKING_STATUS.CANCEL:
+      status = MY_NOTIFICATION_STATUS.CANCEL;
+      break;
+    default:
+      status = "";
+  }
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${currentUser.email}`)
+    .collection("mynoti")
+    .add({
+      status: status,
+      car: booking.car,
+      owner: booking.car.owner,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+      isSeen: false,
     });
 }

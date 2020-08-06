@@ -489,8 +489,8 @@ export default function CarEdits(props) {
   const images = useSelector((state) => state.booking.images);
   const licenses = useSelector((state) => state.booking.licenses);
   useEffect(() => {
-    const fetchCar = () => {
-      dispatch(fetchCarDetail(carId));
+    const fetchCar = async () => {
+      dispatch(await fetchCarDetail(carId));
       dispatch(fetchImageList(1, 20, carId, "CAR"));
       dispatch(fetchImageList(1, 20, carId, "LICENSE"));
       setCurrentCar(carDetail);
