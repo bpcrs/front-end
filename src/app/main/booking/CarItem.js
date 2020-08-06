@@ -228,7 +228,6 @@ export default function CarItem(props = { isAction: true }) {
                       value={info.price}
                       displayType={"text"}
                       thousandSeparator={true}
-                      // prefix={"$"}
                       suffix={" đ"}
                     />
                   }
@@ -244,17 +243,12 @@ export default function CarItem(props = { isAction: true }) {
         open={open}
         onClose={handleClose}
         scroll="paper"
-        maxWidth
+        maxWidth="50%"
       >
-        <DialogTitle id="form-dialog-title" divider>Compare car</DialogTitle>
+        <DialogTitle id="form-dialog-title" divider></DialogTitle>
         <DialogContent>
           <CarCompare />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
       </Dialog >
     </Card>
   );

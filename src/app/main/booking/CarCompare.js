@@ -23,11 +23,14 @@ function createData(name, property1, property2) {
   return { name, property1, property2 };
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
   },
+  imageGrid: {
+    margin: 20,
+  }
 }));
 
 export default function CarCompare() {
@@ -41,6 +44,7 @@ export default function CarCompare() {
   if (carCompare.length == 2) {
     carDetail1 = carCompare[0];
     carDetail2 = carCompare[1];
+    console.log(carDetail1);
     rows = [
       createData("Brand", carDetail1.info.brand.name, carDetail2.info.brand.name),
       createData("Name", carDetail1.info.name, carDetail2.info.name),
@@ -57,61 +61,55 @@ export default function CarCompare() {
   }
 
   return (
-    <Layout name="Compare your car">
-      <TableContainer component={Paper}>
-        <Table
-          className={classes.table}
-          aria-label="customized table"
-          width="100%"
-        >
-          <TableHead>
-            <TableRow>
-              <Grid container spacing={0}>
-                <Grid item xs={2} lg={2}>
+    <TableContainer component={Paper}>
+      <Table
+        className={classes.table}
+        aria-label="customized table"
+      >
+        <TableHead>
+          <TableRow>
+            <Grid container spacing={5}>
+              <Grid item xs={2} lg={2} align="center">
+              </Grid>
+              <Grid item xs={5} lg={5} >
+                <SwipeableTextMobileStepper
+                  images={
+                    carDetail1.info
+                      ? carDetail1.info.images.filter((image) => image.type == "CAR")
+                      : [fakeImg]
+                  }
+                />
+              </Grid>
+              <Grid item xs={5} lg={5}>
+                <SwipeableTextMobileStepper
+                  images={
+                    carDetail2.info
+                      ? carDetail2.info.images.filter((image) => image.type == "CAR")
+                      : [fakeImg]
+                  }
+                />
+              </Grid>
+            </Grid>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <StyledTableRow key={row.name}>
+              <Grid container>
+                <Grid item xs={2} lg={2} align="center">
+                  <p style={{ fontSize: "14" }}>{row.name}</p>
                 </Grid>
-
-                <Grid item xs={5} lg={5}>
-                  <SwipeableTextMobileStepper
-                    images={
-                      carDetail1.info
-                        ? carDetail1.info.images.filter((image) => image.type == "CAR")
-                        : [fakeImg]
-                    }
-                  />
+                <Grid item xs={5} lg={5} align="center">
+                  <p style={{ fontSize: "14" }}>{row.property1}</p>
                 </Grid>
-
-                <Grid item xs={5} lg={5}>
-                  <SwipeableTextMobileStepper
-                    images={
-                      carDetail2.info
-                        ? carDetail2.info.images.filter((image) => image.type == "CAR")
-                        : [fakeImg]
-                    }
-                  />
+                <Grid item xs={5} lg={5} align="center">
+                  <p style={{ fontSize: "14" }}>{row.property2}</p>
                 </Grid>
               </Grid>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <StyledTableRow key={row.name}>
-                <Grid container spacing={0} justify="space-between"
-                  alignItems="baseline">
-                  <Grid item xs={2} lg={2} align="center">
-                    <p style={{ fontSize: "14" }}>{row.name}</p>
-                  </Grid>
-                  <Grid item xs={5} lg={5} align="center">
-                    <p style={{ fontSize: "14" }}>{row.property1}</p>
-                  </Grid>
-                  <Grid item xs={5} lg={5} align="center">
-                    <p style={{ fontSize: "14" }}>{row.property2}</p>
-                  </Grid>
-                </Grid>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Layout>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
