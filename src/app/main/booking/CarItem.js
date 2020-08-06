@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
+  paper:{
+    maxWidth: "75%"
+  }
 }));
 
 export default function CarItem(props = { isAction: true }) {
@@ -243,9 +246,7 @@ export default function CarItem(props = { isAction: true }) {
         open={open}
         onClose={handleClose}
         scroll="paper"
-        maxWidth="50%"
-      >
-        <DialogTitle id="form-dialog-title" divider></DialogTitle>
+        classes={{ paper: classes.paper }}>
         <DialogContent>
           <CarCompare />
         </DialogContent>
