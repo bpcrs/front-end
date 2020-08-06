@@ -67,6 +67,68 @@ const Notification = () => {
       });
   };
 
+  const handleClickNotiLicense = (id) => {
+    const path = APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("License")
+      .doc(id)
+      .update({
+        isSeen: true,
+      });
+  };
+
+  const handleClickNotiCar = (id) => {
+    const path = APP_PATH.PROFILE;
+    history.push({
+      pathname: path,
+    });
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("Car")
+      .doc(id)
+      .update({
+        isSeen: true,
+      });
+  };
+
+  const handleMarkAllNotiCarRead = () => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("Car")
+      // .orderBy("createAt", "desc")
+      // .limitToLast(10)
+      .onSnapshot((ns) => {
+        ns.forEach((doc) => {
+          doc.ref.update({ isSeen: true });
+        });
+      });
+  };
+
+  const handleMarkAllNotiLicenseRead = () => {
+    firebase
+      .firestore()
+      .collection("notification")
+      .doc(`${userLogged.email}`)
+      .collection("License")
+      // .orderBy("createAt", "desc")
+      // .limitToLast(10)
+      .onSnapshot((ns) => {
+        ns.forEach((doc) => {
+          doc.ref.update({ isSeen: true });
+        });
+      });
+  };
+
   const handleMarkAllRead = () => {
     firebase
       .firestore()
@@ -80,6 +142,9 @@ const Notification = () => {
           doc.ref.update({ isSeen: true });
         });
       });
+
+      handleMarkAllNotiCarRead();
+      handleMarkAllNotiLicenseRead();
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
@@ -413,17 +478,236 @@ const Notification = () => {
             </CardActionArea>
           </Card>
         );
-      case "DENYCAR":
+      case BOOKING_STATUS.DENYLICENSE:
+
         return (
-          <Typography onClick={() => handleClick(true)}>
-            {notify.message}
-          </Typography>
+
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClickNotiLicense(notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: red[200], color: red[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    License was not Accepted!!
+                  </Typography>
+                  <div>
+                    <div style={{ color: "red" }}>Note:</div> {notify.message}
+                  </div>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
         );
-      case "ACCEPTCAR":
+      case BOOKING_STATUS.ACCEPTLICENSE:
         return (
-          <Typography onClick={() => handleClick(true)}>
-            your car is accept!
-          </Typography>
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClickNotiLicense(notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[200], color: green[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    {notify.message}
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case BOOKING_STATUS.DENYCAR:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClickNotiCar(notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: red[200], color: red[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    Your car with plate number "{notify.car.plateNum}" was not Accepted!!
+                </Typography>
+                  <div>
+                    <div style={{ color: "red" }}>Note:</div> {notify.message}
+                  </div>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case BOOKING_STATUS.ACCEPTCAR:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClickNotiCar(notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[200], color: green[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    {notify.message}
+                  </Typography>
+                  <div>
+                    Car plate number: {notify.car.plateNum}
+                  </div>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
         );
       default:
         console.log(notify);
@@ -447,16 +731,55 @@ const Notification = () => {
         // .orderBy("createAt", "desc")
         // .limitToLast(10)
         .onSnapshot((ns) => {
-          setNotification(
-            ns.docs.map((noti) => {
-              const data = noti.data();
-              data["id"] = noti.id;
-              return data;
-            })
-          );
+          setNotification([...notification,
+          ...ns.docs.map((noti) => {
+            // dispatch(
+            //   showMessage({
+            //     message: "Your have new notification",
+            //   })
+            // );
+            const data = noti.data();
+            data["id"] = noti.id;
+            return data;
+          })
+          ]);
         });
     };
 
+    const fetchNotiLicense = () => {
+      firebase
+        .firestore()
+        .collection("notification")
+        .doc(`${userLogged.email}`)
+        .collection("License")
+        .onSnapshot((ns) => {
+          ns.docs.map((noti) => {
+
+            const data = noti.data();
+            data["id"] = noti.id;
+            notification.push(data);
+          })
+        });
+    };
+
+    const fetchNotiCar = () => {
+      firebase
+        .firestore()
+        .collection("notification")
+        .doc(`${userLogged.email}`)
+        .collection("Car")
+        .onSnapshot((ns) => {
+          ns.docs.map((noti) => {
+
+            const data = noti.data();
+            data["id"] = noti.id;
+            notification.push(data);
+          })
+        });
+    };
+
+    fetchNotiLicense();
+    fetchNotiCar();
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);

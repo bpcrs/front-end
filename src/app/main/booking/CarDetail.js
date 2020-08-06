@@ -30,6 +30,7 @@ import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
+import Pagination from "@material-ui/lab/Pagination";
 // import HorizontalLinearStepper from "../booking/StepperBooking";
 // import ReviewComponent from "./Review";
 
@@ -64,6 +65,9 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
     width: "100%",
   },
+  textField: {
+    width: "100%",
+},
 }));
 const Review = ({ comment, rating, renter, createdDate }) => {
   const classes = useStyles();
@@ -95,7 +99,13 @@ const Review = ({ comment, rating, renter, createdDate }) => {
           </Grid>
           <Grid spacing={1} item xs={12} xl={4} container alignContent="center">
             <Grid item lg={12} xs={12}>
-              <Typography variant="subtitle2">{comment}</Typography>
+              {/* <Typography variant="subtitle2">{comment}</Typography> */}
+              <TextField
+                value={comment ? comment: ""}
+                className={classes.textField}
+                variant="outlined"
+                multiline
+                disabled />
             </Grid>
           </Grid>
         </Grid>
@@ -120,6 +130,9 @@ export default function CarDetails(props) {
     bookingChange.toDate,
   ]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const size = 3;
+
   const fakeImg =
     "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
 
@@ -127,7 +140,7 @@ export default function CarDetails(props) {
     carDetail.price *
     (Math.round(
       (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
-        (1000 * 60 * 60 * 24)
+      (1000 * 60 * 60 * 24)
     ) +
       1);
 
@@ -147,7 +160,7 @@ export default function CarDetails(props) {
 
   useEffect(() => {
     const carId = props.match.params.id;
-    dispatch(fetchReviewList(1, 10, carId));
+    dispatch(fetchReviewList(currentPage, size, carId));
     dispatch(
       fetchCarDetailWithDistance(carId, bookingChange.location.description)
     );
@@ -158,7 +171,7 @@ export default function CarDetails(props) {
     //   )
     // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, props]);
+  }, [dispatch, props, currentPage]);
 
   return (
     <Grid container spacing={3}>
@@ -227,7 +240,7 @@ export default function CarDetails(props) {
                             <Icon
                               fontSize={"default"}
                               color="primary"
-                              // style={{ color: "primary" }}
+                            // style={{ color: "primary" }}
                             >
                               airline_seat_recline_normal_outlined
                             </Icon>
@@ -400,11 +413,28 @@ export default function CarDetails(props) {
                     Customer reviews
                   </Typography>
                 </Grid>
-                {reviews &&
-                  reviews.map((review) => (
-                    <Review key={review.id} {...review} />
-                  ))}
-                {/* <ReviewComponent carId={carDetail.id} /> */}
+                <Grid container>
+                  <Grid item xl={12} lg={12}>
+                    {reviews.data &&
+                      reviews.data.map((review) => (
+                        <Review key={review.id} {...review} />
+                      ))}
+                  </Grid>
+
+                  <Grid item xl={12} lg={12}>
+                    <Pagination
+                      count={
+                        reviews.count !== 0 && reviews.count % size === 0
+                          ? Math.floor(reviews.count / size)
+                          : Math.floor(reviews.count / size) + 1
+                      }
+                      color="primary"
+                      onChange={(e, page) => setCurrentPage(page)}
+                    />
+                  </Grid>
+                </Grid>
+
+
               </CardContent>
             </Card>
           </Grid>
@@ -491,7 +521,7 @@ export default function CarDetails(props) {
                         Math.round(
                           (new Date(selectedDate[1]) -
                             new Date(selectedDate[0])) /
-                            (1000 * 60 * 60 * 24)
+                          (1000 * 60 * 60 * 24)
                         ) + 1
                       }
                       displayType={"text"}

@@ -110,7 +110,7 @@ export function fetchCarCheckingAdmin(page, size) {
             fetchCarCheckingSuccess(response.success ? response.data : [])
           );
         } else {
-          dispatch(showMessageError(response.message));
+          // dispatch(showMessageError(response.message));
         }
       },
       (error) => {
@@ -174,74 +174,103 @@ export function fetchUserListChecking() {
 }
 
 export function putCarUpdate(id, car) {
-    return (dispatch) => {
-        const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
-        request.then(
-            (response) => {
-                if (response.success) {
-                    dispatch(putCarEditSuccess(response.data));
-                } else {
-                    dispatch(showMessageError(response.message));
-                }
-            },
-            (error) => {
-                dispatch(showMessageError(error.message));
-            }
-        );
-    };
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putCarEditSuccess(response.data));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }
 
 
 export async function fetchUserDetailChecking(userId) {
-    return (dispatch) => {
-        const request =  GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
-        request.then(
-            (response) => {
-                if (response.success) {
-                    dispatch(fetchUserDetailCheckingSuccess(response.data));
-                } else {
-                    dispatch(fetchUserDetailCheckingFailure(response.message));
-                    dispatch(showMessageError(response.message));
-                }
-            },
-            (error) => {
-                dispatch(fetchUserDetailCheckingFailure(error));
-                dispatch(showMessageError(error.message));
-            }
-        )
-    }
+  return (dispatch) => {
+    const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(fetchUserDetailCheckingSuccess(response.data));
+        } else {
+          dispatch(fetchUserDetailCheckingFailure(response.message));
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(fetchUserDetailCheckingFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    )
+  }
 }
 
 export function putAcceptUserLicence(id, user) {
-    return (dispatch) => {
-      console.log(user);
-        const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
-        request.then(
-            (response) => {
-                if (response.success) {
-                    dispatch(putUserDetailSuccess(response.data));
-                } else {
-                    dispatch(putUserDetailFailure(response.message));
-                    dispatch(showMessageError(response.message));
-                }
-            },
-            (error) => {
-                dispatch(putUserDetailFailure(error.message));
-                dispatch(showMessageError(error.message));
-            }
-        );
-    };
+  return (dispatch) => {
+    console.log(user);
+    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putUserDetailSuccess(response.data));
+        } else {
+          dispatch(putUserDetailFailure(response.message));
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(putUserDetailFailure(error.message));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }
 
-export function notificationUser(message, userMail, isAccept) {
-    firebase
-        .firestore()
-        .collection("notification")
-        .doc(`${userMail}`)
-        .collection("Car")
-        .add({
-            message: message,
-            status: isAccept ? "ACCEPTCAR" : "DENYCAR",
-            createAt: new Date().getTime(),
-        });
+// export function notificationUser(message, userMail, isAccept) {
+//   firebase
+//     .firestore()
+//     .collection("notification")
+//     .doc(`${userMail}`)
+//     .collection("Car")
+//     .add({
+//       message: message,
+//       status: isAccept ? "ACCEPTCAR" : "DENYCAR",
+//       createAt: new Date().getTime(),
+//     });
+// }
+
+export function notificationLicenseUser(message, userMail, isAccept) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${userMail}`)
+    .collection("License")
+    .add({
+      message: message,
+      status: isAccept ? "ACCEPTLICENSE" : "DENYLICENSE",
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
+}
+
+export function notificationUserCar(message, userMail, isAccept, car) {
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${userMail}`)
+    .collection("Car")
+    .add({
+      message: message,
+      status: isAccept ? "ACCEPTCAR" : "DENYCAR",
+      createAt: new Date().getTime(),
+      car: car,
+      isSeen: false,
+    });
 }
