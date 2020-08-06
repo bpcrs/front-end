@@ -76,19 +76,8 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-    // if (changePage) {
-    //   history.push({
-    //     pathname: APP_PATH.CHECKING,
-    //   });
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     carDetail.id,
-    // carDetail.id,
-    // changePage,
-    // dispatch,
-    // history,
-    // props.location.state,
   ]);
 
   const handleChangeInput = (event) => {

@@ -282,6 +282,7 @@ export function postImagesCar(images) {
   };
 }
 
+
 export function fetchCarList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
