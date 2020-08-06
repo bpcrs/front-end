@@ -178,31 +178,31 @@ const Profile = (props) => {
                 {...a11yProps(0)}
               />
               <Tab
-                // icon={<PaymentIcon />}
-                label="Payment Method"
-                {...a11yProps(1)}
-              />
-              <Tab
                 // icon={<HistoryIcon />}
                 label="My Booking"
+                {...a11yProps(1)}
+              />
+              {/* <Tab
+                // icon={<PaymentIcon />}
+                label="Payment Method"
                 {...a11yProps(2)}
               />
               <Tab
                 // icon={<UpdateIcon />}
                 label="Lease History"
                 {...a11yProps(3)}
-              />
+              /> */}
             </Tabs>
           </Grid>
           <Grid item xs={9} sm={9}>
             <TabPanel value={tab} index={0}>
               <MyCar />
             </TabPanel>
-            <TabPanel value={tab} index={1}></TabPanel>
-            <TabPanel value={tab} index={2}>
+            <TabPanel value={tab} index={1}>
               <MyBooking />
             </TabPanel>
-            <TabPanel value={tab} index={3}></TabPanel>
+            {/* <TabPanel value={tab} index={2}></TabPanel> */}
+            {/* <TabPanel value={tab} index={3}></TabPanel> */}
           </Grid>
         </Grid>
       </div>

@@ -164,7 +164,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        reviews: [...state.reviews, payload],
+        // reviews: [...state.reviews, payload],
         disableButton: true,
       };
     }

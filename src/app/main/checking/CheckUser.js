@@ -1,5 +1,5 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardHeader, Avatar } from "@material-ui/core";
+import { Grid, Card, CardHeader, Avatar, TableCell } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -25,6 +25,16 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const StyledTableCell = withStyles((theme) => ({
+    head: {
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
+    },
+    body: {
+        fontSize: 14,
+    },
+}))(TableCell);
+
 export default function CheckUser() {
     const classes = useStyles();
     const history = useHistory();
@@ -36,17 +46,17 @@ export default function CheckUser() {
     }, [dispatch]);
 
     const handleStateUser = (state) => {
-        if(state){
+        if (state) {
             return "ACTIVED";
-        }else{
+        } else {
             return "NOT ACTIVED";
         }
     };
 
     const handleColorStateUser = (state) => {
-        if(state){
+        if (state) {
             return "green";
-        }else{
+        } else {
             return "red";
         }
     };
@@ -59,7 +69,7 @@ export default function CheckUser() {
             }
         });
     };
-    
+
     return (
         <TableContainer>
             <Table
@@ -67,33 +77,45 @@ export default function CheckUser() {
                 aria-label="customized table"
                 width="100%"
             >
+                <TableHead>
+                    <TableRow>
+                        <StyledTableCell></StyledTableCell>
+                        <StyledTableCell>User</StyledTableCell>
+                        <StyledTableCell>Date Join</StyledTableCell>
+                        <StyledTableCell>Status</StyledTableCell>
+                        <StyledTableCell>Action</StyledTableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
 
                     {
                         users.map((user) => (
-                            <TableRow>
-                                <Card className={classes.card}>
-                                    <Grid container spacing={0} style={{ wordWrap: "break-word", textAlign: "center" }}>
+                            // <Card className={classes.card}>
+                                <TableRow>
+                                    <TableCell>
+                                        <CardHeader
+                                            avatar={
+                                                <Avatar
+                                                    aria-label="recipe"
+                                                    className={classes.avatar}
+                                                    src={user.imageUrl}
+                                                ></Avatar>
+                                            }
+                                            // title={user.fullName}
+                                        />
+                                    </TableCell>
 
-                                        <Grid item xs={5} lg={5}>
-                                            <CardHeader
-                                                avatar={
-                                                    <Avatar
-                                                        aria-label="recipe"
-                                                        className={classes.avatar}
-                                                        src={user.imageUrl}
-                                                    ></Avatar>
-                                                }
-                                                title={user.fullName}
-                                            // subheader={"Email: " + user.email}
-                                            />
-                                        </Grid>
+                                    <TableCell>
+                                    {user.fullName}
+                                    </TableCell>
 
-                                        <Grid item xs={3} lg={3}>
-                                            <p>{new Date(user.createdDate).toLocaleDateString()}</p>
-                                        </Grid>
+                                    <TableCell>
+                                        <p>{new Date(user.createdDate).toLocaleDateString()}</p>
+                                    </TableCell>
 
-                                        <Grid item xs={3} lg={3}
+                                    <TableCell>
+
+                                        <Grid
                                             style={{
                                                 border: "2px solid",
                                                 borderColor: "#B0C4DE",
@@ -102,17 +124,61 @@ export default function CheckUser() {
                                                 textAlign: "center",
                                                 marginTop: "1%",
                                             }}>
-                                            <p style={{color:handleColorStateUser(user.licenseCheck)}} >{handleStateUser(user.licenseCheck)}</p>
+                                            <p style={{ color: handleColorStateUser(user.licenseCheck) }} >{handleStateUser(user.licenseCheck)}</p>
                                         </Grid>
 
-                                        <Grid item xs={1} lg={1}>
-                                            <div >
-                                                <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(user.id)}/>
-                                            </div>
-                                        </Grid>
-                                    </Grid>
-                                </Card>
-                            </TableRow>
+                                    </TableCell>
+
+                                    <TableCell>
+                                        <SettingIcon onClick={() => handleCickSetting(user.id)} />
+                                    </TableCell>
+
+                                   
+                                </TableRow>
+                            // </Card>
+
+                            // <TableRow>
+                            //     <Card className={classes.card}>
+                            //         <Grid container spacing={0} style={{ wordWrap: "break-word", textAlign: "center" }}>
+
+                            //             <Grid item xs={5} lg={5}>
+                            //                 <CardHeader
+                            //                     avatar={
+                            //                         <Avatar
+                            //                             aria-label="recipe"
+                            //                             className={classes.avatar}
+                            //                             src={user.imageUrl}
+                            //                         ></Avatar>
+                            //                     }
+                            //                     title={user.fullName}
+                            //                 // subheader={"Email: " + user.email}
+                            //                 />
+                            //             </Grid>
+
+                            //             <Grid item xs={3} lg={3}>
+                            //                 <p>{new Date(user.createdDate).toLocaleDateString()}</p>
+                            //             </Grid>
+
+                            //             <Grid item xs={3} lg={3}
+                            //                 style={{
+                            //                     border: "2px solid",
+                            //                     borderColor: "#B0C4DE",
+                            //                     borderRadius: "0px 50px 50px 50px",
+                            //                     height: "50%",
+                            //                     textAlign: "center",
+                            //                     marginTop: "1%",
+                            //                 }}>
+                            //                 <p style={{ color: handleColorStateUser(user.licenseCheck) }} >{handleStateUser(user.licenseCheck)}</p>
+                            //             </Grid>
+
+                            //             <Grid item xs={1} lg={1}>
+                            //                 <div >
+                            //                     <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(user.id)} />
+                            //                 </div>
+                            //             </Grid>
+                            //         </Grid>
+                            //     </Card>
+                            // </TableRow>
                         ))
                     }
 

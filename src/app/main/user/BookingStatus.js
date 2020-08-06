@@ -38,7 +38,11 @@ export const bookingStatus = [
     id: 7,
     name: BOOKING_STATUS.CONFIRM,
     color: "bg-yellow text-white",
-  },
+  },{
+    id: 8,
+    name: "DONE",
+    color: "bg-green text-white",
+  }
 ];
 
 const BookingStatus = ({ name }) => {

@@ -268,6 +268,11 @@ const labels = [
     color: "#fbca04",
     description: "Neogating beetween you and owner",
   },
+  {
+    name: "DONE",
+    color: "green",
+    description: "Car already rented",
+  },
   //   {
   //     name: "",
   //     color: "#d93f0b",

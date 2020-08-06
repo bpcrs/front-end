@@ -125,6 +125,7 @@ export default function Review(props) {
                                 value={review.comment}
                                 className={classes.textField}
                                 variant="outlined"
+                                multiline
                                 onChange={handleChangeInput} />
                         </Grid>
                     </Grid>
