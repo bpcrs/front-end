@@ -172,7 +172,7 @@ const BookingRequest = (props) => {
             <Dialog open={open} scroll="body">
 
               <DialogContent>
-                <Review carId={booking.car.id}/>
+                <Review carId={booking.car.id} bookingId={booking.id}/>
               </DialogContent>
 
               <DialogActions>

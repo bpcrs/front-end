@@ -617,6 +617,7 @@ export function postReviewSubmit(review) {
           console.log("Success submit review car");
         } else {
           dispatch(showMessageError(response.message));
+          dispatch(postReviewSubmitFailure(response.message));
           console.log("Success submit review car error");
         }
       },

@@ -20,11 +20,11 @@ import {
   fetchCarDetail,
   fetchCarDetailWithDistance,
 } from "./booking.action";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Slide from "@material-ui/core/Slide";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogTitle from "@material-ui/core/DialogTitle";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+// import Slide from "@material-ui/core/Slide";
 import NumberFormat from "react-number-format";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
@@ -34,9 +34,9 @@ import Pagination from "@material-ui/lab/Pagination";
 // import HorizontalLinearStepper from "../booking/StepperBooking";
 // import ReviewComponent from "./Review";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+// const Transition = React.forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,7 +121,7 @@ export default function CarDetails(props) {
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
   // const currentUser = useSelector((state) => state.auth.user);
-  const loading = useSelector((state) => state.booking.loading);
+  // const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
   const distance = useSelector((state) => state.booking.distance);
@@ -175,7 +175,7 @@ export default function CarDetails(props) {
 
   return (
     <Grid container spacing={3}>
-      <div>
+      {/* <div>
         <Dialog
           open={loading}
           TransitionComponent={Transition}
@@ -193,7 +193,7 @@ export default function CarDetails(props) {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
+      </div> */}
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
           {/* <Grid container item lg={12} justify="center">
