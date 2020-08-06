@@ -34,22 +34,28 @@ export default function CarCompare() {
   const classes = useStyles();
   const fakeImg =
     "https://www.indianbluebook.com/images/selected_car.png";
+  var carDetail1 = [];
+  var carDetail2 = [];
+  var rows = [];
   const carCompare = useSelector((state) => state.booking.carCompare);
-  const carDetail1 = carCompare[0];
-  const carDetail2 = carCompare[1];
-  const rows = [
-    createData("Brand", carDetail1.info.brand.name, carDetail2.info.brand.name),
-    createData("Name", carDetail1.info.name, carDetail2.info.name),
-    createData("Model", carDetail1.info.year, carDetail2.info.year),
-    createData("Screen", carDetail1.info.screen, carDetail2.info.screen),
-    createData("Seats", carDetail1.info.seat, carDetail2.info.seat),
-    createData("Price", carDetail1.info.price, carDetail2.info.price),
-    createData(
-      "Type",
-      carDetail1.info.auto_driver ? "Automatic" : "Manual",
-      carDetail2.info.auto_driver ? "Automatic" : "Manual"
-    ),
-  ];
+  if (carCompare.length == 2) {
+    carDetail1 = carCompare[0];
+    carDetail2 = carCompare[1];
+    rows = [
+      createData("Brand", carDetail1.info.brand.name, carDetail2.info.brand.name),
+      createData("Name", carDetail1.info.name, carDetail2.info.name),
+      createData("Model", carDetail1.info.year, carDetail2.info.year),
+      createData("Screen", carDetail1.info.screen, carDetail2.info.screen),
+      createData("Seats", carDetail1.info.seat, carDetail2.info.seat),
+      createData("Price", carDetail1.info.price, carDetail2.info.price),
+      createData(
+        "Type",
+        carDetail1.info.auto_driver ? "Automatic" : "Manual",
+        carDetail2.info.auto_driver ? "Automatic" : "Manual"
+      ),
+    ];
+  }
+
   return (
     <Layout name="Compare your car">
       <TableContainer component={Paper}>
@@ -67,7 +73,7 @@ export default function CarCompare() {
                 <Grid item xs={5} lg={5}>
                   <SwipeableTextMobileStepper
                     images={
-                      carDetail1.info.images.length > 0
+                      carDetail1.info
                         ? carDetail1.info.images.filter((image) => image.type == "CAR")
                         : [fakeImg]
                     }
@@ -77,7 +83,7 @@ export default function CarCompare() {
                 <Grid item xs={5} lg={5}>
                   <SwipeableTextMobileStepper
                     images={
-                      carDetail2.info.images.length > 0
+                      carDetail2.info
                         ? carDetail2.info.images.filter((image) => image.type == "CAR")
                         : [fakeImg]
                     }

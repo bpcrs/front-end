@@ -13,8 +13,13 @@ import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CarCompare from "./CarCompare";
+import { useTheme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
+  form: {
+    marginTop: 20
+  },
   card: {
     maxWidth: 400,
   },
@@ -38,17 +43,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
-  const [double, setDouble] = useState(false);
   const history = useHistory();
   const { info } = props;
   const [open, setOpen] = React.useState(false);
   const carCompare = useSelector((state) => state.booking.carCompare);
   const handleClose = () => {
+    carCompare.length = 0;
     setOpen(false);
   };
   const clickToAddCompareCar = () => {
     carCompare.push({ info });
-    if (carCompare.length > 1) {
+    if (carCompare.length == 2) {
       setOpen(true);
     }
   };
@@ -206,12 +211,10 @@ export default function CarItem(props = { isAction: true }) {
 
             <Grid item xs={7}>
               <Button
-                disabled={double}
                 variant="contained"
                 startIcon={<CompareIcon />}
                 onClick={() => {
                   clickToAddCompareCar();
-                  setDouble(true);
                 }}
               >
                 Compare
@@ -240,9 +243,10 @@ export default function CarItem(props = { isAction: true }) {
       <Dialog
         open={open}
         onClose={handleClose}
-        scroll="body"
-        aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Compare car</DialogTitle>
+        scroll="paper"
+        maxWidth
+      >
+        <DialogTitle id="form-dialog-title" divider>Compare car</DialogTitle>
         <DialogContent>
           <CarCompare />
         </DialogContent>
