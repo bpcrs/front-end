@@ -14,6 +14,7 @@ import {
   DialogContent,
   CircularProgress,
   Badge,
+  Backdrop,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -46,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
   },
   progress: {
     maxHeight: 50,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -202,25 +207,42 @@ const MyCar = (props) => {
   const currentUser = useSelector((state) => state.auth.user);
   const isDetail = useSelector((state) => state.profile.isDetail);
   const [currentPage, setCurrentPage] = useState(1);
+  const [open, setOpen] = useState(false);
   const request = useSelector((state) => state.profile.request);
   const change = useSelector((state) => state.profile.change);
+  const [refresh, setRefesh] = useState(1);
+  const handleClickRefresh = () => {
+    setOpen(true);
+    setRefesh((refresh) => refresh + 1);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+  };
+
   useEffect(() => {
     dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
   }, [currentUser.id, dispatch, currentPage, change]);
 
   return !isDetail ? (
     <Grid>
-      {/* <Grid item lg={2}>
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Grid item container justify="space-between">
+        <RegisterCar />
         <Button
           variant="text"
           style={{ textTransform: "none", color: "blue" }}
-          onClick={handleAddCar}
-          startIcon={<Icon>playlist_add</Icon>}
+          onClick={() => handleClickRefresh()}
+          startIcon={<Icon>refresh</Icon>}
         >
-          Register Car
+          Refresh
         </Button>
-      </Grid> */}
-      <RegisterCar />
+      </Grid>
       {cars.count > 0 ? (
         <TableContainer>
           <Table
@@ -237,7 +259,7 @@ const MyCar = (props) => {
                 <StyledTableCell>Book request</StyledTableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody key={refresh}>
               {cars.data &&
                 cars.data.map((car, index) => (
                   <Row key={index} car={car} />

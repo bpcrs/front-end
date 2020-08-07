@@ -12,8 +12,6 @@ import firebase from "../../firebase/firebase";
 import {
   setSelectedUser,
   // getRequestFirebase,
-  getBookingRequest,
-  updateChip,
   setSelectedBooking,
   fetchPendingBooking,
 } from "./chat.action";
@@ -82,6 +80,9 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     padding: theme.spacing(2),
   },
+  button: {
+    marginLeft: theme.spacing(1),
+  },
   rootAvt: {
     display: "flex",
     "& > *": {
@@ -91,6 +92,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: theme.spacing(1),
   },
 }));
+
 const StyledBadge = withStyles((theme) => ({
   badge: {
     backgroundColor: "#44b700",
@@ -165,40 +167,45 @@ const ContactList = (props) => {
       className={classes.contactButton}
     >
       <Grid container className="px-8 py-8">
-        <Grid item lg>
-          <StyledBadge
-            overlap="circle"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            variant="dot"
-          >
-            <Avatar
-              src={
-                isRenter ? booking.car.owner.imageUrl : booking.renter.imageUrl
-              }
-            />
-          </StyledBadge>
-        </Grid>
-        <Grid lg={8} item>
-          {/* <Grid container lg={4}> */}
-          <Typography variant="subtitle2">
-            {booking.car.name} -{" "}
-            {isRenter ? booking.car.owner.fullName : booking.renter.fullName}
-          </Typography>
-          <Typography
-            className="text-11"
-            color="textSecondary"
-            variant="caption"
-          >
-            Booking Id : {booking.id}
-          </Typography>
-
-          {/* </Grid> */}
-        </Grid>
-        <Grid item>
-          <BookingStatus name={booking.status} />
+        <Grid item lg></Grid>
+        <Grid item container justify="space-between">
+          <Grid lg={6} item container justify="flex-start">
+            <Grid item>
+              <StyledBadge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                variant="dot"
+              >
+                <Avatar
+                  src={
+                    isRenter
+                      ? booking.car.owner.imageUrl
+                      : booking.renter.imageUrl
+                  }
+                />
+              </StyledBadge>
+            </Grid>
+            <Grid item className={classes.button}>
+              <Typography variant="subtitle2">
+                {isRenter
+                  ? booking.car.owner.fullName
+                  : booking.renter.fullName}
+              </Typography>
+              <Typography
+                className="text-11"
+                color="textSecondary"
+                variant="caption"
+              >
+                Booking Id : {booking.id}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <BookingStatus name={booking.status} />
+          </Grid>
         </Grid>
       </Grid>
     </Box>

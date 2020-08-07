@@ -7,7 +7,7 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import { Icon, Grid } from "@material-ui/core";
+import { Icon, Grid, Button } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
+  },
+  detail: {
+    marginLeft: theme.spacing(3),
   },
 }));
 
@@ -289,26 +292,75 @@ export default function CustomizedTimeline(props) {
   }, [booking.id, dispatch]);
 
   return (
-    <Timeline align="alternate">
-      {cancelBook || denyBook ? (
-        <Grid>
-          {trackings &&
-            trackings.map((track, index) => (
-              <Track track={track} status={track.status} key={index} />
-            ))}
+    <div>
+      <Grid item container className={classes.detail}>
+        <Grid item lg={12}>
+          <Typography variant="subtitle1" color="textPrimary">
+            Information Booking
+          </Typography>
         </Grid>
-      ) : (
-        <Grid>
-          <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
-          <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
-          <Track
-            track={ownerAcceptedBook}
-            status={BOOKING_STATUS.OWNER_ACCEPTED}
-          />
-          <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
-          <Track track={doneBook} status={BOOKING_STATUS.DONE} />
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Book date:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {new Date(booking.createdDate).toLocaleDateString()}
+          </Typography>
         </Grid>
-      )}
-    </Timeline>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Location:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.location}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Destination:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.destination}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            From date:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {new Date(booking.fromDate).toLocaleDateString()}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Car:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.car.name}
+          </Typography>
+        </Grid>
+      </Grid>
+      <Timeline align="alternate">
+        {cancelBook || denyBook ? (
+          <Grid>
+            {trackings &&
+              trackings.map((track, index) => (
+                <Track track={track} status={track.status} key={index} />
+              ))}
+          </Grid>
+        ) : (
+          <Grid>
+            <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
+            <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
+            <Track
+              track={ownerAcceptedBook}
+              status={BOOKING_STATUS.OWNER_ACCEPTED}
+            />
+            <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
+            <Track track={doneBook} status={BOOKING_STATUS.DONE} />
+          </Grid>
+        )}
+      </Timeline>
+    </div>
   );
 }

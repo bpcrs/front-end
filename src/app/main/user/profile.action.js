@@ -1,5 +1,5 @@
 import { GET, ENDPOINT, PUT } from "../../services/api";
-import { showMessageError } from "../../store/actions/fuse";
+import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
 import { BOOKING_STATUS, MY_NOTIFICATION_STATUS } from "../../../constant";
 
@@ -191,7 +191,10 @@ export function changeBookingStatusRequest(bookingId, status) {
       (response) => {
         if (response.success) {
           dispatch(changeBookingStatusRequestSuccess(response.data));
+          // dispatch()
           notificationBooking(response.data);
+          // if (status === BOOKING_STATUS.CONFIRM)
+          //   dispatch(showMessageSuccess("All agreements confirm successful!"));
         } else {
           dispatch(showMessageError(response.message));
         }

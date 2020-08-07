@@ -282,7 +282,6 @@ export function postImagesCar(images) {
   };
 }
 
-
 export function fetchCarList(page, size) {
   return (dispatch) => {
     const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL, {
@@ -717,8 +716,14 @@ export function updateCarStatus(id, status) {
     );
     request.then(
       (response) => {
-        dispatch(updateCarStatusSuccess(response.success ? response.data : ""));
-        dispatch(showMessageSuccess("Update status success"));
+        if (response.success) {
+          dispatch(
+            updateCarStatusSuccess(response.success ? response.data : "")
+          );
+          dispatch(showMessageSuccess("Update status success"));
+        } else {
+          dispatch(showMessageError("Can not update"));
+        }
       },
       (error) => {
         showMessageError(error.message);

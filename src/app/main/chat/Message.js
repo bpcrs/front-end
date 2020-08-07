@@ -84,7 +84,6 @@ const Message = ({ message, receive, type }) => {
     setOpenImg(false);
   };
   const isRevice = userLogged.id !== receive;
-  console.log(newAgreement);
 
   async function handleChangeChip(name) {
     dispatch(changeChip(name, message, booking.id));

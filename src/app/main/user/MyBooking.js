@@ -9,6 +9,8 @@ import {
   Typography,
   Button,
   Icon,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 
 import BookingRequest from "./BookingRequest";
@@ -16,10 +18,23 @@ import BookingStatus from "./BookingStatus";
 import BookingFilter from "./BookingFilter";
 import { useEffect } from "react";
 
+const useStyles = makeStyles((theme) => ({
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+}));
+
 const MyBooking = () => {
+  const classes = useStyles();
   const [statusFilter, setStatusFilter] = useState();
   const [refresh, setRefesh] = useState(1);
+  const [open, setOpen] = useState(false);
   const handleClickRefresh = () => {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
     setRefesh((refresh) => refresh + 1);
   };
 
@@ -34,6 +49,13 @@ const MyBooking = () => {
         >
           Refresh Requests
         </Button>
+        <Backdrop
+          className={classes.backdrop}
+          open={open}
+          // onClick={handleClose}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Grid item lg={6} container justify="flex-end">
           <BookingFilter key={refresh} onFilter={setStatusFilter} />
         </Grid>

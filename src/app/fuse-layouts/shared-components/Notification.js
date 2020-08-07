@@ -143,8 +143,8 @@ const Notification = () => {
         });
       });
 
-      handleMarkAllNotiCarRead();
-      handleMarkAllNotiLicenseRead();
+    handleMarkAllNotiCarRead();
+    handleMarkAllNotiLicenseRead();
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
@@ -479,9 +479,7 @@ const Notification = () => {
           </Card>
         );
       case BOOKING_STATUS.DENYLICENSE:
-
         return (
-
           <Card
             onMouseOver={() => {
               setShadow(4);
@@ -567,9 +565,7 @@ const Notification = () => {
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">
-                    {notify.message}
-                  </Typography>
+                  <Typography variant="subtitle1">{notify.message}</Typography>
                   <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
@@ -623,8 +619,8 @@ const Notification = () => {
                 </Grid>
                 <Grid lg item>
                   <Typography variant="subtitle1">
-                    Your car with plate number "{notify.car.plateNum}" was not Accepted!!
-                </Typography>
+                    {/* Your car with plate number "{notify.car.plateNum}" was not Accepted!! */}
+                  </Typography>
                   <div>
                     <div style={{ color: "red" }}>Note:</div> {notify.message}
                   </div>
@@ -680,12 +676,8 @@ const Notification = () => {
                   />
                 </Grid>
                 <Grid lg item>
-                  <Typography variant="subtitle1">
-                    {notify.message}
-                  </Typography>
-                  <div>
-                    Car plate number: {notify.car.plateNum}
-                  </div>
+                  <Typography variant="subtitle1">{notify.message}</Typography>
+                  <div>Car plate number: {notify.car.plateNum}</div>
                   <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}
@@ -731,17 +723,18 @@ const Notification = () => {
         // .orderBy("createAt", "desc")
         // .limitToLast(10)
         .onSnapshot((ns) => {
-          setNotification([...notification,
-          ...ns.docs.map((noti) => {
-            // dispatch(
-            //   showMessage({
-            //     message: "Your have new notification",
-            //   })
-            // );
-            const data = noti.data();
-            data["id"] = noti.id;
-            return data;
-          })
+          setNotification([
+            ...notification,
+            ...ns.docs.map((noti) => {
+              // dispatch(
+              //   showMessage({
+              //     message: "Your have new notification",
+              //   })
+              // );
+              const data = noti.data();
+              data["id"] = noti.id;
+              return data;
+            }),
           ]);
         });
     };
@@ -754,11 +747,10 @@ const Notification = () => {
         .collection("License")
         .onSnapshot((ns) => {
           ns.docs.map((noti) => {
-
             const data = noti.data();
             data["id"] = noti.id;
             notification.push(data);
-          })
+          });
         });
     };
 
@@ -770,11 +762,10 @@ const Notification = () => {
         .collection("Car")
         .onSnapshot((ns) => {
           ns.docs.map((noti) => {
-
             const data = noti.data();
             data["id"] = noti.id;
             notification.push(data);
-          })
+          });
         });
     };
 

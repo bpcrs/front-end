@@ -242,70 +242,10 @@ function Row(props) {
     }
   }
 
-  function BookingDetail(props) {
-    const { booking } = props;
-    return (
-      <Grid item container>
-        <Grid item lg={12}>
-          <Typography
-            variant="subtitle1"
-            color="textPrimary"
-            className={classNames(
-              "inline text-12 p-4 rounded truncate bg-grey text-white"
-            )}
-          >
-            Information Booking
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Book date:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {new Date(booking.createdDate).toLocaleDateString()}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Location:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.location}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Destination:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.destination}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textSecondary">
-            From date:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {new Date(booking.fromDate).toLocaleDateString()}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textSecondary">
-            Car:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.car.name}
-          </Typography>
-        </Grid>
-      </Grid>
-    );
-  }
-
   return (
     <React.Fragment>
       <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
         <DialogContent>
-          <BookingDetail booking={booking} />
           <StatusAction booking={booking} />
           <CustomizedTimeline booking={booking} />
         </DialogContent>
@@ -423,7 +363,6 @@ const BookingRequest = (props) => {
               </Backdrop>
               {myBookings.data &&
                 myBookings.data.map((booking, index) => (
-                  // <Grid item xs={12} xl={12} lg={12}>
                   <Row key={index} booking={booking} />
                 ))}
             </TableBody>

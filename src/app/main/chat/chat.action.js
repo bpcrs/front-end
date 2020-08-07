@@ -1,7 +1,9 @@
 import firebase from "../../firebase/firebase";
-import { showMessageError } from "../../store/actions/fuse";
+import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import { GET, ENDPOINT, POST, PUT } from "../../services/api";
 import { use } from "marked";
+import { notificationBooking } from "../user/profile.action";
+import { BOOKING_STATUS } from "../../../constant";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
@@ -20,7 +22,20 @@ export const FETCH_BOOKING_PENDING = "[BOOKING] FETCH BOOKING PENDING";
 export const SET_SELECTED_BOOKING = "[CHAT] SET SELECTED BOOKING";
 export const SET_IS_RENTER_BOOKING = "[BOOKING] SET USER ROLE";
 export const ACCEPT_AGREEMENT_SUCCESS = "[AGREEMENT] ACCEPT AGREEMENT SUCCESS";
+export const CLOSE_AGREEMENT_DRAWER = "[AGREEMENT] CLOSE DRAWER";
+export const CHAT_CHANGE_STATUS_BOOKING = "[CHAT] CHANGE BOOKING STATUS";
 
+export function changeBookingStatus(booking) {
+  return {
+    type: CHAT_CHANGE_STATUS_BOOKING,
+    payload: booking,
+  };
+}
+export function closeAgreementDrawer() {
+  return {
+    type: CLOSE_AGREEMENT_DRAWER,
+  };
+}
 export function getRequestFirebase(request) {
   return {
     type: GET_REQUEST_FIREBASE,
@@ -169,16 +184,15 @@ export function fetchCriteriaList() {
 }
 
 export function fetchAgreementList(id) {
-  return (dispatch) => {
-    const request = GET(ENDPOINT.AGREEMENT_CONTROLLER_GETBY_BOOKINGID(id));
-    request.then(
-      (response) => {
-        dispatch(fetchAgreementSuccess(response.success ? response.data : []));
-      },
-      (error) => {
-        showMessageError(error.message);
-      }
+  return async (dispatch) => {
+    const response = await GET(
+      ENDPOINT.AGREEMENT_CONTROLLER_GETBY_BOOKINGID(id)
     );
+    if (response.success) {
+      dispatch(fetchAgreementSuccess(response.data));
+    } else {
+      showMessageError(response.message);
+    }
   };
 }
 export function createAgreement(criteriaId, value, bookingId) {
@@ -285,6 +299,29 @@ export function fetchPendingBooking(user, page, size, status, isRenter) {
       },
       (error) => {
         showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function changeBookingStatusRequest(bookingId, status) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.BOOKING_CONTROLLER_GETBYID(bookingId), {
+      status,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(changeBookingStatus(response.data));
+          notificationBooking(response.data);
+          if (status === BOOKING_STATUS.CONFIRM)
+            dispatch(showMessageSuccess("All agreements confirm successful!"));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
       }
     );
   };
