@@ -87,8 +87,8 @@ const Booking = (props) => {
           />
         </Tabs>
       }
-      <Grid>
-        <TabPanel value={tabValue} index={0}>
+      <Grid item container lg={12}>
+        <TabPanel value={tabValue} index={0} item lg={12}>
           <RentalCarRequest carId={carId} bookingStatus={"REQUEST"} />
         </TabPanel>
         <TabPanel value={tabValue} index={1}>

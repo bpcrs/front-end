@@ -1,24 +1,36 @@
 import React, { useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import {
-  Grid, Icon, Button, Card, CardHeader, CardMedia, CardContent, CardActions, Typography, Dialog, DialogTitle, DialogContent, DialogActions
-}
-  from "@material-ui/core";
+  Grid,
+  Icon,
+  Button,
+  Card,
+  CardHeader,
+  CardMedia,
+  CardContent,
+  CardActions,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import CompareIcon from "@material-ui/icons/Compare";
 import { Link } from "react-router-dom";
+import Chip from "@material-ui/core/Chip";
 import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CarCompare from "./CarCompare";
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   form: {
-    marginTop: 20
+    marginTop: 20,
   },
   card: {
     maxWidth: 400,
@@ -39,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  paper:{
-    maxWidth: "75%"
-  }
+  paper: {
+    maxWidth: "75%",
+  },
 }));
 
 export default function CarItem(props = { isAction: true }) {
@@ -73,35 +85,34 @@ export default function CarItem(props = { isAction: true }) {
                 </Typography>
               </Grid>
             ) : (
-                <Skeleton
-                  animation="wave"
-                  variant="circle"
-                  width={40}
-                  height={40}
-                />
-              )}
+              <Skeleton
+                animation="wave"
+                variant="circle"
+                width={40}
+                height={40}
+              />
+            )}
           </Grid>
         }
-
         title={
           info ? (
             info.name
           ) : (
-              <Skeleton
-                animation="wave"
-                height={10}
-                width="80%"
-                style={{ marginBottom: 6 }}
-              />
-            )
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+          )
         }
         // subheader={info.model.name + " " + info.year}
         subheader={
           info ? (
             info.model.name + " " + info.year
           ) : (
-              <Skeleton animation="wave" height={10} width="40%" />
-            )
+            <Skeleton animation="wave" height={10} width="40%" />
+          )
         }
       />
       {info.images.length > 0 ? (
@@ -111,8 +122,8 @@ export default function CarItem(props = { isAction: true }) {
           title="Car thumbnail"
         />
       ) : (
-          <Skeleton animation="wave" variant="rect" className={classes.media} />
-        )}
+        <Skeleton animation="wave" variant="rect" className={classes.media} />
+      )}
 
       <CardContent>
         <Grid
@@ -138,8 +149,8 @@ export default function CarItem(props = { isAction: true }) {
               {info ? (
                 <Typography variant="caption">{info.seat} people</Typography>
               ) : (
-                  <Skeleton animation="wave" height={10} width="80%" />
-                )}
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
           <Grid
@@ -159,8 +170,8 @@ export default function CarItem(props = { isAction: true }) {
                   {info.autoDriver ? "Automatic" : "Manual"}
                 </Typography>
               ) : (
-                  <Skeleton animation="wave" height={10} width="80%" />
-                )}
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
 
@@ -179,8 +190,8 @@ export default function CarItem(props = { isAction: true }) {
               {info ? (
                 <Typography variant="caption">{info.model.name}</Typography>
               ) : (
-                  <Skeleton animation="wave" height={10} width="80%" />
-                )}
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
         </Grid>
@@ -209,8 +220,8 @@ export default function CarItem(props = { isAction: true }) {
                 </Button>
               </Grid>
             ) : (
-                <Skeleton animation="wave" height={10} width="80%" />
-              )}
+              <Skeleton animation="wave" height={10} width="80%" />
+            )}
 
             <Grid item xs={7}>
               <Button
@@ -225,19 +236,24 @@ export default function CarItem(props = { isAction: true }) {
             </Grid>
             <Grid item xs={6} className={classes.alignRight}>
               {info ? (
-                <Typography variant="subtitle2">
-                  {
+                // <Typography variant="subtitle1" color="primary">
+                <Chip
+                  label={
                     <NumberFormat
                       value={info.price}
                       displayType={"text"}
                       thousandSeparator={true}
-                      suffix={" đ"}
+                      // prefix={"$"}
+                      suffix={" đ/ day"}
                     />
                   }
-                </Typography>
+                  variant="default"
+                  size="medium"
+                  color="primary"
+                />
               ) : (
-                  <Skeleton animation="wave" height={10} width="80%" />
-                )}
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
             </Grid>
           </Grid>
         </CardActions>
@@ -246,11 +262,12 @@ export default function CarItem(props = { isAction: true }) {
         open={open}
         onClose={handleClose}
         scroll="paper"
-        classes={{ paper: classes.paper }}>
+        classes={{ paper: classes.paper }}
+      >
         <DialogContent>
           <CarCompare />
         </DialogContent>
-      </Dialog >
+      </Dialog>
     </Card>
   );
 }

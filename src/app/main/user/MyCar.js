@@ -274,10 +274,6 @@ const MyCar = (props) => {
     </Grid>
   ) : (
     <Grid>
-      {/* <IconButton onClick={() => setIsDetail(false)}>
-        <Icon>arrow_back</Icon>
-        <Typography>Back</Typography>
-      </IconButton> */}
       <Button
         variant="text"
         style={{ textTransform: "none", color: "blue" }}

@@ -123,4 +123,6 @@ export const ENDPOINT = {
   AGREEMENT_CONTROLLER_GETBY_BOOKINGID: (id) => `/agreement/booking/${id}`,
 
   MAPS_CONTROLLER_POST: "/maps",
+
+  TRACKING_CONTROLLER_GETBY_BOOKINGID: (id) => `/tracking/${id}`,
 };

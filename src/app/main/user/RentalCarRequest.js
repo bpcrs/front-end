@@ -26,6 +26,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
+import TimeAgo from "react-timeago";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -39,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
   },
   detailBooking: {
     marginLeft: theme.spacing(1),
+  },
+
+  table: {
+    // width: 1000,
   },
 }));
 
@@ -117,8 +122,17 @@ function Row(props) {
         // key={index}
       >
         <TableCell component="th" scope="row">
-          {booking.renter.fullName}
+          {Math.round(
+            (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
+          ) > 0 ? (
+            new Date(booking.createdDate).toDateString()
+          ) : (
+            <TimeAgo date={booking.createdDate} />
+          )}
         </TableCell>
+        {/* <TableCell component="th" scope="row">
+          {booking.renter.fullName}
+        </TableCell> */}
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
@@ -267,7 +281,8 @@ const RentalCarRequest = (props) => {
           >
             <TableHead>
               <TableRow>
-                <StyledTableCell>Renter Name</StyledTableCell>
+                <StyledTableCell>Book time</StyledTableCell>
+                {/* <StyledTableCell>Renter Name</StyledTableCell> */}
                 <StyledTableCell>Time Rental</StyledTableCell>
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Detail</StyledTableCell>
