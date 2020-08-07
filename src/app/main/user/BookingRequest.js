@@ -33,6 +33,8 @@ import BookingStatus from "./BookingStatus";
 import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
+import classNames from "classnames";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -92,7 +94,6 @@ function Row(props) {
   const ownerAcceptedText = `Click to join chat room with car owner`;
 
   function StatusAction(props) {
-    // console.log(status);
     const [open, setOpen] = useState(false);
     const { booking } = props;
 
@@ -213,10 +214,70 @@ function Row(props) {
     }
   }
 
+  function BookingDetail(props) {
+    const { booking } = props;
+    return (
+      <Grid item container>
+        <Grid item lg={12}>
+          <Typography
+            variant="subtitle1"
+            color="textPrimary"
+            className={classNames(
+              "inline text-12 p-4 rounded truncate bg-grey text-white"
+            )}
+          >
+            Information Booking
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Book date:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {new Date(booking.createdDate).toLocaleDateString()}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Location:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.location}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textPrimary">
+            Destination:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.destination}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textSecondary">
+            From date:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {new Date(booking.fromDate).toLocaleDateString()}
+          </Typography>
+        </Grid>
+        <Grid item container lg={12} justify="flex-start">
+          <Typography variant="subtitle2" color="textSecondary">
+            Car:
+          </Typography>
+          <Typography variant="subtitle2" color="textPrimary">
+            {booking.car.name}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
+  }
+
   return (
     <React.Fragment>
       <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
         <DialogContent>
+          <BookingDetail booking={booking} />
           <StatusAction booking={booking} />
           <CustomizedTimeline booking={booking} />
         </DialogContent>
@@ -266,7 +327,6 @@ function Row(props) {
         <TableCell component="th" scope="row">
           <BookingStatus name={booking.status} />
         </TableCell>
-        {/* <StatusAction booking={booking} /> */}
       </TableRow>
     </React.Fragment>
   );

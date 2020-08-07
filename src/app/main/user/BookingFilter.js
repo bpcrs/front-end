@@ -10,6 +10,7 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import InputBase from "@material-ui/core/InputBase";
 import { Typography } from "@material-ui/core";
 import { useEffect } from "react";
+import { usePrevious } from "@chakra-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {

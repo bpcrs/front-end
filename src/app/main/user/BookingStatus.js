@@ -22,7 +22,7 @@ export const bookingStatus = [
   {
     id: 4,
     name: BOOKING_STATUS.CANCEL,
-    color: "bg-purple text-white",
+    color: "bg-red text-white",
   },
   {
     id: 5,
@@ -32,7 +32,7 @@ export const bookingStatus = [
   {
     id: 6,
     name: BOOKING_STATUS.OWNER_ACCEPTED,
-    color: "bg-yellow text-white",
+    color: "bg-purple text-white",
   },
   {
     id: 7,
@@ -46,13 +46,22 @@ export const bookingStatus = [
   },
 ];
 
-const BookingStatus = ({ name }) => {
-  return (
+const BookingStatus = ({ name, done }) => {
+  return !done ? (
     <div
       className={classNames(
         "inline text-12 p-4 rounded truncate",
         _.find(bookingStatus, { name: name }).color
       )}
+    >
+      {name}
+    </div>
+  ) : (
+    <div
+      className={classNames(
+        "inline text-12 p-4 rounded truncate bg-grey text-white"
+      )}
+      // style={{ backgroundColor: "grey", textCo }}
     >
       {name}
     </div>

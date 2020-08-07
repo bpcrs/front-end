@@ -7,13 +7,11 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import FastfoodIcon from "@material-ui/icons/Fastfood";
-import { Icon } from "@material-ui/core";
+import { Icon, Grid } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { getTrackingsByBooking } from "../user/profile.action";
-import { Grid } from "@material-ui/core";
 import BookingStatus from "../user/BookingStatus";
 import { BOOKING_STATUS } from "../../../constant";
 
@@ -42,19 +40,25 @@ function Track(props) {
               </Typography>
             ) : (
               <Typography variant="subtitle2" color="textSecondary">
-                ???
+                N/A
               </Typography>
             )}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <TimelineDot color="secondary" variant="outlined">
-              <Icon style={{ color: "blue" }}>send</Icon>
-            </TimelineDot>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "blue" }}>send</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
-              <BookingStatus name={status} />
+              <BookingStatus name={status} done={track ? false : true} />
               <Typography variant="subtitle2" color="primary">
                 Book car
               </Typography>
@@ -73,19 +77,25 @@ function Track(props) {
               </Typography>
             ) : (
               <Typography variant="subtitle2" color="textSecondary">
-                ???
+                N/A
               </Typography>
             )}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <TimelineDot color="inherit">
-              <Icon style={{ color: "black" }}>chat</Icon>
-            </TimelineDot>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "black" }}>chat</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
-              <BookingStatus name={status} />
+              <BookingStatus name={status} done={track ? false : true} />
               <Typography variant="subtitle2" color="primary">
                 Negotiate with car's owner
               </Typography>
@@ -104,19 +114,25 @@ function Track(props) {
               </Typography>
             ) : (
               <Typography variant="subtitle2" color="textSecondary">
-                ???
+                N/A
               </Typography>
             )}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <TimelineDot color="primary" variant="outlined">
-              <Icon style={{ color: "purple" }}>check_circle</Icon>
-            </TimelineDot>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "purple" }}>check_circle</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
-              <BookingStatus name={status} />
+              <BookingStatus name={status} done={track ? false : true} />
               <Typography variant="subtitle2" color="primary">
                 Car's owner accpeted agreement
               </Typography>
@@ -135,19 +151,25 @@ function Track(props) {
               </Typography>
             ) : (
               <Typography variant="subtitle2" color="textSecondary">
-                ???
+                N/A
               </Typography>
             )}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <TimelineDot color="secondary" variant="outlined">
-              <Icon style={{ color: "green" }}>done_all</Icon>
-            </TimelineDot>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "green" }}>done_all</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
             <TimelineConnector />
           </TimelineSeparator>
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
-              <BookingStatus name={status} />
+              <BookingStatus name={status} done={track ? false : true} />
               <Typography variant="subtitle2" color="primary">
                 Close agreement. Waiting for receive car
               </Typography>
@@ -166,21 +188,65 @@ function Track(props) {
               </Typography>
             ) : (
               <Typography variant="subtitle2" color="textSecondary">
-                ???
+                N/A
               </Typography>
             )}
           </TimelineOppositeContent>
           <TimelineSeparator>
-            <TimelineDot color="secondary" variant="outlined">
-              <Icon style={{ color: "green" }}>done_all</Icon>
-            </TimelineDot>
-            <TimelineConnector />
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "green" }}>done_all</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
           </TimelineSeparator>
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
-              <BookingStatus name={status} />
+              <BookingStatus name={status} done={track ? false : true} />
               <Typography variant="subtitle2" color="primary">
                 Done rental.
+              </Typography>
+            </Paper>
+          </TimelineContent>
+        </TimelineItem>
+      );
+    case BOOKING_STATUS.CANCEL:
+    case BOOKING_STATUS.DENY:
+      return (
+        <TimelineItem>
+          <TimelineOppositeContent>
+            {track ? (
+              <Typography variant="subtitle2" color="textSecondary">
+                {new Date(track.createdDate).toLocaleTimeString()}{" "}
+                {new Date(track.createdDate).toLocaleDateString()}
+              </Typography>
+            ) : (
+              <Typography variant="subtitle2" color="textSecondary">
+                N/A
+              </Typography>
+            )}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "red" }}>clear</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
+          </TimelineSeparator>
+          <TimelineContent>
+            <Paper elevation={3} className={classes.paper}>
+              <BookingStatus name={status} done={track ? false : true} />
+              <Typography variant="subtitle2" color="primary">
+                {status === BOOKING_STATUS.CANCEL
+                  ? "Cancelled booking"
+                  : "Car's owner had denied your request"}
               </Typography>
             </Paper>
           </TimelineContent>
@@ -217,26 +283,32 @@ export default function CustomizedTimeline(props) {
   const denyBook = trackings.find(
     (item) => item.status === BOOKING_STATUS.DENY
   );
+
   useEffect(() => {
     dispatch(getTrackingsByBooking(booking.id));
   }, [booking.id, dispatch]);
 
   return (
     <Timeline align="alternate">
-      {/* {trackings &&
-        trackings.map((track, index) => (
+      {cancelBook || denyBook ? (
+        <Grid>
+          {trackings &&
+            trackings.map((track, index) => (
+              <Track track={track} status={track.status} key={index} />
+            ))}
+        </Grid>
+      ) : (
+        <Grid>
+          <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
+          <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
           <Track
-            track={track}
-            key={index}
-            length={trackings.length}
-            pos={index}
+            track={ownerAcceptedBook}
+            status={BOOKING_STATUS.OWNER_ACCEPTED}
           />
-        ))} */}
-      <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
-      <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
-      <Track track={ownerAcceptedBook} status={BOOKING_STATUS.OWNER_ACCEPTED} />
-      <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
-      <Track track={doneBook} status={BOOKING_STATUS.DONE} />
+          <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
+          <Track track={doneBook} status={BOOKING_STATUS.DONE} />
+        </Grid>
+      )}
     </Timeline>
   );
 }
