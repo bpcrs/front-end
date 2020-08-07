@@ -34,6 +34,7 @@ import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import classNames from "classnames";
+import Review from "../booking/Review";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,7 +90,8 @@ function Row(props) {
   const cancelText = `Click to view info`;
   const requestText = `Cancel this booking request`;
   const confirmText = `View contract`;
-  const doneText = `View completed contract`;
+  // const doneText = `View completed contract`;
+  const doneText = `Review and Rating this car`;
   const denyText = `View info`;
   const ownerAcceptedText = `Click to join chat room with car owner`;
 
@@ -163,15 +165,41 @@ function Row(props) {
         );
       case "DONE":
         return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={doneText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "green" }}>info</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
+          <React.Fragment>
+            <TableCell component="th" scope="row">
+              <Tooltip title={doneText}>
+                <IconButton
+                // onClick={() => handleAgreement()}
+                >
+                  <Icon
+                    style={{ color: "green" }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    start
+                  </Icon>
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                <Review carId={booking.car.id} bookingId={booking.id} />
+              </DialogContent>
+
+              <DialogActions>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
         );
       case "DENY":
         return (

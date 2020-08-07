@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchCarDetailCheck, putCarUpdate, notificationUser } from "./checking.action";
+import { fetchCarDetailCheck, putCarUpdate, notificationUser, notificationUserCar } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 const ITEM_HEIGHT = 48;
@@ -76,19 +76,8 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-    // if (changePage) {
-    //   history.push({
-    //     pathname: APP_PATH.CHECKING,
-    //   });
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     carDetail.id,
-    // carDetail.id,
-    // changePage,
-    // dispatch,
-    // history,
-    // props.location.state,
   ]);
 
   const handleChangeInput = (event) => {
@@ -104,7 +93,8 @@ export default function CarDetailChecking(props) {
   };
 
   const handleAcceptCar = () => {
-    notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
+    // notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
+    notificationUserCar("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true, carDetail)
     dispatch(
       putCarUpdate(currentCar.id, {
         available: true,
@@ -117,7 +107,8 @@ export default function CarDetailChecking(props) {
   };
 
   const handleDenyCar = () => {
-    notificationUser(message, currentCar.owner.email, false);
+    // notificationUser(message, currentCar.owner.email, false);
+    notificationUserCar(message, currentCar.owner.email, false, carDetail)
     dispatch(
       putCarUpdate(currentCar.id, {
         available: false,

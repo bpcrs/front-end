@@ -21,6 +21,7 @@ const initialState = {
   disableButton: false,
   distance: {},
   loadingBooking: false,
+  messageResponeReview: "",
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -164,7 +165,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: false,
-        reviews: [...state.reviews, payload],
+        // reviews: [...state.reviews, payload],
         disableButton: true,
       };
     }
@@ -173,6 +174,13 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         loading: true,
       };
+    }
+    case Actions.POST_REVIEW_SUBMIT_FAILURE:{
+      return{
+        ...state,
+        messageResponeReview: payload,
+        loading: true,
+      }
     }
     default: {
       return state;

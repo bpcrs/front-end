@@ -13,7 +13,7 @@ import { APP_PATH } from "../../../constant";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchUserDetailChecking, putAcceptUserLicence, notificationUser } from "./checking.action";
+import { fetchUserDetailChecking, putAcceptUserLicence, notificationLicenseUser } from "./checking.action";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -84,14 +84,14 @@ export default function UserDetailChecking(props) {
 
 
     const handleAcceptUserLicense = () => {
-        notificationUser("Your license have benn accepted", currentUser.email, true);
+        notificationLicenseUser("Your license have been Accepted", currentUser.email, true);
         dispatch(putAcceptUserLicence(currentUser.id, {
             licenseCheck: true,
         }));
     };
 
     const handleSendNotificationCheckLicense = () => {
-        notificationUser(message, currentUser.email, false);
+        notificationLicenseUser(message, currentUser.email, false);
         setOpen(false);
 
         history.push({

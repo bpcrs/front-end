@@ -272,7 +272,7 @@ const RentalCarRequest = (props) => {
 
   return (
     <Grid>
-      {rentalBookings.data.length > 0 ? (
+      {rentalBookings && rentalBookings.data.length > 0 ? (
         <TableContainer>
           <Table
             className={classes.table}
