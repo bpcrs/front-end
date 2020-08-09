@@ -52,13 +52,19 @@ export default function ContractTable({ booking }) {
             <StyledTableCell component="th" scope="row">
               Pickup date
             </StyledTableCell>
-            <StyledTableCell align="right">{booking.fromDate}</StyledTableCell>
+            <StyledTableCell align="right">
+              {new Date(booking.fromDate).toLocaleDateString()}{" "}
+              {new Date(booking.fromDate).toLocaleTimeString()}
+            </StyledTableCell>
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
               Return date
             </StyledTableCell>
-            <StyledTableCell align="right">{booking.toDate}</StyledTableCell>
+            <StyledTableCell align="right">
+              {new Date(booking.toDate).toLocaleDateString()}{" "}
+              {new Date(booking.toDate).toLocaleTimeString()}
+            </StyledTableCell>
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">

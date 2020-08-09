@@ -259,7 +259,6 @@ function Track(props) {
 }
 
 export default function CustomizedTimeline(props) {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const { booking } = props;
   const trackings = useSelector((state) => state.profile.trackings);

@@ -25,7 +25,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest } from "./profile.action";
+import { fetchBookingRequest, signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
@@ -64,9 +64,8 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row(props) {
+function Row({ booking }) {
   const dispatch = useDispatch();
-  const { booking } = props;
   const [open, setOpen] = useState(false);
   const [openTimeline, setOpenTimeline] = useState(false);
   const history = useHistory();
@@ -88,7 +87,9 @@ function Row(props) {
     setOpenTimeline(false);
   };
 
-  const handleSignContract = () => {};
+  const handleSignContract = () => {
+    dispatch(signContractRequest(booking.id));
+  };
 
   const pendingText = `Click to join chat room with car owner`;
   const cancelText = `Click to view info`;

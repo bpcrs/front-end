@@ -125,4 +125,6 @@ export const ENDPOINT = {
   MAPS_CONTROLLER_POST: "/maps",
 
   TRACKING_CONTROLLER_GETBY_BOOKINGID: (id) => `/tracking/${id}`,
+
+  CONTRACT_CONTROLLER_SIGN: "/contract",
 };
