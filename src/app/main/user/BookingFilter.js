@@ -11,6 +11,7 @@ import InputBase from "@material-ui/core/InputBase";
 import { Typography } from "@material-ui/core";
 import { useEffect } from "react";
 import { usePrevious } from "@chakra-ui/core";
+import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -273,6 +274,11 @@ const labels = [
     name: "DONE",
     color: "green",
     description: "Car already rented",
+  },
+  {
+    name: BOOKING_STATUS.OWNER_ACCEPTED,
+    color: "purple",
+    description: "Owner had accepted all agreements",
   },
   //   {
   //     name: "",

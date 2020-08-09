@@ -14,6 +14,7 @@ import {
   Box,
   FormGroup,
   Icon,
+  Tooltip,
 } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = ({ message, receive, type }) => {
+const Message = ({ message, receive, type, createAt }) => {
   // console.log("Create At ", createAt);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -69,13 +70,6 @@ const Message = ({ message, receive, type }) => {
   const [openImg, setOpenImg] = useState(false);
   const criteria = useSelector((state) => state.chat.criteria);
 
-  // const [insurance, setInsurance] = useState(false);
-  // console.log(insurance);
-
-  // const handleInsurance = () => {
-  //   setInsurance(true);
-  // };
-
   const handleClickOpen = () => {
     setOpenImg(true);
   };
@@ -84,13 +78,6 @@ const Message = ({ message, receive, type }) => {
     setOpenImg(false);
   };
   const isRevice = userLogged.id !== receive;
-
-  async function handleChangeChip(name) {
-    dispatch(changeChip(name, message, booking.id));
-    const send = `agree agreement ${type} with ${message}`;
-
-    dispatch(closeAgreement());
-  }
 
   const handAgreementAccepted = async (type) => {
     dispatch(
@@ -113,9 +100,6 @@ const Message = ({ message, receive, type }) => {
                 <Typography variant="subtitle1" color="inherit">
                   Mileage limit
                 </Typography>
-                {/* <Typography variant="caption" color="inherit">
-                  Save 15%
-                </Typography> */}
               </div>
               <CardContent>
                 <Card raised square>
@@ -138,6 +122,7 @@ const Message = ({ message, receive, type }) => {
                         <Button
                           size="small"
                           color="default"
+                          style={{ backgroundColor: "green", color: "white" }}
                           variant="outlined"
                           onClick={() => {
                             handAgreementAccepted(type);
@@ -157,10 +142,12 @@ const Message = ({ message, receive, type }) => {
         return (
           <Card className="w-1/2">
             <CardActionArea>
-              <CardContent>
+              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
                 <Typography gutterBottom variant="subtitle1">
                   Extra
                 </Typography>
+              </div>
+              <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
                     ? `You offer ${selectedBooking.car.owner.fullName} in extra fees with ${message} đ/km`
@@ -173,6 +160,7 @@ const Message = ({ message, receive, type }) => {
                 <Button
                   size="small"
                   color="default"
+                  style={{ backgroundColor: "green", color: "white" }}
                   variant="outlined"
                   onClick={() => {
                     handAgreementAccepted(type);
@@ -230,6 +218,7 @@ const Message = ({ message, receive, type }) => {
                       <Button
                         size="small"
                         color="default"
+                        style={{ backgroundColor: "green", color: "white" }}
                         variant="outlined"
                         onClick={() => {
                           handAgreementAccepted(type);
@@ -248,10 +237,12 @@ const Message = ({ message, receive, type }) => {
         return (
           <Card className="w-1/2">
             <CardActionArea>
-              <CardContent>
+              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
                 <Typography gutterBottom variant="subtitle1">
                   Deposit
                 </Typography>
+              </div>
+              <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {isRevice
                     ? `You offer ${selectedBooking.car.owner.fullName} in deposit with ${message} days rent`
@@ -264,6 +255,7 @@ const Message = ({ message, receive, type }) => {
                 <Button
                   size="small"
                   color="default"
+                  style={{ backgroundColor: "green", color: "white" }}
                   variant="outlined"
                   onClick={() => {
                     handAgreementAccepted(type);
@@ -321,6 +313,7 @@ const Message = ({ message, receive, type }) => {
                   <Button
                     size="small"
                     color="default"
+                    style={{ backgroundColor: "green", color: "white" }}
                     variant="outlined"
                     onClick={() => {
                       handAgreementAccepted(type);
@@ -390,15 +383,24 @@ const Message = ({ message, receive, type }) => {
     }
   };
   return (
-    <Grid
-      container
-      justify={isRevice ? "flex-end" : "flex-start"}
-      className="py-4"
-      item
-      lg={12}
+    <Tooltip
+      title={
+        new Date(createAt).toDateString() +
+        " " +
+        new Date(createAt).toLocaleTimeString()
+      }
+      placement={isRevice ? "right-end" : "left-start"}
     >
-      <MessageByType />
-    </Grid>
+      <Grid
+        container
+        justify={isRevice ? "flex-end" : "flex-start"}
+        className="py-4"
+        item
+        lg={12}
+      >
+        <MessageByType />
+      </Grid>
+    </Tooltip>
   );
 };
 

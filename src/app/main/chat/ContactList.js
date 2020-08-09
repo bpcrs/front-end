@@ -24,14 +24,6 @@ const useStyles = makeStyles((theme) => ({
   root: {
     background: theme.palette.background.default,
   },
-  // contactButton: {
-  //   position: "absolute",
-  //   top: 0,
-  //   right: 0,
-  //   bottom: 8,
-  //   content: "''",
-  //   width: 4,
-  // },
 
   unreadBadge: {
     position: "absolute",
@@ -124,12 +116,10 @@ const StyledBadge = withStyles((theme) => ({
 const ContactList = (props) => {
   const classes = useStyles();
   const [users, setUsers] = useState([]);
-  const selectedBooking = useSelector((state) => state.chat.selectedBooking);
-  const { info, renter, chipList } = props || {};
+  const { info } = props || {};
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
   const pendingBookings = useSelector((state) => state.chat.pendingBookings);
-  // console.log(pendingBookings);
   const isRenter = useSelector((state) => state.chat.isRenter);
 
   const setSelectedContact = (booking) => {

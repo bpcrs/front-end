@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  CircularProgress,
 } from "@material-ui/core";
 import CarItem from "./CarItem";
 // import { Link } from "react-router-dom";
@@ -25,6 +24,7 @@ import { postBookingRequest, changeLoadingBooking } from "./booking.action";
 import { useState } from "react";
 import NumberFormat from "react-number-format";
 import SubmitLicense from "../submitLicense/submitLicense";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,9 +61,8 @@ export default function ViewBooking(props) {
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
   const loadingBooking = useSelector((state) => state.booking.loadingBooking);
-  // const bookingRequest = useSelector((state) =>)
+  const flagBookSuccess = useSelector((state) => state.booking.flagBookSuccess);
   const [open, setOpen] = useState(false);
-  const [check, setCheck] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleCheckBox = () => {
@@ -92,8 +91,6 @@ export default function ViewBooking(props) {
   console.log(bookingReq);
 
   const handleUpdate = () => {
-    // setCheck(false);
-    // setOpen(false);
     dispatch(changeLoadingBooking());
     setOpenUpdate(true);
   };
@@ -109,7 +106,6 @@ export default function ViewBooking(props) {
   };
 
   const handleBooking = () => {
-    // setOpen(true);
     createBookingRequest();
     // history.push({
     //   pathname: APP_PATH.PROFILE,
@@ -120,6 +116,10 @@ export default function ViewBooking(props) {
     dispatch(postBookingRequest(bookingReq, carDetail.name, currentUser));
     // loadingBooking
   };
+
+  useEffect(() => {
+    if (flagBookSuccess) history.push({ pathname: APP_PATH.PROFILE });
+  }, [flagBookSuccess, history]);
 
   return (
     <Layout name="Review Plan">

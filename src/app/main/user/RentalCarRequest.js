@@ -250,9 +250,6 @@ const RentalCarRequest = (props) => {
   const { carId, bookingStatus } = props;
   const changeApprove = useSelector((state) => state.profile.changeApprove);
 
-  // const currentUser = useSelector((state) => state.auth.user);
-  // const history = useHistory();
-
   const handleTableRowStatusBooking = (booking) => {
     switch (booking) {
       case BOOKING_STATUS.REQUEST:
@@ -272,7 +269,7 @@ const RentalCarRequest = (props) => {
 
   return (
     <Grid>
-      {rentalBookings && rentalBookings.data.length > 0 ? (
+      {rentalBookings ? (
         <TableContainer>
           <Table
             className={classes.table}
@@ -293,22 +290,41 @@ const RentalCarRequest = (props) => {
               <Backdrop className={classes.backdrop} open={loading}>
                 <CircularProgress color="inherit" />
               </Backdrop>
-              {rentalBookings.data &&
-                rentalBookings.data.map((booking, index) => (
-                  <Row key={index} booking={booking} />
-                ))}
-              <Grid xs={12} lg={12} item container justify="flex-end">
-                <Pagination
-                  count={
-                    rentalBookings.count !== 0 &&
-                    rentalBookings.count % size === 0
-                      ? Math.floor(rentalBookings.count / size)
-                      : Math.floor(rentalBookings.count / size) + 1
-                  }
-                  color="primary"
-                  onChange={(e, page) => setCurrentPage(page)}
-                />
-              </Grid>
+              {rentalBookings.count > 0 ? (
+                <Grid>
+                  {rentalBookings.data &&
+                    rentalBookings.data.map((booking, index) => (
+                      <Row key={index} booking={booking} />
+                    ))}
+                  <Grid xs={12} lg={12} item container justify="flex-end">
+                    <Pagination
+                      count={
+                        rentalBookings.count !== 0 &&
+                        rentalBookings.count % size === 0
+                          ? Math.floor(rentalBookings.count / size)
+                          : Math.floor(rentalBookings.count / size) + 1
+                      }
+                      color="primary"
+                      onChange={(e, page) => setCurrentPage(page)}
+                    />
+                  </Grid>
+                </Grid>
+              ) : (
+                <Grid container justify="center" alignItems="center">
+                  <Grid item>
+                    <img
+                      src="assets/images/empty.jpg"
+                      alt="No resourse"
+                      height="300px"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle2" color="error">
+                      Your car don't have any request
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}
             </TableBody>
           </Table>
         </TableContainer>

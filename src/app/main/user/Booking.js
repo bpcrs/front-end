@@ -1,8 +1,20 @@
 import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import { Grid, Tabs, Tab, Box, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Tabs,
+  Tab,
+  Box,
+  Typography,
+  Button,
+  Icon,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import RentalCarRequest from "./RentalCarRequest";
 import PropTypes from "prop-types";
+import BookingFilter from "../user/BookingFilter";
+import BookingRequest from "./BookingRequest";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -52,10 +64,18 @@ const Booking = (props) => {
   const classes = useStyles();
   const [tabValue, setTabValue] = useState(0);
   const { carId } = props;
-
+  const [statusFilter, setStatusFilter] = useState();
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefesh] = useState(1);
   const handleChangeTab = (event, newValue) => {
-    // console.log("value", value);
     setTabValue(newValue);
+  };
+  const handleClickRefresh = () => {
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+    setRefesh((refresh) => refresh + 1);
   };
 
   return (
@@ -95,7 +115,29 @@ const Booking = (props) => {
           <RentalCarRequest carId={carId} bookingStatus={"PENDING"} />
         </TabPanel>
         <TabPanel value={tabValue} index={2}>
-          <RentalCarRequest carId={carId} bookingStatus={"CONFIRM"} />
+          <Grid container item justify="space-between">
+            <Button
+              variant="text"
+              style={{ textTransform: "none", color: "blue" }}
+              onClick={() => handleClickRefresh()}
+              startIcon={<Icon>refresh</Icon>}
+            >
+              Refresh Requests
+            </Button>
+            <Backdrop
+              className={classes.backdrop}
+              open={open}
+              // onClick={handleClose}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+            <Grid item lg={6} container justify="flex-end">
+              <BookingFilter key={refresh} onFilter={setStatusFilter} />
+            </Grid>
+          </Grid>
+          <Grid item lg={12}>
+            <BookingRequest key={refresh} status={statusFilter} carId={carId} />
+          </Grid>
         </TabPanel>
       </Grid>
     </Grid>

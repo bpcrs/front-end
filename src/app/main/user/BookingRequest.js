@@ -25,7 +25,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+<<<<<<< HEAD
+import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
+=======
 import { fetchBookingRequest, signContractRequest } from "./profile.action";
+>>>>>>> master
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
@@ -34,7 +38,6 @@ import BookingStatus from "./BookingStatus";
 import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
-import classNames from "classnames";
 import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
 
@@ -279,11 +282,23 @@ function Row({ booking }) {
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
+<<<<<<< HEAD
+          <Grid></Grid>
+          <Button
+            autoFocus
+            onClick={handleCloseTimeline}
+            color="primary"
+            variant="outlined"
+          >
+            Close
+          </Button>
+=======
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
               <StatusAction booking={booking} />
             </Grid>
           </Grid>
+>>>>>>> master
         </DialogActions>
       </Dialog>
       <TableRow
@@ -333,20 +348,30 @@ const BookingRequest = (props) => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.profile.loading);
   const myBookings = useSelector((state) => state.profile.bookings);
-  const { status } = props;
+  const { status, carId } = props;
+  console.log(carId);
   const history = useHistory();
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    dispatch(
-      fetchBookingRequest(
-        currentUser.id,
-        status && status.map((item) => item.name),
-        currentPage,
-        size
-      )
-    );
-  }, [currentPage, dispatch, currentUser.id, status]);
+    carId
+      ? dispatch(
+          fetchBookingRentalMyCar(
+            carId,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
+        )
+      : dispatch(
+          fetchBookingRequest(
+            currentUser.id,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
+        );
+  }, [currentPage, dispatch, currentUser.id, status, carId]);
 
   return (
     <Grid>
