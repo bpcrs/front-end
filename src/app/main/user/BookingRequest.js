@@ -143,6 +143,7 @@ function Row({ booking, carId }) {
           </React.Fragment>
         );
       case BOOKING_STATUS.CONFIRM:
+      case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <Tooltip title={confirmText}>
             <Button
@@ -156,7 +157,6 @@ function Row({ booking, carId }) {
           </Tooltip>
         );
       case BOOKING_STATUS.DONE:
-      case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <React.Fragment>
             <Tooltip title={doneText}>
