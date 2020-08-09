@@ -250,11 +250,16 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
+      <Dialog
+        open={openTimeline}
+        scroll="body"
+        onClose={handleCloseTimeline}
+        fullWidth
+        maxWidth={"lg"}
+      >
         <DialogTitle id="alert-dialog-slide-title">
           <Typography variant="overline">BOOKING INFOMATION</Typography>
         </DialogTitle>
-
         <DialogContent>
           <CustomizedTimeline booking={booking} />
         </DialogContent>

@@ -291,30 +291,36 @@ export default function CustomizedTimeline(props) {
 
   return (
     <div>
-      <Timeline align="alternate">
-        {cancelBook || denyBook ? (
-          <Grid>
-            {trackings &&
-              trackings.map((track, index) => (
-                <Track track={track} status={track.status} key={index} />
-              ))}
-          </Grid>
-        ) : (
-          <Grid>
-            <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
-            <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
-            <Track
-              track={ownerAcceptedBook}
-              status={BOOKING_STATUS.OWNER_ACCEPTED}
-            />
-            <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
-            <Track track={doneBook} status={BOOKING_STATUS.DONE} />
-          </Grid>
-        )}
-      </Timeline>
-      <Grid lg={12} item>
-        <ContractTable booking={booking} />
+      <Grid container>
+        <Grid item lg={6}>
+          <Timeline align="alternate">
+            {cancelBook || denyBook ? (
+              <Grid>
+                {trackings &&
+                  trackings.map((track, index) => (
+                    <Track track={track} status={track.status} key={index} />
+                  ))}
+              </Grid>
+            ) : (
+              <Grid>
+                <Track track={requestBook} status={BOOKING_STATUS.REQUEST} />
+                <Track track={pendingBook} status={BOOKING_STATUS.PENDING} />
+                <Track
+                  track={ownerAcceptedBook}
+                  status={BOOKING_STATUS.OWNER_ACCEPTED}
+                />
+                <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
+                <Track track={doneBook} status={BOOKING_STATUS.DONE} />
+              </Grid>
+            )}
+          </Timeline>
+        </Grid>
+        <Grid item lg={6}>
+          <ContractTable booking={booking} />
+        </Grid>
       </Grid>
+
+      {/* <Grid lg={12} item></Grid> */}
     </div>
   );
 }
