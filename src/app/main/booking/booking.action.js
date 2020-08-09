@@ -579,9 +579,7 @@ export function postBookingRequest(booking) {
           dispatch(postBookingSuccess(response.data));
           notificationBooking(response.data);
           notificationMyBooking(response.data, "BOOKED");
-          // dispatch(changeLoadingBooking());
           dispatch(showMessageSuccess("Book success"));
-          console.log("Create success ", response.data);
         }
       },
       (error) => {

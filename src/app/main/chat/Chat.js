@@ -132,7 +132,9 @@ const Chat = () => {
               {msg
                 .sort((first, second) => first.createAt - second.createAt)
                 .map((message) => (
-                  <Message key={message.createAt} {...message} />
+                  <Tooltip title="dsadsad" placement="top">
+                    <Message key={message.createAt} {...message} />
+                  </Tooltip>
                 ))}
             </Grid>
           </Grid>

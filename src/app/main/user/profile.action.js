@@ -139,8 +139,12 @@ export function fetchCarInformationOwner(ownerId, page, size) {
 }
 
 export function fetchBookingRentalMyCar(carId, status, page, size) {
+  // console.log(Array.isArray(status));
   return (dispatch) => {
-    const params = { page, size, status };
+    // Array.isArray(status) ?
+    const params = Array.isArray(status)
+      ? { page, size, status: status && status.join(",") }
+      : { page, size, status };
     const request = GET(ENDPOINT.BOOKING_CONTROLLER_OWNER_GETBYID(carId), {
       ...params,
     });
@@ -191,10 +195,7 @@ export function changeBookingStatusRequest(bookingId, status) {
       (response) => {
         if (response.success) {
           dispatch(changeBookingStatusRequestSuccess(response.data));
-          // dispatch()
           notificationBooking(response.data);
-          // if (status === BOOKING_STATUS.CONFIRM)
-          //   dispatch(showMessageSuccess("All agreements confirm successful!"));
         } else {
           dispatch(showMessageError(response.message));
         }

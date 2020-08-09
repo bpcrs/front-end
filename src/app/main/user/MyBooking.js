@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
 import {
   Grid,
-  Tabs,
-  Tab,
-  Box,
-  Typography,
   Button,
   Icon,
   Backdrop,
@@ -14,9 +9,7 @@ import {
 } from "@material-ui/core";
 
 import BookingRequest from "./BookingRequest";
-import BookingStatus from "./BookingStatus";
 import BookingFilter from "./BookingFilter";
-import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   backdrop: {

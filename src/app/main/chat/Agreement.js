@@ -91,14 +91,18 @@ const GreenRadio = withStyles({
 export default function Agreement({ type, onSubmit = () => {} }) {
   const [selectedValue, setSelectedValue] = React.useState("basic");
   const [checkboxValue, setCheckboxValue] = useState({
-    carDamage: false,
-    overdue: false,
-    violate: false,
+    carDamage: true,
+    overdue: true,
+    violate: true,
   });
 
   // const criterias = useSelector((state) => state.chat.criteria);
   const [scope, setScope] = useState(15);
+  const [limit, setLimit] = useState(100);
   const [extra, setExtra] = useState(2000);
+  const handleLimit = (event, newValue) => {
+    setLimit(newValue);
+  };
   const handleChange = (event, newValue) => {
     setScope(newValue);
     setSelectedValue(newValue);
@@ -109,10 +113,14 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   };
   useEffect(() => {
     switch (type) {
-      case "Insurance":
       case "Mileage limit":
-      case "Extra":
+        onSubmit({ type, value: limit });
+        break;
+      case "Insurance":
         onSubmit({ type, value: selectedValue });
+        break;
+      case "Extra":
+        onSubmit({ type, value: extra });
         break;
       case "Indemnification":
         onSubmit({ type, value: checkboxValue });
@@ -154,9 +162,9 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       <PrettoSlider
                         valueLabelDisplay="on"
                         aria-labelledby="continuous-slider"
-                        value={scope}
+                        value={limit}
                         marks={true}
-                        onChange={handleChange}
+                        onChange={handleLimit}
                         onDragStop={(e) => console.log(e)}
                         step={50}
                         min={100}
@@ -167,7 +175,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       />
                       <Typography variant="subtitle1" color="primary">
                         Mileage limit: You will offer{" "}
-                        {scope === 15 ? 100 + " km" : scope + " km"} not
+                        {limit === 15 ? 100 + " km" : limit + " km"} not
                         exceeded destination registered.
                       </Typography>
                     </CardContent>

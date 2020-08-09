@@ -21,7 +21,7 @@ import {
 import { useEffect } from "react";
 import { BOOKING_STATUS } from "../../../constant";
 import { useCallback } from "react";
-import { Grid } from "@material-ui/core";
+import { Grid, Dialog, DialogContent, DialogActions } from "@material-ui/core";
 import { showMessageSuccess } from "../../store/actions/fuse";
 
 const useStyles = makeStyles((theme) => ({
@@ -86,6 +86,7 @@ export default function VerticalLinearStepper() {
     return step === 0 || step === 1 || step === 2;
   };
   const [currentAgreement, setCurrentAgreement] = useState();
+  const [open, setOpen] = useState(false);
   const isStepSkipped = (step) => {
     return skipped.has(step);
   };
@@ -184,12 +185,18 @@ export default function VerticalLinearStepper() {
       throw new Error("You can't skip a step that isn't optional.");
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
+    // setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // setSkipped((prevSkipped) => {
+    //   const newSkipped = new Set(prevSkipped.values());
+    //   newSkipped.add(activeStep);
+    //   return newSkipped;
+    // });
+    handleNext();
+    setOpen(false);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -199,6 +206,30 @@ export default function VerticalLinearStepper() {
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
             <StepContent>
+              <Dialog open={open} scroll="body" onClose={handleClose}>
+                <DialogContent>
+                  <Typography variant="subtitle2" color="textPrimary">
+                    If you skip this agreement, This agreement will take the
+                    default value.
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "red", color: "white" }}
+                    onClick={handleClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSkip}
+                  >
+                    I skip this agreement
+                  </Button>
+                </DialogActions>
+              </Dialog>
               <Typography>
                 {selectedBooking.renter.id === userLogged.id
                   ? getStepContentRenter(index)
@@ -206,13 +237,12 @@ export default function VerticalLinearStepper() {
               </Typography>
               <div className={classes.actionsContainer}>
                 <div>
-                  {/* {activeStep === steps.length - 1 ? null : ( */}
                   {isStepOptional(activeStep) &&
                     (activeStep === steps.length - 1 ? null : (
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSkip}
+                        onClick={() => setOpen(true)}
                         className={classes.button}
                       >
                         Skip

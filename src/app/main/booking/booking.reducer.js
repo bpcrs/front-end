@@ -11,7 +11,6 @@ const initialState = {
   carCompare: [],
   brands: [],
   filterCars: {
-    // data: new Array(8),
     count: 8,
   },
   models: [],
@@ -22,6 +21,7 @@ const initialState = {
   distance: {},
   loadingBooking: false,
   messageResponeReview: "",
+  flagBookSuccess: false,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -141,6 +141,7 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         ...state,
         // loading: false,
         bookingRequest: payload,
+        flagBookSuccess: true,
       };
     }
     case Actions.POST_BOOKING_FAILURE: {
@@ -175,12 +176,12 @@ const bookingReducer = (state = initialState, { type, payload }) => {
         loading: true,
       };
     }
-    case Actions.POST_REVIEW_SUBMIT_FAILURE:{
-      return{
+    case Actions.POST_REVIEW_SUBMIT_FAILURE: {
+      return {
         ...state,
         messageResponeReview: payload,
         loading: true,
-      }
+      };
     }
     default: {
       return state;

@@ -10,6 +10,8 @@ import {
   Icon,
   makeStyles,
   TextField,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
@@ -31,12 +33,6 @@ import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
 import Pagination from "@material-ui/lab/Pagination";
-// import HorizontalLinearStepper from "../booking/StepperBooking";
-// import ReviewComponent from "./Review";
-
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +63,11 @@ const useStyles = makeStyles((theme) => ({
   },
   textField: {
     width: "100%",
-},
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 const Review = ({ comment, rating, renter, createdDate }) => {
   const classes = useStyles();
@@ -101,11 +101,12 @@ const Review = ({ comment, rating, renter, createdDate }) => {
             <Grid item lg={12} xs={12}>
               {/* <Typography variant="subtitle2">{comment}</Typography> */}
               <TextField
-                value={comment ? comment: ""}
+                value={comment ? comment : ""}
                 className={classes.textField}
                 variant="outlined"
                 multiline
-                disabled />
+                disabled
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -120,8 +121,6 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-  // const currentUser = useSelector((state) => state.auth.user);
-  // const loading = useSelector((state) => state.booking.loading);
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
   const distance = useSelector((state) => state.booking.distance);
@@ -129,9 +128,16 @@ export default function CarDetails(props) {
     bookingChange.fromDate,
     bookingChange.toDate,
   ]);
-
+  const [loadingProcess, setLoadingProcess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const size = 3;
+
+  const handleChangeInfo = () => {
+    setLoadingProcess(true);
+    setTimeout(() => {
+      setLoadingProcess(false);
+    }, 3000);
+  };
 
   const fakeImg =
     "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
@@ -140,7 +146,7 @@ export default function CarDetails(props) {
     carDetail.price *
     (Math.round(
       (new Date(selectedDate[1]) - new Date(selectedDate[0])) /
-      (1000 * 60 * 60 * 24)
+        (1000 * 60 * 60 * 24)
     ) +
       1);
 
@@ -158,47 +164,39 @@ export default function CarDetails(props) {
     });
   };
 
+  const handleDateProcess = (date) => {
+    setDateChange(date);
+    handleChangeInfo();
+  };
+
+  const handleDestinationChange = (value) => {
+    setBookingChange({
+      ...bookingChange,
+      destination: value,
+    });
+    handleChangeInfo();
+  };
+  const handleLocationChange = (value) => {
+    setBookingChange({
+      ...bookingChange,
+      location: value,
+    });
+    handleChangeInfo();
+  };
+
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(currentPage, size, carId));
     dispatch(
       fetchCarDetailWithDistance(carId, bookingChange.location.description)
     );
-    // dispatch(
-    //   distanceBetweenTwoLocation(
-    //     bookingChange.location.description,
-    //     carDetail.location
-    //   )
-    // );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, props, currentPage]);
+  }, [dispatch, props, currentPage, bookingChange.location.description]);
 
   return (
     <Grid container spacing={3}>
-      {/* <div>
-        <Dialog
-          open={loading}
-          TransitionComponent={Transition}
-          keepMounted
-          aria-labelledby="alert-dialog-slide-title"
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <DialogTitle id="alert-dialog-slide-title">
-            {"Uploading Review"}
-          </DialogTitle>
-          <DialogContent>
-            <div align="center" className={classes.progressBar}>
-              <CircularProgress color="secondary" />
-              <p>We are upload your Review, please wait...</p>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div> */}
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
-          {/* <Grid container item lg={12} justify="center">
-            <HorizontalLinearStepper step={1} />
-          </Grid> */}
           <Grid item xl={12} xs={12} lg={12}>
             <Card>
               <CardContent>
@@ -237,11 +235,7 @@ export default function CarDetails(props) {
                           justify="space-around"
                         >
                           <Grid justify="center" container>
-                            <Icon
-                              fontSize={"default"}
-                              color="primary"
-                            // style={{ color: "primary" }}
-                            >
+                            <Icon fontSize={"default"} color="primary">
                               airline_seat_recline_normal_outlined
                             </Icon>
                           </Grid>
@@ -433,8 +427,6 @@ export default function CarDetails(props) {
                     />
                   </Grid>
                 </Grid>
-
-
               </CardContent>
             </Card>
           </Grid>
@@ -452,7 +444,7 @@ export default function CarDetails(props) {
                 <div className={classes.paper}></div>
                 <DateRangePicker
                   value={selectedDate}
-                  onChange={(date) => setDateChange(date)}
+                  onChange={(date) => handleDateProcess(date)}
                   disablePast
                   showTodayButton
                   inputFormat="dd/MM/yyyy"
@@ -466,17 +458,20 @@ export default function CarDetails(props) {
                 />
                 <GoogleMaps
                   label="Pick-up location"
+                  id="location"
+                  name="location"
                   value={bookingChange.location}
-                  onChange={(value) =>
-                    setBookingChange({ ...bookingChange, location: value })
-                  }
+                  onChange={handleLocationChange}
                 />
                 <GoogleMaps
                   label="Destination"
+                  id="destination"
+                  name="destination"
                   value={bookingChange.destination}
-                  onChange={(value) =>
-                    setBookingChange({ ...bookingChange, destination: value })
-                  }
+                  // onChange={(value) =>
+                  //   setBookingChange({ ...bookingChange, destination: value })
+                  // }
+                  onChange={handleDestinationChange}
                 />
                 <br />
               </CardContent>
@@ -521,7 +516,7 @@ export default function CarDetails(props) {
                         Math.round(
                           (new Date(selectedDate[1]) -
                             new Date(selectedDate[0])) /
-                          (1000 * 60 * 60 * 24)
+                            (1000 * 60 * 60 * 24)
                         ) + 1
                       }
                       displayType={"text"}
@@ -575,6 +570,13 @@ export default function CarDetails(props) {
           </Grid>
         </Grid>
       </Grid>
+      <Backdrop
+        className={classes.backdrop}
+        open={loadingProcess}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Grid>
   );
 }

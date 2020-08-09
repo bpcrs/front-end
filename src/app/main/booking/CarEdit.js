@@ -205,7 +205,6 @@ export default function CarEdits(props) {
   };
 
   function HandleAvailable() {
-    const [location, setLocation] = useState();
     const [open, setOpen] = useState(false);
     const [openLocation, setOpenLocation] = useState(false);
     const [checkSure, setCheckSure] = useState(false);
@@ -215,7 +214,6 @@ export default function CarEdits(props) {
       setUpCar({ ...upCar, location: value.description });
     };
     console.log(upCar);
-    // console.log(location);
     const handleChangeStatus = () => {
       const nextStatus =
         carDetail.status === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
@@ -232,9 +230,6 @@ export default function CarEdits(props) {
       dispatch(putCarUpdate(upCar.id, upCar));
     };
 
-    // useEffect(() => {
-    //   dispatch(fetchCarDetail(upCar.id));
-    // }, [])
     return (
       <React.Fragment>
         {carDetail.status === "AVAILABLE" ||
