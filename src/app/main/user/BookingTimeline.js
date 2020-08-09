@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getTrackingsByBooking } from "../user/profile.action";
 import BookingStatus from "../user/BookingStatus";
 import { BOOKING_STATUS } from "../../../constant";
+import ContractTable from "./ContractTable";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -21,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
   },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
-  },
-  detail: {
-    marginLeft: theme.spacing(3),
   },
 }));
 
@@ -293,53 +291,6 @@ export default function CustomizedTimeline(props) {
 
   return (
     <div>
-      <Grid item container className={classes.detail}>
-        <Grid item lg={12}>
-          <Typography variant="subtitle1" color="textPrimary">
-            Information Booking
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Book date:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {new Date(booking.createdDate).toLocaleDateString()}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Location:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.location}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Destination:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.destination}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            From date:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {new Date(booking.fromDate).toLocaleDateString()}
-          </Typography>
-        </Grid>
-        <Grid item container lg={12} justify="flex-start">
-          <Typography variant="subtitle2" color="textPrimary">
-            Car:
-          </Typography>
-          <Typography variant="subtitle2" color="textPrimary">
-            {booking.car.name}
-          </Typography>
-        </Grid>
-      </Grid>
       <Timeline align="alternate">
         {cancelBook || denyBook ? (
           <Grid>
@@ -361,6 +312,9 @@ export default function CustomizedTimeline(props) {
           </Grid>
         )}
       </Timeline>
+      <Grid lg={12} item>
+        <ContractTable booking={booking} />
+      </Grid>
     </div>
   );
 }

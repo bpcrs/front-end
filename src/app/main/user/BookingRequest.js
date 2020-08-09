@@ -15,6 +15,7 @@ import {
   DialogActions,
   Button,
   Tooltip,
+  DialogTitle,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -89,7 +90,7 @@ function Row(props) {
   const pendingText = `Click to join chat room with car owner`;
   const cancelText = `Click to view info`;
   const requestText = `Cancel this booking request`;
-  const confirmText = `View contract`;
+  const confirmText = `Sign contract`;
   // const doneText = `View completed contract`;
   const doneText = `Review and Rating this car`;
   const denyText = `View info`;
@@ -153,15 +154,20 @@ function Row(props) {
         );
       case "CONFIRM":
         return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={confirmText}>
-              <IconButton
+          <Tooltip title={confirmText}>
+            <Button
+              variant="outlined"
+              startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+              style={{ textTransform: "none" }}
+            >
+              {confirmText}
+              {/* <IconButton
               // onClick={() => handleAgreement()}
               >
                 <Icon style={{ color: "green" }}>assignment</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
+              </IconButton> */}
+            </Button>
+          </Tooltip>
         );
       case "DONE":
         return (
@@ -245,19 +251,29 @@ function Row(props) {
   return (
     <React.Fragment>
       <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
+        <DialogTitle id="alert-dialog-slide-title">
+          <Typography variant="overline">BOOKING INFOMATION</Typography>
+        </DialogTitle>
+
         <DialogContent>
-          <StatusAction booking={booking} />
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
-          <Button
-            autoFocus
-            onClick={handleCloseTimeline}
-            color="secondary"
-            variant="contained"
-          >
-            Close
-          </Button>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid>
+              <StatusAction booking={booking} />
+            </Grid>
+            <Grid>
+              <Button
+                autoFocus
+                onClick={handleCloseTimeline}
+                color="default"
+                variant="contained"
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
       <TableRow
@@ -342,11 +358,7 @@ const BookingRequest = (props) => {
       </Box>
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-label="customized table"
-            width="100%"
-          >
+          <Table aria-label="customized table" width="100%">
             <TableHead>
               <TableRow>
                 <StyledTableCell>Book time</StyledTableCell>
