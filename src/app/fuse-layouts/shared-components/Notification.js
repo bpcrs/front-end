@@ -83,6 +83,8 @@ const Notification = () => {
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
+      case BOOKING_STATUS.RENTER_SIGNED:
+        return <Card></Card>;
       case BOOKING_STATUS.BOOKED:
         return (
           <Card
@@ -767,8 +769,8 @@ const Notification = () => {
                 </Grid>
               </React.Fragment>
             ) : (
-                <></>
-              )}
+              <></>
+            )}
           </Grid>
           {notification.length !== 0 &&
             notification

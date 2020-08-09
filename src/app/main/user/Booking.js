@@ -95,26 +95,38 @@ const Booking = (props) => {
             label="Rental request"
             {...a11yProps(0)}
           />
-          <Tab
-            className="h-64 normal-case"
-            label="Pending request"
-            {...a11yProps(1)}
-          />
+
           <Tab
             className="h-64 normal-case"
             label="History booking"
-            {...a11yProps(2)}
+            {...a11yProps(1)}
           />
         </Tabs>
       }
       <Grid item container lg={12}>
         <TabPanel value={tabValue} index={0} item lg={12}>
-          <RentalCarRequest carId={carId} bookingStatus={"REQUEST"} />
+          <Button
+            variant="text"
+            style={{ textTransform: "none", color: "blue" }}
+            onClick={() => handleClickRefresh()}
+            startIcon={<Icon>refresh</Icon>}
+          >
+            Refresh Requests
+          </Button>
+          <Backdrop
+            className={classes.backdrop}
+            open={open}
+            // onClick={handleClose}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
+          <RentalCarRequest
+            key={refresh}
+            carId={carId}
+            bookingStatus={"REQUEST"}
+          />
         </TabPanel>
         <TabPanel value={tabValue} index={1}>
-          <RentalCarRequest carId={carId} bookingStatus={"PENDING"} />
-        </TabPanel>
-        <TabPanel value={tabValue} index={2}>
           <Grid container item justify="space-between">
             <Button
               variant="text"
