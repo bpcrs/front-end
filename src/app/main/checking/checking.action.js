@@ -173,9 +173,10 @@ export function fetchUserListChecking() {
   };
 }
 
-export function putCarUpdate(id, car) {
+export function putCarUpdate(id, status) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
+    // const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
+    const request = PUT(ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id), { status }, {});
     request.then(
       (response) => {
         if (response.success) {
@@ -233,25 +234,12 @@ export function putAcceptUserLicence(id, user) {
   };
 }
 
-// export function notificationUser(message, userMail, isAccept) {
-//   firebase
-//     .firestore()
-//     .collection("notification")
-//     .doc(`${userMail}`)
-//     .collection("Car")
-//     .add({
-//       message: message,
-//       status: isAccept ? "ACCEPTCAR" : "DENYCAR",
-//       createAt: new Date().getTime(),
-//     });
-// }
-
 export function notificationLicenseUser(message, userMail, isAccept) {
   firebase
     .firestore()
     .collection("notification")
     .doc(`${userMail}`)
-    .collection("License")
+    .collection("requests")
     .add({
       message: message,
       status: isAccept ? "ACCEPTLICENSE" : "DENYLICENSE",
@@ -265,7 +253,7 @@ export function notificationUserCar(message, userMail, isAccept, car) {
     .firestore()
     .collection("notification")
     .doc(`${userMail}`)
-    .collection("Car")
+    .collection("requests")
     .add({
       message: message,
       status: isAccept ? "ACCEPTCAR" : "DENYCAR",

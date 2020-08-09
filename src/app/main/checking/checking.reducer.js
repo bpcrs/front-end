@@ -5,7 +5,7 @@ const initialState = {
   carDetail: {},
   images: [],
   users: [],
-  loading: false,
+  // loading: false,
   changePage: false,
   userDetail: {},
 };
