@@ -25,11 +25,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-<<<<<<< HEAD
 import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
-=======
-import { fetchBookingRequest, signContractRequest } from "./profile.action";
->>>>>>> master
+import { signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
@@ -282,23 +279,11 @@ function Row({ booking }) {
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
-<<<<<<< HEAD
-          <Grid></Grid>
-          <Button
-            autoFocus
-            onClick={handleCloseTimeline}
-            color="primary"
-            variant="outlined"
-          >
-            Close
-          </Button>
-=======
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
               <StatusAction booking={booking} />
             </Grid>
           </Grid>
->>>>>>> master
         </DialogActions>
       </Dialog>
       <TableRow
