@@ -14,10 +14,37 @@ const initialState = {
   pendingBookings: [],
   selectedBooking: {},
   isRenter: true,
+  agreements: [],
+  change: false,
 };
 
 const chatReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.CHAT_CHANGE_STATUS_BOOKING: {
+      const itemChange = state.pendingBookings.findIndex(
+        (item) => item.id === payload.id
+      );
+      const updateBooking = state.pendingBookings.map((item, index) => {
+        if (index !== itemChange) {
+          return item;
+        }
+        return {
+          ...item,
+          ...payload,
+        };
+      });
+      return {
+        ...state,
+        selectedBooking: payload,
+        pendingBookings: updateBooking,
+      };
+    }
+    case Actions.CLOSE_AGREEMENT_DRAWER: {
+      return {
+        ...state,
+        change: !state.change,
+      };
+    }
     case Actions.SET_SELECTED_BOOKING: {
       return {
         ...state,
@@ -69,7 +96,6 @@ const chatReducer = (state = initialState, { type, payload }) => {
     }
     case Actions.CHANGE_CHIP: {
       console.log(payload);
-      // dispatchEvent()
       const agreementNeedChange = state.criteria.findIndex(
         (item) => item.name === payload.name
       );

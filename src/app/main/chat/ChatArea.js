@@ -7,6 +7,11 @@ import {
   makeStyles,
   Paper,
   Box,
+  Button,
+  Icon,
+  CircularProgress,
+  Backdrop,
+  Drawer,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
@@ -22,6 +27,8 @@ import BookingStatus from "../user/BookingStatus";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { FuseScrollbars } from "../../../@fuse";
+import { useState } from "react";
+import BookingTimeline from "../user/BookingTimeline";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     overflow: "auto",
     "-webkit-overflow-scrolling": "touch",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 const StyledBadge = withStyles((theme) => ({
@@ -185,6 +196,7 @@ const User = ({ displayName, email, photoURL }) => {
 
 const UserSelected = () => {
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
+  const userLogged = useSelector((state) => state.auth.user);
   return (
     <Box
     // onClick={() => setSelectedContact(booking)}
@@ -201,7 +213,13 @@ const UserSelected = () => {
             }}
             variant="dot"
           >
-            <Avatar src={selectedBooking.car.owner.imageUrl} />
+            <Avatar
+              src={
+                userLogged.email === selectedBooking.car.owner.email
+                  ? selectedBooking.renter.imageUrl
+                  : selectedBooking.car.owner.imageUrl
+              }
+            />
           </StyledBadge>
         </Grid>
         <Grid lg={10} item>
@@ -233,11 +251,27 @@ export const ChatArea = (props) => {
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
+  const [refresh, setRefesh] = useState(1);
+  const handleClickRefresh = () => {
+    setOpen(true);
+    setRefesh((refresh) => refresh + 1);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+  };
+
+  const handleOpenDetail = () => {
+    setOpenDetail(true);
+  };
+  const handleClose = () => {
+    setOpenDetail(false);
+  };
 
   useEffect(() => {
     function initDataFromAPI() {
       dispatch(fetchCriteriaList());
-      dispatch(fetchAgreementList(selectedBooking.id));
     }
     initDataFromAPI();
   }, [dispatch, selectedBooking]);
@@ -260,6 +294,14 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
           >
             <User {...userLogged} />
+            <Button
+              variant="text"
+              style={{ textTransform: "none", color: "blue" }}
+              onClick={() => handleClickRefresh()}
+              startIcon={<Icon>refresh</Icon>}
+            >
+              Refresh
+            </Button>
           </Grid>
           <Grid
             item
@@ -284,6 +326,20 @@ export const ChatArea = (props) => {
             style={{ backgroundColor: "#E6E6E6" }}
           >
             {selectedBooking.id && <StepAgreement />}
+            {selectedBooking.id && (
+              <Button
+                variant="outlined"
+                onClick={handleOpenDetail}
+                startIcon={<Icon>details</Icon>}
+              >
+                Detail
+              </Button>
+            )}
+            <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
+              <Grid container style={{ maxWidth: "700px", width: "700px" }}>
+                <BookingTimeline booking={selectedBooking} />
+              </Grid>
+            </Drawer>
           </Grid>
         </Grid>
         <Grid
@@ -304,6 +360,7 @@ export const ChatArea = (props) => {
           >
             <FuseScrollbars className={classes.content}>
               <ContactList
+                key={refresh}
                 info={carDetail}
                 renter={notification}
                 chipList={chip}
@@ -320,7 +377,14 @@ export const ChatArea = (props) => {
             alignContent="flex-start"
             style={{ backgroundColor: "#F2F2F2" }}
           >
-            <Chat />
+            <Backdrop
+              className={classes.backdrop}
+              open={open}
+              // onClick={handleClose}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
+            <Chat key={refresh} />
           </Grid>
         </Grid>
       </Paper>

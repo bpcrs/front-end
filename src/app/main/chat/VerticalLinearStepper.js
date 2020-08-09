@@ -14,10 +14,15 @@ import {
   createAgreement,
   submitMessage,
   deleteAllMsgByTypeFromFirebase,
+  fetchAgreementList,
+  closeAgreementDrawer,
+  changeBookingStatusRequest,
 } from "./chat.action";
 import { useEffect } from "react";
-import { changeBookingStatusRequest } from "../user/profile.action";
 import { BOOKING_STATUS } from "../../../constant";
+import { useCallback } from "react";
+import { Grid } from "@material-ui/core";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,31 +59,28 @@ export default function VerticalLinearStepper() {
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
-  const agreements = useSelector((state) => state.chat.agreements);
   const steps =
     selectedBooking.renter.id === userLogged.id ? getStepsRenter() : getSteps();
 
+  const useAgreements = () => useSelector((state) => state.chat.agreements);
+
+  const agreements = useAgreements();
   useEffect(() => {
-    console.log(agreements.length === steps.length - 1);
     if (
       agreements.length === steps.length - 1 &&
       selectedBooking.status === BOOKING_STATUS.CONFIRM
     ) {
       setActiveStep(steps.length);
     } else {
+      setActiveStep(0);
       agreements.forEach((item) => {
         if (item.approved) {
           setActiveStep((activeStep) => activeStep + 1);
         }
       });
     }
-  }, [
-    agreements,
-    dispatch,
-    selectedBooking.id,
-    selectedBooking.status,
-    steps.length,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedBooking.status, steps.length, agreements]);
 
   const isStepOptional = (step) => {
     return step === 0 || step === 1 || step === 2;
@@ -97,6 +99,7 @@ export default function VerticalLinearStepper() {
             : BOOKING_STATUS.CONFIRM
         )
       );
+      dispatch(closeAgreementDrawer());
     } else {
       let newSkipped = skipped;
       if (isStepSkipped(activeStep)) {
@@ -189,14 +192,6 @@ export default function VerticalLinearStepper() {
     });
   };
 
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
-
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
-
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -211,23 +206,19 @@ export default function VerticalLinearStepper() {
               </Typography>
               <div className={classes.actionsContainer}>
                 <div>
-                  {/* <Button
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    className={classes.button}
-                  >
-                    Back
-                  </Button> */}
-                  {isStepOptional(activeStep) && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleSkip}
-                      className={classes.button}
-                    >
-                      Skip
-                    </Button>
-                  )}
+                  {/* {activeStep === steps.length - 1 ? null : ( */}
+                  {isStepOptional(activeStep) &&
+                    (activeStep === steps.length - 1 ? null : (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSkip}
+                        className={classes.button}
+                      >
+                        Skip
+                      </Button>
+                    ))}
+                  {/* )} */}
                   <Button
                     variant="contained"
                     color="primary"
@@ -245,9 +236,6 @@ export default function VerticalLinearStepper() {
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
-          {/* <Button onClick={handleReset} className={classes.button}>
-            Reset
-          </Button> */}
         </Paper>
       )}
     </div>

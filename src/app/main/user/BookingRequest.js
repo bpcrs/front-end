@@ -32,6 +32,8 @@ import { useState } from "react";
 import BookingStatus from "./BookingStatus";
 import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
+import CustomizedTimeline from "../user/BookingTimeline";
+import classNames from "classnames";
 import Review from "../booking/Review";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,22 +62,28 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-const BookingRequest = (props) => {
-  const size = 5;
-  const classes = useStyles();
-  const [currentPage, setCurrentPage] = useState(1);
+function Row(props) {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.profile.loading);
-  const myBookings = useSelector((state) => state.profile.bookings);
-  const { status } = props;
+  const { booking } = props;
+  const [open, setOpen] = useState(false);
+  const [openTimeline, setOpenTimeline] = useState(false);
   const history = useHistory();
-
-  const currentUser = useSelector((state) => state.auth.user);
-
   const handleAgreement = () => {
     history.push({
       pathname: APP_PATH.CHAT,
     });
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSelected = (booking) => {
+    console.log(booking);
+    setOpenTimeline(true);
+  };
+
+  const handleCloseTimeline = () => {
+    setOpenTimeline(false);
   };
 
   const pendingText = `Click to join chat room with car owner`;
@@ -88,7 +96,6 @@ const BookingRequest = (props) => {
   const ownerAcceptedText = `Click to join chat room with car owner`;
 
   function StatusAction(props) {
-    // console.log(status);
     const [open, setOpen] = useState(false);
     const { booking } = props;
 
@@ -164,15 +171,21 @@ const BookingRequest = (props) => {
                 <IconButton
                 // onClick={() => handleAgreement()}
                 >
-                  <Icon style={{ color: "green" }} onClick={() => { setOpen(true) }}>start</Icon>
+                  <Icon
+                    style={{ color: "green" }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    start
+                  </Icon>
                 </IconButton>
               </Tooltip>
             </TableCell>
 
             <Dialog open={open} scroll="body">
-
               <DialogContent>
-                <Review carId={booking.car.id} bookingId={booking.id}/>
+                <Review carId={booking.car.id} bookingId={booking.id} />
               </DialogContent>
 
               <DialogActions>
@@ -185,7 +198,6 @@ const BookingRequest = (props) => {
                   Close
                 </Button>
               </DialogActions>
-
             </Dialog>
           </React.Fragment>
         );
@@ -229,6 +241,76 @@ const BookingRequest = (props) => {
         return null;
     }
   }
+
+  return (
+    <React.Fragment>
+      <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
+        <DialogContent>
+          <StatusAction booking={booking} />
+          <CustomizedTimeline booking={booking} />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            autoFocus
+            onClick={handleCloseTimeline}
+            color="secondary"
+            variant="contained"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <TableRow
+        className="h-64 cursor-pointer"
+        hover
+        // role="checkbox"
+        // aria-checked={isSelected}
+        tabIndex={-1}
+        // key={index}
+        onClick={() => handleSelected(booking)}
+        // selected={isSelected}
+      >
+        <TableCell component="th" scope="row">
+          {Math.round(
+            (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
+          ) > 0 ? (
+            new Date(booking.createdDate).toDateString()
+          ) : (
+            <TimeAgo date={booking.createdDate} />
+          )}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {booking.car.name}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {Math.round(
+            (new Date(booking.toDate) - new Date(booking.fromDate)) /
+              (1000 * 60 * 60 * 24)
+          ) + 1}{" "}
+          days
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {new Date(booking.fromDate).toDateString()}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          <BookingStatus name={booking.status} />
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
+}
+
+const BookingRequest = (props) => {
+  const size = 5;
+  const classes = useStyles();
+  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  const loading = useSelector((state) => state.profile.loading);
+  const myBookings = useSelector((state) => state.profile.bookings);
+  const { status } = props;
+  const history = useHistory();
+  const currentUser = useSelector((state) => state.auth.user);
+
   useEffect(() => {
     dispatch(
       fetchBookingRequest(
@@ -272,7 +354,7 @@ const BookingRequest = (props) => {
                 <StyledTableCell>Time Rental</StyledTableCell>
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
-                <StyledTableCell>Action</StyledTableCell>
+                {/* <StyledTableCell>Action</StyledTableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -280,39 +362,8 @@ const BookingRequest = (props) => {
                 <CircularProgress color="inherit" />
               </Backdrop>
               {myBookings.data &&
-                myBookings.data.reverse().map((booking, index) => (
-                  // <Grid item xs={12} xl={12} lg={12}>
-                  <TableRow
-                    className="h-64 cursor-pointer"
-                    hover
-                    // role="checkbox"
-                    // aria-checked={isSelected}
-                    tabIndex={-1}
-                    key={index}
-                  // selected={isSelected}
-                  >
-                    <TableCell component="th" scope="row">
-                      <TimeAgo date={booking.createdDate} />
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {booking.car.name}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {Math.round(
-                        (new Date(booking.toDate) -
-                          new Date(booking.fromDate)) /
-                        (1000 * 60 * 60 * 24)
-                      ) + 1}{" "}
-                      days
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      {new Date(booking.fromDate).toDateString()}
-                    </TableCell>
-                    <TableCell component="th" scope="row">
-                      <BookingStatus name={booking.status} />
-                    </TableCell>
-                    <StatusAction booking={booking} />
-                  </TableRow>
+                myBookings.data.map((booking, index) => (
+                  <Row key={index} booking={booking} />
                 ))}
             </TableBody>
           </Table>
