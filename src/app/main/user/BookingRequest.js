@@ -25,11 +25,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-<<<<<<< HEAD
 import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
-=======
-import { fetchBookingRequest, signContractRequest } from "./profile.action";
->>>>>>> master
+import { signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
@@ -67,18 +64,14 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row({ booking }) {
+function Row({ booking, carId }) {
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
   const [openTimeline, setOpenTimeline] = useState(false);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
       pathname: APP_PATH.CHAT,
     });
-  };
-  const handleClose = () => {
-    setOpen(false);
   };
 
   const handleSelected = (booking) => {
@@ -94,45 +87,35 @@ function Row({ booking }) {
     dispatch(signContractRequest(booking.id));
   };
 
-  const pendingText = `Click to join chat room with car owner`;
-  const cancelText = `Click to view info`;
+  const pendingText = `Click to join chat room with renter`;
   const requestText = `Cancel this booking request`;
   const confirmText = `Sign contract`;
-  // const doneText = `View completed contract`;
   const doneText = `Review and Rating this car`;
-  const denyText = `View info`;
   const ownerAcceptedText = `Click to join chat room with car owner`;
 
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
-    const { booking } = props;
+    const { booking, carId } = props;
 
     const handleCancelRequest = () => {
-      console.log(booking.id);
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
+      handleCloseTimeline();
     };
 
     switch (booking.status) {
-      case "PENDING":
-        return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={pendingText}>
-              <IconButton onClick={() => handleAgreement()}>
-                <Icon style={{ color: "black" }}>chat</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-        );
-      case "REQUEST":
+      case BOOKING_STATUS.REQUEST:
         return (
           <React.Fragment>
-            <TableCell component="th" scope="row">
-              <Tooltip title={requestText}>
-                <IconButton onClick={() => setOpen(true)}>
-                  <Icon style={{ color: "red" }}>cancel</Icon>
-                </IconButton>
-              </Tooltip>
-            </TableCell>
+            <Tooltip title={requestText}>
+              <Button
+                variant="outlined"
+                style={{ textTransform: "none" }}
+                startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
+                onClick={() => setOpen(true)}
+              >
+                {requestText}
+              </Button>
+            </Tooltip>
             <Dialog open={open} scroll="body">
               <DialogContent>
                 <Typography variant="subtitle1" color="initial">
@@ -150,7 +133,7 @@ function Row({ booking }) {
                 <Button
                   autoFocus
                   onClick={() => setOpen(false)}
-                  color="secondary"
+                  style={{ backgroundColor: "red", color: "white" }}
                   variant="contained"
                 >
                   No
@@ -159,7 +142,7 @@ function Row({ booking }) {
             </Dialog>
           </React.Fragment>
         );
-      case "CONFIRM":
+      case BOOKING_STATUS.CONFIRM:
         return (
           <Tooltip title={confirmText}>
             <Button
@@ -172,25 +155,22 @@ function Row({ booking }) {
             </Button>
           </Tooltip>
         );
-      case "DONE":
+      case BOOKING_STATUS.DONE:
+      case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <React.Fragment>
-            <TableCell component="th" scope="row">
-              <Tooltip title={doneText}>
-                <IconButton
-                // onClick={() => handleAgreement()}
-                >
-                  <Icon
-                    style={{ color: "green" }}
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
-                    start
-                  </Icon>
-                </IconButton>
-              </Tooltip>
-            </TableCell>
+            <Tooltip title={doneText}>
+              <Button
+                variant="outlined"
+                startIcon={<Icon style={{ color: "green" }}>start</Icon>}
+                style={{ textTransform: "none" }}
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
+                {doneText}
+              </Button>
+            </Tooltip>
 
             <Dialog open={open} scroll="body">
               <DialogContent>
@@ -210,41 +190,23 @@ function Row({ booking }) {
             </Dialog>
           </React.Fragment>
         );
-      case "DENY":
+      case BOOKING_STATUS.DENY:
+        return <Grid></Grid>;
+      case BOOKING_STATUS.CANCEL:
+        return <Grid></Grid>;
+      case BOOKING_STATUS.OWNER_ACCEPTED:
+      case BOOKING_STATUS.PENDING:
         return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={denyText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "black" }}>error</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-        );
-      case "CANCEL":
-        return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={cancelText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "red" }}>clear</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-        );
-      case "OWNER_ACCEPTED":
-        return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={ownerAcceptedText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "purple" }}>chat</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
+          <Tooltip title={carId ? pendingText : ownerAcceptedText}>
+            <Button
+              variant="outlined"
+              style={{ textTransform: "none" }}
+              onClick={handleAgreement}
+              startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
+            >
+              {carId ? pendingText : ownerAcceptedText}
+            </Button>
+          </Tooltip>
         );
       default:
         return null;
@@ -270,7 +232,6 @@ function Row({ booking }) {
                 autoFocus
                 style={{ color: red[500] }}
                 onClick={handleCloseTimeline}
-                // color="default"
                 startIcon={<Icon>close</Icon>}
               >
                 Close
@@ -282,34 +243,18 @@ function Row({ booking }) {
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
-<<<<<<< HEAD
-          <Grid></Grid>
-          <Button
-            autoFocus
-            onClick={handleCloseTimeline}
-            color="primary"
-            variant="outlined"
-          >
-            Close
-          </Button>
-=======
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
-              <StatusAction booking={booking} />
+              <StatusAction booking={booking} carId={carId} />
             </Grid>
           </Grid>
->>>>>>> master
         </DialogActions>
       </Dialog>
       <TableRow
         className="h-64 cursor-pointer"
         hover
-        // role="checkbox"
-        // aria-checked={isSelected}
         tabIndex={-1}
-        // key={index}
         onClick={() => handleSelected(booking)}
-        // selected={isSelected}
       >
         <TableCell component="th" scope="row">
           {Math.round(
@@ -410,7 +355,7 @@ const BookingRequest = (props) => {
               </Backdrop>
               {myBookings.data &&
                 myBookings.data.map((booking, index) => (
-                  <Row key={index} booking={booking} />
+                  <Row key={index} booking={booking} carId={carId} />
                 ))}
             </TableBody>
           </Table>

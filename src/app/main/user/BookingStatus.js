@@ -27,7 +27,7 @@ export const bookingStatus = [
   {
     id: 5,
     name: BOOKING_STATUS.PENDING,
-    color: "bg-yellow text-white",
+    color: "bg-black text-white",
   },
   {
     id: 6,
@@ -37,12 +37,17 @@ export const bookingStatus = [
   {
     id: 7,
     name: BOOKING_STATUS.CONFIRM,
-    color: "bg-yellow text-white",
+    color: "bg-green text-white",
   },
   {
     id: 8,
     name: BOOKING_STATUS.DONE,
     color: "bg-green text-white",
+  },
+  {
+    id: 9,
+    name: BOOKING_STATUS.RENTER_SIGNED,
+    color: "bg-yellow text-black",
   },
 ];
 

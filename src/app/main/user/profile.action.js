@@ -196,6 +196,7 @@ export function changeBookingStatusRequest(bookingId, status) {
         if (response.success) {
           dispatch(changeBookingStatusRequestSuccess(response.data));
           notificationBooking(response.data);
+          dispatch(showMessageSuccess(messageStatusSuccess(status)));
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -205,6 +206,15 @@ export function changeBookingStatusRequest(bookingId, status) {
       }
     );
   };
+}
+
+export function messageStatusSuccess(status) {
+  switch (status) {
+    case BOOKING_STATUS.CANCEL:
+      return "Cancel booking success";
+    default:
+      return "Change success";
+  }
 }
 
 export function signContractRequest(id) {

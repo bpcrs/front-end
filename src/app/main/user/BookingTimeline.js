@@ -253,6 +253,42 @@ function Track(props) {
           </TimelineContent>
         </TimelineItem>
       );
+    case BOOKING_STATUS.RENTER_SIGNED:
+      return (
+        <TimelineItem>
+          <TimelineOppositeContent>
+            {track ? (
+              <Typography variant="subtitle2" color="textSecondary">
+                {new Date(track.createdDate).toLocaleTimeString()}{" "}
+                {new Date(track.createdDate).toLocaleDateString()}
+              </Typography>
+            ) : (
+              <Typography variant="subtitle2" color="textSecondary">
+                N/A
+              </Typography>
+            )}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "green" }}>create</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
+          </TimelineSeparator>
+          <TimelineContent>
+            <Paper elevation={3} className={classes.paper}>
+              <BookingStatus name={status} done={track ? false : true} />
+              <Typography variant="subtitle2" color="primary">
+                Renter signed successful
+              </Typography>
+            </Paper>
+          </TimelineContent>
+        </TimelineItem>
+      );
     default:
       return null;
   }
@@ -284,6 +320,10 @@ export default function CustomizedTimeline(props) {
     (item) => item.status === BOOKING_STATUS.DENY
   );
 
+  const signBook = trackings.find(
+    (item) => item.status === BOOKING_STATUS.RENTER_SIGNED
+  );
+
   useEffect(() => {
     dispatch(getTrackingsByBooking(booking.id));
   }, [booking.id, dispatch]);
@@ -309,6 +349,7 @@ export default function CustomizedTimeline(props) {
                   status={BOOKING_STATUS.OWNER_ACCEPTED}
                 />
                 <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
+                <Track track={signBook} status={BOOKING_STATUS.RENTER_SIGNED} />
                 <Track track={doneBook} status={BOOKING_STATUS.DONE} />
               </Grid>
             )}
@@ -318,8 +359,6 @@ export default function CustomizedTimeline(props) {
           <ContractTable booking={booking} />
         </Grid>
       </Grid>
-
-      {/* <Grid lg={12} item></Grid> */}
     </div>
   );
 }

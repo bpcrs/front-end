@@ -280,6 +280,11 @@ const labels = [
     color: "purple",
     description: "Owner had accepted all agreements",
   },
+  {
+    name: BOOKING_STATUS.RENTER_SIGNED,
+    color: "purple",
+    description: "Renter had signed contract",
+  },
   //   {
   //     name: "",
   //     color: "#d93f0b",
