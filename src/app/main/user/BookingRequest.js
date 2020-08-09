@@ -15,6 +15,7 @@ import {
   DialogActions,
   Button,
   Tooltip,
+  DialogTitle,
   // IconButton,
   // Icon,
 } from "@material-ui/core";
@@ -24,7 +25,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest } from "./profile.action";
+import { fetchBookingRequest, signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
@@ -35,6 +36,7 @@ import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import classNames from "classnames";
 import Review from "../booking/Review";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,9 +64,8 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row(props) {
+function Row({ booking }) {
   const dispatch = useDispatch();
-  const { booking } = props;
   const [open, setOpen] = useState(false);
   const [openTimeline, setOpenTimeline] = useState(false);
   const history = useHistory();
@@ -86,10 +87,14 @@ function Row(props) {
     setOpenTimeline(false);
   };
 
+  const handleSignContract = () => {
+    dispatch(signContractRequest(booking.id));
+  };
+
   const pendingText = `Click to join chat room with car owner`;
   const cancelText = `Click to view info`;
   const requestText = `Cancel this booking request`;
-  const confirmText = `View contract`;
+  const confirmText = `Sign contract`;
   // const doneText = `View completed contract`;
   const doneText = `Review and Rating this car`;
   const denyText = `View info`;
@@ -153,15 +158,16 @@ function Row(props) {
         );
       case "CONFIRM":
         return (
-          <TableCell component="th" scope="row">
-            <Tooltip title={confirmText}>
-              <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "green" }}>assignment</Icon>
-              </IconButton>
-            </Tooltip>
-          </TableCell>
+          <Tooltip title={confirmText}>
+            <Button
+              variant="outlined"
+              startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+              style={{ textTransform: "none" }}
+              onClick={handleSignContract}
+            >
+              {confirmText}
+            </Button>
+          </Tooltip>
         );
       case "DONE":
         return (
@@ -244,20 +250,40 @@ function Row(props) {
 
   return (
     <React.Fragment>
-      <Dialog open={openTimeline} scroll="body" onClose={handleCloseTimeline}>
+      <Dialog
+        open={openTimeline}
+        scroll="body"
+        onClose={handleCloseTimeline}
+        fullWidth
+        maxWidth={"lg"}
+      >
+        <DialogTitle id="alert-dialog-slide-title">
+          <Grid container justify="space-between">
+            <Grid>
+              <Typography variant="overline">BOOKING INFOMATION</Typography>
+            </Grid>
+            <Grid>
+              <Button
+                autoFocus
+                style={{ color: red[500] }}
+                onClick={handleCloseTimeline}
+                // color="default"
+                startIcon={<Icon>close</Icon>}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogTitle>
         <DialogContent>
-          <StatusAction booking={booking} />
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
-          <Button
-            autoFocus
-            onClick={handleCloseTimeline}
-            color="secondary"
-            variant="contained"
-          >
-            Close
-          </Button>
+          <Grid container justify="flex-end" alignItems="center">
+            <Grid>
+              <StatusAction booking={booking} />
+            </Grid>
+          </Grid>
         </DialogActions>
       </Dialog>
       <TableRow
@@ -342,11 +368,7 @@ const BookingRequest = (props) => {
       </Box>
       <Box hidden={!myBookings.data || myBookings.data.length === 0}>
         <TableContainer>
-          <Table
-            className={classes.table}
-            aria-label="customized table"
-            width="100%"
-          >
+          <Table aria-label="customized table" width="100%">
             <TableHead>
               <TableRow>
                 <StyledTableCell>Book time</StyledTableCell>

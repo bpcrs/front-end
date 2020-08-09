@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
-  const history = useHistory();
   const { info } = props;
   const [open, setOpen] = React.useState(false);
   const carCompare = useSelector((state) => state.booking.carCompare);
@@ -213,7 +212,7 @@ export default function CarItem(props = { isAction: true }) {
                   to={(location) => ({
                     ...location,
                     pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
-                    state: { booking: props.booking },
+                    state: { booking: props.booking ? props.booking : "" },
                   })}
                 >
                   View
