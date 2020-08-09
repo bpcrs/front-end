@@ -22,17 +22,18 @@ import {
   fetchCarDetail,
   fetchCarDetailWithDistance,
 } from "./booking.action";
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogContent from "@material-ui/core/DialogContent";
-// import DialogTitle from "@material-ui/core/DialogTitle";
-// import CircularProgress from "@material-ui/core/CircularProgress";
-// import Slide from "@material-ui/core/Slide";
 import NumberFormat from "react-number-format";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
 import Pagination from "@material-ui/lab/Pagination";
+<<<<<<< HEAD
+=======
+// import HorizontalLinearStepper from "../booking/StepperBooking";
+// import ReviewComponent from "./Review";
+
+>>>>>>> master
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,6 +122,10 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
+<<<<<<< HEAD
+=======
+  // const currentUser = useSelector((state) => state.auth.user);
+>>>>>>> master
   const { booking } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
   const distance = useSelector((state) => state.booking.distance);
@@ -195,6 +200,10 @@ export default function CarDetails(props) {
 
   return (
     <Grid container spacing={3}>
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
           <Grid item xl={12} xs={12} lg={12}>

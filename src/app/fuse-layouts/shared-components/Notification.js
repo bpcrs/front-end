@@ -67,68 +67,6 @@ const Notification = () => {
       });
   };
 
-  const handleClickNotiLicense = (id) => {
-    const path = APP_PATH.PROFILE;
-    history.push({
-      pathname: path,
-    });
-    firebase
-      .firestore()
-      .collection("notification")
-      .doc(`${userLogged.email}`)
-      .collection("License")
-      .doc(id)
-      .update({
-        isSeen: true,
-      });
-  };
-
-  const handleClickNotiCar = (id) => {
-    const path = APP_PATH.PROFILE;
-    history.push({
-      pathname: path,
-    });
-    firebase
-      .firestore()
-      .collection("notification")
-      .doc(`${userLogged.email}`)
-      .collection("Car")
-      .doc(id)
-      .update({
-        isSeen: true,
-      });
-  };
-
-  const handleMarkAllNotiCarRead = () => {
-    firebase
-      .firestore()
-      .collection("notification")
-      .doc(`${userLogged.email}`)
-      .collection("Car")
-      // .orderBy("createAt", "desc")
-      // .limitToLast(10)
-      .onSnapshot((ns) => {
-        ns.forEach((doc) => {
-          doc.ref.update({ isSeen: true });
-        });
-      });
-  };
-
-  const handleMarkAllNotiLicenseRead = () => {
-    firebase
-      .firestore()
-      .collection("notification")
-      .doc(`${userLogged.email}`)
-      .collection("License")
-      // .orderBy("createAt", "desc")
-      // .limitToLast(10)
-      .onSnapshot((ns) => {
-        ns.forEach((doc) => {
-          doc.ref.update({ isSeen: true });
-        });
-      });
-  };
-
   const handleMarkAllRead = () => {
     firebase
       .firestore()
@@ -142,9 +80,6 @@ const Notification = () => {
           doc.ref.update({ isSeen: true });
         });
       });
-
-    handleMarkAllNotiCarRead();
-    handleMarkAllNotiLicenseRead();
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
@@ -490,7 +425,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClickNotiLicense(notify.id)}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -511,7 +446,14 @@ const Notification = () => {
                     License was not Accepted!!
                   </Typography>
                   <div>
-                    <div style={{ color: "red" }}>Note:</div> {notify.message}
+                    <div style={{ color: "red" }}>Note:</div>
+                    <div>
+                      <p>{notify.message.checkedA}</p>
+                      <p>{notify.message.checkedB}</p>
+                      <p>{notify.message.checkedC}</p>
+                      <p>{notify.message.checkedD}</p>
+                      <p>{notify.message.checkedE}</p>
+                    </div>
                   </div>
                   <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
@@ -548,7 +490,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClickNotiLicense(notify.id)}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -601,7 +543,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClickNotiCar(notify.id)}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -622,7 +564,14 @@ const Notification = () => {
                     {/* Your car with plate number "{notify.car.plateNum}" was not Accepted!! */}
                   </Typography>
                   <div>
-                    <div style={{ color: "red" }}>Note:</div> {notify.message}
+                    <div style={{ color: "red" }}>Note:</div>
+                    <div>
+                      <p>{notify.message.checkedA}</p>
+                      <p>{notify.message.checkedB}</p>
+                      <p>{notify.message.checkedC}</p>
+                      <p>{notify.message.checkedD}</p>
+                      <p>{notify.message.checkedE}</p>
+                    </div>
                   </div>
                   <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
@@ -659,7 +608,7 @@ const Notification = () => {
               setHoving(0);
             }}
             elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClickNotiCar(notify.id)}
+            onClick={() => handleClick(true, notify.id)}
           >
             <CardActionArea>
               <Grid container className={classes.notification}>
@@ -739,38 +688,6 @@ const Notification = () => {
         });
     };
 
-    const fetchNotiLicense = () => {
-      firebase
-        .firestore()
-        .collection("notification")
-        .doc(`${userLogged.email}`)
-        .collection("License")
-        .onSnapshot((ns) => {
-          ns.docs.map((noti) => {
-            const data = noti.data();
-            data["id"] = noti.id;
-            notification.push(data);
-          });
-        });
-    };
-
-    const fetchNotiCar = () => {
-      firebase
-        .firestore()
-        .collection("notification")
-        .doc(`${userLogged.email}`)
-        .collection("Car")
-        .onSnapshot((ns) => {
-          ns.docs.map((noti) => {
-            const data = noti.data();
-            data["id"] = noti.id;
-            notification.push(data);
-          });
-        });
-    };
-
-    fetchNotiLicense();
-    fetchNotiCar();
     fetchNotificationFromFirebase();
     // eslint-disable-next-line
   }, [userLogged.email]);
@@ -850,8 +767,8 @@ const Notification = () => {
                 </Grid>
               </React.Fragment>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
           </Grid>
           {notification.length !== 0 &&
             notification

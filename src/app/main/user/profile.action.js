@@ -1,4 +1,4 @@
-import { GET, ENDPOINT, PUT } from "../../services/api";
+import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
 import { BOOKING_STATUS, MY_NOTIFICATION_STATUS } from "../../../constant";
@@ -196,6 +196,24 @@ export function changeBookingStatusRequest(bookingId, status) {
         if (response.success) {
           dispatch(changeBookingStatusRequestSuccess(response.data));
           notificationBooking(response.data);
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function signContractRequest(id) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.CONTRACT_CONTROLLER_SIGN, { id });
+    request.then(
+      (response) => {
+        if (response.success) {
+          showMessageSuccess("Signed contract");
         } else {
           dispatch(showMessageError(response.message));
         }

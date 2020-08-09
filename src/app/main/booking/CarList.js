@@ -277,7 +277,6 @@ function CarList(props) {
             <CarItem
               isAction={true}
               info={car}
-              model={models}
               booking={props.location.state}
             />
           </Grid>

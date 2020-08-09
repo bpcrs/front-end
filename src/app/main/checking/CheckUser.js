@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { fetchUserListChecking } from "./checking.action";
-
+import DetailsIcon from "@material-ui/icons/Details";
+import Button from "@material-ui/core/Button";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -91,50 +92,59 @@ export default function CheckUser() {
                     {
                         users.map((user) => (
                             // <Card className={classes.card}>
-                                <TableRow>
-                                    <TableCell>
-                                        <CardHeader
-                                            avatar={
-                                                <Avatar
-                                                    aria-label="recipe"
-                                                    className={classes.avatar}
-                                                    src={user.imageUrl}
-                                                ></Avatar>
-                                            }
-                                            // title={user.fullName}
-                                        />
-                                    </TableCell>
+                            <TableRow>
+                                <TableCell>
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar
+                                                aria-label="recipe"
+                                                className={classes.avatar}
+                                                src={user.imageUrl}
+                                            ></Avatar>
+                                        }
+                                    // title={user.fullName}
+                                    />
+                                </TableCell>
 
-                                    <TableCell>
+                                <TableCell>
                                     {user.fullName}
-                                    </TableCell>
+                                </TableCell>
 
-                                    <TableCell>
-                                        <p>{new Date(user.createdDate).toLocaleDateString()}</p>
-                                    </TableCell>
+                                <TableCell>
+                                    <p>{new Date(user.createdDate).toLocaleDateString()}</p>
+                                </TableCell>
 
-                                    <TableCell>
+                                <TableCell>
 
-                                        <Grid
-                                            style={{
-                                                border: "2px solid",
-                                                borderColor: "#B0C4DE",
-                                                borderRadius: "0px 50px 50px 50px",
-                                                height: "50%",
-                                                textAlign: "center",
-                                                marginTop: "1%",
-                                            }}>
-                                            <p style={{ color: handleColorStateUser(user.licenseCheck) }} >{handleStateUser(user.licenseCheck)}</p>
-                                        </Grid>
+                                    <Grid
+                                        style={{
+                                            border: "2px solid",
+                                            borderColor: "#B0C4DE",
+                                            borderRadius: "0px 50px 50px 50px",
+                                            height: "50%",
+                                            textAlign: "center",
+                                            marginTop: "1%",
+                                        }}>
+                                        <p style={{ color: handleColorStateUser(user.licenseCheck) }} >{handleStateUser(user.licenseCheck)}</p>
+                                    </Grid>
 
-                                    </TableCell>
+                                </TableCell>
 
-                                    <TableCell>
-                                        <SettingIcon onClick={() => handleCickSetting(user.id)} />
-                                    </TableCell>
+                                <TableCell>
+                                    {/* <SettingIcon onClick={() => handleCickSetting(user.id)} /> */}
+                                    <Button
+                                        variant="contained"
+                                        color="default"
+                                        className={classes.button}
+                                        startIcon={<DetailsIcon />}
+                                        onClick={() =>  handleCickSetting(user.id)}
+                                    >
+                                        Check
+                      </Button>
+                                </TableCell>
 
-                                   
-                                </TableRow>
+
+                            </TableRow>
                             // </Card>
 
                             // <TableRow>
