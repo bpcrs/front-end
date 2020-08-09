@@ -36,6 +36,7 @@ import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import classNames from "classnames";
 import Review from "../booking/Review";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +87,8 @@ function Row(props) {
   const handleCloseTimeline = () => {
     setOpenTimeline(false);
   };
+
+  const handleSignContract = () => {};
 
   const pendingText = `Click to join chat room with car owner`;
   const cancelText = `Click to view info`;
@@ -159,13 +162,9 @@ function Row(props) {
               variant="outlined"
               startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
               style={{ textTransform: "none" }}
+              onClick={handleSignContract}
             >
               {confirmText}
-              {/* <IconButton
-              // onClick={() => handleAgreement()}
-              >
-                <Icon style={{ color: "green" }}>assignment</Icon>
-              </IconButton> */}
             </Button>
           </Tooltip>
         );
@@ -258,25 +257,30 @@ function Row(props) {
         maxWidth={"lg"}
       >
         <DialogTitle id="alert-dialog-slide-title">
-          <Typography variant="overline">BOOKING INFOMATION</Typography>
+          <Grid container justify="space-between">
+            <Grid>
+              <Typography variant="overline">BOOKING INFOMATION</Typography>
+            </Grid>
+            <Grid>
+              <Button
+                autoFocus
+                style={{ color: red[500] }}
+                onClick={handleCloseTimeline}
+                // color="default"
+                startIcon={<Icon>close</Icon>}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
         </DialogTitle>
         <DialogContent>
           <CustomizedTimeline booking={booking} />
         </DialogContent>
         <DialogActions>
-          <Grid container justify="space-between" alignItems="center">
+          <Grid container justify="flex-end" alignItems="center">
             <Grid>
               <StatusAction booking={booking} />
-            </Grid>
-            <Grid>
-              <Button
-                autoFocus
-                onClick={handleCloseTimeline}
-                color="default"
-                variant="contained"
-              >
-                Close
-              </Button>
             </Grid>
           </Grid>
         </DialogActions>
