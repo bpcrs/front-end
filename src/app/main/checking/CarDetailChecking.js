@@ -9,6 +9,9 @@ import Layout from "../../layout";
 import { fetchCarDetailCheck, putCarUpdate, notificationUser, notificationUserCar } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,7 +71,12 @@ export default function CarDetailChecking(props) {
   const [currentCar, setCurrentCar] = useState({});
   const [open, setOpen] = React.useState(false);
   const { carId } = props.location.state;
-  const [message, setMessage] = useState();
+  // const [message, setMessage] = useState();
+
+  const reason1 = "License not clear";
+  const reason2 = "Image car not clear";
+  const reason3 = "Wrong information car";
+  const reason4 = "Don't have License";
 
   useEffect(() => {
     const fetchCar = () => {
@@ -80,9 +88,40 @@ export default function CarDetailChecking(props) {
     carDetail.id,
   ]);
 
-  const handleChangeInput = (event) => {
-    setMessage(event.target.value);
+  const [valueCheckBox, setValueCheckBox] = useState({
+    checkedA: "",
+    checkedB: "",
+    checkedC: "",
+    checkedD: "",
+    checkedE: "",
+  });
+
+  const handleChangeBox = (event) => {
+    if (event.target.checked) {
+      setValueCheckBox({
+        ...valueCheckBox,
+        [event.target.name]: event.target.value,
+      });
+    } else {
+      setValueCheckBox({
+        ...valueCheckBox,
+        [event.target.name]: "",
+      });
+    }
+
   };
+
+
+  const handleChangeBoxAnotherReason = (event) => {
+    setValueCheckBox({
+      ...valueCheckBox,
+      checkedE: event.target.value,
+    })
+  };
+
+  // const handleChangeInput = (event) => {
+  //   setMessage(event.target.value);
+  // };
 
   const handleValueAutoDrive = (state) => {
     if (state) {
@@ -96,10 +135,11 @@ export default function CarDetailChecking(props) {
     // notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
     notificationUserCar("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true, carDetail)
     dispatch(
-      putCarUpdate(currentCar.id, {
-        available: true,
-        status: "AVAILABLE"
-      })
+      // putCarUpdate(currentCar.id, {
+      //   // available: true,
+      //   status: "AVAILABLE"
+      // })
+      putCarUpdate(currentCar.id, "UNAVAILABLE")
     );
     history.push({
       pathname: APP_PATH.CHECKING,
@@ -108,13 +148,15 @@ export default function CarDetailChecking(props) {
 
   const handleDenyCar = () => {
     // notificationUser(message, currentCar.owner.email, false);
-    notificationUserCar(message, currentCar.owner.email, false, carDetail)
-    dispatch(
-      putCarUpdate(currentCar.id, {
-        available: false,
-        status: "UNAVAILABLE"
-      })
-    );
+    // notificationUserCar(message, currentCar.owner.email, false, carDetail)
+    notificationUserCar(valueCheckBox, currentCar.owner.email, false, carDetail);
+    // dispatch(
+    //   // putCarUpdate(currentCar.id, {
+    //   //   // available: false,
+    //   //   status: "UNAVAILABLE"
+    //   // })
+    //   putCarUpdate(currentCar.id, "UNAVAILABLE")
+    // );
     history.push({
       pathname: APP_PATH.CHECKING,
     });
@@ -298,7 +340,7 @@ export default function CarDetailChecking(props) {
         aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
         <DialogContent>
-          <TextareaAutosize
+          {/* <TextareaAutosize
             className={classes.textArea}
             autoFocus
             margin="dense"
@@ -307,7 +349,71 @@ export default function CarDetailChecking(props) {
             name="message"
             label="Reason"
             fullWidth
-          />
+          /> */}
+          <Grid container>
+            <Grid item xs={12} lg={12}>
+              <FormControlLabel
+                control=
+                {<Checkbox
+                  name="checkedA"
+                  value={reason1}
+                  onChange={handleChangeBox}
+                />
+                }
+                label={reason1}
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="checkedB"
+                    value={reason2}
+                    onChange={handleChangeBox}
+                  />
+                }
+                label={reason2}
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="checkedC"
+                    value={reason3}
+                    onChange={handleChangeBox}
+                  />
+                }
+                label={reason3}
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="checkedD"
+                    value={reason4}
+                    onChange={handleChangeBox}
+                  />
+                }
+                label={reason4}
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={12}>
+              <TextField
+                className={classes.textField}
+                variant="outlined"
+                multiline
+                value={valueCheckBox.checkedE}
+                onChange={handleChangeBoxAnotherReason}
+                placeholder="Another reason..."
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

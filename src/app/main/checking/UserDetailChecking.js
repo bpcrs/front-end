@@ -13,6 +13,8 @@ import { APP_PATH } from "../../../constant";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { fetchUserDetailChecking, putAcceptUserLicence, notificationLicenseUser } from "./checking.action";
 
 const ITEM_HEIGHT = 48;
@@ -59,9 +61,42 @@ export default function UserDetailChecking(props) {
     const changePage = useSelector((state) => state.checking.changePage);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState();
-
     const [linkImage, setLinkImage] = useState([]);
-    console.log(linkImage);
+    const reason1 = "License not clear";
+    const reason2 = "Identification not clear";
+    const reason3 = "Don't have Identificatoin";
+    const reason4 = "Don't have License";
+
+    const [valueCheckBox, setValueCheckBox] = useState({
+        checkedA: "",
+        checkedB: "",
+        checkedC: "",
+        checkedD: "",
+        checkedE: "",
+    });
+
+    const handleChangeBox = (event) => {
+        if (event.target.checked) {
+            setValueCheckBox({
+                ...valueCheckBox,
+                [event.target.name]: event.target.value,
+            });
+        } else {
+            setValueCheckBox({
+                ...valueCheckBox,
+                [event.target.name]: "",
+            });
+        }
+        
+    };
+
+    const handleChangeBoxAnotherReason = (event) => {
+        setValueCheckBox({
+            ...valueCheckBox,
+            checkedE: event.target.value,
+        })
+    };
+
     useEffect(() => {
         const { userId } = props.location.state;
 
@@ -70,7 +105,7 @@ export default function UserDetailChecking(props) {
             setCurrentUser(userDetail);
 
             if (userDetail.imageLicense) {
-                console.log("asdasdasdasdsa" ,userDetail.imageLicense.length);
+                // console.log("asdasdasdasdsa", userDetail.imageLicense.length);
                 setLinkImage(JSON.parse(userDetail.imageLicense));
             }
         };
@@ -91,7 +126,10 @@ export default function UserDetailChecking(props) {
     };
 
     const handleSendNotificationCheckLicense = () => {
-        notificationLicenseUser(message, currentUser.email, false);
+        // setMessage(valueCheckBox);
+        // console.log("check mess:", message);
+        // notificationLicenseUser(message, currentUser.email, false);
+        notificationLicenseUser(valueCheckBox, currentUser.email, false);
         setOpen(false);
 
         history.push({
@@ -99,9 +137,9 @@ export default function UserDetailChecking(props) {
         });
     };
 
-    const handleChangeInput = (event) => {
-        setMessage(event.target.value);
-    };
+    // const handleChangeInput = (event) => {
+    //     setMessage(event.target.value);
+    // };
     return (
         <Layout name="User checking form">
             <Grid spacing={1} container justify="center" alignItems="center">
@@ -170,24 +208,24 @@ export default function UserDetailChecking(props) {
 
                 <Grid item xs={12} lg={7}>
                     <Card className={classes.card}>
-                        
-                            <Grid container>
-                                {
-                                    linkImage &&
-                                    linkImage.map((image, index) => (
-                                        <Grid item xs={12} lg={6}>
-                                            <div style={{ textAlign: "center" }}>
-                                                <p>Picture {index + 1}</p>
-                                                <p>
-                                                    <img src={image} id="output" width="200" height="200" />
-                                                </p>
-                                            </div>
-                                        </Grid>
-                                    ))
-                                }
 
-                            </Grid>
-                      
+                        <Grid container>
+                            {
+                                linkImage &&
+                                linkImage.map((image, index) => (
+                                    <Grid item xs={12} lg={6}>
+                                        <div style={{ textAlign: "center" }}>
+                                            <p>Picture {index + 1}</p>
+                                            <p>
+                                                <img src={image} id="output" width="200" height="200" />
+                                            </p>
+                                        </div>
+                                    </Grid>
+                                ))
+                            }
+
+                        </Grid>
+
                     </Card>
                 </Grid>
             </Grid>
@@ -220,24 +258,92 @@ export default function UserDetailChecking(props) {
 
                     <Dialog open={open} >
                         <DialogContent>
-                            <TextField
+                            {/* <TextField
                                 // className={classes.textField}
                                 label="Notification"
                                 variant="outlined"
                                 onChange={handleChangeInput}
-                            />
+                            /> */}
+                            <Grid container>
+                                <Grid item xs={12} lg={12}>
+                                    <FormControlLabel
+                                        control=
+                                        {<Checkbox
+                                            name="checkedA"
+                                            value={reason1}
+                                            onChange={handleChangeBox}
+                                        />
+                                        }
+                                        label={reason1}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} lg={12}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name="checkedB"
+                                                value={reason2}
+                                                onChange={handleChangeBox}
+                                            />
+                                        }
+                                        label={reason2}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} lg={12}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name="checkedC"
+                                                value={reason3}
+                                                onChange={handleChangeBox}
+                                            />
+                                        }
+                                        label={reason3}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} lg={12}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                name="checkedD"
+                                                value={reason4}
+                                                onChange={handleChangeBox}
+                                            />
+                                        }
+                                        label={reason4}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} lg={12}>
+                                    <TextField
+                                        className={classes.textField}
+                                        variant="outlined"
+                                        multiline
+                                        value={valueCheckBox.checkedE}
+                                        onChange={handleChangeBoxAnotherReason}
+                                        placeholder="Another reason..."
+                                    />
+                                </Grid>
+                            </Grid>
                         </DialogContent>
                         <DialogActions>
                             <Grid container>
                                 <Grid xs={6} lg={6}>
-                                    <Button color="primary"
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
                                         onClick={() => { setOpen(false) }}>
                                         Cancel
                             </Button>
                                 </Grid>
 
                                 <Grid item xs={6} lg={6}>
-                                    <Button color="primary"
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
                                         onClick={handleSendNotificationCheckLicense}>
                                         Send
                             </Button>

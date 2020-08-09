@@ -67,6 +67,8 @@ export default function Review(props) {
     const dispatch = useDispatch();
     const { carId } = props;
     const { bookingId } = props;
+    const [error, setError] = useState(false);
+    const [errortext, setErrorText] = useState("");
 
     const [review, setReview] = useState({
         rating: 5,
@@ -95,12 +97,27 @@ export default function Review(props) {
     }
 
     const submitReviewBooking = () => {
-        dispatch(postReviewSubmit(review));
-        setReview({
-            ...review,
-            comment: "",
-            rating: 5,
-        })
+        const check = checkNotNullReview();
+        if (check) {
+            setError(true);
+            setErrorText("Your filed is empty!!");
+        } else {
+            dispatch(postReviewSubmit(review));
+            setReview({
+                ...review,
+                comment: "",
+                rating: 5,
+            })
+        }
+
+    };
+
+    const checkNotNullReview = () => {
+        if (!review.comment) {
+            return true;
+        } else {
+            return false;
+        }
     };
 
     return (
@@ -168,11 +185,14 @@ export default function Review(props) {
                             <Grid item lg={12} xs={12}>
 
                                 <TextField
+                                    error={error}
                                     name="comment"
                                     value={review.comment}
                                     className={classes.textField}
                                     variant="outlined"
                                     multiline
+                                    placeholder="Tell us about your feeling..."
+                                    helperText={errortext}
                                     onChange={handleChangeInput} />
                             </Grid>
                         </Grid>
@@ -185,7 +205,7 @@ export default function Review(props) {
                                 // disabled={disableButton}
                                 onClick={submitReviewBooking}
                             >
-                                Submit
+                                Rate
                          </Button>
                         </Grid>
                     </Grid>
