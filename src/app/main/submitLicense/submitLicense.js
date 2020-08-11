@@ -92,6 +92,9 @@ export default function SubmitLicense(props) {
     })
   };
 
+  const handleRemoveImage = (image) => {
+    setImageLicenseArr(imageLicenseArr.filter((item) => item.name !== image.name))
+  };
 
   const updateLicense = () => {
     const imageLicense = JSON.stringify(linkImageArr);
@@ -523,6 +526,12 @@ export default function SubmitLicense(props) {
                         <Grid item lg={6} xs={12}>
                           <div className={classes.productImageItem} key={index}>
 
+                            <Icon
+                              className={classes.productImageFeaturedStar}
+                              onClick={() => handleRemoveImage(image)}
+                            >
+                              remove_circle
+                      </Icon>
                             <img
                               src={URL.createObjectURL(image)}
                               alt="img"
