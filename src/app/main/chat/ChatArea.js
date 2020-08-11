@@ -217,7 +217,6 @@ const UserSelected = () => {
           </StyledBadge>
         </Grid>
         <Grid lg={10} item>
-          {/* <Grid container lg={4}> */}
           <Typography variant="subtitle2">
             {selectedBooking.car.name} -{" "}
             {userLogged.email === selectedBooking.car.owner.email
@@ -311,7 +310,6 @@ export const ChatArea = (props) => {
             style={{ backgroundColor: "#E6E6E6" }}
           >
             {selectedBooking.id && <UserSelected {...selectedBooking} />}
-            {/* <ViewBookingDialog info={booking} /> */}
           </Grid>
           <Grid
             item
@@ -327,7 +325,7 @@ export const ChatArea = (props) => {
               <Button
                 variant="outlined"
                 onClick={handleOpenDetail}
-                startIcon={<Icon>details</Icon>}
+                startIcon={<Icon>description</Icon>}
               >
                 Detail
               </Button>
@@ -350,7 +348,6 @@ export const ChatArea = (props) => {
             container
             lg={4}
             direction="column"
-            // className="px-8 py-8"
             justify="flex-start"
             alignContent="flex-start"
             className={classes.contactList}
