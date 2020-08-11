@@ -56,6 +56,7 @@ export function updateUserLicense(id, user) {
         }
       },
       (error) => {
+        dispatch(updateUserLicenseFailure(error.message));
         dispatch(showMessageError(error.message));
       }
     );

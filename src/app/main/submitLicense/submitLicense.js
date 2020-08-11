@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Grid, makeStyles, Typography, } from "@material-ui/core";
+import { Button, TextField, Grid, makeStyles, Typography, Icon, DialogActions } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -62,7 +62,8 @@ export default function SubmitLicense(props) {
   const loading = useSelector((state) => state.license.loading);
   // const [license, setLicense] = useState({});
   const userLogged = useSelector((state) => state.auth.user);
-
+  const [disableButton, setDisableButton] = useState(false);
+  const [open, setOpen] = useState(true);
   var [imageLicenseArr, setImageLicenseArr] = useState([]);
   var linkImageArr = new Array();
 
@@ -99,7 +100,22 @@ export default function SubmitLicense(props) {
       phone: currentUser.phone,
       identification: currentUser.identification,
       imageLicense: imageLicense,
+      licenseCheck: currentUser.licenseCheck,
     }))
+    setDisableButton(true);
+  };
+
+  const handleClickSave = () => {
+    console.log("license: ", userDetail.licenseCheck);
+    if (!userDetail.licenseCheck) {
+      uploadFile();
+    } else {
+      dispatch(updateUserLicense(currentUser.id, {
+        phone: currentUser.phone,
+        licenseCheck: currentUser.licenseCheck,
+      }))
+      setDisableButton(true);
+    }
   };
 
   let uploadFile = () => {
@@ -184,7 +200,27 @@ export default function SubmitLicense(props) {
       }
     } else {
       console.log("Khong co file");
-      return;
+      setOpen(true);
+      return (
+        <Dialog
+          open={open}
+        >
+
+          <DialogContent>
+            <div align="center" className={classes.progressBar}>
+              <p>You must upload your image License and Identification</p>
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => { setOpen(false) }}>
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      );
     }
   };
 
@@ -245,15 +281,16 @@ export default function SubmitLicense(props) {
   };
 
   var loadFile = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      if (imageLicenseArr.length > 0) {
-        imageLicenseArr[0] = event.target.files[0];
-      } else {
-        setImageLicenseArr([...imageLicenseArr, event.target.files[0]]);
-      }
-    }
+    // if (event.target.files[0]) {
+    //   var image = document.getElementById("output");
+    //   image.src = URL.createObjectURL(event.target.files[0]);
+    //   if (imageLicenseArr.length > 0) {
+    //     imageLicenseArr[0] = event.target.files[0];
+    //   } else {
+    //     setImageLicenseArr([...imageLicenseArr, event.target.files[0]]);
+    //   }
+    // }
+    setImageLicenseArr([...imageLicenseArr, ...event.target.files]);
   };
 
   var loadFile2 = function (event) {
@@ -314,7 +351,7 @@ export default function SubmitLicense(props) {
 
       <Grid container spacing={2} component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
 
-        <Grid item xs={12} lg={12}>
+        {/* <Grid item xs={12} lg={12}>
           <TextField
             className={classes.textField}
             id="phone"
@@ -337,15 +374,176 @@ export default function SubmitLicense(props) {
             label="Identification Number"
             variant="outlined"
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} lg={12}>
-          <Typography variant="h6" color="initial" className={classes.head}>
-            Upload your two picture License and two picture Identification
-        </Typography>
+          {
+            userDetail.licenseCheck == true ? (
+              <Grid container>
+
+                <Grid item xs={12} lg={12}>
+                  <TextField
+                    className={classes.textField}
+                    id="phone"
+                    name="phone"
+                    value={currentUser.phone ? currentUser.phone : ""}
+                    onChange={handleInputChange}
+                    label="Phone Number"
+                    variant="outlined"
+                  />
+                </Grid>
+
+                <Grid item xs={12} lg={12}>
+                  <Typography variant="h6" color="initial" className={classes.head}>
+                    Your License and Identification
+                  </Typography>
+                </Grid>
+
+                <Grid item xs={12} lg={6}>
+                  <div style={{ textAlign: "center" }}>
+                    <h2>Picture 1</h2>
+                    <p>
+                      <img
+                        id="output"
+                        width="200"
+                        height="200"
+                        src={imageJson[0]}
+                      />
+                    </p>
+                  </div>
+                </Grid>
+
+                <Grid item xs={12} lg={6}>
+                  <div style={{ textAlign: "center" }}>
+                    <h2>Picture 2</h2>
+                    <p>
+                      <img
+                        id="output2"
+                        width="200"
+                        height="200"
+                        src={imageJson[1]}
+                      />
+                    </p>
+                  </div>
+                </Grid>
+
+
+                <Grid item xs={12} lg={6}>
+                  <div style={{ textAlign: "center" }}>
+                    <h2>Picture 3</h2>
+                    <p>
+                      <img
+                        id="output3"
+                        width="200"
+                        height="200"
+                        src={imageJson[2]}
+                      />
+                    </p>
+                  </div>
+                </Grid>
+
+
+                <Grid item xs={12} lg={6}>
+                  <div style={{ textAlign: "center" }}>
+                    <h2>Picture 4</h2>
+                    <p>
+                      <img
+                        id="output4"
+                        width="200"
+                        height="200"
+                        src={imageJson[3]}
+                      />
+                    </p>
+                  </div>
+                </Grid>
+              </Grid>
+            ) : (
+
+                <Grid container spacing={2}>
+
+                  <Grid item xs={12} lg={12}>
+                    <TextField
+                      className={classes.textField}
+                      id="phone"
+                      name="phone"
+                      value={currentUser.phone ? currentUser.phone : ""}
+                      onChange={handleInputChange}
+                      label="Phone Number"
+                      variant="outlined"
+                    />
+                  </Grid>
+
+
+                  <Grid item xs={12} lg={12}>
+                    <TextField
+                      className={classes.textField}
+                      id="identification"
+                      name="identification"
+                      onChange={handleInputChange}
+                      value={currentUser.identification ? currentUser.identification : ""}
+                      label="Identification Number"
+                      variant="outlined"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} lg={12}>
+                    <Typography variant="h6" color="initial" className={classes.head}>
+                      Upload your two picture License and two picture Identification
+                  </Typography>
+                  </Grid>
+
+                  <Grid item lg={12} xs={12}>
+                    <label className={classes.productImageItem} variant="outlined">
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple
+                        accept="image/*"
+                        name="image"
+                        id="file"
+                        onChange={loadFile}
+                      />
+                      <span aria-hidden="true" style={{ margin: "center", textAlign: "center" }}>
+                        {/* <Icon style={{ color: "blue", margin: "center" }}>cloud_upload</Icon> */}
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<CloudUploadIcon />}
+                        >
+                          <label htmlFor="file">Choose File</label>
+                        </Button>
+                      </span>
+                    </label>
+                  </Grid>
+
+                  <Grid container item lg={12} xs={12}>
+                    {
+                      imageLicenseArr &&
+                      imageLicenseArr.map((image, index) => (
+                        <Grid item lg={6} xs={12}>
+                          <div className={classes.productImageItem} key={index}>
+
+                            <img
+                              src={URL.createObjectURL(image)}
+                              alt="img"
+                              width="200"
+                              height="200"
+
+                            />
+                          </div>
+                        </Grid>
+                      ))
+                    }
+                  </Grid>
+                </Grid>
+              )
+          }
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+
+
+
+        {/* <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
             <h2>Picture 1</h2>
             <p>
@@ -469,20 +667,22 @@ export default function SubmitLicense(props) {
               />
             </p>
           </div>
-        </Grid>
+        </Grid> */}
 
         <Grid container justify="center">
           <Button
             id="submitButton"
             variant="contained"
             color="secondary"
-            onClick={uploadFile}
+            // onClick={uploadFile}
+            onClick={handleClickSave}
+            disabled={disableButton}
           >
             Save Change
           </Button>
         </Grid>
       </Grid>
 
-    </Grid>
+    </Grid >
   );
 }
