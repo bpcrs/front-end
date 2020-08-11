@@ -127,6 +127,10 @@ export default function CarDetails(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const size = 3;
 
+  const flag = "29.8 kms";
+  console.log(
+    distance.distance ? distance.distance.split(",")[0] >= 25 : "abc"
+  );
   const handleChangeInfo = () => {
     setLoadingProcess(true);
     setTimeout(() => {
@@ -144,9 +148,9 @@ export default function CarDetails(props) {
         (1000 * 60 * 60 * 24)
     ) +
       1);
-
   const handleBookingChange = () => {
     console.log(bookingChange);
+
     history.push({
       pathname: APP_PATH.VIEW_BOOKING,
       state: {
@@ -375,6 +379,7 @@ export default function CarDetails(props) {
                     color="inherit"
                     className={classes.platenum}
                   >
+                    Distance between pickup to car:{" "}
                     {distance ? distance.distance : "? km"}
                   </Typography>
                 </Grid>
@@ -553,7 +558,11 @@ export default function CarDetails(props) {
                     color="primary"
                     className="w-full mt-20"
                     disabled={
-                      !bookingChange.location || !bookingChange.destination
+                      // !bookingChange.location ||
+                      // !bookingChange.destination ||
+                      distance.distance
+                        ? distance.distance.split(",")[0] >= 30
+                        : false
                     }
                     onClick={handleBookingChange}
                   >

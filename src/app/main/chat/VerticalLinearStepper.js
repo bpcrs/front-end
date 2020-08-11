@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
+  cancelAgreement: {
+    marginLeft: theme.spacing(4),
+  },
 }));
 function getSteps() {
   return [
@@ -199,6 +202,17 @@ export default function VerticalLinearStepper() {
     setOpen(false);
   };
 
+  const [openCancel, setOpenCancel] = useState(false);
+  const handleCloseCancel = () => {
+    setOpenCancel(false);
+  };
+  const handleCancel = () => {
+    dispatch(
+      changeBookingStatusRequest(selectedBooking.id, BOOKING_STATUS.CANCEL)
+    );
+    handleCloseCancel();
+  };
+
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep} orientation="vertical">
@@ -227,6 +241,33 @@ export default function VerticalLinearStepper() {
                     onClick={handleSkip}
                   >
                     I skip this agreement
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Dialog
+                open={openCancel}
+                scroll="body"
+                onClose={handleCloseCancel}
+              >
+                <DialogContent>
+                  <Typography variant="subtitle2" color="textPrimary">
+                    Cancel this booking request ?
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "red", color: "white" }}
+                    onClick={handleCloseCancel}
+                  >
+                    No
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCancel}
+                  >
+                    Yes
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -268,6 +309,16 @@ export default function VerticalLinearStepper() {
           <Typography>All steps completed - you&apos;re finished</Typography>
         </Paper>
       )}
+      {selectedBooking.status === BOOKING_STATUS.PENDING ? (
+        <Button
+          className={classes.cancelAgreement}
+          variant="contained"
+          style={{ color: "white", backgroundColor: "red" }}
+          onClick={() => setOpenCancel(true)}
+        >
+          Cancel Agreement
+        </Button>
+      ) : null}
     </div>
   );
 }

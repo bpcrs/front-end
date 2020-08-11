@@ -61,7 +61,13 @@ export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
 export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
+export const RESET_CREATE_BOOKING = "[BOOKING] RESET CREATE";
 
+export function resetFlagCreateBooking() {
+  return {
+    type: RESET_CREATE_BOOKING,
+  };
+}
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
@@ -673,8 +679,6 @@ export function storeImageToFirebase(imgs) {
     uploadTask.put(img, metadata).then(function (result) {
       uploadTask.getDownloadURL().then(function (url) {
         console.log("file available at ", url);
-        // getImageDownloadURL(url);
-        // submitMessage(url, send, receive, "IMG");
       });
     });
   });

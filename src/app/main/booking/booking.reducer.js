@@ -26,6 +26,12 @@ const initialState = {
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.RESET_CREATE_BOOKING: {
+      return {
+        ...state,
+        flagBookSuccess: false,
+      };
+    }
     case Actions.LOADING_CREATE_BOOKING: {
       return {
         ...state,

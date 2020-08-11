@@ -122,11 +122,9 @@ const StyledToggleButtonGroup = withStyles((theme) => ({
 export default function ToggleButtons() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const [alignment, setAlignment] = React.useState("left");
   const isRenter = useSelector((state) => state.chat.isRenter);
 
   const handleAlignment = (event, role) => {
-    // setAlignment(newAlignment);
     dispatch(setIsRenterBooking(role));
   };
 
@@ -198,11 +196,7 @@ const UserSelected = () => {
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
   return (
-    <Box
-    // onClick={() => setSelectedContact(booking)}
-    // className={classes.contactButton}
-    >
-      {/* {console.log(booking)} */}
+    <Box>
       <Grid container className="px-8 py-8">
         <Grid item lg>
           <StyledBadge
@@ -225,7 +219,10 @@ const UserSelected = () => {
         <Grid lg={10} item>
           {/* <Grid container lg={4}> */}
           <Typography variant="subtitle2">
-            {selectedBooking.car.name} - {selectedBooking.car.owner.fullName}
+            {selectedBooking.car.name} -{" "}
+            {userLogged.email === selectedBooking.car.owner.email
+              ? selectedBooking.renter.fullName
+              : selectedBooking.car.owner.fullName}
           </Typography>
           <Typography
             className="text-11"
