@@ -659,7 +659,7 @@ export default function CarSubmit(props) {
           if (flag2) {
             flag2 = false;
             console.log("length link download image: " + carImages.length);
-            console.log("Starting store car info to DB...");
+            console.log("Starting store license info to firebase...");
             storeLicenseToFireBase();
             // submitCarToDB();
           }
@@ -685,7 +685,6 @@ export default function CarSubmit(props) {
         today.getDate();
       var count = 0;
       var flag = false;
-      // var vinCarNumber = document.getElementById("vin").value;
 
       for (let i = 0; i < carImages.length; i++) {
         var uploadTask = firebase
@@ -778,7 +777,7 @@ export default function CarSubmit(props) {
           if (flag2) {
             flag2 = false;
             // console.log("length link download image: " + carImages.length);
-            // console.log("Starting store car info to DB...");
+            console.log("Starting store car info to DB...");
             // storeLicenseToFirebase();
             submitCarToDB();
           }
@@ -857,9 +856,9 @@ export default function CarSubmit(props) {
             if (flag) {
               flag = false;
               if (count == 0) {
-                console.log("starting get link download image...");
+                console.log("starting get link download firebase...");
                 await new Promise((resolve, reject) =>
-                  setTimeout(resolve, 3000)
+                  setTimeout(resolve, 2000)
                 );
                 getLinkLicenseFromFireBase(date);
               }
@@ -875,7 +874,6 @@ export default function CarSubmit(props) {
   const linkImageArr = new Array();
   const submitCarToDB = () => {
     console.log(linkImageArr);
-    // dispatch(submitImagesCar(40, linkImageArr));
     dispatch(postCarSubmit(currentCar, linkImageArr));
   };
 
@@ -930,7 +928,6 @@ export default function CarSubmit(props) {
                 Back
               </Button>
               {activeStep === steps.length - 1 ? (
-                // <Grid>
                 <Button
                   variant="contained"
                   color="primary"
@@ -941,8 +938,6 @@ export default function CarSubmit(props) {
                   Register
                 </Button>
               ) : (
-                // </Grid>
-                // <Grid>
                 <Button
                   variant="contained"
                   color="primary"

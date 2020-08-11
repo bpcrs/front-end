@@ -20,6 +20,12 @@ const initialState = {
 
 const chatReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.RESET_AGREEMENTS: {
+      return {
+        ...state,
+        agreements: [],
+      };
+    }
     case Actions.CHAT_CHANGE_STATUS_BOOKING: {
       const itemChange = state.pendingBookings.findIndex(
         (item) => item.id === payload.id

@@ -18,7 +18,10 @@ const initialState = {
   booking: {},
   change: false,
   disableButton: false,
-  distance: {},
+  distance: {
+    value: 0,
+    text: "",
+  },
   loadingBooking: false,
   messageResponeReview: "",
   flagBookSuccess: false,
@@ -26,6 +29,12 @@ const initialState = {
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.RESET_CREATE_BOOKING: {
+      return {
+        ...state,
+        flagBookSuccess: false,
+      };
+    }
     case Actions.LOADING_CREATE_BOOKING: {
       return {
         ...state,
