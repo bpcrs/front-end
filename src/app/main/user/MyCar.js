@@ -106,7 +106,8 @@ function Row(props) {
         <TableCell component="th" scope="row">
           <IconButton onClick={() => handleClickBooked(car.id, car.name)}>
             {car.status === CAR_STATUS.REQUEST ? (
-              <Badge color="secondary" badgeContent="?">
+              <Badge color="error" badgeContent={car.requestCounting}>
+                {console.log(car)}
                 <Icon style={{ color: "purple" }}>calendar_view_day</Icon>
               </Badge>
             ) : (

@@ -19,7 +19,12 @@ const ToolbarLayout3 = () => {
   const toolbarTheme = useSelector((state) => state.fuse.settings.toolbarTheme);
   return (
     <MuiThemeProvider theme={toolbarTheme}>
-      <AppBar id="fuse-toolbar" className="flex relative z-10" color="default">
+      <AppBar
+        id="fuse-toolbar"
+        className="flex relative z-10"
+        color="default"
+        elevation={10}
+      >
         <Toolbar className="container p-0 lg:px-24">
           <div className={classNames("flex flex-no-shrink items-center")}>
             <Logo />
