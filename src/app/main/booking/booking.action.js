@@ -772,7 +772,18 @@ export function distanceBetweenTwoLocation(destination, location) {
     );
     request.then(
       (response) => {
-        dispatch(getDistanceLocation(response.success ? response.data : ""));
+        dispatch(
+          getDistanceLocation(
+            response.success
+              ? {
+                  value: response.data.distance
+                    .replace(".", "")
+                    .match(/\d+/)[0],
+                  text: response.data.distance,
+                }
+              : ""
+          )
+        );
       },
       (error) => {
         showMessageError(error.message);

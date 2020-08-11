@@ -18,7 +18,10 @@ const initialState = {
   booking: {},
   change: false,
   disableButton: false,
-  distance: {},
+  distance: {
+    value: 0,
+    text: "",
+  },
   loadingBooking: false,
   messageResponeReview: "",
   flagBookSuccess: false,
