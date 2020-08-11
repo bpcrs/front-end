@@ -10,7 +10,7 @@ import OtpInput from "react-otp-input";
 import { useState } from "react";
 import { theme } from "@chakra-ui/core";
 import { blue, green } from "@material-ui/core/colors";
-import { Grid, CircularProgress } from "@material-ui/core";
+import { Grid, CircularProgress, Chip, Icon } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   inputStyle: {
@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     height: "4rem",
     margin: "0 1rem",
     fontSize: "2rem",
+    fontFamily: theme.typography.fontFamily,
     fontWeight: "100",
     borderRadius: "4px",
     border: "1px solid rgba(0,0,0,0.3)",
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VerifyOTP() {
+export default function VerifyOTP({ component }) {
   const [open, setOpen] = useState(false);
   const [OTP, setOTP] = useState();
   const [loading, setLoading] = useState(false);
@@ -50,20 +51,30 @@ export default function VerifyOTP() {
     setOpen(false);
   };
   const handleSendOTP = () => {
+    setCounter(60);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 6000);
+    }, 60000);
     setInterval(() => {
       setCounter((counter) => counter - 1);
     }, 1000);
   };
 
+  const handleChangeOTP = (value) => {
+    setOTP(value);
+    if (value.toString().length === 6) {
+      console.log("OK");
+    }
+  };
   return (
     <React.Fragment>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open max-width dialog
-      </Button>
+      <Chip
+        icon={<Icon style={{ color: green[600] }}>check_circle</Icon>}
+        label="Verified Member"
+        style={{ color: green[600], backgroundColor: green[50] }}
+        onClick={handleClickOpen}
+      />
       <Dialog
         fullWidth
         maxWidth="sm"
@@ -71,7 +82,9 @@ export default function VerifyOTP() {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Verify OTP</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">
+          Verify your number phone
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please verify you phone before renting or register new car
@@ -81,11 +94,13 @@ export default function VerifyOTP() {
               <OtpInput
                 value={OTP}
                 isInputNum
-                onChange={(otp) => setOTP(otp)}
+                onChange={handleChangeOTP}
                 numInputs={6}
                 separator={" "}
                 inputStyle={classes.inputStyle}
                 focusStyle={{ borderColor: "#1976d2" }}
+                shouldAutoFocus
+                isDisabled={loading}
               />
             </Grid>
             <Grid lg={3} item>
@@ -94,7 +109,6 @@ export default function VerifyOTP() {
                   fullWidth
                   variant="outlined"
                   color="primary"
-                  //   className={buttonClassname}
                   disabled={loading}
                   onClick={handleSendOTP}
                   style={{ textTransform: "none" }}

@@ -132,13 +132,13 @@ const Profile = (props) => {
                     {userLogged.role}
                   </Typography>
                   <VerifyOTP />
-                  <Chip
+                  {/* <Chip
                     icon={
                       <Icon style={{ color: green[600] }}>check_circle</Icon>
                     }
                     label="Verified Member"
                     style={{ color: green[600], backgroundColor: green[50] }}
-                  />
+                  /> */}
                 </div>
               </Grid>
               <Grid item lg={2}>
