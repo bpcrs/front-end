@@ -25,7 +25,14 @@ export const PUT_USER_DETAIL_CHECKING_SUCCESS =
   "[USER_DETAIL_CHECKING] PUT DATA SUCCESS";
 export const PUT_USER_DETAIL_CHECKING_FAILURE =
   "[USER_DETAIL_CHECKING] PUT DATA FAILURE";
+export const FETCH_REVENUE_BOOKING = "[REVENUE] BOOKING";
 
+export function fetchRevenueBooking(price) {
+  return {
+    type: FETCH_REVENUE_BOOKING,
+    payload: price,
+  };
+}
 export function fetchCarCheckingSuccess(cars) {
   return {
     type: FETCH_CAR_CHECKING_SUCCESS,
@@ -127,7 +134,6 @@ export function putUserDetailSuccess(user) {
   };
 }
 
-
 export function putUserDetailFailure(error) {
   return {
     type: PUT_USER_DETAIL_CHECKING_FAILURE,
@@ -176,7 +182,11 @@ export function fetchUserListChecking() {
 export function putCarUpdate(id, status) {
   return (dispatch) => {
     // const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id), { status }, {});
+    const request = PUT(
+      ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id),
+      { status },
+      {}
+    );
     request.then(
       (response) => {
         if (response.success) {
@@ -191,7 +201,6 @@ export function putCarUpdate(id, status) {
     );
   };
 }
-
 
 export async function fetchUserDetailChecking(userId) {
   return (dispatch) => {
@@ -209,8 +218,8 @@ export async function fetchUserDetailChecking(userId) {
         dispatch(fetchUserDetailCheckingFailure(error));
         dispatch(showMessageError(error.message));
       }
-    )
-  }
+    );
+  };
 }
 
 export function putAcceptUserLicence(id, user) {
@@ -261,4 +270,18 @@ export function notificationUserCar(message, userMail, isAccept, car) {
       car: car,
       isSeen: false,
     });
+}
+
+export function fetchRevenueAllDoneBooking(fromDate, toDate) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.STATIC_CONTROLLER, { fromDate, toDate });
+    request.then(
+      (response) => {
+        dispatch(fetchRevenueBooking(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
 }

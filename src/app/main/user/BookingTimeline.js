@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 function Track(props) {
   const classes = useStyles();
   const { track, status } = props;
-  console.log(status);
   switch (status) {
     case BOOKING_STATUS.REQUEST:
       return (

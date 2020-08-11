@@ -8,10 +8,17 @@ const initialState = {
   // loading: false,
   changePage: false,
   userDetail: {},
+  price: 0,
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_REVENUE_BOOKING: {
+      return {
+        ...state,
+        price: payload,
+      };
+    }
     case Actions.FETCH_CAR_CHECKING_SUCCESS: {
       return {
         ...state,
