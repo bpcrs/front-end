@@ -24,7 +24,13 @@ export const SET_IS_RENTER_BOOKING = "[BOOKING] SET USER ROLE";
 export const ACCEPT_AGREEMENT_SUCCESS = "[AGREEMENT] ACCEPT AGREEMENT SUCCESS";
 export const CLOSE_AGREEMENT_DRAWER = "[AGREEMENT] CLOSE DRAWER";
 export const CHAT_CHANGE_STATUS_BOOKING = "[CHAT] CHANGE BOOKING STATUS";
+export const RESET_AGREEMENTS = "[AGREEMENTS] RESET AGREEMENTS";
 
+export function resetAgreements() {
+  return {
+    type: RESET_AGREEMENTS,
+  };
+}
 export function changeBookingStatus(booking) {
   return {
     type: CHAT_CHANGE_STATUS_BOOKING,
@@ -188,8 +194,12 @@ export function fetchAgreementList(id) {
     const response = await GET(
       ENDPOINT.AGREEMENT_CONTROLLER_GETBY_BOOKINGID(id)
     );
-    if (response.success) {
-      dispatch(fetchAgreementSuccess(response.data));
+    if (response) {
+      if (response.success) {
+        dispatch(fetchAgreementSuccess(response.data));
+      } else {
+        dispatch(resetAgreements());
+      }
     } else {
       showMessageError(response.message);
     }
@@ -314,8 +324,11 @@ export function changeBookingStatusRequest(bookingId, status) {
         if (response.success) {
           dispatch(changeBookingStatus(response.data));
           notificationBooking(response.data);
-          if (status === BOOKING_STATUS.CONFIRM)
+          if (status === BOOKING_STATUS.CONFIRM) {
             dispatch(showMessageSuccess("All agreements confirm successful!"));
+          } else if (status === BOOKING_STATUS.CANCEL) {
+            dispatch(showMessageSuccess("Cancel agreements successful!"));
+          }
         } else {
           dispatch(showMessageError(response.message));
         }

@@ -115,6 +115,8 @@ export default function GoogleMaps(props) {
       }}
       renderInput={(params) => (
         <TextField
+          error={value ? false : true}
+          helperText={value ? "" : "Please fill out location"}
           {...params}
           label={props.label}
           variant="outlined"

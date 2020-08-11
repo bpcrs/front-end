@@ -28,6 +28,7 @@ import GoogleMaps from "../landing/GoogleMaps";
 import SwipeableTextMobileStepper from "./SlideShow";
 import Divider from "@material-ui/core/Divider";
 import Pagination from "@material-ui/lab/Pagination";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   comment: {
-    margin: theme.spacing(2),
+    margin: theme.spacing(1),
   },
   paper: {
     marginTop: theme.spacing(2),
@@ -127,6 +128,10 @@ export default function CarDetails(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const size = 3;
 
+  const isInArea = () => {
+    const isKm = distance && distance.text.indexOf("km") !== -1;
+    return isKm && distance.value <= 50;
+  };
   const handleChangeInfo = () => {
     setLoadingProcess(true);
     setTimeout(() => {
@@ -144,9 +149,9 @@ export default function CarDetails(props) {
         (1000 * 60 * 60 * 24)
     ) +
       1);
-
   const handleBookingChange = () => {
     console.log(bookingChange);
+
     history.push({
       pathname: APP_PATH.VIEW_BOOKING,
       state: {
@@ -172,9 +177,11 @@ export default function CarDetails(props) {
     handleChangeInfo();
   };
   const handleLocationChange = (value) => {
+    console.log(value);
+
     setBookingChange({
       ...bookingChange,
-      location: value,
+      location: value !== null ? value : booking.location.description,
     });
     handleChangeInfo();
   };
@@ -375,7 +382,9 @@ export default function CarDetails(props) {
                     color="inherit"
                     className={classes.platenum}
                   >
-                    {distance ? distance.distance : "? km"}
+                    {distance.text
+                      ? `Distance between to car: ${distance.text}`
+                      : "Please fill pick-up location"}
                   </Typography>
                 </Grid>
                 <Grid container>
@@ -458,6 +467,7 @@ export default function CarDetails(props) {
                   value={bookingChange.location}
                   onChange={handleLocationChange}
                 />
+
                 <GoogleMaps
                   label="Destination"
                   id="destination"
@@ -548,12 +558,21 @@ export default function CarDetails(props) {
                       />
                     }
                   </Typography>
+                  {!isInArea() ? (
+                    <Grid item lg={12}>
+                      <Alert severity="warning" className={classes.comment}>
+                        Distance should less than 50 km
+                      </Alert>
+                    </Grid>
+                  ) : null}
                   <Button
                     variant="contained"
                     color="primary"
                     className="w-full mt-20"
                     disabled={
-                      !bookingChange.location || !bookingChange.destination
+                      !bookingChange.location ||
+                      !bookingChange.destination ||
+                      !isInArea()
                     }
                     onClick={handleBookingChange}
                   >
