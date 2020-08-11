@@ -15,7 +15,11 @@ import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
-import { APP_PATH, BOOKING_STATUS } from "../../../constant";
+import {
+  APP_PATH,
+  BOOKING_STATUS,
+  MY_NOTIFICATION_STATUS,
+} from "../../../constant";
 import { blue, grey, green, red } from "@material-ui/core/colors";
 import ReactTimeago from "react-timeago";
 // import { theme } from "@chakra-ui/core";
@@ -83,8 +87,62 @@ const Notification = () => {
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
+      case MY_NOTIFICATION_STATUS.YOU_SIGNED:
       case BOOKING_STATUS.RENTER_SIGNED:
-        return <Card></Card>;
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[400], color: green[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} is signed.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
       case BOOKING_STATUS.BOOKED:
         return (
           <Card
@@ -629,6 +687,236 @@ const Notification = () => {
                 <Grid lg item>
                   <Typography variant="subtitle1">{notify.message}</Typography>
                   <div>Car plate number: {notify.car.plateNum}</div>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case MY_NOTIFICATION_STATUS.ACCEPT:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[400], color: green[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    You have accepted Booking #{notify.bookingId}.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case MY_NOTIFICATION_STATUS.REFUSE:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{
+                      backgroundColor: green[400],
+                      color: green[900],
+                    }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    You have denied Booking #{notify.bookingId}.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case MY_NOTIFICATION_STATUS.YOU_ACCEPTED:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{
+                      backgroundColor: green[400],
+                      color: green[900],
+                    }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    You have agree all agreements in Booking #{notify.bookingId}
+                    .
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
+      case MY_NOTIFICATION_STATUS.REVOKE:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{
+                      backgroundColor: green[400],
+                      color: green[900],
+                    }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    You have cancel Booking #{notify.bookingId}.
+                  </Typography>
                   <Typography variant="caption" style={{ color: grey[500] }}>
                     <ReactTimeago
                       date={new Date(notify.createAt)}

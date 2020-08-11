@@ -665,7 +665,6 @@ export function notificationMyBooking(booking, status) {
 }
 
 export function storeImageToFirebase(imgs) {
-  // const [imgs, setImgs] = useState([]);
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -689,24 +688,18 @@ export function updateImageCar(images, carId, type) {
     contentType: "image/jpeg",
   };
   const date = new Date().getTime();
-  images.map(
-    (img) => {
-      const uploadTask = firebase
-        .storage()
-        .ref("Img/" + date)
-        .child(img.name);
+  images.map((img) => {
+    const uploadTask = firebase
+      .storage()
+      .ref("Img/" + date)
+      .child(img.name);
 
-      uploadTask.put(img, metadata).then(function (result) {
-        uploadTask.getDownloadURL().then(function (url) {
-          console.log("file available at ", url);
-          // return (dispatch) =>;
-          // dispatch(postImageCar(url, carId, type));
-          // getImageDownloadURL(url);
-        });
+    uploadTask.put(img, metadata).then(function (result) {
+      uploadTask.getDownloadURL().then(function (url) {
+        console.log("file available at ", url);
       });
-    }
-    // return(url);
-  );
+    });
+  });
 }
 
 export function updateCarStatus(id, status) {

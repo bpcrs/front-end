@@ -376,16 +376,25 @@ export default function CarDetails(props) {
               >
                 <Grid container>
                   <Icon color="primary">location_searching</Icon>
-                  <Typography
-                    variant="subtitle2"
-                    align="center"
-                    color="inherit"
-                    className={classes.platenum}
-                  >
-                    {distance.text
-                      ? `Distance between to car: ${distance.text}`
-                      : "Please fill pick-up location"}
-                  </Typography>
+                  {distance.text ? (
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      color="inherit"
+                      className={classes.platenum}
+                    >
+                      Distance to pick-up location: {distance.text}
+                    </Typography>
+                  ) : (
+                    <Typography
+                      variant="subtitle2"
+                      align="center"
+                      color="error"
+                      className={classes.platenum}
+                    >
+                      Please fill out location
+                    </Typography>
+                  )}
                 </Grid>
                 <Grid container>
                   <Icon color="primary">location_on</Icon>
@@ -412,24 +421,31 @@ export default function CarDetails(props) {
                   </Typography>
                 </Grid>
                 <Grid container>
-                  <Grid item xl={12} lg={12}>
-                    {reviews.data &&
-                      reviews.data.map((review) => (
-                        <Review key={review.id} {...review} />
-                      ))}
-                  </Grid>
-
-                  <Grid item xl={12} lg={12}>
-                    <Pagination
-                      count={
-                        reviews.count !== 0 && reviews.count % size === 0
-                          ? Math.floor(reviews.count / size)
-                          : Math.floor(reviews.count / size) + 1
-                      }
-                      color="primary"
-                      onChange={(e, page) => setCurrentPage(page)}
-                    />
-                  </Grid>
+                  {reviews ? (
+                    <Grid>
+                      <Typography variant="subtitle1" color="primary">
+                        Don't have any reviews
+                      </Typography>
+                    </Grid>
+                  ) : (
+                    <Grid item xl={12} lg={12}>
+                      {reviews.data &&
+                        reviews.data.map((review) => (
+                          <Review key={review.id} {...review} />
+                        ))}
+                      <Grid item xl={12} lg={12}>
+                        <Pagination
+                          count={
+                            reviews.count !== 0 && reviews.count % size === 0
+                              ? Math.floor(reviews.count / size)
+                              : Math.floor(reviews.count / size) + 1
+                          }
+                          color="primary"
+                          onChange={(e, page) => setCurrentPage(page)}
+                        />
+                      </Grid>
+                    </Grid>
+                  )}
                 </Grid>
               </CardContent>
             </Card>
@@ -442,7 +458,7 @@ export default function CarDetails(props) {
             <Card square>
               <CardContent>
                 <Grid spacing={1} container alignItems="baseline">
-                  <Icon className={classes.review}>info</Icon>
+                  <Icon className={classes.review}>description</Icon>
                   <Typography variant="h6">Info</Typography>
                 </Grid>
                 <div className={classes.paper}></div>

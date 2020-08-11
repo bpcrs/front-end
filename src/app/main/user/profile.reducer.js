@@ -99,12 +99,6 @@ const profileReducer = (state = initialState, { type, payload }) => {
     case Actions.CHANGE_BOOKING_REQUEST: {
       return {
         ...state,
-        // bookings: {
-        //   data: state.bookings.data.filter(
-        //     (element) => element.id !== payload.id
-        //   ),
-        //   count: state.bookings.count - 1,
-        // },
         changeApprove: !state.changeApprove,
       };
     }
