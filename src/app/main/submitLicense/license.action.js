@@ -42,9 +42,9 @@ export function fetchUserDetailFailure(error) {
   };
 }
 
-export function updateUserLicense(id, user) {
+export function updateUserLicense(user) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
+    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE, {}, user);
     request.then(
       (response) => {
         if (response.success) {

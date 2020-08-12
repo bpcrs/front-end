@@ -9,11 +9,13 @@ const initialState = {
     "https://images.glints.com/unsafe/120x0/glints-dashboard.s3.amazonaws.com/profile-picture-default/1.jpg",
   email: "empty",
   id: 0,
+  phone: 0,
 };
 
 const user = function (state = initialState, action) {
   switch (action.type) {
     case Actions.SET_USER_DATA: {
+      console.log(action);
       return {
         ...initialState,
         ...action.payload,
@@ -38,6 +40,7 @@ const user = function (state = initialState, action) {
             photoURL: userFromToken.imageUrl,
             email: userFromToken.email,
             id: userFromToken.id,
+            phone: userFromToken.phone,
           },
         };
       }

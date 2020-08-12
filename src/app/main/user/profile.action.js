@@ -235,6 +235,43 @@ export function signContractRequest(id) {
   };
 }
 
+export function sendOTPRequest() {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_OTP, {});
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+export function sendOTPConfirm(otp) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_CONFIRM_OTP, {
+      otp,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
 export function getTrackingsByBooking(id) {
   return (dispatch) => {
     const request = GET(ENDPOINT.TRACKING_CONTROLLER_GETBY_BOOKINGID(id));
