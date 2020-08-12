@@ -9,8 +9,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import OtpInput from "react-otp-input";
 import { useState } from "react";
 import { theme } from "@chakra-ui/core";
-import { blue, green } from "@material-ui/core/colors";
-import { Grid, CircularProgress, Chip, Icon } from "@material-ui/core";
+import { blue, green, red, grey } from "@material-ui/core/colors";
+import {
+  Grid,
+  CircularProgress,
+  Chip,
+  Icon,
+  Typography,
+  LinearProgress,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   inputStyle: {
@@ -35,6 +42,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  loadingProgress: {
+    color: blue[500],
+    position: "absolute",
+    top: "50%",
+    left: "-10%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 export default function VerifyOTP({ component }) {
@@ -46,6 +61,7 @@ export default function VerifyOTP({ component }) {
   };
   const [counter, setCounter] = useState(60);
   const classes = useStyles();
+  const [confirming, setConfirming] = useState(false);
 
   const handleClose = () => {
     setOpen(false);
@@ -53,17 +69,18 @@ export default function VerifyOTP({ component }) {
   const handleSendOTP = () => {
     setCounter(60);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 60000);
     setInterval(() => {
       setCounter((counter) => counter - 1);
     }, 1000);
+    setTimeout(() => {
+      setLoading(false);
+    }, 60000);
   };
 
   const handleChangeOTP = (value) => {
     setOTP(value);
     if (value.toString().length === 6) {
+      setConfirming(true);
       console.log("OK");
     }
   };
@@ -81,15 +98,30 @@ export default function VerifyOTP({ component }) {
         open={open}
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
+        disableEscapeKeyDown={confirming || loading}
+        disableBackdropClick={confirming || loading}
       >
         <DialogTitle id="max-width-dialog-title">
-          Verify your number phone
+          <Grid container justify="space-between">
+            <Grid> Verify your number phone</Grid>
+            <Grid>
+              <Button
+                autoFocus
+                style={{ color: confirming || loading ? grey[500] : red[500] }}
+                onClick={handleClose}
+                startIcon={<Icon>close</Icon>}
+                disabled={confirming || loading}
+              >
+                Close
+              </Button>
+            </Grid>
+          </Grid>
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
             Please verify you phone before renting or register new car
           </DialogContentText>
-          <Grid container justify="space-between" alignItems="center">
+          <Grid container justify="center" alignItems="center">
             <Grid lg={9} item>
               <OtpInput
                 value={OTP}
@@ -99,11 +131,10 @@ export default function VerifyOTP({ component }) {
                 separator={" "}
                 inputStyle={classes.inputStyle}
                 focusStyle={{ borderColor: "#1976d2" }}
-                shouldAutoFocus
-                isDisabled={loading}
+                isDisabled={confirming}
               />
             </Grid>
-            <Grid lg={3} item>
+            {/* <Grid lg={3} item>
               <div className={classes.wrapper}>
                 <Button
                   fullWidth
@@ -122,13 +153,40 @@ export default function VerifyOTP({ component }) {
                   />
                 )}
               </div>
-            </Grid>
+            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
+          {!confirming && (
+            <React.Fragment>
+              <Grid lg={8} item></Grid>
+              <Grid lg={4} item justify="flex-end">
+                <div className={classes.wrapper}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    color="primary"
+                    disabled={loading}
+                    onClick={handleSendOTP}
+                    style={{ textTransform: "none" }}
+                  >
+                    {loading ? `Resend in ${counter} s` : "Send OTP"}
+                  </Button>
+                  {loading && (
+                    <CircularProgress
+                      size={24}
+                      className={classes.buttonProgress}
+                    />
+                  )}
+                </div>
+              </Grid>
+            </React.Fragment>
+          )}
+          {confirming && (
+            <Grid lg={12}>
+              <LinearProgress />
+            </Grid>
+          )}
         </DialogActions>
       </Dialog>
     </React.Fragment>
