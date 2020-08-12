@@ -233,7 +233,7 @@ function Track(props) {
           <TimelineSeparator>
             {track ? (
               <TimelineDot color="secondary" variant="outlined">
-                <Icon style={{ color: "red" }}>clear</Icon>
+                <Icon style={{ color: "red" }}>block</Icon>
               </TimelineDot>
             ) : (
               <TimelineDot color="grey" variant="outlined">

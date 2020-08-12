@@ -213,7 +213,7 @@ export function messageStatusSuccess(status) {
     case BOOKING_STATUS.CANCEL:
       return "Cancel booking success";
     default:
-      return "Change success";
+      return "Success";
   }
 }
 
@@ -223,7 +223,7 @@ export function signContractRequest(id) {
     request.then(
       (response) => {
         if (response.success) {
-          showMessageSuccess("Signed contract");
+          showMessageSuccess("Signed contract successful");
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -266,7 +266,6 @@ export function notificationBooking(booking) {
 }
 
 export function notiMyNotification(currentUser, status, booking) {
-  // const myStatus = "";
   switch (status) {
     case BOOKING_STATUS.PENDING:
       status = MY_NOTIFICATION_STATUS.ACCEPT;
@@ -281,7 +280,10 @@ export function notiMyNotification(currentUser, status, booking) {
       status = MY_NOTIFICATION_STATUS.WAITING;
       break;
     case BOOKING_STATUS.CANCEL:
-      status = MY_NOTIFICATION_STATUS.CANCEL;
+      status = MY_NOTIFICATION_STATUS.REVOKE;
+      break;
+    case BOOKING_STATUS.RENTER_SIGNED:
+      status = MY_NOTIFICATION_STATUS.YOU_SIGNED;
       break;
     default:
       status = "";
@@ -290,7 +292,7 @@ export function notiMyNotification(currentUser, status, booking) {
     .firestore()
     .collection("notification")
     .doc(`${currentUser.email}`)
-    .collection("mynoti")
+    .collection("requests")
     .add({
       status: status,
       car: booking.car,

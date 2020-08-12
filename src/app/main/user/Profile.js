@@ -22,6 +22,8 @@ import MyCar from "./MyCar";
 import MyLicense from "../submitLicense/MyLicense";
 import { green } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
+import { useEffect } from "react";
+import { resetFlagCreateBooking } from "../booking/booking.action";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -93,7 +95,7 @@ const Profile = (props) => {
   const userLogged = useSelector((state) => state.auth.user);
   const history = useHistory();
   const [tab, setTab] = useState(0);
-  // const { close } = props;
+  // const flagBookSuccess = useSelector((state) => state.booking.flagBookSuccess);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
@@ -102,6 +104,10 @@ const Profile = (props) => {
     dispatch(logoutUser());
     history.push(APP_PATH.HOME);
   };
+
+  useEffect(() => {
+    resetFlagCreateBooking();
+  });
   return (
     <Layout name="Profile">
       <div className={classes.root}>

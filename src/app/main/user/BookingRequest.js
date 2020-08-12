@@ -1,4 +1,3 @@
-// import React from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import {
   Grid,
@@ -7,7 +6,6 @@ import {
   TableRow,
   TableHead,
   Typography,
-  IconButton,
   Icon,
   Box,
   DialogContent,
@@ -16,8 +14,6 @@ import {
   Button,
   Tooltip,
   DialogTitle,
-  // IconButton,
-  // Icon,
 } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
@@ -25,7 +21,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
+import {
+  fetchBookingRequest,
+  fetchBookingRentalMyCar,
+  notiMyNotification,
+} from "./profile.action";
 import { signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2),
   },
   backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
+    zIndex: theme.zIndex.drawer + 0,
     color: "#fff",
   },
 }));
@@ -65,8 +65,10 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function Row({ booking, carId }) {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const [openTimeline, setOpenTimeline] = useState(false);
+  const [open, setOpen] = useState(false);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -75,7 +77,6 @@ function Row({ booking, carId }) {
   };
 
   const handleSelected = (booking) => {
-    console.log(booking);
     setOpenTimeline(true);
   };
 
@@ -85,6 +86,11 @@ function Row({ booking, carId }) {
 
   const handleSignContract = () => {
     dispatch(signContractRequest(booking.id));
+    setOpenTimeline(false);
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 3000);
   };
 
   const pendingText = `Click to join chat room with renter`;
@@ -96,9 +102,10 @@ function Row({ booking, carId }) {
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
     const { booking, carId } = props;
-
+    const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
+      notiMyNotification(currentUser, BOOKING_STATUS.CANCEL, booking);
       handleCloseTimeline();
     };
 
@@ -159,35 +166,44 @@ function Row({ booking, carId }) {
       case BOOKING_STATUS.DONE:
         return (
           <React.Fragment>
-            <Tooltip title={doneText}>
-              <Button
-                variant="outlined"
-                startIcon={<Icon style={{ color: "green" }}>start</Icon>}
-                style={{ textTransform: "none" }}
-                onClick={() => {
-                  setOpen(true);
-                }}
-              >
-                {doneText}
-              </Button>
-            </Tooltip>
+            {
+              booking.car.owner.email === booking.renter.email ? (
+                <Grid></Grid>
+              ) : (
+                  <React.Fragment>
+                    <Tooltip title={doneText}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<Icon style={{ color: "green" }}>start</Icon>}
+                        style={{ textTransform: "none" }}
+                        onClick={() => {
+                          setOpen(true);
+                        }}
+                      >
+                        {doneText}
+                      </Button>
+                    </Tooltip>
 
-            <Dialog open={open} scroll="body">
-              <DialogContent>
-                <Review carId={booking.car.id} bookingId={booking.id} />
-              </DialogContent>
+                    <Dialog open={open} scroll="body">
+                      <DialogContent>
+                        <Review carId={booking.car.id} bookingId={booking.id} />
+                      </DialogContent>
 
-              <DialogActions>
-                <Button
-                  autoFocus
-                  onClick={() => setOpen(false)}
-                  color="secondary"
-                  variant="contained"
-                >
-                  Close
+                      <DialogActions>
+                        <Button
+                          autoFocus
+                          onClick={() => setOpen(false)}
+                          color="secondary"
+                          variant="contained"
+                        >
+                          Close
                 </Button>
-              </DialogActions>
-            </Dialog>
+                      </DialogActions>
+                    </Dialog>
+                  </React.Fragment>
+                )
+            }
+
           </React.Fragment>
         );
       case BOOKING_STATUS.DENY:
@@ -215,6 +231,13 @@ function Row({ booking, carId }) {
 
   return (
     <React.Fragment>
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Dialog
         open={openTimeline}
         scroll="body"
@@ -260,10 +283,10 @@ function Row({ booking, carId }) {
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
           ) > 0 ? (
-            new Date(booking.createdDate).toDateString()
-          ) : (
-            <TimeAgo date={booking.createdDate} />
-          )}
+              new Date(booking.createdDate).toDateString()
+            ) : (
+              <TimeAgo date={booking.createdDate} />
+            )}
         </TableCell>
         <TableCell component="th" scope="row">
           {booking.car.name}
@@ -271,7 +294,7 @@ function Row({ booking, carId }) {
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
-              (1000 * 60 * 60 * 24)
+            (1000 * 60 * 60 * 24)
           ) + 1}{" "}
           days
         </TableCell>
@@ -294,28 +317,26 @@ const BookingRequest = (props) => {
   const loading = useSelector((state) => state.profile.loading);
   const myBookings = useSelector((state) => state.profile.bookings);
   const { status, carId } = props;
-  console.log(carId);
-  const history = useHistory();
   const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     carId
       ? dispatch(
-          fetchBookingRentalMyCar(
-            carId,
-            status && status.map((item) => item.name),
-            currentPage,
-            size
-          )
+        fetchBookingRentalMyCar(
+          carId,
+          status && status.map((item) => item.name),
+          currentPage,
+          size
         )
+      )
       : dispatch(
-          fetchBookingRequest(
-            currentUser.id,
-            status && status.map((item) => item.name),
-            currentPage,
-            size
-          )
-        );
+        fetchBookingRequest(
+          currentUser.id,
+          status && status.map((item) => item.name),
+          currentPage,
+          size
+        )
+      );
   }, [currentPage, dispatch, currentUser.id, status, carId]);
 
   return (

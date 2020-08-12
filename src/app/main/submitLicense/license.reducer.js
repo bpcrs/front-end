@@ -15,6 +15,12 @@ const LicenseReducer = (state = initialState, { type, payload }) => {
                 loading: false,
             }
         }
+        case Actions.USER_LICENSE_UPDATE_FAILURE: {
+            return{
+                ...state,
+                loading: false,
+            }
+        }
         case Actions.USER_LICENSE_UPDATE: {
             return{
                 ...state,

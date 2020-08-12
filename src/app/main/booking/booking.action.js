@@ -61,7 +61,13 @@ export const POST_DISTANCE_LOCATION = "[MAPS] GET DISTANCE LOCATION";
 export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
 export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
+export const RESET_CREATE_BOOKING = "[BOOKING] RESET CREATE";
 
+export function resetFlagCreateBooking() {
+  return {
+    type: RESET_CREATE_BOOKING,
+  };
+}
 export function createBooking(booking) {
   return {
     type: CREATE_BOOKING_REQUEST,
@@ -659,7 +665,6 @@ export function notificationMyBooking(booking, status) {
 }
 
 export function storeImageToFirebase(imgs) {
-  // const [imgs, setImgs] = useState([]);
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -673,8 +678,6 @@ export function storeImageToFirebase(imgs) {
     uploadTask.put(img, metadata).then(function (result) {
       uploadTask.getDownloadURL().then(function (url) {
         console.log("file available at ", url);
-        // getImageDownloadURL(url);
-        // submitMessage(url, send, receive, "IMG");
       });
     });
   });
@@ -685,24 +688,18 @@ export function updateImageCar(images, carId, type) {
     contentType: "image/jpeg",
   };
   const date = new Date().getTime();
-  images.map(
-    (img) => {
-      const uploadTask = firebase
-        .storage()
-        .ref("Img/" + date)
-        .child(img.name);
+  images.map((img) => {
+    const uploadTask = firebase
+      .storage()
+      .ref("Img/" + date)
+      .child(img.name);
 
-      uploadTask.put(img, metadata).then(function (result) {
-        uploadTask.getDownloadURL().then(function (url) {
-          console.log("file available at ", url);
-          // return (dispatch) =>;
-          // dispatch(postImageCar(url, carId, type));
-          // getImageDownloadURL(url);
-        });
+    uploadTask.put(img, metadata).then(function (result) {
+      uploadTask.getDownloadURL().then(function (url) {
+        console.log("file available at ", url);
       });
-    }
-    // return(url);
-  );
+    });
+  });
 }
 
 export function updateCarStatus(id, status) {
@@ -768,7 +765,18 @@ export function distanceBetweenTwoLocation(destination, location) {
     );
     request.then(
       (response) => {
-        dispatch(getDistanceLocation(response.success ? response.data : ""));
+        dispatch(
+          getDistanceLocation(
+            response.success
+              ? {
+                  value: response.data.distance
+                    .replace(".", "")
+                    .match(/\d+/)[0],
+                  text: response.data.distance,
+                }
+              : ""
+          )
+        );
       },
       (error) => {
         showMessageError(error.message);
