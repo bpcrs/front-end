@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBookingRentalMyCar,
   changeBookingStatusRequest,
+  notiMyNotification,
 } from "./profile.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
@@ -58,7 +59,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function Row(props) {
-  const { booking } = props;
+  const { booking, currentUser } = props;
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -67,8 +68,14 @@ function Row(props) {
     dispatch(
       changeBookingStatusRequest(
         id,
-        !isApprove ? "DENY" : BOOKING_STATUS.PENDING
+        !isApprove ? BOOKING_STATUS.DENY : BOOKING_STATUS.PENDING
       )
+    );
+
+    notiMyNotification(
+      currentUser,
+      !isApprove ? BOOKING_STATUS.DENY : BOOKING_STATUS.PENDING,
+      booking
     );
   };
   const agreementChat = () => {
@@ -249,6 +256,7 @@ const RentalCarRequest = (props) => {
   const rentalBookings = useSelector((state) => state.profile.bookings);
   const { carId, bookingStatus } = props;
   const changeApprove = useSelector((state) => state.profile.changeApprove);
+  const currentUser = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchBookingRentalMyCar(carId, bookingStatus, currentPage, size));
@@ -276,7 +284,11 @@ const RentalCarRequest = (props) => {
               <TableBody>
                 {rentalBookings.data &&
                   rentalBookings.data.map((booking, index) => (
-                    <Row key={index} booking={booking} />
+                    <Row
+                      key={index}
+                      booking={booking}
+                      currentUser={currentUser}
+                    />
                   ))}
               </TableBody>
             ) : (

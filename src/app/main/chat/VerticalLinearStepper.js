@@ -23,6 +23,7 @@ import { BOOKING_STATUS } from "../../../constant";
 import { useCallback } from "react";
 import { Grid, Dialog, DialogContent, DialogActions } from "@material-ui/core";
 import { showMessageSuccess } from "../../store/actions/fuse";
+import { notiMyNotification } from "../user/profile.action";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,6 +102,15 @@ export default function VerticalLinearStepper() {
           selectedBooking.renter.id !== userLogged.id
             ? BOOKING_STATUS.OWNER_ACCEPTED
             : BOOKING_STATUS.CONFIRM
+        )
+      );
+      dispatch(
+        notiMyNotification(
+          userLogged,
+          selectedBooking.renter.id !== userLogged.id
+            ? BOOKING_STATUS.OWNER_ACCEPTED
+            : BOOKING_STATUS.CONFIRM,
+          selectedBooking
         )
       );
       dispatch(closeAgreementDrawer());
@@ -210,6 +220,9 @@ export default function VerticalLinearStepper() {
     dispatch(
       changeBookingStatusRequest(selectedBooking.id, BOOKING_STATUS.CANCEL)
     );
+
+    notiMyNotification(userLogged, BOOKING_STATUS.CANCEL, selectedBooking);
+
     handleCloseCancel();
   };
 
