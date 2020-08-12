@@ -105,6 +105,8 @@ export const ENDPOINT = {
   ACCOUNT_CONTROLLER_GETALL: "/account",
   ACCOUNT_CONTROLLER_GETBYID: (id) => `/account/${id}`,
   ACCOUNT_LICENSE_UPDATE: "/account/license/",
+  ACCOUNT_SEND_OTP: "/account/send-otp",
+  ACCOUNT_SEND_CONFIRM_OTP: "/account/confirm-otp",
 
   IMAGE_CONTROLLER_GETALL: "/image",
   IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,

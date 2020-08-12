@@ -18,6 +18,8 @@ import {
   Typography,
   LinearProgress,
 } from "@material-ui/core";
+import { useDispatch } from "react-redux";
+import { sendOTPRequest, sendOTPConfirm } from "./profile.action";
 
 const useStyles = makeStyles((theme) => ({
   inputStyle: {
@@ -56,19 +58,20 @@ export default function VerifyOTP({ component }) {
   const [open, setOpen] = useState(false);
   const [OTP, setOTP] = useState();
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
   };
   const [counter, setCounter] = useState(60);
   const classes = useStyles();
   const [confirming, setConfirming] = useState(false);
-
   const handleClose = () => {
     setOpen(false);
   };
   const handleSendOTP = () => {
     setCounter(60);
     setLoading(true);
+    dispatch(sendOTPRequest());
     setInterval(() => {
       setCounter((counter) => counter - 1);
     }, 1000);
@@ -79,9 +82,15 @@ export default function VerifyOTP({ component }) {
 
   const handleChangeOTP = (value) => {
     setOTP(value);
-    if (value.toString().length === 6) {
+    if (value.toString().length === 7) {
       setConfirming(true);
-      console.log("OK");
+      setTimeout(() => {
+        setConfirming(false);
+        setLoading(false);
+        setCounter(60);
+        setOpen(false);
+      }, 3000);
+      dispatch(sendOTPConfirm(value));
     }
   };
   return (
@@ -127,7 +136,7 @@ export default function VerifyOTP({ component }) {
                 value={OTP}
                 isInputNum
                 onChange={handleChangeOTP}
-                numInputs={6}
+                numInputs={7}
                 separator={" "}
                 inputStyle={classes.inputStyle}
                 focusStyle={{ borderColor: "#1976d2" }}
