@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Grid, makeStyles, Typography, } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Grid,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,8 +15,11 @@ import firebase from "../../firebase/firebase";
 import Slide from "@material-ui/core/Slide";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserLicense, updateUserLicenseLoading, fetchUserDetail } from "./license.action";
-
+import {
+  updateUserLicense,
+  updateUserLicenseLoading,
+  fetchUserDetail,
+} from "./license.action";
 
 // import event from '';
 const ITEM_HEIGHT = 48;
@@ -68,17 +77,16 @@ export default function SubmitLicense(props) {
 
   const [imageJson, setImageJson] = useState([]);
   useEffect(() => {
-
     const fetchUser = () => {
       dispatch(fetchUserDetail(userLogged.id));
       setCurrentUser(userDetail);
-    }
+    };
 
     if (userDetail.imageLicense) {
       setImageJson(JSON.parse(userDetail.imageLicense));
     }
     fetchUser();
-  }, [userDetail.id]);
+  }, [dispatch, userDetail, userDetail.id, userLogged.id]);
 
   const handleInputChange = (event) => {
     // setLicense({
@@ -88,18 +96,19 @@ export default function SubmitLicense(props) {
     setCurrentUser({
       ...currentUser,
       [event.target.name]: event.target.value,
-    })
+    });
   };
-
 
   const updateLicense = () => {
     const imageLicense = JSON.stringify(linkImageArr);
 
-    dispatch(updateUserLicense(currentUser.id, {
-      phone: currentUser.phone,
-      identification: currentUser.identification,
-      imageLicense: imageLicense,
-    }))
+    dispatch(
+      updateUserLicense({
+        phone: currentUser.phone,
+        identification: currentUser.identification,
+        imageLicense: imageLicense,
+      })
+    );
   };
 
   let uploadFile = () => {
@@ -197,7 +206,8 @@ export default function SubmitLicense(props) {
     for (let i = 0; i < imageLicenseArr.length; i++) {
       // Create a reference to the file we want to download
       var starsRef = storageRef.child(
-        date + "/" + currentUser.email + "/" + imageLicenseArr[i].name);
+        date + "/" + currentUser.email + "/" + imageLicenseArr[i].name
+      );
 
       // Get the download URL
       console.log("state download: " + starsRef.state);
@@ -283,11 +293,8 @@ export default function SubmitLicense(props) {
     }
   };
 
-
   return (
     <Grid spacing={1} container justify="center" alignItems="center">
-
-
       <div>
         <Dialog
           open={loading}
@@ -310,10 +317,14 @@ export default function SubmitLicense(props) {
 
       <Typography variant="h6" color="initial" className={classes.head}>
         Update Information
-        </Typography>
+      </Typography>
 
-      <Grid container spacing={2} component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
-
+      <Grid
+        container
+        spacing={2}
+        component={Paper}
+        style={{ wordWrap: "break-word", textAlign: "center" }}
+      >
         <Grid item xs={12} lg={12}>
           <TextField
             className={classes.textField}
@@ -325,7 +336,6 @@ export default function SubmitLicense(props) {
             variant="outlined"
           />
         </Grid>
-
 
         <Grid item xs={12} lg={12}>
           <TextField
@@ -342,7 +352,7 @@ export default function SubmitLicense(props) {
         <Grid item xs={12} lg={12}>
           <Typography variant="h6" color="initial" className={classes.head}>
             Upload your two picture License and two picture Identification
-        </Typography>
+          </Typography>
         </Grid>
 
         <Grid item xs={12} lg={6}>
@@ -366,12 +376,7 @@ export default function SubmitLicense(props) {
               <label htmlFor="file">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output"
-                width="200"
-                height="200"
-                src={imageJson[0]}
-              />
+              <img id="output" width="200" height="200" src={imageJson[0]} />
             </p>
           </div>
         </Grid>
@@ -397,16 +402,10 @@ export default function SubmitLicense(props) {
               <label htmlFor="file2">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output2"
-                width="200"
-                height="200"
-                src={imageJson[1]}
-              />
+              <img id="output2" width="200" height="200" src={imageJson[1]} />
             </p>
           </div>
         </Grid>
-
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
@@ -429,16 +428,10 @@ export default function SubmitLicense(props) {
               <label htmlFor="file3">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output3"
-                width="200"
-                height="200"
-                src={imageJson[2]}
-              />
+              <img id="output3" width="200" height="200" src={imageJson[2]} />
             </p>
           </div>
         </Grid>
-
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
@@ -461,12 +454,7 @@ export default function SubmitLicense(props) {
               <label htmlFor="file4">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output4"
-                width="200"
-                height="200"
-                src={imageJson[3]}
-              />
+              <img id="output4" width="200" height="200" src={imageJson[3]} />
             </p>
           </div>
         </Grid>
@@ -482,7 +470,6 @@ export default function SubmitLicense(props) {
           </Button>
         </Grid>
       </Grid>
-
     </Grid>
   );
 }
