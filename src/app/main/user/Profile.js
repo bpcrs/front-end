@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Icon,
+  Chip,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +20,8 @@ import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
 import MyLicense from "../submitLicense/MyLicense";
+import { green } from "@material-ui/core/colors";
+import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
 
@@ -134,6 +137,14 @@ const Profile = (props) => {
                   >
                     {userLogged.role}
                   </Typography>
+                  <VerifyOTP />
+                  {/* <Chip
+                    icon={
+                      <Icon style={{ color: green[600] }}>check_circle</Icon>
+                    }
+                    label="Verified Member"
+                    style={{ color: green[600], backgroundColor: green[50] }}
+                  /> */}
                 </div>
               </Grid>
               <Grid item lg={2}>
@@ -158,9 +169,7 @@ const Profile = (props) => {
               <Grid item lg={2}></Grid>
               <Grid item lg={5}>
                 <Typography variant="subtitle1">PHONE</Typography>
-                <Typography variant="subtitle2">
-                  {userLogged.displayName}
-                </Typography>
+                <Typography variant="subtitle2">{userLogged.phone} </Typography>
                 {/* <Typography>{userLogged.displayName}</Typography> */}
               </Grid>
               <Grid item lg={5}>

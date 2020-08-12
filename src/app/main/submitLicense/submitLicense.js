@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Grid, makeStyles, Typography, Icon, DialogActions } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Grid,
+  makeStyles,
+  Typography,
+  DialogActions,
+  Icon,
+} from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,8 +17,11 @@ import firebase from "../../firebase/firebase";
 import Slide from "@material-ui/core/Slide";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserLicense, updateUserLicenseLoading, fetchUserDetail } from "./license.action";
-
+import {
+  updateUserLicense,
+  updateUserLicenseLoading,
+  fetchUserDetail,
+} from "./license.action";
 
 // import event from '';
 const ITEM_HEIGHT = 48;
@@ -69,17 +80,16 @@ export default function SubmitLicense(props) {
 
   const [imageJson, setImageJson] = useState([]);
   useEffect(() => {
-
     const fetchUser = () => {
       dispatch(fetchUserDetail(userLogged.id));
       setCurrentUser(userDetail);
-    }
+    };
 
     if (userDetail.imageLicense) {
       setImageJson(JSON.parse(userDetail.imageLicense));
     }
     fetchUser();
-  }, [userDetail.id]);
+  }, [dispatch, userDetail, userDetail.id, userLogged.id]);
 
   const handleInputChange = (event) => {
     // setLicense({
@@ -89,22 +99,26 @@ export default function SubmitLicense(props) {
     setCurrentUser({
       ...currentUser,
       [event.target.name]: event.target.value,
-    })
+    });
   };
 
   const handleRemoveImage = (image) => {
-    setImageLicenseArr(imageLicenseArr.filter((item) => item.name !== image.name))
+    setImageLicenseArr(
+      imageLicenseArr.filter((item) => item.name !== image.name)
+    );
   };
 
   const updateLicense = () => {
     const imageLicense = JSON.stringify(linkImageArr);
 
-    dispatch(updateUserLicense(currentUser.id, {
-      phone: currentUser.phone,
-      identification: currentUser.identification,
-      imageLicense: imageLicense,
-      licenseCheck: currentUser.licenseCheck,
-    }))
+    dispatch(
+      updateUserLicense({
+        phone: currentUser.phone,
+        identification: currentUser.identification,
+        imageLicense: imageLicense,
+        licenseCheck: currentUser.licenseCheck,
+      })
+    );
     setDisableButton(true);
   };
 
@@ -113,10 +127,12 @@ export default function SubmitLicense(props) {
     if (!userDetail.licenseCheck) {
       uploadFile();
     } else {
-      dispatch(updateUserLicense(currentUser.id, {
-        phone: currentUser.phone,
-        licenseCheck: currentUser.licenseCheck,
-      }))
+      dispatch(
+        updateUserLicense(currentUser.id, {
+          phone: currentUser.phone,
+          licenseCheck: currentUser.licenseCheck,
+        })
+      );
       setDisableButton(true);
     }
   };
@@ -205,10 +221,7 @@ export default function SubmitLicense(props) {
       console.log("Khong co file");
       setOpen(true);
       return (
-        <Dialog
-          open={open}
-        >
-
+        <Dialog open={open}>
           <DialogContent>
             <div align="center" className={classes.progressBar}>
               <p>You must upload your image License and Identification</p>
@@ -218,7 +231,10 @@ export default function SubmitLicense(props) {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => { setOpen(false) }}>
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
               Close
             </Button>
           </DialogActions>
@@ -236,7 +252,8 @@ export default function SubmitLicense(props) {
     for (let i = 0; i < imageLicenseArr.length; i++) {
       // Create a reference to the file we want to download
       var starsRef = storageRef.child(
-        date + "/" + currentUser.email + "/" + imageLicenseArr[i].name);
+        date + "/" + currentUser.email + "/" + imageLicenseArr[i].name
+      );
 
       // Get the download URL
       console.log("state download: " + starsRef.state);
@@ -323,11 +340,8 @@ export default function SubmitLicense(props) {
     }
   };
 
-
   return (
     <Grid spacing={1} container justify="center" alignItems="center">
-
-
       <div>
         <Dialog
           open={loading}
@@ -350,10 +364,14 @@ export default function SubmitLicense(props) {
 
       <Typography variant="h6" color="initial" className={classes.head}>
         Update Information
-        </Typography>
+      </Typography>
 
-      <Grid container spacing={2} component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
-
+      <Grid
+        container
+        spacing={2}
+        component={Paper}
+        style={{ wordWrap: "break-word", textAlign: "center" }}
+      >
         {/* <Grid item xs={12} lg={12}>
           <TextField
             className={classes.textField}
@@ -365,7 +383,6 @@ export default function SubmitLicense(props) {
             variant="outlined"
           />
         </Grid>
-
 
         <Grid item xs={12} lg={12}>
           <TextField
@@ -380,177 +397,175 @@ export default function SubmitLicense(props) {
         </Grid> */}
 
         <Grid item xs={12} lg={12}>
-          {
-            userDetail.licenseCheck == true ? (
-              <Grid container>
-
-                <Grid item xs={12} lg={12}>
-                  <TextField
-                    className={classes.textField}
-                    id="phone"
-                    name="phone"
-                    value={currentUser.phone ? currentUser.phone : ""}
-                    onChange={handleInputChange}
-                    label="Phone Number"
-                    variant="outlined"
-                  />
-                </Grid>
-
-                <Grid item xs={12} lg={12}>
-                  <Typography variant="h6" color="initial" className={classes.head}>
-                    Your License and Identification
-                  </Typography>
-                </Grid>
-
-                <Grid item xs={12} lg={6}>
-                  <div style={{ textAlign: "center" }}>
-                    <h2>Picture 1</h2>
-                    <p>
-                      <img
-                        id="output"
-                        width="200"
-                        height="200"
-                        src={imageJson[0]}
-                      />
-                    </p>
-                  </div>
-                </Grid>
-
-                <Grid item xs={12} lg={6}>
-                  <div style={{ textAlign: "center" }}>
-                    <h2>Picture 2</h2>
-                    <p>
-                      <img
-                        id="output2"
-                        width="200"
-                        height="200"
-                        src={imageJson[1]}
-                      />
-                    </p>
-                  </div>
-                </Grid>
-
-
-                <Grid item xs={12} lg={6}>
-                  <div style={{ textAlign: "center" }}>
-                    <h2>Picture 3</h2>
-                    <p>
-                      <img
-                        id="output3"
-                        width="200"
-                        height="200"
-                        src={imageJson[2]}
-                      />
-                    </p>
-                  </div>
-                </Grid>
-
-
-                <Grid item xs={12} lg={6}>
-                  <div style={{ textAlign: "center" }}>
-                    <h2>Picture 4</h2>
-                    <p>
-                      <img
-                        id="output4"
-                        width="200"
-                        height="200"
-                        src={imageJson[3]}
-                      />
-                    </p>
-                  </div>
-                </Grid>
+          {userDetail.licenseCheck == true ? (
+            <Grid container>
+              <Grid item xs={12} lg={12}>
+                <TextField
+                  className={classes.textField}
+                  id="phone"
+                  name="phone"
+                  value={currentUser.phone ? currentUser.phone : ""}
+                  onChange={handleInputChange}
+                  label="Phone Number"
+                  variant="outlined"
+                />
               </Grid>
-            ) : (
 
-                <Grid container spacing={2}>
+              <Grid item xs={12} lg={12}>
+                <Typography
+                  variant="h6"
+                  color="initial"
+                  className={classes.head}
+                >
+                  Your License and Identification
+                </Typography>
+              </Grid>
 
-                  <Grid item xs={12} lg={12}>
-                    <TextField
-                      className={classes.textField}
-                      id="phone"
-                      name="phone"
-                      value={currentUser.phone ? currentUser.phone : ""}
-                      onChange={handleInputChange}
-                      label="Phone Number"
-                      variant="outlined"
+              <Grid item xs={12} lg={6}>
+                <div style={{ textAlign: "center" }}>
+                  <h2>Picture 1</h2>
+                  <p>
+                    <img
+                      id="output"
+                      width="200"
+                      height="200"
+                      src={imageJson[0]}
                     />
-                  </Grid>
+                  </p>
+                </div>
+              </Grid>
 
-
-                  <Grid item xs={12} lg={12}>
-                    <TextField
-                      className={classes.textField}
-                      id="identification"
-                      name="identification"
-                      onChange={handleInputChange}
-                      value={currentUser.identification ? currentUser.identification : ""}
-                      label="Identification Number"
-                      variant="outlined"
+              <Grid item xs={12} lg={6}>
+                <div style={{ textAlign: "center" }}>
+                  <h2>Picture 2</h2>
+                  <p>
+                    <img
+                      id="output2"
+                      width="200"
+                      height="200"
+                      src={imageJson[1]}
                     />
-                  </Grid>
+                  </p>
+                </div>
+              </Grid>
 
-                  <Grid item xs={12} lg={12}>
-                    <Typography variant="h6" color="initial" className={classes.head}>
-                      Upload your two picture License and two picture Identification
-                  </Typography>
-                  </Grid>
+              <Grid item xs={12} lg={6}>
+                <div style={{ textAlign: "center" }}>
+                  <h2>Picture 3</h2>
+                  <p>
+                    <img
+                      id="output3"
+                      width="200"
+                      height="200"
+                      src={imageJson[2]}
+                    />
+                  </p>
+                </div>
+              </Grid>
 
-                  <Grid item lg={12} xs={12}>
-                    <label className={classes.productImageItem} variant="outlined">
-                      <input
-                        type="file"
-                        style={{ display: "none" }}
-                        multiple
-                        accept="image/*"
-                        name="image"
-                        id="file"
-                        onChange={loadFile}
-                      />
-                      <span aria-hidden="true" style={{ margin: "center", textAlign: "center" }}>
-                        {/* <Icon style={{ color: "blue", margin: "center" }}>cloud_upload</Icon> */}
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          startIcon={<CloudUploadIcon />}
+              <Grid item xs={12} lg={6}>
+                <div style={{ textAlign: "center" }}>
+                  <h2>Picture 4</h2>
+                  <p>
+                    <img
+                      id="output4"
+                      width="200"
+                      height="200"
+                      src={imageJson[3]}
+                    />
+                  </p>
+                </div>
+              </Grid>
+            </Grid>
+          ) : (
+            <Grid container spacing={2}>
+              <Grid item xs={12} lg={12}>
+                <TextField
+                  className={classes.textField}
+                  id="phone"
+                  name="phone"
+                  value={currentUser.phone ? currentUser.phone : ""}
+                  onChange={handleInputChange}
+                  label="Phone Number"
+                  variant="outlined"
+                />
+              </Grid>
+
+              <Grid item xs={12} lg={12}>
+                <TextField
+                  className={classes.textField}
+                  id="identification"
+                  name="identification"
+                  onChange={handleInputChange}
+                  value={
+                    currentUser.identification ? currentUser.identification : ""
+                  }
+                  label="Identification Number"
+                  variant="outlined"
+                />
+              </Grid>
+
+              <Grid item xs={12} lg={12}>
+                <Typography
+                  variant="h6"
+                  color="initial"
+                  className={classes.head}
+                >
+                  Upload your two picture License and two picture Identification
+                </Typography>
+              </Grid>
+
+              <Grid item lg={12} xs={12}>
+                <label className={classes.productImageItem} variant="outlined">
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={loadFile}
+                  />
+                  <span
+                    aria-hidden="true"
+                    style={{ margin: "center", textAlign: "center" }}
+                  >
+                    {/* <Icon style={{ color: "blue", margin: "center" }}>cloud_upload</Icon> */}
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      startIcon={<CloudUploadIcon />}
+                    >
+                      <label htmlFor="file">Choose File</label>
+                    </Button>
+                  </span>
+                </label>
+              </Grid>
+
+              <Grid container item lg={12} xs={12}>
+                {imageLicenseArr &&
+                  imageLicenseArr.map((image, index) => (
+                    <Grid item lg={6} xs={12}>
+                      <div className={classes.productImageItem} key={index}>
+                        <Icon
+                          className={classes.productImageFeaturedStar}
+                          onClick={() => handleRemoveImage(image)}
                         >
-                          <label htmlFor="file">Choose File</label>
-                        </Button>
-                      </span>
-                    </label>
-                  </Grid>
-
-                  <Grid container item lg={12} xs={12}>
-                    {
-                      imageLicenseArr &&
-                      imageLicenseArr.map((image, index) => (
-                        <Grid item lg={6} xs={12}>
-                          <div className={classes.productImageItem} key={index}>
-
-                            <Icon
-                              className={classes.productImageFeaturedStar}
-                              onClick={() => handleRemoveImage(image)}
-                            >
-                              remove_circle
-                      </Icon>
-                            <img
-                              src={URL.createObjectURL(image)}
-                              alt="img"
-                              width="200"
-                              height="200"
-
-                            />
-                          </div>
-                        </Grid>
-                      ))
-                    }
-                  </Grid>
-                </Grid>
-              )
-          }
+                          remove_circle
+                        </Icon>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="img"
+                          width="200"
+                          height="200"
+                        />
+                      </div>
+                    </Grid>
+                  ))}
+              </Grid>
+            </Grid>
+          )}
         </Grid>
-
-
-
 
         {/* <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
@@ -573,12 +588,7 @@ export default function SubmitLicense(props) {
               <label htmlFor="file">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output"
-                width="200"
-                height="200"
-                src={imageJson[0]}
-              />
+              <img id="output" width="200" height="200" src={imageJson[0]} />
             </p>
           </div>
         </Grid>
@@ -604,16 +614,10 @@ export default function SubmitLicense(props) {
               <label htmlFor="file2">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output2"
-                width="200"
-                height="200"
-                src={imageJson[1]}
-              />
+              <img id="output2" width="200" height="200" src={imageJson[1]} />
             </p>
           </div>
         </Grid>
-
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
@@ -636,16 +640,10 @@ export default function SubmitLicense(props) {
               <label htmlFor="file3">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output3"
-                width="200"
-                height="200"
-                src={imageJson[2]}
-              />
+              <img id="output3" width="200" height="200" src={imageJson[2]} />
             </p>
           </div>
         </Grid>
-
 
         <Grid item xs={12} lg={6}>
           <div style={{ textAlign: "center" }}>
@@ -668,12 +666,7 @@ export default function SubmitLicense(props) {
               <label htmlFor="file4">Choose File</label>
             </Button>
             <p>
-              <img
-                id="output4"
-                width="200"
-                height="200"
-                src={imageJson[3]}
-              />
+              <img id="output4" width="200" height="200" src={imageJson[3]} />
             </p>
           </div>
         </Grid> */}
@@ -691,7 +684,6 @@ export default function SubmitLicense(props) {
           </Button>
         </Grid>
       </Grid>
-
-    </Grid >
+    </Grid>
   );
 }

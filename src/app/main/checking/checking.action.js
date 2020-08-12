@@ -127,7 +127,6 @@ export function putUserDetailSuccess(user) {
   };
 }
 
-
 export function putUserDetailFailure(error) {
   return {
     type: PUT_USER_DETAIL_CHECKING_FAILURE,
@@ -176,7 +175,11 @@ export function fetchUserListChecking() {
 export function putCarUpdate(id, status) {
   return (dispatch) => {
     // const request = PUT(ENDPOINT.CAR_CONTROLLER_GETBYID(id), {}, car);
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id), { status }, {});
+    const request = PUT(
+      ENDPOINT.CAR_CONTROLLER_STATUS_GETBYID(id),
+      { status },
+      {}
+    );
     request.then(
       (response) => {
         if (response.success) {
@@ -192,7 +195,6 @@ export function putCarUpdate(id, status) {
   };
 }
 
-
 export async function fetchUserDetailChecking(userId) {
   return (dispatch) => {
     const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(userId));
@@ -207,27 +209,6 @@ export async function fetchUserDetailChecking(userId) {
       },
       (error) => {
         dispatch(fetchUserDetailCheckingFailure(error));
-        dispatch(showMessageError(error.message));
-      }
-    )
-  }
-}
-
-export function putAcceptUserLicence(id, user) {
-  return (dispatch) => {
-    console.log(user);
-    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(putUserDetailSuccess(response.data));
-        } else {
-          dispatch(putUserDetailFailure(response.message));
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(putUserDetailFailure(error.message));
         dispatch(showMessageError(error.message));
       }
     );

@@ -20,6 +20,7 @@ export function submitLogin(token) {
               email: userFromToken.email,
               id: userFromToken.id,
               shortcuts: [],
+              phone: userFromToken.phone,
             },
           })
         );
