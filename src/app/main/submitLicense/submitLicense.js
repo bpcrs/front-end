@@ -344,7 +344,7 @@ export default function SubmitLicense(props) {
           <DialogActions>
             <Grid container>
 
-            <Grid item xs={6} lg={6}>
+              <Grid item xs={6} lg={6}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -361,7 +361,7 @@ export default function SubmitLicense(props) {
                   Cancel
                             </Button>
               </Grid>
-             
+
             </Grid>
 
           </DialogActions>
