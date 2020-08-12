@@ -79,7 +79,7 @@ export default function SubmitLicense(props) {
   var linkImageArr = new Array();
 
   const [imageJson, setImageJson] = useState([]);
-
+  console.log(imageJson);
   useEffect(() => {
     const fetchUser = () => {
       dispatch(fetchUserDetail(userLogged.id));
@@ -385,61 +385,20 @@ export default function SubmitLicense(props) {
                 </Typography>
               </Grid>
 
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <h2>Picture 1</h2>
-                  <p>
-                    <img
-                      id="output"
-                      width="200"
-                      height="200"
-                      src={imageJson[0]}
-                    />
-                  </p>
-                </div>
+              <Grid container>
+                {imageJson &&
+                  imageJson.map((image, index) => (
+                    <Grid item xs={12} lg={6}>
+                      <div style={{ textAlign: "center" }}>
+                        <p>Picture {index + 1}</p>
+                        <p>
+                          <img src={image} id="output" width="200" height="200" />
+                        </p>
+                      </div>
+                    </Grid>
+                  ))}
               </Grid>
 
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <h2>Picture 2</h2>
-                  <p>
-                    <img
-                      id="output2"
-                      width="200"
-                      height="200"
-                      src={imageJson[1]}
-                    />
-                  </p>
-                </div>
-              </Grid>
-
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <h2>Picture 3</h2>
-                  <p>
-                    <img
-                      id="output3"
-                      width="200"
-                      height="200"
-                      src={imageJson[2]}
-                    />
-                  </p>
-                </div>
-              </Grid>
-
-              <Grid item xs={12} lg={6}>
-                <div style={{ textAlign: "center" }}>
-                  <h2>Picture 4</h2>
-                  <p>
-                    <img
-                      id="output4"
-                      width="200"
-                      height="200"
-                      src={imageJson[3]}
-                    />
-                  </p>
-                </div>
-              </Grid>
             </Grid>
           ) : (
               <Grid container spacing={2}>
