@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     textField: {
         width: "100%",
         margin: theme.spacing(1),
+        readOnly: true,
     },
     card: {
         margin: 20,
@@ -157,7 +158,7 @@ export default function UserDetailChecking(props) {
                                         label="Full Name"
                                         variant="outlined"
                                         value={currentUser.fullName ? currentUser.fullName : ""}
-                                        disabled
+                                        
                                     />
                                 </Grid>
 
@@ -167,7 +168,7 @@ export default function UserDetailChecking(props) {
                                         label="Email"
                                         variant="outlined"
                                         value={currentUser.email ? currentUser.email : ""}
-                                        disabled
+                                        
                                     />
                                 </Grid>
                             </Grid>
@@ -176,7 +177,6 @@ export default function UserDetailChecking(props) {
                             <Grid item xs={12} lg={12}>
                                 <TextField
                                     className={classes.textField}
-                                    disabled
                                     label="Phone"
                                     value={currentUser.phone ? currentUser.phone : ""}
                                     variant="outlined"
@@ -186,7 +186,7 @@ export default function UserDetailChecking(props) {
                             <Grid item xs={12} lg={12}>
                                 <TextField
                                     className={classes.textField}
-                                    disabled
+                                    
                                     label="Date Join"
                                     value={new Date(currentUser.createdDate).toLocaleDateString()}
                                     variant="outlined"
@@ -196,7 +196,6 @@ export default function UserDetailChecking(props) {
                             <Grid item xs={12} lg={12}>
                                 <TextField
                                     className={classes.textField}
-                                    disabled
                                     value={currentUser.identification ? currentUser.identification : ""}
                                     label="Identification"
                                     variant="outlined"
@@ -209,15 +208,15 @@ export default function UserDetailChecking(props) {
                 <Grid item xs={12} lg={7}>
                     <Card className={classes.card}>
 
-                        <Grid container>
+                        <Grid container spacing={1}>
                             {
                                 linkImage &&
                                 linkImage.map((image, index) => (
-                                    <Grid item xs={12} lg={6}>
+                                    <Grid item xs={12} lg={6} >
                                         <div style={{ textAlign: "center" }}>
                                             <p>Picture {index + 1}</p>
                                             <p>
-                                                <img src={image} id="output" width="200" height="200" />
+                                                <img src={image} id="output" width="250" height="250" />
                                             </p>
                                         </div>
                                     </Grid>

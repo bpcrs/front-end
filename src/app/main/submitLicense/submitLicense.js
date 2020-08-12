@@ -64,6 +64,7 @@ export default function SubmitLicense(props) {
   const userLogged = useSelector((state) => state.auth.user);
   const [disableButton, setDisableButton] = useState(false);
   const [open, setOpen] = useState(true);
+  const [openDialogNoImage, setDialogNoImage] = useState(false);
   var [imageLicenseArr, setImageLicenseArr] = useState([]);
   var linkImageArr = new Array();
 
@@ -108,10 +109,24 @@ export default function SubmitLicense(props) {
     setDisableButton(true);
   };
 
+  const updateLinseNoImage = () => {
+    setDialogNoImage(false);
+    dispatch(updateUserLicense(currentUser.id, {
+      phone: currentUser.phone,
+      identification: currentUser.identification,
+      licenseCheck: currentUser.licenseCheck,
+    }))
+  };
+
   const handleClickSave = () => {
     console.log("license: ", userDetail.licenseCheck);
     if (!userDetail.licenseCheck) {
-      uploadFile();
+      if (imageLicenseArr.length > 0) {
+        uploadFile();
+      } else {
+        setDialogNoImage(true);
+      }
+
     } else {
       dispatch(updateUserLicense(currentUser.id, {
         phone: currentUser.phone,
@@ -296,34 +311,6 @@ export default function SubmitLicense(props) {
     setImageLicenseArr([...imageLicenseArr, ...event.target.files]);
   };
 
-  var loadFile2 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output2");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      //fileArr.push(event.target.files[0]);
-      imageLicenseArr[1] = event.target.files[0];
-    }
-  };
-
-  var loadFile3 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output3");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      // fileArr.push(event.target.files[0]);
-      imageLicenseArr[2] = event.target.files[0];
-    }
-  };
-
-  var loadFile4 = function (event) {
-    if (event.target.files[0]) {
-      var image = document.getElementById("output4");
-      image.src = URL.createObjectURL(event.target.files[0]);
-      // fileArr.push(event.target.files[0]);
-      imageLicenseArr[3] = event.target.files[0];
-    }
-  };
-
-
   return (
     <Grid spacing={1} container justify="center" alignItems="center">
 
@@ -348,36 +335,44 @@ export default function SubmitLicense(props) {
         </Dialog>
       </div>
 
+      <div>
+        <Dialog open={openDialogNoImage}>
+          <DialogContent>
+            <p>Are you want update profile without Image?</p>
+          </DialogContent>
+
+          <DialogActions>
+            <Grid container>
+
+            <Grid item xs={6} lg={6}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={updateLinseNoImage}>
+                  Yes
+                            </Button>
+              </Grid>
+
+              <Grid xs={6} lg={6}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => { setDialogNoImage(false) }}>
+                  Cancel
+                            </Button>
+              </Grid>
+             
+            </Grid>
+
+          </DialogActions>
+
+        </Dialog>
+      </div>
       <Typography variant="h6" color="initial" className={classes.head}>
         Update Information
         </Typography>
 
       <Grid container spacing={2} component={Paper} style={{ wordWrap: "break-word", textAlign: "center" }}>
-
-        {/* <Grid item xs={12} lg={12}>
-          <TextField
-            className={classes.textField}
-            id="phone"
-            name="phone"
-            value={currentUser.phone ? currentUser.phone : ""}
-            onChange={handleInputChange}
-            label="Phone Number"
-            variant="outlined"
-          />
-        </Grid>
-
-
-        <Grid item xs={12} lg={12}>
-          <TextField
-            className={classes.textField}
-            id="identification"
-            name="identification"
-            onChange={handleInputChange}
-            value={currentUser.identification ? currentUser.identification : ""}
-            label="Identification Number"
-            variant="outlined"
-          />
-        </Grid> */}
 
         <Grid item xs={12} lg={12}>
           {
@@ -549,141 +544,11 @@ export default function SubmitLicense(props) {
           }
         </Grid>
 
-
-
-
-        {/* <Grid item xs={12} lg={6}>
-          <div style={{ textAlign: "center" }}>
-            <h2>Picture 1</h2>
-            <p>
-              <input
-                type="file"
-                style={{ display: "none" }}
-                accept="image/*"
-                name="image"
-                id="file"
-                onChange={loadFile}
-              />
-            </p>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<CloudUploadIcon />}
-            >
-              <label htmlFor="file">Choose File</label>
-            </Button>
-            <p>
-              <img
-                id="output"
-                width="200"
-                height="200"
-                src={imageJson[0]}
-              />
-            </p>
-          </div>
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
-          <div style={{ textAlign: "center" }}>
-            <h2>Picture 2</h2>
-            <p>
-              <input
-                type="file"
-                style={{ display: "none" }}
-                accept="image/*"
-                name="image"
-                id="file2"
-                onChange={loadFile2}
-              />
-            </p>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<CloudUploadIcon />}
-            >
-              <label htmlFor="file2">Choose File</label>
-            </Button>
-            <p>
-              <img
-                id="output2"
-                width="200"
-                height="200"
-                src={imageJson[1]}
-              />
-            </p>
-          </div>
-        </Grid>
-
-
-        <Grid item xs={12} lg={6}>
-          <div style={{ textAlign: "center" }}>
-            <h2>Picture 3</h2>
-            <p>
-              <input
-                type="file"
-                style={{ display: "none" }}
-                accept="image/*"
-                name="image"
-                id="file3"
-                onChange={loadFile3}
-              />
-            </p>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<CloudUploadIcon />}
-            >
-              <label htmlFor="file3">Choose File</label>
-            </Button>
-            <p>
-              <img
-                id="output3"
-                width="200"
-                height="200"
-                src={imageJson[2]}
-              />
-            </p>
-          </div>
-        </Grid>
-
-
-        <Grid item xs={12} lg={6}>
-          <div style={{ textAlign: "center" }}>
-            <h2>Picture 4</h2>
-            <p>
-              <input
-                type="file"
-                style={{ display: "none" }}
-                accept="image/*"
-                name="image"
-                id="file4"
-                onChange={loadFile4}
-              />
-            </p>
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<CloudUploadIcon />}
-            >
-              <label htmlFor="file4">Choose File</label>
-            </Button>
-            <p>
-              <img
-                id="output4"
-                width="200"
-                height="200"
-                src={imageJson[3]}
-              />
-            </p>
-          </div>
-        </Grid> */}
-
         <Grid container justify="center">
           <Button
             id="submitButton"
             variant="contained"
             color="secondary"
-            // onClick={uploadFile}
             onClick={handleClickSave}
             disabled={disableButton}
           >
