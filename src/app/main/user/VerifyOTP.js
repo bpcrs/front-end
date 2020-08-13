@@ -70,7 +70,7 @@ export default function VerifyOTP({ children, callBack, title, content }) {
   const handleSendOTP = () => {
     setCounter(60);
     setLoading(true);
-    // dispatch(sendOTPRequest());
+    dispatch(sendOTPRequest());
     const timer = setInterval(() => {
       setCounter((counter) => counter - 1);
     }, 1000);

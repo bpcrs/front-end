@@ -167,14 +167,6 @@ function Row({ booking, carId }) {
                 {confirmText}
               </Button>
             </VerifyOTP>
-            {/* <Button
-              variant="outlined"
-              startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
-              style={{ textTransform: "none" }}
-              onClick={handleSignContract}
-            >
-              {confirmText}
-            </Button> */}
           </Tooltip>
         );
       case BOOKING_STATUS.DONE:
