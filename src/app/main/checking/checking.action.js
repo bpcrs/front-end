@@ -1,5 +1,5 @@
-import { GET, PUT, ENDPOINT } from "../../services/api";
-import { showMessageError } from "../../store/actions/fuse";
+import { GET, PUT, ENDPOINT, POST } from "../../services/api";
+import { showMessageError, showMessage } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
@@ -26,7 +26,36 @@ export const PUT_USER_DETAIL_CHECKING_SUCCESS =
 export const PUT_USER_DETAIL_CHECKING_FAILURE =
   "[USER_DETAIL_CHECKING] PUT DATA FAILURE";
 export const FETCH_REVENUE_BOOKING = "[REVENUE] BOOKING";
+export const FETCH_BOOKING_TRANSACTIONS_WEEKS = "[TRANSACTIONS] FETCH WEEKS";
+export const FETCH_LAST_MONTH_TRANSACTIONS = "[TRANSACTION] FETCH LAST MONTH";
+export const FETCH_COUNT_BOOKING_REQUEST = "[COUNT_BOOKING] FETCH REQUEST";
+export const FETCH_COUNT_LAST_MONTH_REQUESTS =
+  "[COUNT_BOOKING] FETCH LAST MONTH";
 
+export function fetchCountBookingLastMonth(data) {
+  return {
+    type: FETCH_COUNT_LAST_MONTH_REQUESTS,
+    payload: data,
+  };
+}
+export function fetchCountBookingRequests(data) {
+  return {
+    type: FETCH_COUNT_BOOKING_REQUEST,
+    payload: data,
+  };
+}
+export function fetchLastMonthTransaction(price) {
+  return {
+    type: FETCH_LAST_MONTH_TRANSACTIONS,
+    payload: price,
+  };
+}
+export function fetchTransactionsPriceBookingWeek(prices) {
+  return {
+    type: FETCH_BOOKING_TRANSACTIONS_WEEKS,
+    payload: prices,
+  };
+}
 export function fetchRevenueBooking(price) {
   return {
     type: FETCH_REVENUE_BOOKING,
@@ -222,27 +251,6 @@ export async function fetchUserDetailChecking(userId) {
   };
 }
 
-export function putAcceptUserLicence(id, user) {
-  return (dispatch) => {
-    console.log(user);
-    const request = PUT(ENDPOINT.ACCOUNT_LICENSE_UPDATE(id), {}, user);
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(putUserDetailSuccess(response.data));
-        } else {
-          dispatch(putUserDetailFailure(response.message));
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        dispatch(putUserDetailFailure(error.message));
-        dispatch(showMessageError(error.message));
-      }
-    );
-  };
-}
-
 export function notificationLicenseUser(message, userMail, isAccept) {
   firebase
     .firestore()
@@ -272,12 +280,56 @@ export function notificationUserCar(message, userMail, isAccept, car) {
     });
 }
 
-export function fetchRevenueAllDoneBooking(fromDate, toDate) {
+export function fetchRevenueAllDoneBooking(fromDate, toDate, isDay) {
   return (dispatch) => {
-    const request = GET(ENDPOINT.STATIC_CONTROLLER, { fromDate, toDate });
+    const request = GET(ENDPOINT.STATISTICS_CONTROLLER, { fromDate, toDate });
     request.then(
       (response) => {
-        dispatch(fetchRevenueBooking(response.success ? response.data : ""));
+        dispatch(
+          isDay
+            ? fetchTransactionsPriceBookingWeek(
+                response.success ? response.data : ""
+              )
+            : fetchRevenueBooking(response.success ? response.data : "")
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function fetchLastMonthTransactions(fromDate, toDate) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.STATISTICS_CONTROLLER, { fromDate, toDate });
+    request.then(
+      (response) => {
+        dispatch(
+          fetchLastMonthTransaction(response.success ? response.data : 0)
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function fetchCountBookingRequest(fromDate, toDate, status, isCurrent) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.STATISTICS_CONTROLLER, {
+      fromDate,
+      status,
+      toDate,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          isCurrent
+            ? fetchCountBookingRequests(response.success ? response.data : {})
+            : fetchCountBookingLastMonth(response.success ? response.data : {})
+        );
       },
       (error) => {
         showMessageError(error.message);

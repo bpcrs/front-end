@@ -10,6 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import NumberFormat from "react-number-format";
 import PopoverCar from "./PopoverCar";
 import PopoverUser from "./PopoverUser";
+import PopoverPricing from "./PopoverPricing";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -101,11 +102,15 @@ export default function ContractTable({ booking }) {
               Total price
             </StyledTableCell>
             <StyledTableCell align="right">
-              <NumberFormat
-                value={booking.totalPrice}
-                displayType={"text"}
-                thousandSeparator={true}
-                suffix={" đ"}
+              <PopoverPricing
+                pricing={
+                  <NumberFormat
+                    value={booking.totalPrice}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={" đ"}
+                  />
+                }
               />
             </StyledTableCell>
           </StyledTableRow>

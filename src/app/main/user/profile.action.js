@@ -20,6 +20,8 @@ export const PROCESS_REGISTER = "[PROCESS] PROCESSING REGISTER";
 export const OPEN_DETAIL = "[DETAIL] CHANGE";
 export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
 export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
+export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
+export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
 
 export function chooseCar(carId, name) {
   return {
@@ -217,9 +219,9 @@ export function messageStatusSuccess(status) {
   }
 }
 
-export function signContractRequest(id) {
+export function signContractRequest(id, otp) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.CONTRACT_CONTROLLER_SIGN, { id });
+    const request = POST(ENDPOINT.CONTRACT_CONTROLLER_SIGN, { id, otp });
     request.then(
       (response) => {
         if (response.success) {
@@ -235,6 +237,42 @@ export function signContractRequest(id) {
   };
 }
 
+export function sendOTPRequest() {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_OTP, {});
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+export function checkVerifyRequestSuccess(isVerify) {
+  return {
+    type: FETCH_ACCOUNT_VERIFY,
+    payload: isVerify,
+  };
+}
+export function checkVerifyRequest() {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_VERIFY, {});
+    request.then(
+      (response) => {
+        dispatch(checkVerifyRequestSuccess(response.success));
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
 export function getTrackingsByBooking(id) {
   return (dispatch) => {
     const request = GET(ENDPOINT.TRACKING_CONTROLLER_GETBY_BOOKINGID(id));

@@ -831,7 +831,7 @@ export default function CarSubmit(props) {
               count = count + 1;
             }
 
-            if (count == carImages.length) {
+            if (count == carLicense.length) {
               count = 0;
               flag = true;
             }
@@ -873,7 +873,7 @@ export default function CarSubmit(props) {
   };
   const linkImageArr = new Array();
   const submitCarToDB = () => {
-    console.log(linkImageArr);
+    console.log("check submit", linkImageArr);
     dispatch(postCarSubmit(currentCar, linkImageArr));
   };
 

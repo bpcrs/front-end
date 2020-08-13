@@ -95,7 +95,6 @@ export default function Cheking() {
   const history = useHistory();
 
   const [tab, setTab] = React.useState(0);
-  const userLogged = useSelector((state) => state.auth.user);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);

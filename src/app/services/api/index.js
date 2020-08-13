@@ -104,7 +104,10 @@ export const ENDPOINT = {
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
   ACCOUNT_CONTROLLER_GETALL: "/account",
   ACCOUNT_CONTROLLER_GETBYID: (id) => `/account/${id}`,
-  ACCOUNT_LICENSE_UPDATE: (id) => `/account/license/${id}`,
+  ACCOUNT_LICENSE_UPDATE: "/account/license/",
+  ACCOUNT_SEND_OTP: "/account/send-otp",
+  ACCOUNT_SEND_CONFIRM_OTP: "/account/confirm-otp",
+  ACCOUNT_VERIFY: "/account/verify",
 
   IMAGE_CONTROLLER_GETALL: "/image",
   IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
@@ -127,5 +130,5 @@ export const ENDPOINT = {
   TRACKING_CONTROLLER_GETBY_BOOKINGID: (id) => `/tracking/${id}`,
 
   CONTRACT_CONTROLLER_SIGN: "/contract",
-  STATIC_CONTROLLER: "/static",
+  STATISTICS_CONTROLLER: "/statistics",
 };

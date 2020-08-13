@@ -8,15 +8,43 @@ const initialState = {
   // loading: false,
   changePage: false,
   userDetail: {},
-  price: 0,
+  priceTransaction: 0,
+  lastMonthTransaction: 0,
+  priceTransactions: [],
+  requests: {},
+  requestsLastMonth: {},
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_COUNT_LAST_MONTH_REQUESTS: {
+      return {
+        ...state,
+        requestsLastMonth: payload,
+      };
+    }
+    case Actions.FETCH_COUNT_BOOKING_REQUEST: {
+      return {
+        ...state,
+        requests: payload,
+      };
+    }
+    case Actions.FETCH_LAST_MONTH_TRANSACTIONS: {
+      return {
+        ...state,
+        lastMonthTransaction: payload,
+      };
+    }
+    case Actions.FETCH_BOOKING_TRANSACTIONS_WEEKS: {
+      return {
+        ...state,
+        priceTransactions: [...state.priceTransactions, payload],
+      };
+    }
     case Actions.FETCH_REVENUE_BOOKING: {
       return {
         ...state,
-        price: payload,
+        priceTransaction: payload,
       };
     }
     case Actions.FETCH_CAR_CHECKING_SUCCESS: {
