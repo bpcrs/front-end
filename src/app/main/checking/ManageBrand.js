@@ -51,8 +51,7 @@ export default function ManageBrand(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = React.useState(false);
   const [name, setName] = useState();
-  const handleClickOpen = (id) => {
-    console.log(brands.id)
+  const handleClickOpen = () => {
     setOpen(true);
   };
 
@@ -107,7 +106,7 @@ export default function ManageBrand(props) {
                               className={classes.button}
                               startIcon={<EditIcon />}
                               style={{ marginLeft: "30%" }}
-                              onClick={handleClickOpen(id)}
+                              onClick={handleClickOpen()}
                             >
                               Check
                             </Button>

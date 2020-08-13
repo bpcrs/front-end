@@ -99,6 +99,7 @@ export const ENDPOINT = {
   CAR_CONTROLLER_GETBYID: (id) => `/car/${id}`,
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
   CAR_CONTROLLER_STATUS_GETBYID: (id) => `/car/status/${id}`,
+  CAR_CONTROLLER_CHECK_CAR: `/car/check-car`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
@@ -131,4 +132,5 @@ export const ENDPOINT = {
   TRACKING_CONTROLLER_GETBY_BOOKINGID: (id) => `/tracking/${id}`,
 
   CONTRACT_CONTROLLER_SIGN: "/contract",
+  STATISTICS_CONTROLLER: "/statistics",
 };

@@ -9,6 +9,11 @@ const initialState = {
   brands: [],
   changePage: false,
   userDetail: {},
+  priceTransaction: 0,
+  lastMonthTransaction: 0,
+  priceTransactions: [],
+  requests: {},
+  requestsLastMonth: {},
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
@@ -17,6 +22,36 @@ const CheckingReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         brands: payload,
+      };
+    }
+    case Actions.FETCH_COUNT_LAST_MONTH_REQUESTS: {
+      return {
+        ...state,
+        requestsLastMonth: payload,
+      };
+    }
+    case Actions.FETCH_COUNT_BOOKING_REQUEST: {
+      return {
+        ...state,
+        requests: payload,
+      };
+    }
+    case Actions.FETCH_LAST_MONTH_TRANSACTIONS: {
+      return {
+        ...state,
+        lastMonthTransaction: payload,
+      };
+    }
+    case Actions.FETCH_BOOKING_TRANSACTIONS_WEEKS: {
+      return {
+        ...state,
+        priceTransactions: [...state.priceTransactions, payload],
+      };
+    }
+    case Actions.FETCH_REVENUE_BOOKING: {
+      return {
+        ...state,
+        priceTransaction: payload,
       };
     }
     case Actions.FETCH_CAR_CHECKING_SUCCESS: {

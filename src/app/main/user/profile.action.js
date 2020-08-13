@@ -225,7 +225,7 @@ export function signContractRequest(id, otp) {
     request.then(
       (response) => {
         if (response.success) {
-          showMessageSuccess("Signed contract successful");
+          dispatch(showMessageSuccess("Signed contract successful"));
         } else {
           dispatch(showMessageError(response.message));
         }
