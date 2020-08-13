@@ -142,6 +142,7 @@ export default function Cheking() {
           >
             <Tab label="Car Approval & Infomation" {...a11yProps(0)} />
             <Tab label="License Approval" {...a11yProps(1)} />
+            <Tab label="Add Model/Brand" {...a11yProps(2)} />
           </Tabs>
         </Grid>
         <Grid item xs={9} sm={9}>
