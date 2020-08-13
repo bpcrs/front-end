@@ -10,6 +10,8 @@ import {
   Button,
   Icon,
   Chip,
+  Tooltip,
+  Zoom,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
@@ -90,6 +92,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const useStylesBootstrap = makeStyles((theme) => ({
+  arrow: {
+    color: theme.palette.common.black,
+  },
+  tooltip: {
+    backgroundColor: theme.palette.common.black,
+  },
+}));
+function BootstrapTooltip(props) {
+  const classes = useStylesBootstrap();
+
+  return <Tooltip arrow classes={classes} {...props} />;
+}
+
 const Profile = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -143,23 +159,54 @@ const Profile = (props) => {
                       content=" Please verify you phone before renting or register new car"
                       title="Verify Phone number"
                     >
-                      <Chip
-                        icon={
-                          <Icon style={{ color: red[600] }}>check_circle</Icon>
+                      <BootstrapTooltip
+                        TransitionComponent={Zoom}
+                        placement="top"
+                        title={
+                          <Typography variant="subtitle2">
+                            This badge means that you are the Unverified.
+                            Plesase verify your phone, identification and
+                            license.
+                          </Typography>
                         }
-                        label="Unverified Member"
-                        style={{ color: red[600], backgroundColor: red[50] }}
-                      />
+                      >
+                        <Chip
+                          icon={
+                            <Icon style={{ color: red[600] }}>
+                              check_circle
+                            </Icon>
+                          }
+                          label="Unverified Member"
+                          style={{ color: red[600], backgroundColor: red[50] }}
+                        />
+                      </BootstrapTooltip>
                     </VerifyOTP>
                   )}
                   {isVerified && (
-                    <Chip
-                      icon={
-                        <Icon style={{ color: green[600] }}>check_circle</Icon>
+                    <BootstrapTooltip
+                      TransitionComponent={Zoom}
+                      placement="top"
+                      title={
+                        <Typography variant="subtitle2">
+                          This badge means that you are the Verified. As a
+                          Verified member, you will register new car, renting a
+                          car.
+                        </Typography>
                       }
-                      label="Verified Member"
-                      style={{ color: green[600], backgroundColor: green[50] }}
-                    />
+                    >
+                      <Chip
+                        icon={
+                          <Icon style={{ color: green[600] }}>
+                            check_circle
+                          </Icon>
+                        }
+                        label="Verified Member"
+                        style={{
+                          color: green[600],
+                          backgroundColor: green[50],
+                        }}
+                      />
+                    </BootstrapTooltip>
                   )}
                   {/* <Chip
                     icon={
