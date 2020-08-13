@@ -15,6 +15,8 @@ import {
   StepLabel,
   withStyles,
   StepConnector,
+  InputAdornment,
+  Tooltip,
 } from "@material-ui/core";
 import firebase from "../../firebase/firebase";
 import {
@@ -29,7 +31,6 @@ import { processingRegister } from "../user/profile.action";
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
@@ -150,7 +151,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
   const [brand, setBrand] = React.useState("");
   const [imageCarArr, setImageCarArr] = useState([]);
   const [licenses, setLicenses] = useState([]);
-  const [linkLicenses, setLinkLicenses] = useState([]);
+  // const [linkLicenses, setLinkLicenses] = useState([]);
 
   const years = Array(now - (now - 10))
     .fill("")
@@ -390,9 +391,35 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 id="vin"
                 name="vin"
                 value={currentCar.vin}
-                label="Vin number"
+                label="VIN number"
                 variant="outlined"
                 onChange={handleInputChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip
+                        title={
+                          <Typography variant="caption">
+                            The car's vehicle identification number (VIN) is the
+                            identifying code for a SPECIFIC automobile. A VIN is
+                            composed of 17 characters (digits and capital
+                            letters) that act as a unique identifier for the
+                            vehicle.
+                          </Typography>
+                        }
+                        placement="top"
+                      >
+                        <Icon style={{ cursor: "pointer" }}>error_outline</Icon>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+                error={currentCar.vin && currentCar.vin.length !== 17}
+                helperText={
+                  currentCar.vin && currentCar.vin.length !== 17
+                    ? "VIN must be 17 characters"
+                    : ""
+                }
               />
             </Grid>
             <Grid item xs={5} lg={5}>
@@ -408,6 +435,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                 }}
+                helperText="Lowest 100.000đ/day"
               />
             </Grid>
           </Grid>
@@ -952,7 +980,8 @@ export default function CarSubmit(props) {
                     !currentCar.screen ||
                     !currentCar.vin ||
                     !currentCar.price > 0 ||
-                    !currentCar.plateNum
+                    !currentCar.plateNum ||
+                    (currentCar.vin && currentCar.vin.length !== 17)
                   }
                 >
                   Next
