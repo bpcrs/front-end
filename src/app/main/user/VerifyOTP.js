@@ -71,11 +71,12 @@ export default function VerifyOTP({ children, callBack, title, content }) {
     setCounter(60);
     setLoading(true);
     dispatch(sendOTPRequest());
-    setInterval(() => {
+    const timer = setInterval(() => {
       setCounter((counter) => counter - 1);
     }, 1000);
     setTimeout(() => {
       setLoading(false);
+      clearInterval(timer);
     }, 60000);
   };
   const handleClickOpen = () => {

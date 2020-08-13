@@ -156,7 +156,7 @@ function Row({ booking, carId }) {
           <Tooltip title={confirmText}>
             <VerifyOTP
               callBack={handleSignContract}
-              content="Please verify OTP before singing"
+              content="Please verify OTP before signing"
               title="Verify OTP"
             >
               <Button
@@ -167,14 +167,6 @@ function Row({ booking, carId }) {
                 {confirmText}
               </Button>
             </VerifyOTP>
-            {/* <Button
-              variant="outlined"
-              startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
-              style={{ textTransform: "none" }}
-              onClick={handleSignContract}
-            >
-              {confirmText}
-            </Button> */}
           </Tooltip>
         );
       case BOOKING_STATUS.DONE:
