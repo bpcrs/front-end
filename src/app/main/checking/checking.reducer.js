@@ -6,12 +6,19 @@ const initialState = {
   images: [],
   users: [],
   // loading: false,
+  brands: [],
   changePage: false,
   userDetail: {},
 };
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_BRAND_LIST_SUCCESS: {
+      return {
+        ...state,
+        brands: payload,
+      };
+    }
     case Actions.FETCH_CAR_CHECKING_SUCCESS: {
       return {
         ...state,

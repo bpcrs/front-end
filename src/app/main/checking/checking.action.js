@@ -5,6 +5,9 @@ export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 
+export const FETCH_BRAND_LIST_SUCCESS = "[BRAND_LIST] FETCH DATA SUCCESS";
+export const FETCH_BRAND_LIST_FAILURE = "[BRAND_LIST] FETCH DATA FAILURE";
+
 export const FETCH_CAR_DETAIL_CHECKING_SUCCESS =
   "[CAR_DETAIL_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_CHECKING_FAILURE =
@@ -36,6 +39,20 @@ export function fetchCarCheckingSuccess(cars) {
 export function fetchCarCheckingFailure(error) {
   return {
     type: FETCH_CAR_CHECKING_FAILURE,
+    payload: error,
+  };
+}
+
+export function fetchBrandListSuccess(brands) {
+  return {
+    type: FETCH_BRAND_LIST_SUCCESS,
+    payload: brands,
+  };
+}
+
+export function fetchBrandListFailure(error) {
+  return {
+    type: FETCH_BRAND_LIST_FAILURE,
     payload: error,
   };
 }
@@ -120,6 +137,24 @@ export function fetchCarCheckingAdmin(page, size) {
     );
   };
 }
+
+export function fetchBrandByAdminList(page, size) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.BRAND_CONTROLLER_GETALLBY_ADMIN, {
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchBrandListSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchBrandListFailure(error.message));
+      }
+    );
+  };
+}
+
 export function putUserDetailSuccess(user) {
   return {
     type: PUT_USER_DETAIL_CHECKING_SUCCESS,

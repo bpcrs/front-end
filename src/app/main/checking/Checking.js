@@ -21,6 +21,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import ManageBrand from "./ManageBrand";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -176,16 +177,16 @@ export default function Cheking() {
               label="License Approval"
               {...a11yProps(1)}
             />
-            {/* <Tab
+            <Tab
               // icon={<HistoryIcon />}
-              label="My Booking"
+              label="Manage brand"
               {...a11yProps(2)}
             />
             <Tab
               // icon={<UpdateIcon />}
-              label="Lease History"
+              label="Manage model"
               {...a11yProps(3)}
-            /> */}
+            />
           </Tabs>
         </Grid>
         <Grid item xs={9} sm={9}>
@@ -195,7 +196,9 @@ export default function Cheking() {
           <TabPanel value={tab} index={1}>
             <CheckUser />
           </TabPanel>
-          <TabPanel value={tab} index={2}></TabPanel>
+          <TabPanel value={tab} index={2}>
+            <ManageBrand />
+          </TabPanel>
           <TabPanel value={tab} index={3}></TabPanel>
         </Grid>
       </Grid>
