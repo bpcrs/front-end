@@ -20,10 +20,11 @@ import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
 import MyLicense from "../submitLicense/MyLicense";
-import { green } from "@material-ui/core/colors";
+import { green, red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
+import { checkVerifyRequest } from "./profile.action";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,8 +96,7 @@ const Profile = (props) => {
   const userLogged = useSelector((state) => state.auth.user);
   const history = useHistory();
   const [tab, setTab] = useState(0);
-  // const flagBookSuccess = useSelector((state) => state.booking.flagBookSuccess);
-
+  const isVerified = useSelector((state) => state.profile.isVerify);
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
   };
@@ -107,7 +107,8 @@ const Profile = (props) => {
 
   useEffect(() => {
     resetFlagCreateBooking();
-  });
+    dispatch(checkVerifyRequest());
+  }, [dispatch]);
   return (
     <Layout name="Profile">
       <div className={classes.root}>
@@ -137,7 +138,29 @@ const Profile = (props) => {
                   >
                     {userLogged.role}
                   </Typography>
-                  <VerifyOTP />
+                  {!isVerified && (
+                    <VerifyOTP
+                      content=" Please verify you phone before renting or register new car"
+                      title="Verify Phone number"
+                    >
+                      <Chip
+                        icon={
+                          <Icon style={{ color: red[600] }}>check_circle</Icon>
+                        }
+                        label="Unverified Member"
+                        style={{ color: red[600], backgroundColor: red[50] }}
+                      />
+                    </VerifyOTP>
+                  )}
+                  {isVerified && (
+                    <Chip
+                      icon={
+                        <Icon style={{ color: green[600] }}>check_circle</Icon>
+                      }
+                      label="Verified Member"
+                      style={{ color: green[600], backgroundColor: green[50] }}
+                    />
+                  )}
                   {/* <Chip
                     icon={
                       <Icon style={{ color: green[600] }}>check_circle</Icon>

@@ -37,6 +37,7 @@ import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
+import VerifyOTP from "./VerifyOTP";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,8 +85,8 @@ function Row({ booking, carId }) {
     setOpenTimeline(false);
   };
 
-  const handleSignContract = () => {
-    dispatch(signContractRequest(booking.id));
+  const handleSignContract = (otp) => {
+    dispatch(signContractRequest(booking.id, otp));
     setOpenTimeline(false);
     setOpen(true);
     setTimeout(() => {
@@ -153,57 +154,67 @@ function Row({ booking, carId }) {
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <Tooltip title={confirmText}>
-            <Button
+            <VerifyOTP
+              callBack={handleSignContract}
+              content="Please verify OTP before singing"
+              title="Verify OTP"
+            >
+              <Button
+                variant="outlined"
+                startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                style={{ textTransform: "none" }}
+              >
+                {confirmText}
+              </Button>
+            </VerifyOTP>
+            {/* <Button
               variant="outlined"
               startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
               style={{ textTransform: "none" }}
               onClick={handleSignContract}
             >
               {confirmText}
-            </Button>
+            </Button> */}
           </Tooltip>
         );
       case BOOKING_STATUS.DONE:
         return (
           <React.Fragment>
-            {
-              booking.car.owner.email === booking.renter.email ? (
-                <Grid></Grid>
-              ) : (
-                  <React.Fragment>
-                    <Tooltip title={doneText}>
-                      <Button
-                        variant="outlined"
-                        startIcon={<Icon style={{ color: "green" }}>start</Icon>}
-                        style={{ textTransform: "none" }}
-                        onClick={() => {
-                          setOpen(true);
-                        }}
-                      >
-                        {doneText}
-                      </Button>
-                    </Tooltip>
+            {booking.car.owner.email === booking.renter.email ? (
+              <Grid></Grid>
+            ) : (
+              <React.Fragment>
+                <Tooltip title={doneText}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Icon style={{ color: "green" }}>start</Icon>}
+                    style={{ textTransform: "none" }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    {doneText}
+                  </Button>
+                </Tooltip>
 
-                    <Dialog open={open} scroll="body">
-                      <DialogContent>
-                        <Review carId={booking.car.id} bookingId={booking.id} />
-                      </DialogContent>
+                <Dialog open={open} scroll="body">
+                  <DialogContent>
+                    <Review carId={booking.car.id} bookingId={booking.id} />
+                  </DialogContent>
 
-                      <DialogActions>
-                        <Button
-                          autoFocus
-                          onClick={() => setOpen(false)}
-                          color="secondary"
-                          variant="contained"
-                        >
-                          Close
-                </Button>
-                      </DialogActions>
-                    </Dialog>
-                  </React.Fragment>
-                )
-            }
-
+                  <DialogActions>
+                    <Button
+                      autoFocus
+                      onClick={() => setOpen(false)}
+                      color="secondary"
+                      variant="contained"
+                    >
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </React.Fragment>
+            )}
           </React.Fragment>
         );
       case BOOKING_STATUS.DENY:
@@ -283,10 +294,10 @@ function Row({ booking, carId }) {
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
           ) > 0 ? (
-              new Date(booking.createdDate).toDateString()
-            ) : (
-              <TimeAgo date={booking.createdDate} />
-            )}
+            new Date(booking.createdDate).toDateString()
+          ) : (
+            <TimeAgo date={booking.createdDate} />
+          )}
         </TableCell>
         <TableCell component="th" scope="row">
           {booking.car.name}
@@ -294,7 +305,7 @@ function Row({ booking, carId }) {
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
-            (1000 * 60 * 60 * 24)
+              (1000 * 60 * 60 * 24)
           ) + 1}{" "}
           days
         </TableCell>
@@ -322,21 +333,21 @@ const BookingRequest = (props) => {
   useEffect(() => {
     carId
       ? dispatch(
-        fetchBookingRentalMyCar(
-          carId,
-          status && status.map((item) => item.name),
-          currentPage,
-          size
+          fetchBookingRentalMyCar(
+            carId,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
         )
-      )
       : dispatch(
-        fetchBookingRequest(
-          currentUser.id,
-          status && status.map((item) => item.name),
-          currentPage,
-          size
-        )
-      );
+          fetchBookingRequest(
+            currentUser.id,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
+        );
   }, [currentPage, dispatch, currentUser.id, status, carId]);
 
   return (

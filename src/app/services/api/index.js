@@ -107,6 +107,7 @@ export const ENDPOINT = {
   ACCOUNT_LICENSE_UPDATE: "/account/license/",
   ACCOUNT_SEND_OTP: "/account/send-otp",
   ACCOUNT_SEND_CONFIRM_OTP: "/account/confirm-otp",
+  ACCOUNT_VERIFY: "/account/verify",
 
   IMAGE_CONTROLLER_GETALL: "/image",
   IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
