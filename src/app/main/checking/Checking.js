@@ -2,17 +2,14 @@ import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
-  TextField,
-  Avatar,
   Tabs,
   Tab,
   Typography,
   Box,
   Button,
   Icon,
+  Paper,
 } from "@material-ui/core";
-import DriveEtaIcon from "@material-ui/icons/DriveEta";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import PropTypes from "prop-types";
 import Layout from "../../layout";
 import CheckCar from "./CheckCar";
@@ -21,7 +18,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
-
+import Widget from "../checking/Widget";
+import BookingWidget from "../checking/BookingWidget";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -84,6 +82,11 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: theme.spacing(3),
   },
+  paper: {
+    padding: theme.spacing(2),
+    margin: "auto",
+    maxWidth: 500,
+  },
 }));
 
 export default function Cheking() {
@@ -92,7 +95,6 @@ export default function Cheking() {
   const history = useHistory();
 
   const [tab, setTab] = React.useState(0);
-  const userLogged = useSelector((state) => state.auth.user);
 
   const handleSetTab = (event, newTab) => {
     setTab(newTab);
@@ -105,33 +107,9 @@ export default function Cheking() {
   return (
     <Layout name="Checking">
       <Grid container>
-        <h2>Personal Information</h2>
+        <h2>Admin page</h2>
         <Grid container spacing={2}>
           <Grid item lg={12} container>
-            <Grid item lg={1}>
-              <Avatar
-                aria-label="recipe"
-                className={classes.avatar}
-                src={userLogged.photoURL}
-              />
-            </Grid>
-            <Grid item lg>
-              <div className="hidden md:flex flex-col ml-12 items-start">
-                <Typography
-                  variant="h5"
-                  // className="normal-case font-1000 flex"
-                >
-                  {userLogged.displayName}
-                </Typography>
-                <Typography
-                  className="text-11 capitalize"
-                  color="textSecondary"
-                  variant="overline"
-                >
-                  {userLogged.role}
-                </Typography>
-              </div>
-            </Grid>
             <Grid item lg={2}>
               <Button
                 variant="text"
@@ -144,17 +122,12 @@ export default function Cheking() {
             </Grid>
           </Grid>
           <Grid item lg={12} container>
-            <Grid item lg={2}></Grid>
-            {/* <Grid item lg={5}>
-              <Typography variant="subtitle1">PHONE</Typography>
-              <Typography variant="subtitle2">
-                {userLogged.displayName}
-              </Typography>
-            </Grid> */}
-            <Grid item lg={5}>
-              <Typography variant="subtitle1">EMAIL</Typography>
-              <Typography variant="subtitle2">{userLogged.email}</Typography>
-            </Grid>
+            <div className="widget flex w-full sm:w-1/3 p-16">
+              <Widget />
+            </div>
+            <div className="widget flex w-full sm:w-1/3 p-16">
+              <BookingWidget />
+            </div>
           </Grid>
         </Grid>
 
@@ -166,26 +139,9 @@ export default function Cheking() {
             onChange={handleSetTab}
             aria-label="Vertical tabs example"
           >
-            <Tab
-              // icon={<DriveEtaIcon />}
-              label="Car Approval & Infomation"
-              {...a11yProps(0)}
-            />
-            <Tab
-              // icon={<PaymentIcon />}
-              label="License Approval"
-              {...a11yProps(1)}
-            />
-            {/* <Tab
-              // icon={<HistoryIcon />}
-              label="My Booking"
-              {...a11yProps(2)}
-            />
-            <Tab
-              // icon={<UpdateIcon />}
-              label="Lease History"
-              {...a11yProps(3)}
-            /> */}
+            <Tab label="Car Approval & Infomation" {...a11yProps(0)} />
+            <Tab label="License Approval" {...a11yProps(1)} />
+            <Tab label="Add Model/Brand" {...a11yProps(2)} />
           </Tabs>
         </Grid>
         <Grid item xs={9} sm={9}>

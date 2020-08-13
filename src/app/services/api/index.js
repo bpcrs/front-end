@@ -131,4 +131,5 @@ export const ENDPOINT = {
   TRACKING_CONTROLLER_GETBY_BOOKINGID: (id) => `/tracking/${id}`,
 
   CONTRACT_CONTROLLER_SIGN: "/contract",
+  STATISTICS_CONTROLLER: "/statistics",
 };
