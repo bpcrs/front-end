@@ -106,7 +106,7 @@ const Profile = (props) => {
   };
 
   useEffect(() => {
-    resetFlagCreateBooking();
+    dispatch(resetFlagCreateBooking());
     dispatch(checkVerifyRequest());
   }, [dispatch]);
   return (
