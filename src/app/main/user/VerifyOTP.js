@@ -18,8 +18,8 @@ import {
   Typography,
   LinearProgress,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { sendOTPRequest, sendOTPConfirm } from "./profile.action";
+import { useDispatch, useSelector } from "react-redux";
+import { sendOTPRequest } from "./profile.action";
 
 const useStyles = makeStyles((theme) => ({
   inputStyle: {
@@ -54,14 +54,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function VerifyOTP({ component }) {
+export default function VerifyOTP({ children, callBack, title, content }) {
   const [open, setOpen] = useState(false);
   const [OTP, setOTP] = useState();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+
+  // const otpConfirm = useSelector((state) => state.profile.otpConfirm);
   const [counter, setCounter] = useState(60);
   const classes = useStyles();
   const [confirming, setConfirming] = useState(false);
@@ -79,6 +78,9 @@ export default function VerifyOTP({ component }) {
       setLoading(false);
     }, 60000);
   };
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const handleChangeOTP = (value) => {
     setOTP(value);
@@ -89,34 +91,35 @@ export default function VerifyOTP({ component }) {
         setLoading(false);
         setCounter(60);
         setOpen(false);
+        callBack(value);
       }, 3000);
-      dispatch(sendOTPConfirm(value));
+      // // dispatch(sendOTPConfirm(value));
+      // if (otpConfirm) {
+      // }
     }
   };
+
   return (
     <React.Fragment>
-      <Chip
-        icon={<Icon style={{ color: green[600] }}>check_circle</Icon>}
-        label="Verified Member"
-        style={{ color: green[600], backgroundColor: green[50] }}
-        onClick={handleClickOpen}
-      />
+      {React.cloneElement(children, { onClick: handleClickOpen })}
       <Dialog
         fullWidth
         maxWidth="sm"
         open={open}
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
-        disableEscapeKeyDown={confirming || loading}
-        disableBackdropClick={confirming || loading}
+        disableEscapeKeyDown={confirming}
+        disableBackdropClick={confirming}
       >
         <DialogTitle id="max-width-dialog-title">
           <Grid container justify="space-between">
-            <Grid> Verify your number phone</Grid>
+            <Grid>{title}</Grid>
             <Grid>
               <Button
                 autoFocus
-                style={{ color: confirming || loading ? grey[500] : red[500] }}
+                style={{
+                  color: confirming || loading ? grey[500] : red[500],
+                }}
                 onClick={handleClose}
                 startIcon={<Icon>close</Icon>}
                 disabled={confirming || loading}
@@ -127,9 +130,7 @@ export default function VerifyOTP({ component }) {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Please verify you phone before renting or register new car
-          </DialogContentText>
+          <DialogContentText>{content}</DialogContentText>
           <Grid container justify="center" alignItems="center">
             <Grid lg={9} item>
               <OtpInput

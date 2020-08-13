@@ -22,6 +22,8 @@ const initialState = {
   change: false,
   changeApprove: false,
   trackings: [],
+  isVerify: false,
+  otpConfirm: false,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
@@ -101,6 +103,12 @@ const profileReducer = (state = initialState, { type, payload }) => {
         ...state,
         changeApprove: !state.changeApprove,
       };
+    }
+    case Actions.FETCH_ACCOUNT_VERIFY: {
+      return { ...state, isVerify: payload };
+    }
+    case Actions.FETCH_CONFRIM_OTP: {
+      return { ...state, otpConfirm: payload };
     }
     default: {
       return state;
