@@ -156,7 +156,7 @@ function Row({ booking, carId }) {
           <Tooltip title={confirmText}>
             <VerifyOTP
               callBack={handleSignContract}
-              content="Please verify OTP before singing"
+              content="Please verify OTP before signing"
               title="Verify OTP"
             >
               <Button
