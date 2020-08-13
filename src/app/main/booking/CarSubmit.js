@@ -17,6 +17,8 @@ import {
   StepConnector,
   InputAdornment,
   Tooltip,
+  FormGroup,
+  FormControlLabel,
 } from "@material-ui/core";
 import firebase from "../../firebase/firebase";
 import {
@@ -24,6 +26,7 @@ import {
   fetchBrandList,
   fetchModelList,
   postCar,
+  checkCar,
 } from "./booking.action";
 import { useDispatch, useSelector } from "react-redux";
 import { orange, green } from "@material-ui/core/colors";
@@ -31,6 +34,7 @@ import { processingRegister } from "../user/profile.action";
 import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 import clsx from "clsx";
+import { showMessageError } from "../../store/actions/fuse";
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
@@ -205,10 +209,8 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
   };
 
   useEffect(() => {
-    console.log(brands);
     if (brands.length === 0) dispatch(fetchBrandList());
     if (models.length === 0) dispatch(fetchModelList());
-
     onSubmit(currentCar);
     onSubmitImage(imageCarArr);
     onSubmitLicense(licenses);
@@ -282,21 +284,14 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 variant="outlined"
                 className={classes.formControl}
               >
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Year
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value={year}
-                  onChange={handleChangeYear}
-                  label="Year"
-                >
-                  {years.map((year) => (
-                    <MenuItem key={year} value={year}>
-                      <Typography>{year}</Typography>
-                    </MenuItem>
-                  ))}
+                <InputLabel>Year</InputLabel>
+                <Select value={year} onChange={handleChangeYear} label="Year">
+                  {years &&
+                    years.map((year) => (
+                      <MenuItem key={year} value={year}>
+                        <Typography>{year}</Typography>
+                      </MenuItem>
+                    ))}
                 </Select>
               </FormControl>
             </Grid>
@@ -435,7 +430,10 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 InputProps={{
                   inputComponent: NumberFormatCustom,
                 }}
-                helperText="Lowest 100.000đ/day"
+                error={currentCar.price < 100000}
+                helperText={
+                  currentCar.price < 100000 ? "Minimum 100.000 đ/day" : ""
+                }
               />
             </Grid>
           </Grid>
@@ -635,6 +633,7 @@ function NumberFormatCustom(props) {
       }}
       thousandSeparator
       isNumericString
+      allowNegative={false}
       // prefix="$"
       suffix=" ₫"
     />
@@ -647,7 +646,17 @@ export default function CarSubmit(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
   const handleStepNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    if (activeStep === 0) {
+      checkCar(currentCar.vin, currentCar.plateNum, ({ success, message }) => {
+        if (success) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        } else {
+          dispatch(showMessageError(message));
+        }
+      });
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
   };
 
   const [currentCar, setCurrentCar] = useState({});
@@ -981,7 +990,8 @@ export default function CarSubmit(props) {
                     !currentCar.vin ||
                     !currentCar.price > 0 ||
                     !currentCar.plateNum ||
-                    (currentCar.vin && currentCar.vin.length !== 17)
+                    (currentCar.vin && currentCar.vin.length !== 17) ||
+                    (currentCar.price && currentCar.price < 100000)
                   }
                 >
                   Next

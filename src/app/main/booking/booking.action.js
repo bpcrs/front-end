@@ -784,3 +784,22 @@ export function distanceBetweenTwoLocation(destination, location) {
     );
   };
 }
+
+export function checkCar(vin, plateNum, cb) {
+  const request = POST(
+    ENDPOINT.CAR_CONTROLLER_CHECK_CAR,
+    { vin, plateNum },
+    {}
+  );
+  request.then(
+    (response) => {
+      cb(response);
+    },
+    (error) => {
+      cb({
+        success: false,
+        message: error.message,
+      });
+    }
+  );
+}
