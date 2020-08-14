@@ -27,6 +27,7 @@ import {
   submitMessage,
 } from "./chat.action";
 import { useState } from "react";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -192,7 +193,7 @@ const Message = ({ message, receive, type, createAt }) => {
                   <CardContent className="p-32">
                     <div className="flex justify-center">
                       <Typography variant="h6" color="textSecondary">
-                        +200.000VND
+                        {message.type}
                       </Typography>
                     </div>
 
@@ -210,6 +211,17 @@ const Message = ({ message, receive, type, createAt }) => {
                       <Typography variant="subtitle1" className="">
                         <span className="font-bold mr-4">100</span>
                         Mb Disk Space
+                      </Typography>
+                    </div>
+                    <Divider className="my-32" />
+                    <div className="flex justify-center">
+                      <Typography variant="h6" color="textPrimary">
+                        <NumberFormat
+                          value={message.value}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          suffix={" đ"}
+                        />
                       </Typography>
                     </div>
                   </CardContent>
