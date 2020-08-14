@@ -1,5 +1,5 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardHeader, Avatar, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import { Grid, DialogActions, CardHeader, Avatar, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -11,6 +11,8 @@ import { useHistory } from "react-router-dom";
 import { fetchBrandByAdminList } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -42,16 +44,17 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function ManageBrand(props) {
+export default function ManageBrand() {
   const classes = useStyles();
-  const history = useHistory();
+
   const dispatch = useDispatch();
   const brands = useSelector((state) => state.checking.brands);
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [open, setOpen] = React.useState(false);
-  const [name, setName] = useState();
-  const handleClickOpen = () => {
+  const [open, setOpen] = useState(false);
+  let currentBrand = useState([]);
+  const handleClickOpen = (brand) => {
+    currentBrand = brand;
+    console.log(currentBrand);
     setOpen(true);
   };
 
@@ -59,7 +62,7 @@ export default function ManageBrand(props) {
     setOpen(false);
   };
   const handleChangeInput = (event) => {
-    setName(event.target.value);
+    // setName(event.target.value);
   };
   const size = 10;
   useEffect(() => {
@@ -106,9 +109,9 @@ export default function ManageBrand(props) {
                               className={classes.button}
                               startIcon={<EditIcon />}
                               style={{ marginLeft: "30%" }}
-                              onClick={handleClickOpen()}
+                              onClick={() => handleClickOpen(brand)}
                             >
-                              Check
+                              Update
                             </Button>
                           </TableCell>
                         </StyledTableRow>
@@ -121,7 +124,7 @@ export default function ManageBrand(props) {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Update brand name</DialogTitle>
+              <DialogTitle id="form-dialog-title">Update brand name {currentBrand.name}</DialogTitle>
               <DialogContent>
                 <TextField
                   autoFocus
@@ -131,8 +134,33 @@ export default function ManageBrand(props) {
                   name="name"
                   label="Brand"
                   fullWidth
-                />
+                ></TextField>
+                  {/* {currentBrand.name} */}
+
               </DialogContent>
+              <DialogActions>
+                <Grid container justify="center">
+                  <Grid item xs={6} lg={6}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      // onClick={() => handleAcceptCar()}
+                      startIcon={<CheckCircleIcon />}
+                      style={{ marginLeft: "30%" }}
+                    />
+                  </Grid>
+                  <Grid item xs={6} lg={6}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CancelIcon />}
+                      style={{ marginLeft: "30%" }}
+                      onClick={handleClose}
+                    />
+
+                  </Grid>
+                </Grid>
+              </DialogActions>
             </Dialog>
             <Grid xs={12} lg={12} item container justify="flex-end">
               <Pagination
