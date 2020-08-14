@@ -152,9 +152,9 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -177,9 +177,9 @@ export function fetchBookingRequest(
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
