@@ -72,6 +72,17 @@ export default function BookingClose({ booking, openClose }) {
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
   const [totalBill, openTotalBill] = useState(false);
+  const [checkboxValue, setCheckboxValue] = useState({
+    carDamage: false,
+    overdue: false,
+    violate: false,
+  });
+  const handleChangeCheckbox = (event) => {
+    setCheckboxValue({
+      ...checkboxValue,
+      [event.target.name]: event.target.checked,
+    });
+  };
   const handleExceedLimit = () => {
     setLoading(true);
     setTimeout(() => {
@@ -241,33 +252,99 @@ export default function BookingClose({ booking, openClose }) {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            // checked={checkboxValue.carDamage}
-                            // onChange={handleChangeCheckbox}
+                            checked={checkboxValue.carDamage}
+                            onChange={handleChangeCheckbox}
                             name="carDamage"
                           />
                         }
                         label="Car damage"
                       />
+                      {checkboxValue.carDamage ? (
+                        <FormControl
+                          fullWidth
+                          className={classes.margin}
+                          variant="outlined"
+                        >
+                          <InputLabel htmlFor="outlined-adornment-amount">
+                            Amount
+                          </InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-amount"
+                            //   value={values.amount}
+                            //   onChange={handleChange("amount")}
+                            startAdornment={
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            }
+                            labelWidth={60}
+                          />
+                        </FormControl>
+                      ) : null}
                       <FormControlLabel
                         control={
                           <Checkbox
-                            // checked={checkboxValue.overdue}
-                            // onChange={handleChangeCheckbox}
+                            checked={checkboxValue.overdue}
+                            onChange={handleChangeCheckbox}
                             name="overdue"
                           />
                         }
                         label="Overdue return time"
                       />
+                      {checkboxValue.overdue ? (
+                        <FormControl
+                          fullWidth
+                          className={classes.margin}
+                          variant="outlined"
+                        >
+                          <InputLabel htmlFor="outlined-adornment-amount">
+                            Amount
+                          </InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-amount"
+                            //   value={values.amount}
+                            //   onChange={handleChange("amount")}
+                            startAdornment={
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            }
+                            labelWidth={60}
+                          />
+                        </FormControl>
+                      ) : null}
                       <FormControlLabel
                         control={
                           <Checkbox
-                            // checked={checkboxValue.violate}
-                            // onChange={handleChangeCheckbox}
+                            checked={checkboxValue.violate}
+                            onChange={handleChangeCheckbox}
                             name="violate"
                           />
                         }
                         label="Violate transport"
                       />
+                      {checkboxValue.violate ? (
+                        <FormControl
+                          fullWidth
+                          className={classes.margin}
+                          variant="outlined"
+                        >
+                          <InputLabel htmlFor="outlined-adornment-amount">
+                            Amount
+                          </InputLabel>
+                          <OutlinedInput
+                            id="outlined-adornment-amount"
+                            //   value={values.amount}
+                            //   onChange={handleChange("amount")}
+                            startAdornment={
+                              <InputAdornment position="start">
+                                $
+                              </InputAdornment>
+                            }
+                            labelWidth={60}
+                          />
+                        </FormControl>
+                      ) : null}
                     </FormGroup>
                   </CardContent>
                 </Card>
