@@ -270,11 +270,6 @@ const Profile = () => {
                 label="My Booking"
                 {...a11yProps(1)}
               />
-              <Tab
-                // icon={<PaymentIcon />}
-                label="Calendar"
-                {...a11yProps(2)}
-              />
               {/* <Tab
                 // icon={<UpdateIcon />}
                 label="Lease History"
@@ -288,11 +283,6 @@ const Profile = () => {
             </TabPanel>
             <TabPanel value={tab} index={1} tab={1}>
               <MyBooking />
-            </TabPanel>
-            <TabPanel value={tab} index={2} tab={2}>
-              {/* <Grid item lg={12}> */}
-              <CalendarApp />
-              {/* </Grid> */}
             </TabPanel>
             {/* <TabPanel value={tab} index={3}></TabPanel> */}
           </Grid>

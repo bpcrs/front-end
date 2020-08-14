@@ -6,10 +6,13 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import moment from "moment";
 import classNames from "classnames";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import EventDialog from "./EventDialog";
 import CalendarHeader from "./CalendarHeader";
 import { useRef } from "react";
+import { useEffect } from "react";
+import { fetchBookingRentalMyCar } from "../main/user/profile.action";
+import { BOOKING_STATUS } from "../../constant";
 
 const localizer = BigCalendar.momentLocalizer(moment);
 
@@ -165,7 +168,7 @@ const ColoredDateCellWrapper = ({ children }) =>
     },
   });
 
-const CalendarApp = () => {
+const CalendarApp = ({ carId }) => {
   const classes = useStyle();
   const bookings = useSelector((state) => state.profile.bookings.data);
   const [currentBooking, setCurrentBooking] = useState({
@@ -177,11 +180,15 @@ const CalendarApp = () => {
       isOpen: false,
     });
   };
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBookingRentalMyCar(carId, BOOKING_STATUS.CONFIRM, 1, 10));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carId]);
   return (
     <div
       className={classNames(classes.root, "flex flex-col flex-auto relative")}
     >
-      {console.log("bookings", bookings)}
       <DragAndDropCalendar
         className="flex flex-1 container"
         selectable
@@ -193,9 +200,7 @@ const CalendarApp = () => {
               id: item.id,
               start: new Date(item.fromDate),
               end: new Date(item.toDate),
-              title: `#${item.id} with ${item.car.name} - ${
-                new Date(item.fromDate).toLocaleDateString().split("T")[0]
-              } - ${new Date(item.toDate).toLocaleDateString().split("T")[0]}`,
+              title: `#${item.id} - ${item.renter.fullName} - ${item.status}`,
             };
           })
         }

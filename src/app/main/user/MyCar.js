@@ -10,13 +10,11 @@ import {
   Typography,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   CircularProgress,
   Badge,
   Backdrop,
   Paper,
-  Collapse,
   Fade,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -31,18 +29,12 @@ import {
   openDetail,
   chooseCar,
 } from "./profile.action";
-import { useHistory } from "react-router-dom";
-import { APP_PATH, CAR_STATUS } from "../../../constant";
+import { CAR_STATUS } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
 import CarSubmit from "../booking/CarSubmit";
 import CarEdit from "../booking/CarEdit";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import { request } from "../../services/api";
-import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
