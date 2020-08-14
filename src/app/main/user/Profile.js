@@ -281,7 +281,7 @@ const Profile = () => {
             </Tabs>
           </Grid>
           <Grid item xs={12} sm={12}>
-            <TabPanel value={tab} index={0}>
+            <TabPanel value={tab} index={0} tab={0}>
               <MyCar />
             </TabPanel>
             <TabPanel value={tab} index={1}>

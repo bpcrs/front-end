@@ -168,7 +168,6 @@ const ColoredDateCellWrapper = ({ children }) =>
 const CalendarApp = () => {
   const classes = useStyle();
   const bookings = useSelector((state) => state.profile.bookings.data);
-  const toolbarProps = useRef();
   const [currentBooking, setCurrentBooking] = useState({
     data: {},
     isOpen: false,
@@ -182,21 +181,24 @@ const CalendarApp = () => {
     <div
       className={classNames(classes.root, "flex flex-col flex-auto relative")}
     >
-      {/* {toolbarProps && <CalendarHeader {...toolbarProps} />} */}
+      {console.log("bookings", bookings)}
       <DragAndDropCalendar
         className="flex flex-1 container"
         selectable
         localizer={localizer}
-        events={bookings.map((item) => {
-          return {
-            id: item.id,
-            start: new Date(item.fromDate),
-            end: new Date(item.toDate),
-            title: `#${item.id} with ${item.car.name} - ${
-              new Date(item.fromDate).toLocaleDateString().split("T")[0]
-            } - ${new Date(item.toDate).toLocaleDateString().split("T")[0]}`,
-          };
-        })}
+        events={
+          bookings &&
+          bookings.map((item) => {
+            return {
+              id: item.id,
+              start: new Date(item.fromDate),
+              end: new Date(item.toDate),
+              title: `#${item.id} with ${item.car.name} - ${
+                new Date(item.fromDate).toLocaleDateString().split("T")[0]
+              } - ${new Date(item.toDate).toLocaleDateString().split("T")[0]}`,
+            };
+          })
+        }
         defaultView={BigCalendar.Views.MONTH}
         defaultDate={new Date()}
         startAccessor="start"
@@ -206,12 +208,10 @@ const CalendarApp = () => {
         showMultiDayTimes
         components={{
           toolbar: (props) => {
-            console.log("props", props);
             return <CalendarHeader {...props} />;
           },
           timeSlotWrapper: ColoredDateCellWrapper,
         }}
-        // onNavigate={this.handleNavigate}
         onSelectEvent={(event) => {
           setCurrentBooking({
             data:
