@@ -26,7 +26,7 @@ import { green, red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
-import { checkVerifyRequest } from "./profile.action";
+import { checkVerifyRequest, sendOTPConfirm } from "./profile.action";
 import CalendarApp from "../../calendar/CalendarApp";
 
 function TabPanel(props) {
@@ -157,6 +157,7 @@ const Profile = () => {
                   </Typography>
                   {!isVerified && (
                     <VerifyOTP
+                      callBack={(value) => dispatch(sendOTPConfirm(value))}
                       content=" Please verify you phone before renting or register new car"
                       title="Verify Phone number"
                     >
