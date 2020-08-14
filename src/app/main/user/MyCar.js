@@ -15,6 +15,9 @@ import {
   CircularProgress,
   Badge,
   Backdrop,
+  Paper,
+  Collapse,
+  Fade,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -35,6 +38,11 @@ import Booking from "./Booking";
 import { useState } from "react";
 import CarSubmit from "../booking/CarSubmit";
 import CarEdit from "../booking/CarEdit";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import { request } from "../../services/api";
+import { grey } from "@material-ui/core/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -64,9 +72,9 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row(props) {
+function Row({ car, isDetail, request }) {
   const dispatch = useDispatch();
-  const { car } = props;
+
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -74,7 +82,7 @@ function Row(props) {
   };
 
   const handleClickBooked = (carId, carName) => {
-    dispatch(openDetail(true));
+    dispatch(openDetail(!isDetail));
     dispatch(chooseCar(carId, carName));
   };
 
@@ -104,13 +112,19 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <IconButton onClick={() => handleClickBooked(car.id, car.name)}>
+          <IconButton
+            onClick={() => handleClickBooked(car.id, car.name)}
+            disabled={isDetail && request.carId !== car.id}
+            style={{
+              display: isDetail && request.carId !== car.id ? "none" : "",
+            }}
+          >
             {car.status === CAR_STATUS.REQUEST ? (
               <Badge color="error" badgeContent={car.requestCounting}>
-                <Icon style={{ color: "black" }}>calendar_view_day</Icon>
+                <Icon style={{ color: "black" }}>sort</Icon>
               </Badge>
             ) : (
-              <Icon style={{ color: "black" }}>calendar_view_day</Icon>
+              <Icon style={{ color: "black" }}>sort</Icon>
             )}
           </IconButton>
         </TableCell>
@@ -199,7 +213,7 @@ function RegisterCar() {
   );
 }
 
-const MyCar = (props) => {
+const MyCar = () => {
   const classes = useStyles();
   const size = 5;
   const dispatch = useDispatch();
@@ -223,7 +237,7 @@ const MyCar = (props) => {
     dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
   }, [currentUser.id, dispatch, currentPage, change]);
 
-  return !isDetail ? (
+  return (
     <Grid>
       <Backdrop
         className={classes.backdrop}
@@ -262,7 +276,12 @@ const MyCar = (props) => {
             <TableBody key={refresh}>
               {cars.data &&
                 cars.data.map((car, index) => (
-                  <Row key={index} car={car} />
+                  <Row
+                    key={index}
+                    car={car}
+                    isDetail={isDetail}
+                    request={request}
+                  />
                   // </Grid>
                 ))}
             </TableBody>
@@ -293,36 +312,11 @@ const MyCar = (props) => {
           </Typography>
         </Grid>
       )}
-    </Grid>
-  ) : (
-    <Grid>
-      <Button
-        variant="text"
-        style={{ textTransform: "none", color: "blue" }}
-        onClick={() => dispatch(openDetail(false))}
-        startIcon={<Icon>arrow_back</Icon>}
-      >
-        Back
-      </Button>
-      <Grid
-        item
-        container
-        direction="row"
-        alignItems="center"
-        justify="flex-start"
-      >
-        <Typography variant="body2" color="secondary">
-          Car:
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          color="initial"
-          className={classes.card}
-        >
-          {request.name}
-        </Typography>
-      </Grid>
-      <Booking carId={request.carId} />
+      <Fade in={isDetail} style={{ marginTop: "8px" }}>
+        <Paper elevation={4} className={classes.paper}>
+          <Booking carId={request.carId} />
+        </Paper>
+      </Fade>
     </Grid>
   );
 };

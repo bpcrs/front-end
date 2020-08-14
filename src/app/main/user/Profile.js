@@ -252,6 +252,8 @@ const Profile = () => {
 
           <Grid item xs={12} lg={12}>
             <Tabs
+              indicatorColor="primary"
+              textColor="primary"
               orientation="horizontal"
               variant="scrollable"
               value={tab}
@@ -284,13 +286,13 @@ const Profile = () => {
             <TabPanel value={tab} index={0} tab={0}>
               <MyCar />
             </TabPanel>
-            <TabPanel value={tab} index={1}>
+            <TabPanel value={tab} index={1} tab={1}>
               <MyBooking />
             </TabPanel>
-            <TabPanel value={tab} index={2}>
-              <Grid item lg={12}>
-                <CalendarApp />
-              </Grid>
+            <TabPanel value={tab} index={2} tab={2}>
+              {/* <Grid item lg={12}> */}
+              <CalendarApp />
+              {/* </Grid> */}
             </TabPanel>
             {/* <TabPanel value={tab} index={3}></TabPanel> */}
           </Grid>
