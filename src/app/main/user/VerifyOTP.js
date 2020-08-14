@@ -145,26 +145,6 @@ export default function VerifyOTP({ children, callBack, title, content }) {
                 isDisabled={confirming}
               />
             </Grid>
-            {/* <Grid lg={3} item>
-              <div className={classes.wrapper}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  color="primary"
-                  disabled={loading}
-                  onClick={handleSendOTP}
-                  style={{ textTransform: "none" }}
-                >
-                  {loading ? `${counter} s` : "Send OTP"}
-                </Button>
-                {loading && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonProgress}
-                  />
-                )}
-              </div>
-            </Grid> */}
           </Grid>
         </DialogContent>
         <DialogActions>

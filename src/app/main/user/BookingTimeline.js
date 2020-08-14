@@ -29,6 +29,43 @@ function Track(props) {
   const classes = useStyles();
   const { track, status } = props;
   switch (status) {
+    case BOOKING_STATUS.PROCESSING:
+      return (
+        <TimelineItem>
+          <TimelineOppositeContent>
+            {track ? (
+              <Typography variant="subtitle2" color="textSecondary">
+                {new Date(track.createdDate).toLocaleTimeString()}{" "}
+                {new Date(track.createdDate).toLocaleDateString()}
+              </Typography>
+            ) : (
+              <Typography variant="subtitle2" color="textSecondary">
+                N/A
+              </Typography>
+            )}
+          </TimelineOppositeContent>
+          <TimelineSeparator>
+            {track ? (
+              <TimelineDot color="secondary" variant="outlined">
+                <Icon style={{ color: "black" }}>directions_car</Icon>
+              </TimelineDot>
+            ) : (
+              <TimelineDot color="grey" variant="outlined">
+                <Icon style={{ color: "yellow" }}>priority_high</Icon>
+              </TimelineDot>
+            )}
+            <TimelineConnector />
+          </TimelineSeparator>
+          <TimelineContent>
+            <Paper elevation={3} className={classes.paper}>
+              <BookingStatus name={status} done={track ? false : true} />
+              <Typography variant="subtitle2" color="primary">
+                Car is renting
+              </Typography>
+            </Paper>
+          </TimelineContent>
+        </TimelineItem>
+      );
     case BOOKING_STATUS.REQUEST:
       return (
         <TimelineItem>
@@ -322,6 +359,10 @@ export default function BookingTimeline({ booking }) {
     (item) => item.status === BOOKING_STATUS.RENTER_SIGNED
   );
 
+  const rentingBook = trackings.find(
+    (item) => item.status === BOOKING_STATUS.PROCESSING
+  );
+
   useEffect(() => {
     dispatch(getTrackingsByBooking(booking.id));
   }, [booking, dispatch, booking.id]);
@@ -348,6 +389,7 @@ export default function BookingTimeline({ booking }) {
                 />
                 <Track track={confirmBook} status={BOOKING_STATUS.CONFIRM} />
                 <Track track={signBook} status={BOOKING_STATUS.RENTER_SIGNED} />
+                <Track track={rentingBook} status={BOOKING_STATUS.PROCESSING} />
                 <Track track={doneBook} status={BOOKING_STATUS.DONE} />
               </Grid>
             )}

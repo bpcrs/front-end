@@ -323,6 +323,9 @@ export function notiMyNotification(currentUser, status, booking) {
     case BOOKING_STATUS.RENTER_SIGNED:
       status = MY_NOTIFICATION_STATUS.YOU_SIGNED;
       break;
+    case BOOKING_STATUS.PROCESSING:
+      status = BOOKING_STATUS.PROCESSING;
+      break;
     default:
       status = "";
   }

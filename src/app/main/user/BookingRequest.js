@@ -38,6 +38,7 @@ import CustomizedTimeline from "../user/BookingTimeline";
 import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
+import BookingClose from "../user/BookingClose";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +71,7 @@ function Row({ booking, carId }) {
   const dispatch = useDispatch();
   const [openTimeline, setOpenTimeline] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openCloseBook, setOpenCloseBook] = useState(false);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -83,6 +85,7 @@ function Row({ booking, carId }) {
 
   const handleCloseTimeline = () => {
     setOpenTimeline(false);
+    // setOpenClose(true);
   };
 
   const handleSignContract = (otp) => {
@@ -99,6 +102,7 @@ function Row({ booking, carId }) {
   const confirmText = `Sign contract`;
   const doneText = `Review and Rating this car`;
   const ownerAcceptedText = `Click to join chat room with car owner`;
+  const processingText = `Complete the rental process`;
 
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
@@ -109,8 +113,52 @@ function Row({ booking, carId }) {
       notiMyNotification(currentUser, BOOKING_STATUS.CANCEL, booking);
       handleCloseTimeline();
     };
+    const handleProcessRequest = () => {
+      setOpenCloseBook(true);
+    };
 
     switch (booking.status) {
+      case BOOKING_STATUS.PROCESSING:
+        return (
+          <React.Fragment>
+            <Tooltip title={processingText}>
+              <Button
+                variant="outlined"
+                style={{ textTransform: "none" }}
+                startIcon={
+                  <Icon style={{ color: "black" }}>assignment_return</Icon>
+                }
+                onClick={() => setOpen(true)}
+              >
+                {processingText}
+              </Button>
+            </Tooltip>
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                <Typography variant="subtitle1" color="initial">
+                  Are you want to finish rental process and go to bill payment?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleProcessRequest}
+                >
+                  Yes
+                </Button>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  style={{ backgroundColor: "red", color: "white" }}
+                  variant="contained"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        );
       case BOOKING_STATUS.REQUEST:
         return (
           <React.Fragment>
@@ -266,7 +314,11 @@ function Row({ booking, carId }) {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <CustomizedTimeline booking={booking} />
+          {openCloseBook ? (
+            <BookingClose booking={booking} />
+          ) : (
+            <CustomizedTimeline booking={booking} />
+          )}
         </DialogContent>
         <DialogActions>
           <Grid container justify="flex-end" alignItems="center">

@@ -104,15 +104,15 @@ export default function VerticalLinearStepper() {
             : BOOKING_STATUS.CONFIRM
         )
       );
-      dispatch(
-        notiMyNotification(
-          userLogged,
-          selectedBooking.renter.id !== userLogged.id
-            ? BOOKING_STATUS.OWNER_ACCEPTED
-            : BOOKING_STATUS.CONFIRM,
-          selectedBooking
-        )
+
+      notiMyNotification(
+        userLogged,
+        selectedBooking.renter.id !== userLogged.id
+          ? BOOKING_STATUS.OWNER_ACCEPTED
+          : BOOKING_STATUS.CONFIRM,
+        selectedBooking
       );
+
       dispatch(closeAgreementDrawer());
     } else {
       let newSkipped = skipped;

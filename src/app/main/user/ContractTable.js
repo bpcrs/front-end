@@ -99,7 +99,7 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Total price
+              Estimate price
             </StyledTableCell>
             <StyledTableCell align="right">
               <PopoverPricing
