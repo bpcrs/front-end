@@ -186,7 +186,7 @@ export default function PopoverPricing({ pricing }) {
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
-                  Total price
+                  Estimate price
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <NumberFormat

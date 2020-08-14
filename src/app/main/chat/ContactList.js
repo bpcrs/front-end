@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import {
-  setSelectedUser,
   // getRequestFirebase,
   setSelectedBooking,
   fetchPendingBooking,
@@ -18,7 +17,6 @@ import {
 import { withStyles } from "@material-ui/styles";
 import BookingStatus from "../user/BookingStatus";
 import { BOOKING_STATUS } from "../../../constant";
-import { FuseScrollbars } from "../../../@fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -142,6 +140,7 @@ const ContactList = (props) => {
           BOOKING_STATUS.PENDING,
           BOOKING_STATUS.CONFIRM,
           BOOKING_STATUS.OWNER_ACCEPTED,
+          BOOKING_STATUS.PROCESSING,
         ],
         isRenter
       )

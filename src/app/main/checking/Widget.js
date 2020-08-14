@@ -19,7 +19,6 @@ import { green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   graph: {

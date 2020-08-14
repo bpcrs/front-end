@@ -87,6 +87,61 @@ const Notification = () => {
   };
   const renderNotification = (notify) => {
     switch (notify.status) {
+      case BOOKING_STATUS.PROCESSING:
+        return (
+          <Card
+            onMouseOver={() => {
+              setShadow(4);
+              setHoving(notify.createAt);
+            }}
+            onMouseOut={() => {
+              setShadow(0);
+              setHoving(0);
+            }}
+            elevation={notify.createAt === hoving ? shadow : 0}
+            onClick={() => handleClick(true, notify.id)}
+          >
+            <CardActionArea>
+              <Grid container className={classes.notification}>
+                <Grid
+                  lg={4}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Chip
+                    label={<strong>INFO</strong>}
+                    style={{ backgroundColor: green[400], color: green[900] }}
+                  />
+                </Grid>
+                <Grid lg item>
+                  <Typography variant="subtitle1">
+                    Booking #{notify.bookingId} is processing.
+                  </Typography>
+                  <Typography variant="caption" style={{ color: grey[500] }}>
+                    <ReactTimeago
+                      date={new Date(notify.createAt)}
+                    ></ReactTimeago>
+                  </Typography>
+                </Grid>
+                <Grid
+                  lg={1}
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Badge
+                    variant="dot"
+                    color="primary"
+                    invisible={notify.isSeen}
+                  />
+                </Grid>
+              </Grid>
+            </CardActionArea>
+          </Card>
+        );
       case MY_NOTIFICATION_STATUS.YOU_SIGNED:
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
