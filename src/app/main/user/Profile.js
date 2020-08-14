@@ -27,6 +27,7 @@ import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
 import { checkVerifyRequest } from "./profile.action";
+import CalendarApp from "../../calendar/CalendarApp";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -106,7 +107,7 @@ function BootstrapTooltip(props) {
   return <Tooltip arrow classes={classes} {...props} />;
 }
 
-const Profile = (props) => {
+const Profile = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
@@ -267,26 +268,30 @@ const Profile = (props) => {
                 label="My Booking"
                 {...a11yProps(1)}
               />
-              {/* <Tab
+              <Tab
                 // icon={<PaymentIcon />}
-                label="Payment Method"
+                label="Calendar"
                 {...a11yProps(2)}
               />
-              <Tab
+              {/* <Tab
                 // icon={<UpdateIcon />}
                 label="Lease History"
                 {...a11yProps(3)}
-              /> */}
+              />  */}
             </Tabs>
           </Grid>
-          <Grid item xs={9} sm={9}>
+          <Grid item xs={12} sm={12}>
             <TabPanel value={tab} index={0}>
               <MyCar />
             </TabPanel>
             <TabPanel value={tab} index={1}>
               <MyBooking />
             </TabPanel>
-            {/* <TabPanel value={tab} index={2}></TabPanel> */}
+            <TabPanel value={tab} index={2}>
+              <Grid item lg={12}>
+                <CalendarApp />
+              </Grid>
+            </TabPanel>
             {/* <TabPanel value={tab} index={3}></TabPanel> */}
           </Grid>
         </Grid>
