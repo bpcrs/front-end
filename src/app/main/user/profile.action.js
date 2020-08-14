@@ -21,7 +21,6 @@ export const OPEN_DETAIL = "[DETAIL] CHANGE";
 export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
 export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
 export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
-export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
 
 export function chooseCar(carId, name) {
   return {
@@ -343,4 +342,23 @@ export function notiMyNotification(currentUser, status, booking) {
       createAt: new Date().getTime(),
       isSeen: false,
     });
+}
+export function sendOTPConfirm(otp) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_CONFIRM_OTP, {
+      otp,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }

@@ -107,9 +107,7 @@ const profileReducer = (state = initialState, { type, payload }) => {
     case Actions.FETCH_ACCOUNT_VERIFY: {
       return { ...state, isVerify: payload };
     }
-    case Actions.FETCH_CONFRIM_OTP: {
-      return { ...state, otpConfirm: payload };
-    }
+
     default: {
       return state;
     }
