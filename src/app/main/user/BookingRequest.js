@@ -103,10 +103,11 @@ function Row({ booking, carId }) {
   const doneText = `Review and Rating this car`;
   const ownerAcceptedText = `Click to join chat room with car owner`;
   const processingText = `Complete the rental process`;
+  const completeText = `Complete booking`;
 
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
-    const { booking, carId } = props;
+    const { booking, carId, isProcess } = props;
     const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
@@ -116,37 +117,42 @@ function Row({ booking, carId }) {
     const handleProcessRequest = () => {
       setOpenCloseBook(true);
     };
-
+    const handleCompleteBooking = () => {
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
+      handleCloseTimeline();
+    };
     switch (booking.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
           <React.Fragment>
-            <Tooltip title={processingText}>
+            <Tooltip title={isProcess ? completeText : processingText}>
               <Button
                 variant="outlined"
                 style={{ textTransform: "none" }}
                 startIcon={
-                  <Icon style={{ color: "black" }}>assignment_return</Icon>
+                  <Icon style={{ color: isProcess ? "green" : "black" }}>
+                    assignment_return
+                  </Icon>
                 }
                 onClick={() => setOpen(true)}
               >
-                {processingText}
+                {isProcess ? completeText : processingText}
               </Button>
             </Tooltip>
             <Dialog open={open} scroll="body">
               <DialogContent>
-                <Typography variant="subtitle1" color="initial">
-                  Are you want to finish rental process and go to bill payment?
-                </Typography>
+                {isProcess ? (
+                  <Typography variant="subtitle1" color="initial">
+                    Are you want to finish this booking?
+                  </Typography>
+                ) : (
+                  <Typography variant="subtitle1" color="initial">
+                    Are you want to finish rental process and go to bill
+                    payment?
+                  </Typography>
+                )}
               </DialogContent>
               <DialogActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleProcessRequest}
-                >
-                  Yes
-                </Button>
                 <Button
                   autoFocus
                   onClick={() => setOpen(false)}
@@ -154,6 +160,15 @@ function Row({ booking, carId }) {
                   variant="contained"
                 >
                   No
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={
+                    isProcess ? handleCompleteBooking : handleProcessRequest
+                  }
+                >
+                  Yes
                 </Button>
               </DialogActions>
             </Dialog>
@@ -323,7 +338,15 @@ function Row({ booking, carId }) {
         <DialogActions>
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
-              <StatusAction booking={booking} carId={carId} />
+              {openCloseBook ? (
+                <StatusAction
+                  booking={booking}
+                  carId={carId}
+                  isProcess={true}
+                />
+              ) : (
+                <StatusAction booking={booking} carId={carId} />
+              )}
             </Grid>
           </Grid>
         </DialogActions>

@@ -25,6 +25,8 @@ import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useDispatch, useSelector } from "react-redux";
 import { getPreReturnPriceBooking } from "./profile.action";
+import { fetchAgreementList } from "../chat/chat.action";
+import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -72,6 +74,11 @@ export default function BookingClose({ booking, openClose }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
+  // const limitAgreement =
+  //   preReturnPrice.agreements &&
+  //   preReturnPrice.agreements.find(
+  //     (item) => item.criteria.name === CRITERIA_NAME.MILEAGE_LIMIT
+  //   );
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
@@ -108,6 +115,7 @@ export default function BookingClose({ booking, openClose }) {
       openTotalBill(true);
     }, 3000);
   };
+
   return (
     <Grid container>
       <Grid item container lg={6} className={classes.info}>
@@ -159,7 +167,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="left"
                       >
                         <NumberFormat
-                          value="3000000"
+                          value={booking.rentalPrice}
                           displayType={"text"}
                           thousandSeparator={true}
                           suffix={" đ"}
@@ -173,7 +181,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="right"
                         display="initial"
                       >
-                        - Insurance price
+                        + Insurance price
                       </Typography>
                       <Typography
                         variant="body2"
@@ -181,7 +189,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="left"
                       >
                         <NumberFormat
-                          value="600000"
+                          value={preReturnPrice.insurance}
                           displayType={"text"}
                           thousandSeparator={true}
                           suffix={" đ"}
@@ -203,7 +211,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="left"
                       >
                         <NumberFormat
-                          value="600000"
+                          value={preReturnPrice.extra}
                           displayType={"text"}
                           thousandSeparator={true}
                           suffix={" đ"}
@@ -416,7 +424,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                {preReturnPrice.mileageLimit}
+                                {preReturnPrice.agreements[0].value}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />
@@ -434,7 +442,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                {preReturnPrice.extra}
+                                {preReturnPrice.mileageLimit}
                               </Typography>
                             </Grid>
                             <Grid container justify="space-between">
@@ -475,7 +483,7 @@ export default function BookingClose({ booking, openClose }) {
                                 align="left"
                               >
                                 <NumberFormat
-                                  value="600000"
+                                  value={preReturnPrice.extra}
                                   displayType={"text"}
                                   thousandSeparator={true}
                                   suffix={" đ"}
@@ -495,7 +503,7 @@ export default function BookingClose({ booking, openClose }) {
                             color="textPrimary"
                             className={classes.button}
                           >
-                            Car speedometer
+                            Car Odmeter
                           </Typography>
                           <Grid item lg={12}>
                             <div className={classes.wrapper}>
@@ -560,7 +568,7 @@ export default function BookingClose({ booking, openClose }) {
               <div className={classes.wrapper}>
                 <Button
                   variant="outlined"
-                  disabled={loadingBill}
+                  disabled={!preReturnPrice.extra}
                   startIcon={
                     <Icon style={{ color: "green" }}>attach_money</Icon>
                   }
