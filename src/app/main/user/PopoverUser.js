@@ -57,21 +57,20 @@ export default function PopoverUser({ user }) {
         <Card className={classes.root}>
           <CardContent className={classes.content}>
             <Grid container alignItems="center" justify="center">
-              <Grid lg={2} item>
+              <Grid item>
                 <Avatar alt={user.fullName} src={user.imageUrl} />
               </Grid>
-              <Grid lg={10} item container justify="flex-start">
-                <Grid lg={12} item>
-                  <Typography variant="subtitle1">{user.fullName}</Typography>
-                </Grid>
+              <Grid item container justify="center" alignItems="center">
+                <Typography variant="subtitle1">{user.fullName}</Typography>
+
                 <Grid lg={12} item>
                   <Typography variant="subtitle2" color="textSecondary">
-                    {user.email}
+                    Phone: {user.phone}
                   </Typography>
                 </Grid>
                 <Grid lg={12} item>
-                  <Typography variant="inherit" color="textSecondary">
-                    {user.phone}
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Email: {user.email}
                   </Typography>
                 </Grid>
               </Grid>
