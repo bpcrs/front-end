@@ -29,6 +29,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { FuseScrollbars } from "../../../@fuse";
 import { useState } from "react";
 import BookingTimeline from "../user/BookingTimeline";
+import DetailBooking from "./DetailBooking";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -320,21 +321,17 @@ export const ChatArea = ({ location }) => {
             alignContent="center"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedBooking.id && <StepAgreement />}
             {selectedBooking.id && (
-              <Button
-                variant="outlined"
-                onClick={handleOpenDetail}
-                startIcon={<Icon>description</Icon>}
-              >
-                Detail
-              </Button>
+              <div>
+                <StepAgreement />
+                <DetailBooking />
+              </div>
             )}
-            <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
+            {/* <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
               <Grid container style={{ maxWidth: "700px", width: "700px" }}>
                 <BookingTimeline booking={selectedBooking} isChat={true} />
               </Grid>
-            </Drawer>
+            </Drawer> */}
           </Grid>
         </Grid>
         <Grid

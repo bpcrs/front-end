@@ -48,9 +48,9 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "nowrap",
   },
   fullHeight: {
-    height: "100%",
-    minHeight: "80vh",
-    maxHeight: "80vh",
+    height: "90%",
+    minHeight: "70vh",
+    maxHeight: "70vh",
     position: "relative",
   },
   fullWidth: {
