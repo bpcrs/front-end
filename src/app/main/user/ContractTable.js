@@ -95,11 +95,17 @@ export default function ContractTable({ booking }) {
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
               {userLogged.id === booking.renter.id
-                ? "Renter infomation"
-                : "Owner infomation"}
+                ? "Owner infomation"
+                : "Renter infomation"}
             </StyledTableCell>
             <StyledTableCell align="right">
-              <PopoverUser user={booking.car.owner} />
+              <PopoverUser
+                user={
+                  userLogged.id !== booking.renter.id
+                    ? booking.renter
+                    : booking.car.owner
+                }
+              />
             </StyledTableCell>
           </StyledTableRow>
           <StyledTableRow>
