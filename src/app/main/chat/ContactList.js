@@ -113,7 +113,6 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 const ContactList = (props) => {
   const classes = useStyles();
-  const [users, setUsers] = useState([]);
   const { info } = props || {};
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
@@ -125,12 +124,6 @@ const ContactList = (props) => {
   };
 
   useEffect(() => {
-    const usersFirebase = firebase.firestore().collection("users");
-    async function getImagesContact() {
-      const usersInfo = await usersFirebase.get();
-      usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
-    }
-    getImagesContact();
     dispatch(
       fetchPendingBooking(
         userLogged.id,
@@ -156,7 +149,6 @@ const ContactList = (props) => {
       className={classes.contactButton}
     >
       <Grid container className="px-8 py-8">
-        <Grid item lg></Grid>
         <Grid item container justify="space-between">
           <Grid lg={6} item container justify="flex-start">
             <Grid item>
