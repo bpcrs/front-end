@@ -100,6 +100,7 @@ export const ENDPOINT = {
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
   CAR_CONTROLLER_STATUS_GETBYID: (id) => `/car/status/${id}`,
   CAR_CONTROLLER_CHECK_CAR: `/car/check-car`,
+  CAR_CONTROLLER_ODOMETER_GETBYID: (id) => `/car/odometer/${id}`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,

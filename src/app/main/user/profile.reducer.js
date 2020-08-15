@@ -25,9 +25,16 @@ const initialState = {
   isVerify: false,
   otpConfirm: false,
   preReturnPrice: {},
+  flag: true,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.UPDATE_ODOMETER_CAR: {
+      return {
+        ...state,
+        flag: false,
+      };
+    }
     case Actions.GET_PRE_RETURN_PRICE_BOOKING: {
       return {
         ...state,

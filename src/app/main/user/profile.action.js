@@ -23,7 +23,14 @@ export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
 export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
 export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
 export const GET_PRE_RETURN_PRICE_BOOKING = "[BOOKING] GET PRE-RETURN PRICE";
+export const UPDATE_ODOMETER_CAR = "[ODOMETER] UPDATE";
 
+export function updateOdometerSuccess(car) {
+  return {
+    type: UPDATE_ODOMETER_CAR,
+    paylaod: car,
+  };
+}
 export function getPreReturnPriceSuccess(price) {
   return {
     type: GET_PRE_RETURN_PRICE_BOOKING,
@@ -304,6 +311,28 @@ export function getPreReturnPriceBooking(id, odmeter) {
         dispatch(
           getPreReturnPriceSuccess(response.success ? response.data : "")
         );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+export function updateOdometer(id, odometer) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.CAR_CONTROLLER_ODOMETER_GETBYID(id), {
+      odometer,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(
+            updateOdometerSuccess(response.success ? response.data : "")
+          );
+          dispatch(showMessageSuccess("Update odmeter successfull"));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
       },
       (error) => {
         showMessageError(error.message);
