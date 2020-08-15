@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import { useEffect } from "react";
+import { CRITERIA_NAME } from "../../../constant";
 
 const PrettoSlider = withStyles({
   root: {
@@ -119,19 +120,19 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   };
   useEffect(() => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         onSubmit({ type, value: limit });
         break;
-      case "Insurance":
+      case CRITERIA_NAME.INSURANCE:
         onSubmit({ type, value: insurance });
         break;
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         onSubmit({ type, value: extra });
         break;
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         onSubmit({ type, value: checkboxValue });
         break;
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         onSubmit({ type, value: scope });
         break;
       default:
@@ -149,7 +150,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   const classes = useStyles();
   const AgreementByType = () => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -191,7 +192,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -231,7 +232,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Insurance":
+      case CRITERIA_NAME.INSURANCE:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -345,7 +346,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -384,7 +385,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         return (
           <Box>
             <Grid container spacing={1}>

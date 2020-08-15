@@ -19,7 +19,7 @@ import {
   changeBookingStatusRequest,
 } from "./chat.action";
 import { useEffect } from "react";
-import { BOOKING_STATUS } from "../../../constant";
+import { BOOKING_STATUS, CRITERIA_NAME } from "../../../constant";
 import { useCallback } from "react";
 import { Grid, Dialog, DialogContent, DialogActions } from "@material-ui/core";
 import { showMessageSuccess } from "../../store/actions/fuse";
@@ -148,19 +148,28 @@ export default function VerticalLinearStepper() {
       case 0:
         return (
           <React.Fragment>
-            <Agreement type="Extra" onSubmit={setCurrentAgreement} />
+            <Agreement
+              type={CRITERIA_NAME.EXTRA}
+              onSubmit={setCurrentAgreement}
+            />
           </React.Fragment>
         );
       case 1:
         return (
           <React.Fragment>
-            <Agreement type="Indemnification" onSubmit={setCurrentAgreement} />
+            <Agreement
+              type={CRITERIA_NAME.INDEMNTIFICATION}
+              onSubmit={setCurrentAgreement}
+            />
           </React.Fragment>
         );
       case 2:
         return (
           <React.Fragment>
-            <Agreement type="Deposit" onSubmit={setCurrentAgreement} />
+            <Agreement
+              type={CRITERIA_NAME.DEPOSIT}
+              onSubmit={setCurrentAgreement}
+            />
           </React.Fragment>
         );
       case 3:
@@ -175,13 +184,19 @@ export default function VerticalLinearStepper() {
       case 0:
         return (
           <React.Fragment>
-            <Agreement type="Mileage limit" onSubmit={setCurrentAgreement} />
+            <Agreement
+              type={CRITERIA_NAME.MILEAGE_LIMIT}
+              onSubmit={setCurrentAgreement}
+            />
           </React.Fragment>
         );
       case 1:
         return (
           <React.Fragment>
-            <Agreement type="Insurance" onSubmit={setCurrentAgreement} />
+            <Agreement
+              type={CRITERIA_NAME.INSURANCE}
+              onSubmit={setCurrentAgreement}
+            />
           </React.Fragment>
         );
       case 2:
