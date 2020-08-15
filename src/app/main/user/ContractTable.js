@@ -105,7 +105,7 @@ export default function ContractTable({ booking }) {
               <PopoverPricing
                 pricing={
                   <NumberFormat
-                    value={booking.totalPrice}
+                    value={booking.rentalPrice}
                     displayType={"text"}
                     thousandSeparator={true}
                     suffix={" đ"}
