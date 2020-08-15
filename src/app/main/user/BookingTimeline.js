@@ -330,9 +330,8 @@ function Track(props) {
   }
 }
 
-export default function CustomizedTimeline(props) {
+export default function BookingTimeline({ booking }) {
   const dispatch = useDispatch();
-  const { booking } = props;
   const trackings = useSelector((state) => state.profile.trackings);
   const requestBook = trackings.find(
     (item) => item.status === BOOKING_STATUS.REQUEST
@@ -366,7 +365,7 @@ export default function CustomizedTimeline(props) {
 
   useEffect(() => {
     dispatch(getTrackingsByBooking(booking.id));
-  }, [booking.id, dispatch]);
+  }, [booking, dispatch, booking.id]);
 
   return (
     <div>

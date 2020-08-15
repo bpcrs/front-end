@@ -159,9 +159,9 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -184,9 +184,9 @@ export function fetchBookingRequest(
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -368,4 +368,23 @@ export function notiMyNotification(currentUser, status, booking) {
       createAt: new Date().getTime(),
       isSeen: false,
     });
+}
+export function sendOTPConfirm(otp) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_CONFIRM_OTP, {
+      otp,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }

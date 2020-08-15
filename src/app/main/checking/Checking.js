@@ -138,13 +138,15 @@ export default function Cheking() {
             value={tab}
             onChange={handleSetTab}
             aria-label="Vertical tabs example"
+            indicatorColor="primary"
+            textColor="primary"
           >
             <Tab label="Car Approval & Infomation" {...a11yProps(0)} />
             <Tab label="License Approval" {...a11yProps(1)} />
             <Tab label="Add Model/Brand" {...a11yProps(2)} />
           </Tabs>
         </Grid>
-        <Grid item xs={9} sm={9}>
+        <Grid item xs={12} sm={12}>
           <TabPanel value={tab} index={0}>
             <CheckCar />
           </TabPanel>
