@@ -23,6 +23,8 @@ import { useState } from "react";
 import ContractTable from "./ContractTable";
 import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
+import { useDispatch, useSelector } from "react-redux";
+import { getPreReturnPriceBooking } from "./profile.action";
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -68,15 +70,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BookingClose({ booking, openClose }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
   const [totalBill, openTotalBill] = useState(false);
+  const [odemeter, setOdemeter] = useState(0);
   const [checkboxValue, setCheckboxValue] = useState({
     carDamage: false,
     overdue: false,
     violate: false,
   });
+  console.log(booking.id);
   const handleChangeCheckbox = (event) => {
     setCheckboxValue({
       ...checkboxValue,
@@ -85,10 +91,15 @@ export default function BookingClose({ booking, openClose }) {
   };
   const handleExceedLimit = () => {
     setLoading(true);
+    console.log(odemeter);
+    dispatch(getPreReturnPriceBooking(booking.id, odemeter));
     setTimeout(() => {
       setLoading(false);
       setOpen(true);
     }, 3000);
+  };
+  const handleChangeOdemeter = (event) => {
+    setOdemeter(event.target.value);
   };
   const handleConfirmTotalPrice = () => {
     setLoadingBill(true);
@@ -126,7 +137,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="left"
                       >
                         <NumberFormat
-                          value="6000000"
+                          value={preReturnPrice.deposit}
                           displayType={"text"}
                           thousandSeparator={true}
                           suffix={" đ"}
@@ -223,7 +234,7 @@ export default function BookingClose({ booking, openClose }) {
                         align="left"
                       >
                         <NumberFormat
-                          value="600000"
+                          value={preReturnPrice.totalPrice}
                           displayType={"text"}
                           thousandSeparator={true}
                           suffix={" đ"}
@@ -388,7 +399,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                600
+                                {odemeter}
                               </Typography>
                             </Grid>
                             <Grid container justify="space-between">
@@ -405,7 +416,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                500
+                                {preReturnPrice.mileageLimit}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />
@@ -423,7 +434,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                100
+                                {preReturnPrice.extra}
                               </Typography>
                             </Grid>
                             <Grid container justify="space-between">
@@ -497,10 +508,11 @@ export default function BookingClose({ booking, openClose }) {
                                   Number
                                 </InputLabel>
                                 <OutlinedInput
-                                  id="outlined-adornment-amount"
+                                  id="odemeter"
+                                  name="odemeter"
                                   type="number"
-                                  //   value={values.amount}
-                                  //   onChange={handleChange("amount")}
+                                  value={odemeter}
+                                  onChange={handleChangeOdemeter}
                                   startAdornment={
                                     <InputAdornment position="start">
                                       Km

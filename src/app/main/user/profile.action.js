@@ -22,7 +22,14 @@ export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
 export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
 export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
 export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
+export const GET_PRE_RETURN_PRICE_BOOKING = "[BOOKING] GET PRE-RETURN PRICE";
 
+export function getPreReturnPriceSuccess(price) {
+  return {
+    type: GET_PRE_RETURN_PRICE_BOOKING,
+    payload: price,
+  };
+}
 export function chooseCar(carId, name) {
   return {
     type: CHOOSE_CAR,
@@ -279,6 +286,24 @@ export function getTrackingsByBooking(id) {
     request.then(
       (response) => {
         dispatch(fetchTracking(response.success ? response.data : {}));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
+export function getPreReturnPriceBooking(id, odmeter) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BOOKING_CONTROLLER_RETURN_PRICE_GETBYID(id), {
+      odmeter,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          getPreReturnPriceSuccess(response.success ? response.data : "")
+        );
       },
       (error) => {
         showMessageError(error.message);

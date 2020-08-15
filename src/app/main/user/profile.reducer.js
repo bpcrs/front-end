@@ -24,9 +24,16 @@ const initialState = {
   trackings: [],
   isVerify: false,
   otpConfirm: false,
+  preReturnPrice: {},
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.GET_PRE_RETURN_PRICE_BOOKING: {
+      return {
+        ...state,
+        preReturnPrice: payload,
+      };
+    }
     case Actions.FETCH_TRACKING_BOOKING: {
       return {
         ...state,
