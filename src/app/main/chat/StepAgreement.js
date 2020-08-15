@@ -10,10 +10,8 @@ export default function StepAgreement() {
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const change = useSelector((state) => state.chat.change);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const handleOpenAgreement = () => {
     dispatch(fetchAgreementList(selectedBooking.id));
-    setDrawerOpen(true);
     dispatch(closeAgreementDrawer());
   };
   const handleClose = () => {
