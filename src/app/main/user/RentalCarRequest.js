@@ -134,7 +134,7 @@ function Row(props) {
           ) > 0 ? (
             new Date(booking.createdDate).toDateString()
           ) : (
-            <TimeAgo date={booking.createdDate} />
+            <TimeAgo date={new Date(booking.createdDate)} />
           )}
         </TableCell>
         {/* <TableCell component="th" scope="row">
