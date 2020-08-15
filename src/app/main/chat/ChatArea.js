@@ -29,6 +29,7 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { FuseScrollbars } from "../../../@fuse";
 import { useState } from "react";
 import BookingTimeline from "../user/BookingTimeline";
+import DetailBooking from "./DetailBooking";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -240,9 +241,9 @@ const UserSelected = () => {
   );
 };
 
-export const ChatArea = (props) => {
+export const ChatArea = ({ location }) => {
   const userLogged = useSelector((state) => state.auth.user);
-  const { carDetail, notification } = props.location.state || {};
+  const { carDetail, notification } = location.state || {};
   const chip = useSelector((state) => state.chat.chip);
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
@@ -320,21 +321,17 @@ export const ChatArea = (props) => {
             alignContent="center"
             style={{ backgroundColor: "#E6E6E6" }}
           >
-            {selectedBooking.id && <StepAgreement />}
             {selectedBooking.id && (
-              <Button
-                variant="outlined"
-                onClick={handleOpenDetail}
-                startIcon={<Icon>description</Icon>}
-              >
-                Detail
-              </Button>
+              <div>
+                <StepAgreement />
+                <DetailBooking />
+              </div>
             )}
-            <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
+            {/* <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
               <Grid container style={{ maxWidth: "700px", width: "700px" }}>
-                <BookingTimeline booking={selectedBooking} />
+                <BookingTimeline booking={selectedBooking} isChat={true} />
               </Grid>
-            </Drawer>
+            </Drawer> */}
           </Grid>
         </Grid>
         <Grid
