@@ -318,27 +318,28 @@ export function getPreReturnPriceBooking(id, odmeter) {
     );
   };
 }
-export function updateOdometer(id, odometer) {
-  return (dispatch) => {
-    const request = PUT(ENDPOINT.CAR_CONTROLLER_ODOMETER_GETBYID(id), {
-      odometer,
-    });
-    request.then(
-      (response) => {
-        if (response.success) {
-          dispatch(
-            updateOdometerSuccess(response.success ? response.data : "")
-          );
-          dispatch(showMessageSuccess("Update odmeter successfull"));
-        } else {
-          dispatch(showMessageError(response.message));
-        }
-      },
-      (error) => {
-        showMessageError(error.message);
+export function updateOdometer(id, odometer, cb) {
+  const request = PUT(ENDPOINT.CAR_CONTROLLER_ODOMETER_GETBYID(id), {
+    odometer,
+  });
+  request.then(
+    (response) => {
+      if (response.success) {
+        cb(response);
+      } else {
+        cb({
+          success: false,
+          message: response.message,
+        });
       }
-    );
-  };
+    },
+    (error) => {
+      cb({
+        success: false,
+        message: error.message,
+      });
+    }
+  );
 }
 
 export function notificationBooking(booking) {

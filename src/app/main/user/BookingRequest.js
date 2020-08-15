@@ -215,64 +215,27 @@ function Row({ booking, carId, currentUser, flag }) {
             </Dialog>
           </React.Fragment>
         );
-      // case BOOKING_STATUS.CONFIRM:
-      //   return (
-      //     <Tooltip title={confirmText}>
-      //       <VerifyOTP
-      //         callBack={handleSignContract}
-      //         content="Please verify OTP before signing"
-      //         title="Verify OTP"
-      //       >
-      //         <Button
-      //           variant="outlined"
-      //           startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
-      //           style={{ textTransform: "none" }}
-      //         >
-      //           {confirmText}
-      //         </Button>
-      //       </VerifyOTP>
-      //     </Tooltip>
-      //   );
       case BOOKING_STATUS.CONFIRM:
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <React.Fragment>
-            {booking.car.owner.email === currentUser.email && flag ? (
-              <Tooltip title={confirmText}>
-                <UpdateOdmeter carId={carId}>
-                  <Button
-                    variant="outlined"
-                    startIcon={
-                      <Icon style={{ color: "green" }}>assignment</Icon>
-                    }
-                    style={{ textTransform: "none" }}
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
-                    {confirmText}
-                  </Button>
-                </UpdateOdmeter>
-              </Tooltip>
-            ) : (
-              <Tooltip title={confirmText}>
-                <VerifyOTP
-                  callBack={handleSignContract}
-                  content="Please verify OTP before signing"
-                  title="Verify OTP"
+            <Tooltip title={confirmText}>
+              <UpdateOdmeter
+                children={handleSignContract}
+                content="Please verify OTP before signing"
+                title="Verify OTP"
+                booking={booking}
+                currentUser={currentUser}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                  style={{ textTransform: "none" }}
                 >
-                  <Button
-                    variant="outlined"
-                    startIcon={
-                      <Icon style={{ color: "green" }}>assignment</Icon>
-                    }
-                    style={{ textTransform: "none" }}
-                  >
-                    {confirmText}
-                  </Button>
-                </VerifyOTP>
-              </Tooltip>
-            )}
+                  {confirmText}
+                </Button>
+              </UpdateOdmeter>
+            </Tooltip>
           </React.Fragment>
         );
       case BOOKING_STATUS.DONE:

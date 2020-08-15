@@ -2,24 +2,36 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import { useState } from "react";
 import { blue } from "@material-ui/core/colors";
 import {
+  Grid,
+  CircularProgress,
   FormControl,
+  InputLabel,
   OutlinedInput,
   InputAdornment,
-  InputLabel,
-  Grid,
+  Stepper,
+  Step,
+  StepLabel,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { putCarUpdate } from "../booking/booking.action";
 import { updateOdometer } from "./profile.action";
+import { showMessageError } from "../../store/actions/fuse";
+import VerifyOTP from "./VerifyOTP";
 
 const useStyles = makeStyles((theme) => ({
+  inputStyle: {
+    width: "4rem !important",
+    height: "4rem",
+    margin: "0 1rem",
+    fontSize: "2rem",
+    fontFamily: theme.typography.fontFamily,
+    fontWeight: "100",
+    borderRadius: "4px",
+    border: "1px solid rgba(0,0,0,0.3)",
+  },
   wrapper: {
     margin: theme.spacing(1),
     position: "relative",
@@ -40,41 +52,33 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
+  step: {
+    margin: theme.spacing(1),
+  },
 }));
 
-export default function UpdateOdmeter({ children, carId }) {
-  const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const [odemeter, setOdemeter] = useState(0);
+function getSteps() {
+  return ["Update car odometer", "Verify OTP"];
+}
 
-  const handleUpdateOdmeter = () => {
-    dispatch(updateOdometer(carId, odemeter));
-    // callBack(false);
-    handleClose();
-  };
+function GetStepContent(
+  stepIndex,
+  booking,
+  onUpdateOdometer,
+  handleSignContract
+) {
+  const classes = useStyles();
+  const [odemeter, setOdemeter] = useState(booking && booking.car.odometer);
+
   const handleUpdate = (event) => {
     setOdemeter(event.target.value);
-  };
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+    onUpdateOdometer(event.target.value);
   };
 
-  return (
-    <React.Fragment>
-      {React.cloneElement(children, {
-        onClick: handleClickOpen,
-      })}
-      <Dialog open={open} scroll="body" onClose={handleClose}>
-        <DialogTitle id="max-width-dialog-title">
-          <Grid>Update Odometer</Grid>
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please update your car odometer before sign contract
-          </DialogContentText>
+  switch (stepIndex) {
+    case 0:
+      return (
+        <Grid className={classes.wrapper}>
           <FormControl
             fullWidth
             // className={classes.margin}
@@ -91,28 +95,117 @@ export default function UpdateOdmeter({ children, carId }) {
                 <InputAdornment position="start">Km</InputAdornment>
               }
               labelWidth={60}
+              helperText={"Current Odometer must be bigger than old odometer"}
             />
           </FormControl>
-        </DialogContent>
+        </Grid>
+      );
+    case 1:
+      return (
+        <VerifyOTP
+          callBack={(value) => handleSignContract(value)}
+          content=" Please verify you phone before renting or register new car"
+          title="Verify Phone number"
+        ></VerifyOTP>
+      );
+    default:
+      return "Unknown stepIndex";
+  }
+}
 
-        <DialogActions>
-          <Button
-            autoFocus
-            onClick={() => setOpen(false)}
-            color="default"
-            variant="contained"
-          >
-            Close
-          </Button>
-          <Button
-            autoFocus
-            onClick={handleUpdateOdmeter}
-            color="primary"
-            variant="contained"
-          >
-            Update
-          </Button>
-        </DialogActions>
+export default function UpdateOdmeter({
+  children,
+  handleSignContract,
+  title,
+  content,
+  booking,
+  currentUser,
+}) {
+  const classes = useStyles();
+  const dispatch = useDispatch();
+  const [activeStep, setActiveStep] = useState(
+    booking && booking.car.owner.email === currentUser.email ? 0 : 1
+  );
+  const steps = getSteps();
+  const [open, setOpen] = useState(false);
+  // const [updateSuccess, setUpdateSuccess]
+  const [odometer, onUpdateOdometer] = useState();
+
+  const handleNext = () => {
+    if (activeStep === 0) {
+      updateOdometer(booking.car.id, odometer, ({ success, message }) => {
+        if (success) {
+          setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        } else {
+          dispatch(showMessageError(message));
+        }
+      });
+    } else if (activeStep === steps.length - 1) {
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <React.Fragment>
+      {React.cloneElement(children, {
+        onClick: handleClickOpen,
+      })}
+      <Dialog
+        open={open}
+        fullWidth
+        maxWidth="sm"
+        onClose={handleClose}
+        aria-labelledby="max-width-dialog-title"
+      >
+        <DialogContent>
+          <Stepper activeStep={activeStep} alternativeLabel>
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel>{label}</StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <div>
+            {activeStep === steps.length ? (
+              <div></div>
+            ) : (
+              <div>
+                <Grid className={classes.step}>
+                  {GetStepContent(
+                    activeStep,
+                    booking,
+                    onUpdateOdometer,
+                    handleSignContract
+                  )}
+                </Grid>
+                <div>
+                  {activeStep === steps.length - 1 ? (
+                    <Grid></Grid>
+                  ) : (
+                    <Grid>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                      >
+                        Next
+                      </Button>
+                    </Grid>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
       </Dialog>
     </React.Fragment>
   );
