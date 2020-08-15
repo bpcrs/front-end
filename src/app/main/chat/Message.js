@@ -28,6 +28,7 @@ import {
 } from "./chat.action";
 import { useState } from "react";
 import NumberFormat from "react-number-format";
+import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -93,7 +94,7 @@ const Message = ({ message, receive, type, createAt }) => {
 
   const MessageByType = () => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -139,7 +140,7 @@ const Message = ({ message, receive, type, createAt }) => {
             </CardActionArea>
           </Card>
         );
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -173,7 +174,7 @@ const Message = ({ message, receive, type, createAt }) => {
             ) : null}
           </Card>
         );
-      case "Insurance":
+      case CRITERIA_NAME.INSURANCE:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -245,7 +246,7 @@ const Message = ({ message, receive, type, createAt }) => {
             </CardActionArea>
           </Card>
         );
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -279,7 +280,7 @@ const Message = ({ message, receive, type, createAt }) => {
             ) : null}
           </Card>
         );
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         return (
           <Card className="w-1/2">
             <CardActionArea>
