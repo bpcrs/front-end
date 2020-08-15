@@ -424,7 +424,12 @@ export default function BookingClose({ booking, openClose }) {
                                 color="textPrimary"
                                 align="left"
                               >
-                                {preReturnPrice.agreements[0].value}
+                                {preReturnPrice.agreements &&
+                                  preReturnPrice.agreements.filter(
+                                    (item) =>
+                                      item.criteria.name ===
+                                      CRITERIA_NAME.MILEAGE_LIMIT
+                                  )}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />
