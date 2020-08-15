@@ -330,7 +330,7 @@ function Track(props) {
   }
 }
 
-export default function BookingTimeline({ booking }) {
+export default function BookingTimeline({ booking, isChat = false }) {
   const dispatch = useDispatch();
   const trackings = useSelector((state) => state.profile.trackings);
   const requestBook = trackings.find(
@@ -370,7 +370,10 @@ export default function BookingTimeline({ booking }) {
   return (
     <div>
       <Grid container>
-        <Grid item lg={6}>
+        <Grid item lg={isChat ? 12 : 6}>
+          <ContractTable booking={booking} />
+        </Grid>
+        <Grid item lg={isChat ? 12 : 6}>
           <Timeline align="alternate">
             {cancelBook || denyBook ? (
               <Grid>
@@ -394,9 +397,6 @@ export default function BookingTimeline({ booking }) {
               </Grid>
             )}
           </Timeline>
-        </Grid>
-        <Grid item lg={6}>
-          <ContractTable booking={booking} />
         </Grid>
       </Grid>
     </div>

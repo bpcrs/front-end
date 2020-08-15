@@ -240,9 +240,9 @@ const UserSelected = () => {
   );
 };
 
-export const ChatArea = (props) => {
+export const ChatArea = ({ location }) => {
   const userLogged = useSelector((state) => state.auth.user);
-  const { carDetail, notification } = props.location.state || {};
+  const { carDetail, notification } = location.state || {};
   const chip = useSelector((state) => state.chat.chip);
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const dispatch = useDispatch();
@@ -332,7 +332,7 @@ export const ChatArea = (props) => {
             )}
             <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
               <Grid container style={{ maxWidth: "700px", width: "700px" }}>
-                <BookingTimeline booking={selectedBooking} />
+                <BookingTimeline booking={selectedBooking} isChat={true} />
               </Grid>
             </Drawer>
           </Grid>
