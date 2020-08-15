@@ -39,7 +39,7 @@ import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import BookingClose from "../user/BookingClose";
-
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -360,11 +360,9 @@ function Row({ booking, carId }) {
         <TableCell component="th" scope="row">
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
-          ) > 0 ? (
-            new Date(booking.createdDate).toDateString()
-          ) : (
-            <TimeAgo date={new Date(booking.createdDate)} />
-          )}
+          ) > 0
+            ? moment.utc(booking.createdDate).local().format("LLL")
+            : moment.utc(booking.createdDate).local().fromNow()}
         </TableCell>
         <TableCell component="th" scope="row">
           {booking.car.name}
