@@ -1,8 +1,18 @@
 import React from "react";
-import { Button, Drawer, Grid, Icon, Fab, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Drawer,
+  Grid,
+  Icon,
+  Fab,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import BookingTimeline from "../user/BookingTimeline";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import classNames from "classnames";
+
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(1),
@@ -15,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
+  },
+  cardHeader: {
+    backgroundColor: theme.palette.primary[800],
+    color: theme.palette.getContrastText(theme.palette.primary[800]),
   },
 }));
 export default function DetailBooking() {
@@ -36,10 +50,17 @@ export default function DetailBooking() {
         open={openDetail}
         onClose={() => setOpenDetail(false)}
       >
-        {/* <Grid className="px-2 py-2" container>
-          <Typography>Agreements of booking</Typography>
-        </Grid> */}
-        <Grid container style={{ maxWidth: "700px", width: "700px" }}>
+        <Grid className="px-2 py-2">
+          <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+            <Typography variant="subtitle1" color="inherit">
+              Booking Infomation
+            </Typography>
+          </div>
+        </Grid>
+        <Grid
+          container
+          style={{ maxWidth: "700px", width: "700px", padding: "16px" }}
+        >
           <BookingTimeline booking={selectedBooking} isChat={true} />
         </Grid>
       </Drawer>

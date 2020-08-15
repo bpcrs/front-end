@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import {
   Drawer,
@@ -13,6 +14,7 @@ import VerticalLinearStepper from "./VerticalLinearStepper";
 import { useCallback } from "react";
 import { fetchAgreementList, closeAgreementDrawer } from "./chat.action";
 import { useSelector, useDispatch } from "react-redux";
+import classNames from "classnames";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -27,12 +29,18 @@ const useStyles = makeStyles((theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  cardHeader: {
+    backgroundColor: theme.palette.primary[800],
+    color: theme.palette.getContrastText(theme.palette.primary[800]),
+  },
 }));
 
 export default function StepAgreement() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
+  const userLogged = useSelector((state) => state.auth.user);
+
   const change = useSelector((state) => state.chat.change);
   const handleOpenAgreement = () => {
     dispatch(fetchAgreementList(selectedBooking.id));
@@ -51,16 +59,14 @@ export default function StepAgreement() {
         <Icon className={classes.extendedIcon}>rate_reviews</Icon>
         Agreements
       </Fab>
-      {/* <Button
-        variant="outlined"
-        onClick={handleOpenAgreement}
-        startIcon={<Icon>event</Icon>}
-      >
-        Agreements
-      </Button> */}
       <Drawer anchor={"right"} open={change} onClose={handleClose}>
-        <Grid className="px-2 py-2" container>
-          <Typography>Agreements of booking</Typography>
+        <Grid className="px-2 py-2">
+          <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+            <Typography variant="subtitle1" color="inherit">
+              Agreements of{" "}
+              {selectedBooking.renter.id === userLogged.id ? "Renter" : "Owner"}
+            </Typography>
+          </div>
         </Grid>
         <Grid container style={{ maxWidth: "700px", width: "700px" }}>
           <VerticalLinearStepper />
