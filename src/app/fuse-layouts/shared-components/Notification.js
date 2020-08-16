@@ -11,6 +11,7 @@ import {
   Badge,
   Divider,
   IconButton,
+  LinearProgress,
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -299,10 +300,10 @@ const Notification = () => {
   const notficationClose = () => {
     setAnchorEl(null);
   };
-
+  const [total, setTotal] = useState(10);
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchNotificationFromFirebase = () => {
       firebase
@@ -361,6 +362,23 @@ const Notification = () => {
             // paper: "py-16",
           }
         }
+        style={{
+          maxHeight: "80vh",
+        }}
+        onScroll={(e) => {
+          if (
+            e.target.scrollHeight - e.target.scrollTop ===
+            e.target.clientHeight
+          ) {
+            if (total <= notification.length) {
+              setLoading(true);
+              setTimeout(() => {
+                setTotal((total) => total + 3);
+                setLoading(false);
+              }, 2000);
+            }
+          }
+        }}
       >
         <React.Fragment>
           <Grid
@@ -391,7 +409,7 @@ const Notification = () => {
                 Mark all as read
               </Button>
             </Grid>
-            {notification.length === 0 ? (
+            {notification.length === 0 && !loading ? (
               <React.Fragment>
                 <Grid container justify="center" alignItems="center">
                   <Grid item>
@@ -416,6 +434,7 @@ const Notification = () => {
           {notification.length !== 0 &&
             notification
               .sort((first, second) => second.createAt - first.createAt)
+              .slice(0, total)
               .map((notify) => (
                 <div className={classes.notification}>
                   <Card
@@ -434,6 +453,7 @@ const Notification = () => {
                   </Card>
                 </div>
               ))}
+          {loading && <LinearProgress style={{ height: "8px" }} />}
         </React.Fragment>
       </Popover>
     </React.Fragment>
