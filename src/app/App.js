@@ -11,7 +11,7 @@ import store from "./store";
 import AppContext from "./AppContext";
 import routes from "./fuse-configs/routesConfig";
 import * as history from "history";
-import { LocalizationProvider } from "@material-ui/pickers/LocalizationProvider";
+import { LocalizationProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@material-ui/pickers/adapter/date-fns";
 
 const jss = create({

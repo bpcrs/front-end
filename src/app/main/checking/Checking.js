@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
+import ManageBrand from "./ManageBrand";
 import Widget from "../checking/Widget";
 import BookingWidget from "../checking/BookingWidget";
 function TabPanel(props) {
@@ -141,9 +142,26 @@ export default function Cheking() {
             indicatorColor="primary"
             textColor="primary"
           >
-            <Tab label="Car Approval & Infomation" {...a11yProps(0)} />
-            <Tab label="License Approval" {...a11yProps(1)} />
-            <Tab label="Add Model/Brand" {...a11yProps(2)} />
+            <Tab
+              // icon={<DriveEtaIcon />}
+              label="Car Approval & Infomation"
+              {...a11yProps(0)}
+            />
+            <Tab
+              // icon={<PaymentIcon />}
+              label="License Approval"
+              {...a11yProps(1)}
+            />
+            <Tab
+              // icon={<HistoryIcon />}
+              label="Manage brand"
+              {...a11yProps(2)}
+            />
+            <Tab
+              // icon={<UpdateIcon />}
+              label="Manage model"
+              {...a11yProps(3)}
+            />
           </Tabs>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -153,7 +171,9 @@ export default function Cheking() {
           <TabPanel value={tab} index={1}>
             <CheckUser />
           </TabPanel>
-          <TabPanel value={tab} index={2}></TabPanel>
+          <TabPanel value={tab} index={2}>
+            <ManageBrand />
+          </TabPanel>
           <TabPanel value={tab} index={3}></TabPanel>
         </Grid>
       </Grid>
