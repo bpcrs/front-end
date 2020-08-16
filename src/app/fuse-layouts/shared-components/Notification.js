@@ -380,10 +380,10 @@ const Notification = () => {
             <CardActionArea>
               <Grid container className={classes.notification}>
                 <Grid
-                  lg={4}
+                  lg={2}
                   item
                   container
-                  justify="center"
+                  // justify="center"
                   alignItems="center"
                 >
                   <Chip
@@ -391,7 +391,7 @@ const Notification = () => {
                     style={{ backgroundColor: blue[200], color: blue[900] }}
                   />
                 </Grid>
-                <Grid lg item>
+                <Grid lg item style={{ marginLeft: "8px" }}>
                   <Typography variant="subtitle1">
                     Booking #{notify.bookingId} has been requested.
                   </Typography>
@@ -401,19 +401,14 @@ const Notification = () => {
                     ></ReactTimeago>
                   </Typography>
                 </Grid>
-                <Grid
+                <Badge variant="dot" color="primary" invisible={false} />
+                {/* <Grid
                   lg={1}
                   item
                   container
                   justify="center"
                   alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
+                ></Grid> */}
               </Grid>
             </CardActionArea>
           </Card>
@@ -1058,11 +1053,13 @@ const Notification = () => {
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "center",
+          horizontal: "left",
         }}
-        classes={{
-          paper: "py-8",
-        }}
+        classes={
+          {
+            // paper: "py-16",
+          }
+        }
       >
         <React.Fragment>
           <Grid

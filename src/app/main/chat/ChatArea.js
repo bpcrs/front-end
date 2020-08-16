@@ -249,7 +249,6 @@ export const ChatArea = ({ location }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [openDetail, setOpenDetail] = useState(false);
   const [refresh, setRefesh] = useState(1);
   const handleClickRefresh = () => {
     setOpen(true);
@@ -257,13 +256,6 @@ export const ChatArea = ({ location }) => {
     setTimeout(() => {
       setOpen(false);
     }, 2000);
-  };
-
-  const handleOpenDetail = () => {
-    setOpenDetail(true);
-  };
-  const handleClose = () => {
-    setOpenDetail(false);
   };
 
   useEffect(() => {
@@ -274,6 +266,12 @@ export const ChatArea = ({ location }) => {
   }, [dispatch, selectedBooking]);
   return (
     <Grid container>
+      {selectedBooking.id && (
+        <div>
+          <StepAgreement />
+          <DetailBooking />
+        </div>
+      )}
       <Paper elevation={5} style={{ width: "100%" }}>
         <Grid
           container
@@ -303,35 +301,16 @@ export const ChatArea = ({ location }) => {
           <Grid
             item
             container
-            lg={4}
+            lg={8}
             direction="column"
             className="px-16 py-16"
             justify="center"
             alignContent="flex-start"
-            style={{ backgroundColor: "#E6E6E6" }}
+            style={{
+              backgroundColor: "#E6E6E6",
+            }}
           >
             {selectedBooking.id && <UserSelected {...selectedBooking} />}
-          </Grid>
-          <Grid
-            item
-            container
-            lg={4}
-            direction="column"
-            justify="center"
-            alignContent="center"
-            style={{ backgroundColor: "#E6E6E6" }}
-          >
-            {selectedBooking.id && (
-              <div>
-                <StepAgreement />
-                <DetailBooking />
-              </div>
-            )}
-            {/* <Drawer anchor={"right"} open={openDetail} onClose={handleClose}>
-              <Grid container style={{ maxWidth: "700px", width: "700px" }}>
-                <BookingTimeline booking={selectedBooking} isChat={true} />
-              </Grid>
-            </Drawer> */}
           </Grid>
         </Grid>
         <Grid
