@@ -32,7 +32,6 @@ import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
-import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import Review from "../booking/Review";
@@ -97,11 +96,11 @@ function Row({ booking, carId }) {
     }, 3000);
   };
 
-  const pendingText = `Click to join chat room with renter`;
-  const requestText = `Cancel this booking request`;
+  const pendingText = `Join chat room`;
+  const requestText = `Cancel booking`;
   const confirmText = `Sign contract`;
-  const doneText = `Review and Rating this car`;
-  const ownerAcceptedText = `Click to join chat room with car owner`;
+  const doneText = `Review trip`;
+  const ownerAcceptedText = `Join chat room`;
   const processingText = `Complete the rental process`;
   const completeText = `Complete booking`;
 

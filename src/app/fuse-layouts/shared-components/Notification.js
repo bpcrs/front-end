@@ -9,6 +9,8 @@ import {
   Card,
   CardActionArea,
   Badge,
+  Divider,
+  IconButton,
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
@@ -20,10 +22,8 @@ import {
   BOOKING_STATUS,
   MY_NOTIFICATION_STATUS,
 } from "../../../constant";
-import { blue, grey, green, red } from "@material-ui/core/colors";
-import ReactTimeago from "react-timeago";
-// import { theme } from "@chakra-ui/core";
-// import { blue } from "@material-ui/core/colors";
+import { blue, grey, green, red, yellow } from "@material-ui/core/colors";
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   notification: {
     padding: theme.spacing(1),
@@ -41,7 +41,59 @@ const useStyles = makeStyles((theme) => ({
     color: grey[500],
   },
 }));
-
+const NotificationUI = ({ header, createAt, isSeen, type, content }) => {
+  const color = {
+    info: blue[700],
+    warn: yellow[700],
+    success: green[700],
+    error: red[700],
+  };
+  const icon = {
+    info: "format_quote",
+    warn: "info_sharp",
+    success: "check_circle_outline",
+    error: "highlight_off",
+  };
+  const classes = useStyles();
+  return (
+    <CardActionArea>
+      <Divider orientation="vertical" flexItem />
+      <Grid container className={classes.notification} alignItems="center">
+        <Grid lg={2} item container justify="center" alignItems="center">
+          <Divider
+            orientation="vertical"
+            flexItem
+            style={{
+              width: "5px",
+              backgroundColor: color[type],
+              fill: color[type],
+              borderRadius: "5px",
+            }}
+          />
+          <IconButton style={{ color: color[type] }}>
+            <Icon>{icon[type]}</Icon>
+          </IconButton>
+        </Grid>
+        <Grid lg item style={{ marginLeft: "8px" }}>
+          <span>
+            <Typography variant="subtitle1">{header}</Typography>
+            <Typography
+              variant="subtitle2"
+              color="textSecondary"
+              style={{ wordBreak: "break-word", maxWidth: "280px" }}
+            >
+              {content}
+            </Typography>
+          </span>
+          <Typography variant="caption" style={{ color: grey[500] }}>
+            {moment.utc(createAt).local().fromNow()}
+          </Typography>
+        </Grid>
+        <Badge variant="dot" color="primary" invisible={!isSeen} />
+      </Grid>
+    </CardActionArea>
+  );
+};
 const Notification = () => {
   // const [notificationMenu, setNotificationMenu] = useState(null);
   const history = useHistory();
@@ -89,911 +141,155 @@ const Notification = () => {
     switch (notify.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[400], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} is processing.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Thanks for choose our services! Happy your trip"
+            header="Trip already"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="info"
+          />
         );
       case MY_NOTIFICATION_STATUS.YOU_SIGNED:
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[400], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} is signed.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={`Contract of booking has been signed.`}
+            header="Contract already"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="success"
+          />
         );
       case BOOKING_STATUS.BOOKED:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[400], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    You have booked Booking #{notify.bookingId}.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Car already"
+            header="Car already for booking"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="success"
+          />
         );
       case BOOKING_STATUS.CONFIRM:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[200], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} has been confirmed.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Congart, Booking is valid"
+            header="Booking is confrimed"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="success"
+          />
         );
       case BOOKING_STATUS.DENY:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: red[200], color: red[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} has been denied.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Your booking has been deny"
+            header="Opps, :( "
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="error"
+          />
         );
       case BOOKING_STATUS.REQUEST:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: blue[200], color: blue[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} has been requested.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
-        );
-      case BOOKING_STATUS.PENDING:
-        return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[200], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} was accepted.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Thanks for choose our services! Happy your trip"
+            header="Trip already"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="info"
+          />
         );
       case BOOKING_STATUS.OWNER_ACCEPTED:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[200], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    Booking #{notify.bookingId} already for trip.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content="Success, Owner already for agreements"
+            header="Success"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case BOOKING_STATUS.DENYLICENSE:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: red[200], color: red[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    License was not Accepted!!
-                  </Typography>
-                  <div>
-                    <div style={{ color: "red" }}>Note:</div>
-                    <div>
-                      <p>{notify.message.checkedA}</p>
-                      <p>{notify.message.checkedB}</p>
-                      <p>{notify.message.checkedC}</p>
-                      <p>{notify.message.checkedD}</p>
-                      <p>{notify.message.checkedE}</p>
-                    </div>
-                  </div>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={
+              <div>
+                <div style={{ color: "red" }}>Note:</div>
+                <div>
+                  <p>{notify.message.checkedA}</p>
+                  <p>{notify.message.checkedB}</p>
+                  <p>{notify.message.checkedC}</p>
+                  <p>{notify.message.checkedD}</p>
+                  <p>{notify.message.checkedE}</p>
+                </div>
+              </div>
+            }
+            header={notify.status}
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="error"
+          />
         );
       case BOOKING_STATUS.ACCEPTLICENSE:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[200], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">{notify.message}</Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case BOOKING_STATUS.DENYCAR:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: red[200], color: red[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    {/* Your car with plate number "{notify.car.plateNum}" was not Accepted!! */}
-                  </Typography>
-                  <div>
-                    <div style={{ color: "red" }}>Note:</div>
-                    <div>
-                      <p>{notify.message.checkedA}</p>
-                      <p>{notify.message.checkedB}</p>
-                      <p>{notify.message.checkedC}</p>
-                      <p>{notify.message.checkedD}</p>
-                      <p>{notify.message.checkedE}</p>
-                    </div>
-                  </div>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case BOOKING_STATUS.ACCEPTCAR:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[200], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">{notify.message}</Typography>
-                  <div>Car plate number: {notify.car.plateNum}</div>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case MY_NOTIFICATION_STATUS.ACCEPT:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{ backgroundColor: green[400], color: green[900] }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    You have accepted Booking #{notify.bookingId}.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case MY_NOTIFICATION_STATUS.REFUSE:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{
-                      backgroundColor: green[400],
-                      color: green[900],
-                    }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    You have denied Booking #{notify.bookingId}.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
-        );
-      case MY_NOTIFICATION_STATUS.YOU_ACCEPTED:
-        return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{
-                      backgroundColor: green[400],
-                      color: green[900],
-                    }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    You have agree all agreements in Booking #{notify.bookingId}
-                    .
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       case MY_NOTIFICATION_STATUS.REVOKE:
         return (
-          <Card
-            onMouseOver={() => {
-              setShadow(4);
-              setHoving(notify.createAt);
-            }}
-            onMouseOut={() => {
-              setShadow(0);
-              setHoving(0);
-            }}
-            elevation={notify.createAt === hoving ? shadow : 0}
-            onClick={() => handleClick(true, notify.id)}
-          >
-            <CardActionArea>
-              <Grid container className={classes.notification}>
-                <Grid
-                  lg={4}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Chip
-                    label={<strong>INFO</strong>}
-                    style={{
-                      backgroundColor: green[400],
-                      color: green[900],
-                    }}
-                  />
-                </Grid>
-                <Grid lg item>
-                  <Typography variant="subtitle1">
-                    You have cancel Booking #{notify.bookingId}.
-                  </Typography>
-                  <Typography variant="caption" style={{ color: grey[500] }}>
-                    <ReactTimeago
-                      date={new Date(notify.createAt)}
-                    ></ReactTimeago>
-                  </Typography>
-                </Grid>
-                <Grid
-                  lg={1}
-                  item
-                  container
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Badge
-                    variant="dot"
-                    color="primary"
-                    invisible={notify.isSeen}
-                  />
-                </Grid>
-              </Grid>
-            </CardActionArea>
-          </Card>
+          <NotificationUI
+            content={notify.status}
+            header="OK"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="warn"
+          />
         );
       default:
         console.log(notify);
@@ -1058,11 +354,13 @@ const Notification = () => {
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "center",
+          horizontal: "left",
         }}
-        classes={{
-          paper: "py-8",
-        }}
+        classes={
+          {
+            // paper: "py-16",
+          }
+        }
       >
         <React.Fragment>
           <Grid
@@ -1120,7 +418,20 @@ const Notification = () => {
               .sort((first, second) => second.createAt - first.createAt)
               .map((notify) => (
                 <div className={classes.notification}>
-                  {renderNotification(notify)}
+                  <Card
+                    onMouseOver={() => {
+                      setShadow(4);
+                      setHoving(notify.createAt);
+                    }}
+                    onMouseOut={() => {
+                      setShadow(0);
+                      setHoving(0);
+                    }}
+                    elevation={notify.createAt === hoving ? shadow : 0}
+                    onClick={() => handleClick(true, notify.id)}
+                  >
+                    {renderNotification(notify)}
+                  </Card>
                 </div>
               ))}
         </React.Fragment>
