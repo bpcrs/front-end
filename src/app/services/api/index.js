@@ -116,7 +116,7 @@ export const ENDPOINT = {
 
   BRAND_CONTROLLER_GETALL: "/brand",
   BRAND_CONTROLLER_GETALLBY_ADMIN: "/brand/admin",
-  BRAND_UPDATE: "/brand/update",
+  BRAND_UPDATE: (id) => `/brand/${id}`,
 
   MODEL_CONTROLLER_GETALL: "/model",
 

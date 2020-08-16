@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { fetchBrandByAdminList } from "./checking.action";
+import { fetchBrandByAdminList, updateBrand } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -54,19 +54,48 @@ export default function ManageBrand() {
   const [open, setOpen] = useState(false);
   const handleClickOpen = (brand) => {
     setCurrentBrand(brand);
-    // currentBrand = brand;
-    // console.log(currentBrand);
     setOpen(true);
   };
+  const handleInputChange = (event) => {
+    setCurrentBrand({
+      ...currentBrand,
+      [event.target.name]: event.target.value,
+    });
+  };
+  const uploadImage = (event) => {
+    // storeImageToFirebase(event.target.files);
+    setCurrentBrand({
+      ...currentBrand,
+      [event.target.name]: event.target.files,
+    });
+    postImg(event.target.files);
+  };
+  const postImg = (images) => {
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    const uploadTask = firebase
+      .storage()
+      .ref("Img/" + date)
+      .child(img.name);
+    setLinkImagesCar((linkImagesCar) => [
+      ...linkImagesCar,
+      uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.getDownloadURL().then(function (url) {
+          const link = [url];
+          dispatch(postImageCar(link, carId, "CAR"));
+        });
+      }),
+    ]);
+  };
   const handleUpdateBrand = () => {
-    dispatch(fetchBrandByAdminList(currentPage, size));
+    dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
   }
   const handleClose = () => {
     setOpen(false);
   };
-  const handleChangeInput = (event) => {
 
-  };
   const size = 10;
   useEffect(() => {
     dispatch(fetchBrandByAdminList(currentPage, size));
@@ -134,8 +163,25 @@ export default function ManageBrand() {
                   id="name"
                   name="name"
                   label="Brand"
-                  // value={currentBrand.name}
+                  onChange={handleInputChange}
+                  value={currentBrand.name ? currentBrand.name : ""}
                   fullWidth />
+                <label
+                  variant="outlined"
+                >
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple
+                    accept="image/*"
+                    name="image"
+                    id="file"
+                    onChange={uploadImage}
+                  />
+                  <span aria-hidden="true">
+                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                  </span>
+                </label>
               </DialogContent>
               <DialogActions>
                 <Grid container justify="center">

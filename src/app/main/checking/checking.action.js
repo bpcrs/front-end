@@ -8,6 +8,9 @@ export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 export const FETCH_BRAND_LIST_SUCCESS = "[BRAND_LIST] FETCH DATA SUCCESS";
 export const FETCH_BRAND_LIST_FAILURE = "[BRAND_LIST] FETCH DATA FAILURE";
 
+export const FETCH_BRAND_EDIT_SUCCESS = "[BRAND_EDIT] PUT DATA SUCCESS";
+export const FETCH_BRAND_EDIT_FAILURE = "[BRAND_EDIT] PUT DATA FAILURE";
+
 export const FETCH_CAR_DETAIL_CHECKING_SUCCESS =
   "[CAR_DETAIL_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_CHECKING_FAILURE =
@@ -35,6 +38,18 @@ export const FETCH_COUNT_BOOKING_REQUEST = "[COUNT_BOOKING] FETCH REQUEST";
 export const FETCH_COUNT_LAST_MONTH_REQUESTS =
   "[COUNT_BOOKING] FETCH LAST MONTH";
 
+export function putEditBrandSuccess(brand) {
+  return {
+    type: FETCH_BRAND_EDIT_SUCCESS,
+    payload: brand,
+  };
+}
+export function putEditBrandFailure(error) {
+  return {
+    type: FETCH_BRAND_EDIT_FAILURE,
+    payload: error,
+  };
+}
 export function fetchCountBookingLastMonth(data) {
   return {
     type: FETCH_COUNT_LAST_MONTH_REQUESTS,
@@ -205,17 +220,15 @@ export function fetchBrandByAdminList(page, size) {
   };
 }
 
-export function updateBrand(brand) {
+export function updateBrand(id, name, imgUrl) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.BRAND_UPDATE, {
-brand
-    });
+    const request = PUT(ENDPOINT.BRAND_UPDATE(id), name, imgUrl);
     request.then(
       (response) => {
-        dispatch(fetchBrandListSuccess(response.success ? response.data : []));
+        dispatch(putEditBrandFailure(response.success ? response.data : []));
       },
       (error) => {
-        dispatch(fetchBrandListFailure(error.message));
+        dispatch(putEditBrandFailure(error.message));
       }
     );
   };
@@ -339,8 +352,8 @@ export function fetchRevenueAllDoneBooking(fromDate, toDate, isDay) {
         dispatch(
           isDay
             ? fetchTransactionsPriceBookingWeek(
-                response.success ? response.data : ""
-              )
+              response.success ? response.data : ""
+            )
             : fetchRevenueBooking(response.success ? response.data : "")
         );
       },
