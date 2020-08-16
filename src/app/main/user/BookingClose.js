@@ -429,7 +429,7 @@ export default function BookingClose({ booking, openClose }) {
                                     (item) =>
                                       item.criteria.name ===
                                       CRITERIA_NAME.MILEAGE_LIMIT
-                                  )}
+                                  )[0].value}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />
