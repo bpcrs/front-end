@@ -216,6 +216,23 @@ function Row({ booking, carId, currentUser, flag }) {
           </React.Fragment>
         );
       case BOOKING_STATUS.CONFIRM:
+        return (
+          <Tooltip title={confirmText}>
+            <VerifyOTP
+              callBack={handleSignContract}
+              content="Please verify OTP before signing"
+              title="Verify OTP"
+            >
+              <Button
+                variant="outlined"
+                startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                style={{ textTransform: "none" }}
+              >
+                {confirmText}
+              </Button>
+            </VerifyOTP>
+          </Tooltip>
+        );
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <React.Fragment>
