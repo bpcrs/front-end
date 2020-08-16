@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import {
-  setSelectedUser,
   // getRequestFirebase,
   setSelectedBooking,
   fetchPendingBooking,
@@ -18,7 +17,6 @@ import {
 import { withStyles } from "@material-ui/styles";
 import BookingStatus from "../user/BookingStatus";
 import { BOOKING_STATUS } from "../../../constant";
-import { FuseScrollbars } from "../../../@fuse";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -115,7 +113,6 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 const ContactList = (props) => {
   const classes = useStyles();
-  const [users, setUsers] = useState([]);
   const { info } = props || {};
   const dispatch = useDispatch();
   const userLogged = useSelector((state) => state.auth.user);
@@ -127,12 +124,6 @@ const ContactList = (props) => {
   };
 
   useEffect(() => {
-    const usersFirebase = firebase.firestore().collection("users");
-    async function getImagesContact() {
-      const usersInfo = await usersFirebase.get();
-      usersInfo.docs.map((doc) => setUsers((users) => [...users, doc.data()]));
-    }
-    getImagesContact();
     dispatch(
       fetchPendingBooking(
         userLogged.id,
@@ -142,6 +133,7 @@ const ContactList = (props) => {
           BOOKING_STATUS.PENDING,
           BOOKING_STATUS.CONFIRM,
           BOOKING_STATUS.OWNER_ACCEPTED,
+          BOOKING_STATUS.PROCESSING,
         ],
         isRenter
       )
@@ -157,7 +149,6 @@ const ContactList = (props) => {
       className={classes.contactButton}
     >
       <Grid container className="px-8 py-8">
-        <Grid item lg></Grid>
         <Grid item container justify="space-between">
           <Grid lg={6} item container justify="flex-start">
             <Grid item>

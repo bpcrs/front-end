@@ -285,6 +285,11 @@ const labels = [
     color: "purple",
     description: "Renter had signed contract",
   },
+  {
+    name: BOOKING_STATUS.PROCESSING,
+    color: "black",
+    description: "Booking is processing",
+  },
   //   {
   //     name: "",
   //     color: "#d93f0b",

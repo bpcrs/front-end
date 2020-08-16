@@ -61,7 +61,7 @@ export const BookingConfig = {
     {
       path: APP_PATH.LICENSE_SUBMIT,
       component: FuseLoadable({
-        loader: () => import("../submitLicense/submitLicense")
+        loader: () => import("../submitLicense/submitLicense"),
       }),
     },
     {

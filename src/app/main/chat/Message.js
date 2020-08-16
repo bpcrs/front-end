@@ -27,6 +27,8 @@ import {
   submitMessage,
 } from "./chat.action";
 import { useState } from "react";
+import NumberFormat from "react-number-format";
+import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   messageBody: {
@@ -92,7 +94,7 @@ const Message = ({ message, receive, type, createAt }) => {
 
   const MessageByType = () => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -138,7 +140,7 @@ const Message = ({ message, receive, type, createAt }) => {
             </CardActionArea>
           </Card>
         );
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -172,7 +174,7 @@ const Message = ({ message, receive, type, createAt }) => {
             ) : null}
           </Card>
         );
-      case "Insurance":
+      case CRITERIA_NAME.INSURANCE:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -192,7 +194,7 @@ const Message = ({ message, receive, type, createAt }) => {
                   <CardContent className="p-32">
                     <div className="flex justify-center">
                       <Typography variant="h6" color="textSecondary">
-                        +200.000VND
+                        {message.type}
                       </Typography>
                     </div>
 
@@ -210,6 +212,17 @@ const Message = ({ message, receive, type, createAt }) => {
                       <Typography variant="subtitle1" className="">
                         <span className="font-bold mr-4">100</span>
                         Mb Disk Space
+                      </Typography>
+                    </div>
+                    <Divider className="my-32" />
+                    <div className="flex justify-center">
+                      <Typography variant="h6" color="textPrimary">
+                        <NumberFormat
+                          value={message.value}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          suffix={" đ"}
+                        />
                       </Typography>
                     </div>
                   </CardContent>
@@ -233,7 +246,7 @@ const Message = ({ message, receive, type, createAt }) => {
             </CardActionArea>
           </Card>
         );
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         return (
           <Card className="w-1/2">
             <CardActionArea>
@@ -267,7 +280,7 @@ const Message = ({ message, receive, type, createAt }) => {
             ) : null}
           </Card>
         );
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         return (
           <Card className="w-1/2">
             <CardActionArea>

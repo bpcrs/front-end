@@ -32,13 +32,15 @@ import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import BookingStatus from "./BookingStatus";
-import TimeAgo from "react-timeago";
 import { changeBookingStatusRequest } from "../user/profile.action";
 import CustomizedTimeline from "../user/BookingTimeline";
 import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
+import BookingClose from "../user/BookingClose";
+import UpdateOdmeter from "./UpdateOdmeter";
 
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -65,11 +67,12 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row({ booking, carId }) {
+function Row({ booking, carId, currentUser, flag }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [openTimeline, setOpenTimeline] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openCloseBook, setOpenCloseBook] = useState(false);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -83,6 +86,7 @@ function Row({ booking, carId }) {
 
   const handleCloseTimeline = () => {
     setOpenTimeline(false);
+    // setOpenClose(true);
   };
 
   const handleSignContract = (otp) => {
@@ -94,23 +98,84 @@ function Row({ booking, carId }) {
     }, 3000);
   };
 
-  const pendingText = `Click to join chat room with renter`;
-  const requestText = `Cancel this booking request`;
+  const pendingText = `Join chat room`;
+  const requestText = `Cancel booking`;
   const confirmText = `Sign contract`;
-  const doneText = `Review and Rating this car`;
-  const ownerAcceptedText = `Click to join chat room with car owner`;
+  const doneText = `Review trip`;
+  const ownerAcceptedText = `Join chat room`;
+  const processingText = `Complete the rental process`;
+  const completeText = `Complete booking`;
 
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
-    const { booking, carId } = props;
+    const { booking, carId, isProcess } = props;
     const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
       notiMyNotification(currentUser, BOOKING_STATUS.CANCEL, booking);
       handleCloseTimeline();
     };
+    const handleProcessRequest = () => {
+      setOpenCloseBook(true);
+    };
+    const handleCompleteBooking = () => {
+      dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
+      handleCloseTimeline();
+    };
 
     switch (booking.status) {
+      case BOOKING_STATUS.PROCESSING:
+        return (
+          <React.Fragment>
+            <Tooltip title={isProcess ? completeText : processingText}>
+              <Button
+                variant="outlined"
+                style={{ textTransform: "none" }}
+                startIcon={
+                  <Icon style={{ color: isProcess ? "green" : "black" }}>
+                    assignment_return
+                  </Icon>
+                }
+                onClick={() => setOpen(true)}
+              >
+                {isProcess ? completeText : processingText}
+              </Button>
+            </Tooltip>
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                {isProcess ? (
+                  <Typography variant="subtitle1" color="initial">
+                    Are you want to finish this booking?
+                  </Typography>
+                ) : (
+                  <Typography variant="subtitle1" color="initial">
+                    Are you want to finish rental process and go to bill
+                    payment?
+                  </Typography>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  style={{ backgroundColor: "red", color: "white" }}
+                  variant="contained"
+                >
+                  No
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={
+                    isProcess ? handleCompleteBooking : handleProcessRequest
+                  }
+                >
+                  Yes
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        );
       case BOOKING_STATUS.REQUEST:
         return (
           <React.Fragment>
@@ -151,7 +216,6 @@ function Row({ booking, carId }) {
           </React.Fragment>
         );
       case BOOKING_STATUS.CONFIRM:
-      case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <Tooltip title={confirmText}>
             <VerifyOTP
@@ -161,7 +225,7 @@ function Row({ booking, carId }) {
             >
               <Button
                 variant="outlined"
-                startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                startIcon={<Icon style={{ color: "green" }}>fingerprint</Icon>}
                 style={{ textTransform: "none" }}
               >
                 {confirmText}
@@ -169,10 +233,32 @@ function Row({ booking, carId }) {
             </VerifyOTP>
           </Tooltip>
         );
+      case BOOKING_STATUS.RENTER_SIGNED:
+        return (
+          <React.Fragment>
+            <Tooltip title={confirmText}>
+              <UpdateOdmeter
+                children={handleSignContract}
+                content="Please verify OTP before signing"
+                title="Verify OTP"
+                booking={booking}
+                currentUser={currentUser}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                  style={{ textTransform: "none" }}
+                >
+                  {confirmText}
+                </Button>
+              </UpdateOdmeter>
+            </Tooltip>
+          </React.Fragment>
+        );
       case BOOKING_STATUS.DONE:
         return (
           <React.Fragment>
-            {booking.car.owner.email === booking.renter.email ? (
+            {booking.car.owner.email === currentUser.email ? (
               <Grid></Grid>
             ) : (
               <React.Fragment>
@@ -266,12 +352,24 @@ function Row({ booking, carId }) {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <CustomizedTimeline booking={booking} />
+          {openCloseBook ? (
+            <BookingClose booking={booking} />
+          ) : (
+            <CustomizedTimeline booking={booking} />
+          )}
         </DialogContent>
         <DialogActions>
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
-              <StatusAction booking={booking} carId={carId} />
+              {openCloseBook ? (
+                <StatusAction
+                  booking={booking}
+                  carId={carId}
+                  isProcess={true}
+                />
+              ) : (
+                <StatusAction booking={booking} carId={carId} />
+              )}
             </Grid>
           </Grid>
         </DialogActions>
@@ -285,11 +383,9 @@ function Row({ booking, carId }) {
         <TableCell component="th" scope="row">
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
-          ) > 0 ? (
-            new Date(booking.createdDate).toDateString()
-          ) : (
-            <TimeAgo date={booking.createdDate} />
-          )}
+          ) > 0
+            ? moment.utc(booking.createdDate).local().format("LLL")
+            : moment.utc(booking.createdDate).local().fromNow()}
         </TableCell>
         <TableCell component="th" scope="row">
           {booking.car.name}
@@ -321,6 +417,7 @@ const BookingRequest = (props) => {
   const myBookings = useSelector((state) => state.profile.bookings);
   const { status, carId } = props;
   const currentUser = useSelector((state) => state.auth.user);
+  const flag = useSelector((state) => state.profile.flag);
 
   useEffect(() => {
     carId
@@ -379,7 +476,13 @@ const BookingRequest = (props) => {
               </Backdrop>
               {myBookings.data &&
                 myBookings.data.map((booking, index) => (
-                  <Row key={index} booking={booking} carId={carId} />
+                  <Row
+                    key={index}
+                    booking={booking}
+                    carId={carId}
+                    currentUser={currentUser}
+                    flag={flag}
+                  />
                 ))}
             </TableBody>
           </Table>

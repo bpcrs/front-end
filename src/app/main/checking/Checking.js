@@ -139,6 +139,8 @@ export default function Cheking() {
             value={tab}
             onChange={handleSetTab}
             aria-label="Vertical tabs example"
+            indicatorColor="primary"
+            textColor="primary"
           >
             <Tab
               // icon={<DriveEtaIcon />}
@@ -162,7 +164,7 @@ export default function Cheking() {
             />
           </Tabs>
         </Grid>
-        <Grid item xs={9} sm={9}>
+        <Grid item xs={12} sm={12}>
           <TabPanel value={tab} index={0}>
             <CheckCar />
           </TabPanel>

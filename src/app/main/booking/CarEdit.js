@@ -235,41 +235,41 @@ export default function CarEdits(props) {
     return (
       <React.Fragment>
         {carDetail.status === "AVAILABLE" ||
-          carDetail.status === "UNAVAILABLE" ? (
-            <Grid
-              spacing={1}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <Typography variant="subtitle2" color="inherit">
-                Turn off your car
+        carDetail.status === "UNAVAILABLE" ? (
+          <Grid
+            spacing={1}
+            container
+            justify="space-between"
+            alignItems="baseline"
+          >
+            <Typography variant="subtitle2" color="inherit">
+              Turn off your car
             </Typography>
 
-              <FormControlLabel
-                classes={classes.switchButton}
-                control={
-                  <IOSSwitch
-                    id="staus"
-                    checked={carDetail.status === "AVAILABLE"}
-                    onChange={() => setOpen(true)}
-                    name="staus"
-                  />
-                }
-              />
+            <FormControlLabel
+              classes={classes.switchButton}
+              control={
+                <IOSSwitch
+                  id="staus"
+                  checked={carDetail.status === "AVAILABLE"}
+                  onChange={() => setOpen(true)}
+                  name="staus"
+                />
+              }
+            />
 
-              <Button
-                className={classes.updateButton}
-                color="primary"
-                variant="contained"
-                onClick={() => setOpenLocation(true)}
-              >
-                Update location
+            <Button
+              className={classes.updateButton}
+              color="primary"
+              variant="contained"
+              onClick={() => setOpenLocation(true)}
+            >
+              Update location
             </Button>
-            </Grid>
-          ) : (
-            <Grid></Grid>
-          )}
+          </Grid>
+        ) : (
+          <Grid></Grid>
+        )}
         <Dialog open={openLocation} scroll="body">
           <Grid>
             <DialogContent>
@@ -333,43 +333,43 @@ export default function CarEdits(props) {
         </Dialog>
         <Dialog open={open} scroll="body">
           {carDetail.status === "AVAILABLE" ||
-            carDetail.status === "UNAVAILABLE" ? (
-              <Grid>
-                <DialogContent>
-                  <Grid container justify="center"></Grid>
-                  <Typography variant="subtitle1" color="initial">
-                    Are you sure to{" "}
-                    {carDetail.status === "AVAILABLE" ? "turn off" : "turn on"}{" "}
+          carDetail.status === "UNAVAILABLE" ? (
+            <Grid>
+              <DialogContent>
+                <Grid container justify="center"></Grid>
+                <Typography variant="subtitle1" color="initial">
+                  Are you sure to{" "}
+                  {carDetail.status === "AVAILABLE" ? "turn off" : "turn on"}{" "}
                   your car?
                 </Typography>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    // onClick={handleChangeStatus}
-                    onClick={() => setOpen(false)}
-                  >
-                    No
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  // onClick={handleChangeStatus}
+                  onClick={() => setOpen(false)}
+                >
+                  No
                 </Button>
-                  <Button
-                    autoFocus
-                    onClick={handleChangeStatus}
-                    color="secondary"
-                    variant="contained"
-                  >
-                    Yes
+                <Button
+                  autoFocus
+                  onClick={handleChangeStatus}
+                  color="secondary"
+                  variant="contained"
+                >
+                  Yes
                 </Button>
-                </DialogActions>
-              </Grid>
-            ) : null}
+              </DialogActions>
+            </Grid>
+          ) : null}
         </Dialog>
       </React.Fragment>
     );
   }
 
   const updateCar = () => {
-    setOpen(false)
+    setOpen(false);
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
   const [imagesCar, setImagesCar] = useState([]);
@@ -409,7 +409,6 @@ export default function CarEdits(props) {
   };
   const handleRemoveImage = (image) => {
     console.log(image.id);
-    // dispatch(deleteImage(image));
     dispatch(changeImageByType(image, "DELETE"));
   };
   const images = useSelector((state) => state.booking.images);
@@ -487,8 +486,8 @@ export default function CarEdits(props) {
           <Tabs
             value={tabValue}
             onChange={handleChangeTab}
-            indicatorColor="secondary"
-            textColor="secondary"
+            indicatorColor="primary"
+            textColor="primary"
             variant="scrollable"
             scrollButtons="auto"
             classes={{ root: "w-full h-64" }}
@@ -524,7 +523,11 @@ export default function CarEdits(props) {
                     />
                     <HandleAvailable />
 
-                    <Grid container justify="space-between" alignItems="baseline">
+                    <Grid
+                      container
+                      justify="space-between"
+                      alignItems="baseline"
+                    >
                       <Grid item lg={5}>
                         <TextField
                           className={classes.textField}
@@ -547,15 +550,16 @@ export default function CarEdits(props) {
                           onClick={() => setOpen(true)}
                         >
                           Update
-            </Button>
+                        </Button>
                       </Grid>
                     </Grid>
                     <Dialog open={open} scroll="body">
                       <DialogContent>
                         <Grid container justify="center"></Grid>
                         <Typography variant="subtitle1" color="initial">
-                          Are you want to update price of your car is {currentCar.price} per day ?
-            </Typography>
+                          Are you want to update price of your car is{" "}
+                          {currentCar.price} per day ?
+                        </Typography>
                       </DialogContent>
                       <DialogActions>
                         <Button
@@ -564,7 +568,7 @@ export default function CarEdits(props) {
                           variant="contained"
                         >
                           No
-            </Button>
+                        </Button>
                         <Button
                           autoFocus
                           onClick={updateCar}
@@ -572,7 +576,7 @@ export default function CarEdits(props) {
                           variant="outlined"
                         >
                           Yes
-            </Button>
+                        </Button>
                       </DialogActions>
                     </Dialog>
                   </Grid>
@@ -615,7 +619,7 @@ export default function CarEdits(props) {
                     name="model"
                     variant="outlined"
                     disabled
-                  // onChange={handleInputChange}
+                    // onChange={handleInputChange}
                   />
                   <TextField
                     className={classes.textField}
@@ -720,10 +724,10 @@ export default function CarEdits(props) {
                   ))}
               </Grid>
             ) : (
-                <Grid>
-                  <Typography>The car dont have images</Typography>
-                </Grid>
-              )}
+              <Grid>
+                <Typography>The car dont have images</Typography>
+              </Grid>
+            )}
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
             <Grid container item lg={12}>
@@ -762,21 +766,6 @@ export default function CarEdits(props) {
                     </div>
                   </Grid>
                 ))}
-
-              {/* <Grid container justify="center" alignItems="center">
-                  <Grid item>
-                    <img
-                      src="assets/images/empty.jpg"
-                      alt="No resourse"
-                      height="100px"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2">
-                      We did't find any license right now.
-                    </Typography>
-                  </Grid>
-                </Grid> */}
             </Grid>
           </TabPanel>
         </Grid>

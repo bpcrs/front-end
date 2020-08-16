@@ -22,7 +22,21 @@ export const CHOOSE_CAR = "[CAR] CHOOSE CAR";
 export const FETCH_TRACKING_BOOKING = "[TRACKING] FETCH TRACKING BOOKING";
 export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
 export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
+export const GET_PRE_RETURN_PRICE_BOOKING = "[BOOKING] GET PRE-RETURN PRICE";
+export const UPDATE_ODOMETER_CAR = "[ODOMETER] UPDATE";
 
+export function updateOdometerSuccess(car) {
+  return {
+    type: UPDATE_ODOMETER_CAR,
+    paylaod: car,
+  };
+}
+export function getPreReturnPriceSuccess(price) {
+  return {
+    type: GET_PRE_RETURN_PRICE_BOOKING,
+    payload: price,
+  };
+}
 export function chooseCar(carId, name) {
   return {
     type: CHOOSE_CAR,
@@ -152,9 +166,9 @@ export function fetchBookingRentalMyCar(carId, status, page, size) {
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -177,9 +191,9 @@ export function fetchBookingRequest(
     });
     request.then(
       (response) => {
-        dispatch(
-          fetchBookingRentalCarSuccess(response.success ? response.data : [])
-        );
+        if (response.success) {
+          dispatch(fetchBookingRentalCarSuccess(response.data));
+        }
       },
       (error) => {
         dispatch(showMessageError(error.message));
@@ -287,6 +301,47 @@ export function getTrackingsByBooking(id) {
   };
 }
 
+export function getPreReturnPriceBooking(id, odmeter) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BOOKING_CONTROLLER_RETURN_PRICE_GETBYID(id), {
+      odmeter,
+    });
+    request.then(
+      (response) => {
+        dispatch(
+          getPreReturnPriceSuccess(response.success ? response.data : "")
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+export function updateOdometer(id, odometer, cb) {
+  const request = PUT(ENDPOINT.CAR_CONTROLLER_ODOMETER_GETBYID(id), {
+    odometer,
+  });
+  request.then(
+    (response) => {
+      if (response.success) {
+        cb(response);
+      } else {
+        cb({
+          success: false,
+          message: response.message,
+        });
+      }
+    },
+    (error) => {
+      cb({
+        success: false,
+        message: error.message,
+      });
+    }
+  );
+}
+
 export function notificationBooking(booking) {
   firebase
     .firestore()
@@ -323,6 +378,9 @@ export function notiMyNotification(currentUser, status, booking) {
     case BOOKING_STATUS.RENTER_SIGNED:
       status = MY_NOTIFICATION_STATUS.YOU_SIGNED;
       break;
+    case BOOKING_STATUS.PROCESSING:
+      status = BOOKING_STATUS.PROCESSING;
+      break;
     default:
       status = "";
   }
@@ -340,4 +398,23 @@ export function notiMyNotification(currentUser, status, booking) {
       createAt: new Date().getTime(),
       isSeen: false,
     });
+}
+export function sendOTPConfirm(otp) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.ACCOUNT_SEND_CONFIRM_OTP, {
+      otp,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(showMessageSuccess(response.message));
+        } else {
+          dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
 }

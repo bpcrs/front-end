@@ -10,11 +10,13 @@ import {
   Typography,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   CircularProgress,
   Badge,
   Backdrop,
+  Paper,
+  Fade,
+  Collapse,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -28,8 +30,7 @@ import {
   openDetail,
   chooseCar,
 } from "./profile.action";
-import { useHistory } from "react-router-dom";
-import { APP_PATH, CAR_STATUS } from "../../../constant";
+import { CAR_STATUS } from "../../../constant";
 import CarStatus from "./CarStatus";
 import Booking from "./Booking";
 import { useState } from "react";
@@ -64,9 +65,9 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row(props) {
+function Row({ car, isDetail, request }) {
   const dispatch = useDispatch();
-  const { car } = props;
+
   const [open, setOpen] = useState(false);
 
   const handleClose = () => {
@@ -74,7 +75,7 @@ function Row(props) {
   };
 
   const handleClickBooked = (carId, carName) => {
-    dispatch(openDetail(true));
+    dispatch(openDetail(!isDetail));
     dispatch(chooseCar(carId, carName));
   };
 
@@ -104,13 +105,23 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          <IconButton onClick={() => handleClickBooked(car.id, car.name)}>
+          <IconButton
+            onClick={() => handleClickBooked(car.id, car.name)}
+            disabled={isDetail && request.carId !== car.id}
+            style={{
+              display: isDetail && request.carId !== car.id ? "none" : "",
+            }}
+          >
             {car.status === CAR_STATUS.REQUEST ? (
               <Badge color="error" badgeContent={car.requestCounting}>
-                <Icon style={{ color: "black" }}>calendar_view_day</Icon>
+                <Icon style={{ color: "black" }}>
+                  {isDetail && request.carId === car.id ? "clear" : "sort"}
+                </Icon>
               </Badge>
             ) : (
-              <Icon style={{ color: "black" }}>calendar_view_day</Icon>
+              <Icon style={{ color: "black" }}>
+                {isDetail && request.carId === car.id ? "clear" : "sort"}
+              </Icon>
             )}
           </IconButton>
         </TableCell>
@@ -119,11 +130,6 @@ function Row(props) {
         <DialogContent>
           <CarEdit carId={car.id} />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );
@@ -159,11 +165,6 @@ function RegisterCar() {
         <DialogContent>
           <CarSubmit />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={() =>} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
       <Dialog open={loading} scroll="body">
         <DialogContent>
@@ -189,7 +190,7 @@ function RegisterCar() {
                 Checking information
               </Typography>
               <Typography variant="caption">
-                We uploading your car, please wait a minutes...
+                We are uploading, please wait a minutes...
               </Typography>
             </Grid>
           </Grid>
@@ -199,7 +200,7 @@ function RegisterCar() {
   );
 }
 
-const MyCar = (props) => {
+const MyCar = () => {
   const classes = useStyles();
   const size = 5;
   const dispatch = useDispatch();
@@ -223,7 +224,7 @@ const MyCar = (props) => {
     dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
   }, [currentUser.id, dispatch, currentPage, change]);
 
-  return !isDetail ? (
+  return (
     <Grid>
       <Backdrop
         className={classes.backdrop}
@@ -262,7 +263,12 @@ const MyCar = (props) => {
             <TableBody key={refresh}>
               {cars.data &&
                 cars.data.map((car, index) => (
-                  <Row key={index} car={car} />
+                  <Row
+                    key={index}
+                    car={car}
+                    isDetail={isDetail}
+                    request={request}
+                  />
                   // </Grid>
                 ))}
             </TableBody>
@@ -293,36 +299,11 @@ const MyCar = (props) => {
           </Typography>
         </Grid>
       )}
-    </Grid>
-  ) : (
-    <Grid>
-      <Button
-        variant="text"
-        style={{ textTransform: "none", color: "blue" }}
-        onClick={() => dispatch(openDetail(false))}
-        startIcon={<Icon>arrow_back</Icon>}
-      >
-        Back
-      </Button>
-      <Grid
-        item
-        container
-        direction="row"
-        alignItems="center"
-        justify="flex-start"
-      >
-        <Typography variant="body2" color="secondary">
-          Car:
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          color="initial"
-          className={classes.card}
-        >
-          {request.name}
-        </Typography>
-      </Grid>
-      <Booking carId={request.carId} />
+      <Collapse in={isDetail} style={{ marginTop: "8px" }} collapsedHeight={0}>
+        <Paper elevation={4} className={classes.paper}>
+          <Booking carId={request.carId} />
+        </Paper>
+      </Collapse>
     </Grid>
   );
 };

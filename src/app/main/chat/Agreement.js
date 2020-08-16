@@ -20,6 +20,7 @@ import classNames from "classnames";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import { useEffect } from "react";
+import { CRITERIA_NAME } from "../../../constant";
 
 const PrettoSlider = withStyles({
   root: {
@@ -95,7 +96,10 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     overdue: true,
     violate: true,
   });
-
+  const [insurance, setInsurance] = useState({
+    value: 200000,
+    type: "basic",
+  });
   // const criterias = useSelector((state) => state.chat.criteria);
   const [scope, setScope] = useState(15);
   const [limit, setLimit] = useState(100);
@@ -111,28 +115,31 @@ export default function Agreement({ type, onSubmit = () => {} }) {
     setExtra(newValue);
     setSelectedValue(newValue);
   };
+  const handleInsurrance = (event, newValue) => {
+    console.log(newValue);
+  };
   useEffect(() => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         onSubmit({ type, value: limit });
         break;
-      case "Insurance":
-        onSubmit({ type, value: selectedValue });
+      case CRITERIA_NAME.INSURANCE:
+        onSubmit({ type, value: insurance });
         break;
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         onSubmit({ type, value: extra });
         break;
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         onSubmit({ type, value: checkboxValue });
         break;
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         onSubmit({ type, value: scope });
         break;
       default:
         break;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedValue, scope, checkboxValue]);
+  }, [limit, selectedValue, scope, checkboxValue, insurance]);
 
   const handleChangeCheckbox = (event) => {
     setCheckboxValue({
@@ -143,7 +150,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   const classes = useStyles();
   const AgreementByType = () => {
     switch (type) {
-      case "Mileage limit":
+      case CRITERIA_NAME.MILEAGE_LIMIT:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -185,7 +192,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Extra":
+      case CRITERIA_NAME.EXTRA:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -225,7 +232,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Insurance":
+      case CRITERIA_NAME.INSURANCE:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -270,8 +277,10 @@ export default function Agreement({ type, onSubmit = () => {} }) {
 
                     <div className="flex justify-center pb-32">
                       <GreenRadio
-                        checked={selectedValue === "basic"}
-                        onChange={() => setSelectedValue("basic")}
+                        checked={insurance.type === "basic"}
+                        onChange={() =>
+                          setInsurance({ type: "basic", value: 200000 })
+                        }
                         value="basic"
                         name="radio-button-demo"
                         inputProps={{ "aria-label": "basic" }}
@@ -297,7 +306,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                     <CardContent className="p-32">
                       <div className="flex justify-center">
                         <Typography variant="h6" color="textSecondary">
-                          +300.000VND
+                          +400.000VND
                         </Typography>
                       </div>
 
@@ -321,20 +330,23 @@ export default function Agreement({ type, onSubmit = () => {} }) {
 
                     <div className="flex justify-center pb-32">
                       <GreenRadio
-                        checked={selectedValue === "super"}
-                        onChange={() => setSelectedValue("super")}
+                        checked={insurance.type === "super"}
+                        onChange={() =>
+                          setInsurance({ type: "super", value: 400000 })
+                        }
                         value="super"
                         name="radio-button-demo"
                         inputProps={{ "aria-label": "super" }}
                       />
                     </div>
+                    {console.log(insurance)}
                   </Card>
                 </div>
               </Grid>
             </Grid>
           </Box>
         );
-      case "Deposit":
+      case CRITERIA_NAME.DEPOSIT:
         return (
           <Box>
             <Grid container spacing={1}>
@@ -373,7 +385,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case "Indemnification":
+      case CRITERIA_NAME.INDEMNTIFICATION:
         return (
           <Box>
             <Grid container spacing={1}>

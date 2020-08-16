@@ -27,7 +27,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
-import TimeAgo from "react-timeago";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -131,11 +131,9 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
-          ) > 0 ? (
-            new Date(booking.createdDate).toDateString()
-          ) : (
-            <TimeAgo date={booking.createdDate} />
-          )}
+          ) > 0
+            ? new Date(booking.createdDate).toDateString()
+            : moment.utc(booking.createdDate).local().fromNow()}
         </TableCell>
         {/* <TableCell component="th" scope="row">
           {booking.renter.fullName}

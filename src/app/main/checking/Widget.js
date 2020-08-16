@@ -19,7 +19,6 @@ import { green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useState } from "react";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   graph: {
@@ -204,7 +203,7 @@ const Widget = ({ theme }) => {
           <Grid container item>
             <Icon>monetization_on</Icon>
             <Typography className="h3" color="textSecondary">
-              Monthly Revenue
+              Monthly Transactions
             </Typography>
           </Grid>
           {price ? (
