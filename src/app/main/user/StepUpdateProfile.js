@@ -104,7 +104,13 @@ function getSteps() {
   ];
 }
 
-function GetStepContent(stepIndex, setInformation, currentUser, imageJson) {
+function GetStepContent(
+  stepIndex,
+  setInformation,
+  currentUser,
+  imageJson,
+  isVerify
+) {
   console.log(currentUser);
   const classes = useStyles();
   const [info, setInfo] = useState({
@@ -231,22 +237,24 @@ function GetStepContent(stepIndex, setInformation, currentUser, imageJson) {
     case 1:
       return (
         <Grid container item lg={12}>
-          <Grid item lg={3}>
-            <label className={classes.productImageItem} variant="outlined">
-              <input
-                type="file"
-                style={{ display: "none" }}
-                multiple
-                accept="image/*"
-                name="image"
-                id="file"
-                onChange={uploadLicenseImage}
-              />
-              <span aria-hidden="true">
-                <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-              </span>
-            </label>
-          </Grid>
+          {!isVerify ? (
+            <Grid item lg={3}>
+              <label className={classes.productImageItem} variant="outlined">
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  multiple
+                  accept="image/*"
+                  name="image"
+                  id="file"
+                  onChange={uploadLicenseImage}
+                />
+                <span aria-hidden="true">
+                  <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                </span>
+              </label>
+            </Grid>
+          ) : null}
 
           {licenses &&
             licenses.map((image, index) => (
@@ -292,22 +300,24 @@ function GetStepContent(stepIndex, setInformation, currentUser, imageJson) {
     case 2:
       return (
         <Grid container item lg={12}>
-          <Grid item lg={3}>
-            <label className={classes.productImageItem} variant="outlined">
-              <input
-                type="file"
-                style={{ display: "none" }}
-                multiple
-                accept="image/*"
-                name="image"
-                id="file"
-                onChange={uploadIdenImage}
-              />
-              <span aria-hidden="true">
-                <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-              </span>
-            </label>
-          </Grid>
+          {!isVerify ? (
+            <Grid item lg={3}>
+              <label className={classes.productImageItem} variant="outlined">
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  multiple
+                  accept="image/*"
+                  name="image"
+                  id="file"
+                  onChange={uploadIdenImage}
+                />
+                <span aria-hidden="true">
+                  <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                </span>
+              </label>
+            </Grid>
+          ) : null}
 
           {identification &&
             identification.map((image, index) => (
@@ -537,10 +547,21 @@ export default function UpdateProfileStepper() {
         });
     }
   };
-  const [currentUser, setCurrentUser] = useState({});
   const [imageJson, setImageJson] = useState([]);
   const userDetail = useSelector((state) => state.license.userDetail);
-
+  const isVerify = useSelector((state) => state.profile.isVerify);
+  const updateImfoNoImage = () => {
+    dispatch(processingRegister());
+    submitInfo();
+  };
+  const submitInfo = () => {
+    dispatch(
+      updateUserLicense({
+        phone: information.phone,
+        identification: information.identification,
+      })
+    );
+  };
   useEffect(() => {
     const fetchUser = () => {
       //   dispatch(fetchUserDetail(userLogged.id));
@@ -578,7 +599,8 @@ export default function UpdateProfileStepper() {
                 activeStep,
                 setInformation,
                 userDetail,
-                imageJson
+                imageJson,
+                isVerify
               )}
             </Typography>
             <div>
@@ -604,14 +626,28 @@ export default function UpdateProfileStepper() {
                   Update
                 </Button>
               ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  disabled={!information.phone || !information.identification}
-                >
-                  Next
-                </Button>
+                <Grid item container justify="space-between">
+                  {isVerify ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={updateImfoNoImage}
+                      disabled={
+                        !information.phone || !information.identification
+                      }
+                    >
+                      Update Phone & Identification
+                    </Button>
+                  ) : null}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleNext}
+                    disabled={!information.phone || !information.identification}
+                  >
+                    Next
+                  </Button>
+                </Grid>
               )}
             </div>
           </div>

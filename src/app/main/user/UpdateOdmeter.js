@@ -15,11 +15,17 @@ import {
   Stepper,
   Step,
   StepLabel,
+  LinearProgress,
+  Typography,
 } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { updateOdometer } from "./profile.action";
+import {
+  updateOdometer,
+  sendOTPRequest,
+  signContractRequest,
+} from "./profile.action";
 import { showMessageError } from "../../store/actions/fuse";
-import VerifyOTP from "./VerifyOTP";
+import OtpInput from "react-otp-input";
 
 const useStyles = makeStyles((theme) => ({
   inputStyle: {
@@ -55,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
   step: {
     margin: theme.spacing(1),
   },
+  margin: {
+    marginBottom: theme.spacing(2),
+  },
 }));
 
 function getSteps() {
@@ -65,25 +74,55 @@ function GetStepContent(
   stepIndex,
   booking,
   onUpdateOdometer,
-  handleSignContract
+  setOpen,
+  message
 ) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [odemeter, setOdemeter] = useState(booking && booking.car.odometer);
+  const [OTP, setOTP] = useState();
+  const [loading, setLoading] = useState(false);
+  const [counter, setCounter] = useState(60);
+  const [confirming, setConfirming] = useState(false);
 
   const handleUpdate = (event) => {
     setOdemeter(event.target.value);
     onUpdateOdometer(event.target.value);
   };
 
+  const handleSendOTP = () => {
+    setCounter(60);
+    setLoading(true);
+    dispatch(sendOTPRequest());
+    const timer = setInterval(() => {
+      setCounter((counter) => counter - 1);
+    }, 1000);
+    setTimeout(() => {
+      setLoading(false);
+      clearInterval(timer);
+    }, 60000);
+  };
+
+  const handleChangeOTP = (value) => {
+    setOTP(value);
+    if (value.toString().length === 7) {
+      setConfirming(true);
+      dispatch(signContractRequest(booking.id, value));
+      setTimeout(() => {
+        setConfirming(false);
+        setLoading(false);
+        setCounter(60);
+        setOpen(false);
+        // callBack(value);
+      }, 3000);
+    }
+  };
+
   switch (stepIndex) {
     case 0:
       return (
-        <Grid className={classes.wrapper}>
-          <FormControl
-            fullWidth
-            // className={classes.margin}
-            variant="outlined"
-          >
+        <Grid className={classes.wrapper} item lg={6}>
+          <FormControl fullWidth className={classes.margin} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-amount">Number</InputLabel>
             <OutlinedInput
               id="odemeter"
@@ -95,32 +134,74 @@ function GetStepContent(
                 <InputAdornment position="start">Km</InputAdornment>
               }
               labelWidth={60}
-              helperText={"Current Odometer must be bigger than old odometer"}
+              error={booking && odemeter < booking.car.odometer}
+              // helperText={
+              //   odemeter < booking.car.odometer
+              //     ? "Current dometer must be bigger than old odometer"
+              //     : ""
+              // }
             />
           </FormControl>
+          {message ? (
+            <Typography color="error" variant="subtitle2">
+              {message}
+            </Typography>
+          ) : null}
         </Grid>
       );
     case 1:
       return (
-        <VerifyOTP
-          callBack={(value) => handleSignContract(value)}
-          content=" Please verify you phone before renting or register new car"
-          title="Verify Phone number"
-        ></VerifyOTP>
+        <Grid container justify="center" alignItems="center">
+          <Grid lg={9} item>
+            <OtpInput
+              value={OTP}
+              isInputNum
+              onChange={handleChangeOTP}
+              numInputs={7}
+              separator={" "}
+              inputStyle={classes.inputStyle}
+              focusStyle={{ borderColor: "#1976d2" }}
+              isDisabled={confirming}
+            />
+            {!confirming && (
+              <React.Fragment>
+                <Grid lg={8} item></Grid>
+                <Grid lg={4} item justify="flex-end">
+                  <div className={classes.wrapper}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      color="primary"
+                      disabled={loading}
+                      onClick={handleSendOTP}
+                      style={{ textTransform: "none" }}
+                    >
+                      {loading ? `Resend in ${counter} s` : "Send OTP"}
+                    </Button>
+                    {loading && (
+                      <CircularProgress
+                        size={24}
+                        className={classes.buttonProgress}
+                      />
+                    )}
+                  </div>
+                </Grid>
+              </React.Fragment>
+            )}
+            {confirming && (
+              <Grid lg={12}>
+                <LinearProgress />
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
       );
     default:
       return "Unknown stepIndex";
   }
 }
 
-export default function UpdateOdmeter({
-  children,
-  handleSignContract,
-  title,
-  content,
-  booking,
-  currentUser,
-}) {
+export default function UpdateOdmeter({ children, booking, currentUser }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [activeStep, setActiveStep] = useState(
@@ -130,6 +211,7 @@ export default function UpdateOdmeter({
   const [open, setOpen] = useState(false);
   // const [updateSuccess, setUpdateSuccess]
   const [odometer, onUpdateOdometer] = useState();
+  const [message, setMessage] = useState();
 
   const handleNext = () => {
     if (activeStep === 0) {
@@ -137,7 +219,7 @@ export default function UpdateOdmeter({
         if (success) {
           setActiveStep((prevActiveStep) => prevActiveStep + 1);
         } else {
-          dispatch(showMessageError(message));
+          setMessage(message);
         }
       });
     } else if (activeStep === steps.length - 1) {
@@ -184,7 +266,8 @@ export default function UpdateOdmeter({
                     activeStep,
                     booking,
                     onUpdateOdometer,
-                    handleSignContract
+                    setOpen,
+                    message
                   )}
                 </Grid>
                 <div>

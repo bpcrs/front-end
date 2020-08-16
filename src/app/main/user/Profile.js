@@ -122,6 +122,7 @@ const Profile = () => {
     dispatch(logoutUser());
     history.push(APP_PATH.HOME);
   };
+  const userDetail = useSelector((state) => state.license.userDetail);
 
   useEffect(() => {
     dispatch(resetFlagCreateBooking());
@@ -228,7 +229,7 @@ const Profile = () => {
                   color="textSecondary"
                   // variant="overline"
                 >
-                  <MyLicense />
+                  {/* <MyLicense /> */}
                 </Typography>
                 <UpdateProfile />
                 <Button
@@ -245,7 +246,7 @@ const Profile = () => {
               <Grid item lg={2}></Grid>
               <Grid item lg={5}>
                 <Typography variant="subtitle1">PHONE</Typography>
-                <Typography variant="subtitle2">{userLogged.phone} </Typography>
+                <Typography variant="subtitle2">{userDetail.phone} </Typography>
                 {/* <Typography>{userLogged.displayName}</Typography> */}
               </Grid>
               <Grid item lg={5}>

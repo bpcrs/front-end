@@ -113,10 +113,14 @@ function Row({ car, isDetail, request }) {
           >
             {car.status === CAR_STATUS.REQUEST ? (
               <Badge color="error" badgeContent={car.requestCounting}>
-                <Icon style={{ color: "black" }}>sort</Icon>
+                <Icon style={{ color: "black" }}>
+                  {isDetail && request.carId === car.id ? "clear" : "sort"}
+                </Icon>
               </Badge>
             ) : (
-              <Icon style={{ color: "black" }}>sort</Icon>
+              <Icon style={{ color: "black" }}>
+                {isDetail && request.carId === car.id ? "clear" : "sort"}
+              </Icon>
             )}
           </IconButton>
         </TableCell>
@@ -125,11 +129,6 @@ function Row({ car, isDetail, request }) {
         <DialogContent>
           <CarEdit carId={car.id} />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );

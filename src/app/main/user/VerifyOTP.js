@@ -13,9 +13,7 @@ import { blue, green, red, grey } from "@material-ui/core/colors";
 import {
   Grid,
   CircularProgress,
-  Chip,
   Icon,
-  Typography,
   LinearProgress,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
@@ -94,9 +92,6 @@ export default function VerifyOTP({ children, callBack, title, content }) {
         setOpen(false);
         callBack(value);
       }, 3000);
-      // // dispatch(sendOTPConfirm(value));
-      // if (otpConfirm) {
-      // }
     }
   };
 
