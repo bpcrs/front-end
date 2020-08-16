@@ -31,7 +31,14 @@ export const FETCH_LAST_MONTH_TRANSACTIONS = "[TRANSACTION] FETCH LAST MONTH";
 export const FETCH_COUNT_BOOKING_REQUEST = "[COUNT_BOOKING] FETCH REQUEST";
 export const FETCH_COUNT_LAST_MONTH_REQUESTS =
   "[COUNT_BOOKING] FETCH LAST MONTH";
+export const APPROVE_USER_REGISTER = "[USER_REGISTER] APPROVE";
 
+export function approveUserRegister(data) {
+  return {
+    type: APPROVE_USER_REGISTER,
+    payload: data,
+  };
+}
 export function fetchCountBookingLastMonth(data) {
   return {
     type: FETCH_COUNT_LAST_MONTH_REQUESTS,
@@ -246,6 +253,20 @@ export async function fetchUserDetailChecking(userId) {
       (error) => {
         dispatch(fetchUserDetailCheckingFailure(error));
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function approveUser(id, active) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(id), { active });
+    request.then(
+      (response) => {
+        dispatch(approveUserRegister(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
       }
     );
   };

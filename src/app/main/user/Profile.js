@@ -27,7 +27,8 @@ import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
 import { checkVerifyRequest, sendOTPConfirm } from "./profile.action";
-import CalendarApp from "../../calendar/CalendarApp";
+import UpdateProfile from "./UpdateProfile";
+import { fetchUserDetail } from "../submitLicense/license.action";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -121,10 +122,13 @@ const Profile = () => {
     dispatch(logoutUser());
     history.push(APP_PATH.HOME);
   };
+  const userDetail = useSelector((state) => state.license.userDetail);
 
   useEffect(() => {
     dispatch(resetFlagCreateBooking());
     dispatch(checkVerifyRequest());
+    dispatch(fetchUserDetail(userLogged.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   return (
     <Layout name="Profile">
@@ -225,8 +229,9 @@ const Profile = () => {
                   color="textSecondary"
                   // variant="overline"
                 >
-                  <MyLicense />
+                  {/* <MyLicense /> */}
                 </Typography>
+                <UpdateProfile />
                 <Button
                   variant="text"
                   style={{ textTransform: "none", color: "red" }}
@@ -241,7 +246,7 @@ const Profile = () => {
               <Grid item lg={2}></Grid>
               <Grid item lg={5}>
                 <Typography variant="subtitle1">PHONE</Typography>
-                <Typography variant="subtitle2">{userLogged.phone} </Typography>
+                <Typography variant="subtitle2">{userDetail.phone} </Typography>
                 {/* <Typography>{userLogged.displayName}</Typography> */}
               </Grid>
               <Grid item lg={5}>

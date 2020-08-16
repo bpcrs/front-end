@@ -38,6 +38,8 @@ import Review from "../booking/Review";
 import { red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import BookingClose from "../user/BookingClose";
+import UpdateOdmeter from "./UpdateOdmeter";
+
 import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +67,7 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
-function Row({ booking, carId }) {
+function Row({ booking, carId, currentUser, flag }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [openTimeline, setOpenTimeline] = useState(false);
@@ -120,6 +122,7 @@ function Row({ booking, carId }) {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
       handleCloseTimeline();
     };
+
     switch (booking.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
@@ -213,7 +216,6 @@ function Row({ booking, carId }) {
           </React.Fragment>
         );
       case BOOKING_STATUS.CONFIRM:
-      case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <Tooltip title={confirmText}>
             <VerifyOTP
@@ -231,10 +233,32 @@ function Row({ booking, carId }) {
             </VerifyOTP>
           </Tooltip>
         );
+      case BOOKING_STATUS.RENTER_SIGNED:
+        return (
+          <React.Fragment>
+            <Tooltip title={confirmText}>
+              <UpdateOdmeter
+                children={handleSignContract}
+                content="Please verify OTP before signing"
+                title="Verify OTP"
+                booking={booking}
+                currentUser={currentUser}
+              >
+                <Button
+                  variant="outlined"
+                  startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                  style={{ textTransform: "none" }}
+                >
+                  {confirmText}
+                </Button>
+              </UpdateOdmeter>
+            </Tooltip>
+          </React.Fragment>
+        );
       case BOOKING_STATUS.DONE:
         return (
           <React.Fragment>
-            {booking.car.owner.email === booking.renter.email ? (
+            {booking.car.owner.email === currentUser.email ? (
               <Grid></Grid>
             ) : (
               <React.Fragment>
@@ -393,6 +417,7 @@ const BookingRequest = (props) => {
   const myBookings = useSelector((state) => state.profile.bookings);
   const { status, carId } = props;
   const currentUser = useSelector((state) => state.auth.user);
+  const flag = useSelector((state) => state.profile.flag);
 
   useEffect(() => {
     carId
@@ -451,7 +476,13 @@ const BookingRequest = (props) => {
               </Backdrop>
               {myBookings.data &&
                 myBookings.data.map((booking, index) => (
-                  <Row key={index} booking={booking} carId={carId} />
+                  <Row
+                    key={index}
+                    booking={booking}
+                    carId={carId}
+                    currentUser={currentUser}
+                    flag={flag}
+                  />
                 ))}
             </TableBody>
           </Table>

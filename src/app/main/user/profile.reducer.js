@@ -25,6 +25,7 @@ const initialState = {
   isVerify: false,
   otpConfirm: false,
   preReturnPrice: {},
+  flag: true,
 };
 const profileReducer = (state = initialState, { type, payload }) => {
   switch (type) {
