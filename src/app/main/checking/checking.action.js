@@ -149,6 +149,20 @@ export function putCarEditFailure(error) {
   };
 }
 
+export function putUserDetailSuccess(user) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_SUCCESS,
+    payload: user,
+  };
+}
+
+export function putUserDetailFailure(error) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_FAILURE,
+    payload: error,
+  };
+}
+
 export function fetchCarCheckingAdmin(page, size) {
   return (dispatch) => {
     // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
@@ -191,17 +205,19 @@ export function fetchBrandByAdminList(page, size) {
   };
 }
 
-export function putUserDetailSuccess(user) {
-  return {
-    type: PUT_USER_DETAIL_CHECKING_SUCCESS,
-    payload: user,
-  };
-}
-
-export function putUserDetailFailure(error) {
-  return {
-    type: PUT_USER_DETAIL_CHECKING_FAILURE,
-    payload: error,
+export function updateBrand(brand) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.BRAND_UPDATE, {
+brand
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchBrandListSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchBrandListFailure(error.message));
+      }
+    );
   };
 }
 

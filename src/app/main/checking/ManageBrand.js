@@ -49,20 +49,23 @@ export default function ManageBrand() {
 
   const dispatch = useDispatch();
   const brands = useSelector((state) => state.checking.brands);
+  const [currentBrand, setCurrentBrand] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
-  let currentBrand = useState([]);
   const handleClickOpen = (brand) => {
-    currentBrand = brand;
-    console.log(currentBrand);
+    setCurrentBrand(brand);
+    // currentBrand = brand;
+    // console.log(currentBrand);
     setOpen(true);
   };
-
+  const handleUpdateBrand = () => {
+    dispatch(fetchBrandByAdminList(currentPage, size));
+  }
   const handleClose = () => {
     setOpen(false);
   };
   const handleChangeInput = (event) => {
-    // setName(event.target.value);
+
   };
   const size = 10;
   useEffect(() => {
@@ -124,19 +127,15 @@ export default function ManageBrand() {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Update brand name {currentBrand.name}</DialogTitle>
+              <DialogTitle id="form-dialog-title">Update brand name </DialogTitle>
               <DialogContent>
                 <TextField
-                  autoFocus
                   margin="dense"
-                  onChange={handleChangeInput}
                   id="name"
                   name="name"
                   label="Brand"
-                  fullWidth
-                ></TextField>
-                  {/* {currentBrand.name} */}
-
+                  // value={currentBrand.name}
+                  fullWidth />
               </DialogContent>
               <DialogActions>
                 <Grid container justify="center">
@@ -144,7 +143,7 @@ export default function ManageBrand() {
                     <Button
                       variant="contained"
                       color="primary"
-                      // onClick={() => handleAcceptCar()}
+                      onClick={() => handleUpdateBrand()}
                       startIcon={<CheckCircleIcon />}
                       style={{ marginLeft: "30%" }}
                     />
