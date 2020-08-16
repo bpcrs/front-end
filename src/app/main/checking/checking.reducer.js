@@ -24,6 +24,16 @@ const CheckingReducer = (state = initialState, { type, payload }) => {
         brands: payload,
       };
     }
+    case Actions.FETCH_BRAND_EDIT_SUCCESS: {
+      console.log(state.brands.data.map(brand => brand.id === payload.id ? payload : brand));
+      return {
+        ...state,
+        brands : {
+          data : state.brands.data.map(brand => brand.id === payload.id ? payload : brand),
+          count: state.brands.count
+        }
+      };
+    }
     case Actions.FETCH_COUNT_LAST_MONTH_REQUESTS: {
       return {
         ...state,

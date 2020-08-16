@@ -1,5 +1,5 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, DialogActions, CardHeader, Avatar, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import { Grid, DialogActions, Icon, Avatar, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -13,6 +13,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
+import firebase from "../../firebase/firebase";
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -49,13 +50,16 @@ export default function ManageBrand() {
 
   const dispatch = useDispatch();
   const brands = useSelector((state) => state.checking.brands);
+  // const [brands, setBrands] = useState([]);
   const [currentBrand, setCurrentBrand] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
+
   const handleClickOpen = (brand) => {
     setCurrentBrand(brand);
     setOpen(true);
   };
+
   const handleInputChange = (event) => {
     setCurrentBrand({
       ...currentBrand,
@@ -63,35 +67,37 @@ export default function ManageBrand() {
     });
   };
   const uploadImage = (event) => {
-    // storeImageToFirebase(event.target.files);
-    setCurrentBrand({
-      ...currentBrand,
-      [event.target.name]: event.target.files,
-    });
-    postImg(event.target.files);
+    postImg(event.target.files[0]);
   };
-  const postImg = (images) => {
+  
+  const postImg = (image) => {
     const metadata = {
       contentType: "image/jpeg",
     };
-    const date = new Date().getTime();
     const uploadTask = firebase
       .storage()
-      .ref("Img/" + date)
-      .child(img.name);
-    setLinkImagesCar((linkImagesCar) => [
-      ...linkImagesCar,
-      uploadTask.put(img, metadata).then(function (result) {
-        uploadTask.getDownloadURL().then(function (url) {
-          const link = [url];
-          dispatch(postImageCar(link, carId, "CAR"));
+      .ref("Brand/")
+      .child(image.name);
+
+    uploadTask.put(image, metadata).then(function (result) {
+      uploadTask.getDownloadURL().then(function (url) {
+        setCurrentBrand({
+          ...currentBrand,
+          logoLink: url
         });
-      }),
-    ]);
+      });
+    });
   };
   const handleUpdateBrand = () => {
     dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+    setCurrentBrand([]);
+    setOpen(false);
   }
+  // const handleUpdateBrand = () => {
+  //   dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+  //   setCurrentBrand([]);
+  //   setOpen(false);
+  // }
   const handleClose = () => {
     setOpen(false);
   };
@@ -105,7 +111,15 @@ export default function ManageBrand() {
       {
         brands.count > 0 ? (
           <Grid container>
-            <Grid xs={12} lg={12}>
+            <Button
+              variant="text"
+              style={{ textTransform: "none", color: "blue" }}
+              onClick={handleClickOpen}
+              startIcon={<Icon>playlist_add</Icon>}
+            >
+              Create brand
+            </Button>
+            <Grid xs={12} lg={12} item>
               <TableContainer>
                 <Table
                   className={classes.table}
@@ -156,7 +170,7 @@ export default function ManageBrand() {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Update brand name </DialogTitle>
+              <DialogTitle id="form-dialog-title">Manage car brand</DialogTitle>
               <DialogContent>
                 <TextField
                   margin="dense"
@@ -166,15 +180,15 @@ export default function ManageBrand() {
                   onChange={handleInputChange}
                   value={currentBrand.name ? currentBrand.name : ""}
                   fullWidth />
+                <img width="200" src={currentBrand.logoLink} />
                 <label
                   variant="outlined"
                 >
                   <input
                     type="file"
                     style={{ display: "none" }}
-                    multiple
                     accept="image/*"
-                    name="image"
+                    name="logoLink"
                     id="file"
                     onChange={uploadImage}
                   />
@@ -202,7 +216,6 @@ export default function ManageBrand() {
                       style={{ marginLeft: "30%" }}
                       onClick={handleClose}
                     />
-
                   </Grid>
                 </Grid>
               </DialogActions>

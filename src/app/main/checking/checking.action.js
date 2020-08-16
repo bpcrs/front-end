@@ -220,12 +220,16 @@ export function fetchBrandByAdminList(page, size) {
   };
 }
 
-export function updateBrand(id, name, imgUrl) {
+export function updateBrand(id, name, imageUrl) {
   return (dispatch) => {
-    const request = PUT(ENDPOINT.BRAND_UPDATE(id), name, imgUrl);
+    const request = PUT(ENDPOINT.BRAND_UPDATE(id), { name, imageUrl });
     request.then(
       (response) => {
-        dispatch(putEditBrandFailure(response.success ? response.data : []));
+        if (response.success) {
+          dispatch(putEditBrandSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(putEditBrandFailure(response.message));
+        }
       },
       (error) => {
         dispatch(putEditBrandFailure(error.message));
