@@ -16,6 +16,7 @@ import {
   Backdrop,
   Paper,
   Fade,
+  Collapse,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -298,11 +299,11 @@ const MyCar = () => {
           </Typography>
         </Grid>
       )}
-      <Fade in={isDetail} style={{ marginTop: "8px" }}>
+      <Collapse in={isDetail} style={{ marginTop: "8px" }} collapsedHeight={0}>
         <Paper elevation={4} className={classes.paper}>
           <Booking carId={request.carId} />
         </Paper>
-      </Fade>
+      </Collapse>
     </Grid>
   );
 };

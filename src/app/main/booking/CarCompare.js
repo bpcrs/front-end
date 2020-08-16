@@ -29,13 +29,12 @@ const useStyles = makeStyles((theme) => ({
   },
   imageGrid: {
     margin: 20,
-  }
+  },
 }));
 
 export default function CarCompare() {
   const classes = useStyles();
-  const fakeImg =
-    "https://www.indianbluebook.com/images/selected_car.png";
+  const fakeImg = "https://www.indianbluebook.com/images/selected_car.png";
   var carDetail1 = [];
   var carDetail2 = [];
   var rows = [];
@@ -45,7 +44,11 @@ export default function CarCompare() {
     carDetail2 = carCompare[1];
     console.log(carDetail1);
     rows = [
-      createData("Brand", carDetail1.info.brand.name, carDetail2.info.brand.name),
+      createData(
+        "Brand",
+        carDetail1.info.brand.name,
+        carDetail2.info.brand.name
+      ),
       createData("Name", carDetail1.info.name, carDetail2.info.name),
       createData("Model", carDetail1.info.year, carDetail2.info.year),
       createData("Screen", carDetail1.info.screen, carDetail2.info.screen),
@@ -61,20 +64,18 @@ export default function CarCompare() {
 
   return (
     <TableContainer component={Paper}>
-      <Table
-        className={classes.table}
-        aria-label="customized table"
-      >
+      <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
             <Grid container spacing={5}>
-              <Grid item xs={2} lg={2} align="center">
-              </Grid>
-              <Grid item xs={5} lg={5} >
+              <Grid item xs={2} lg={2} align="center"></Grid>
+              <Grid item xs={5} lg={5}>
                 <SwipeableTextMobileStepper
                   images={
                     carDetail1.info
-                      ? carDetail1.info.images.filter((image) => image.type == "CAR")
+                      ? carDetail1.info.images.filter(
+                          (image) => image.type == "CAR"
+                        )
                       : [fakeImg]
                   }
                 />
@@ -83,7 +84,9 @@ export default function CarCompare() {
                 <SwipeableTextMobileStepper
                   images={
                     carDetail2.info
-                      ? carDetail2.info.images.filter((image) => image.type == "CAR")
+                      ? carDetail2.info.images.filter(
+                          (image) => image.type == "CAR"
+                        )
                       : [fakeImg]
                   }
                 />

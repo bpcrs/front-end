@@ -11,6 +11,7 @@ import NumberFormat from "react-number-format";
 import PopoverCar from "./PopoverCar";
 import PopoverUser from "./PopoverUser";
 import PopoverPricing from "./PopoverPricing";
+import { useSelector } from "react-redux";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -31,6 +32,8 @@ const StyledTableRow = withStyles((theme) => ({
 }))(TableRow);
 
 export default function ContractTable({ booking }) {
+  const userLogged = useSelector((state) => state.auth.user);
+
   return (
     <TableContainer component={Paper}>
       <Table width="100%" aria-label="customized table">
@@ -91,10 +94,18 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Owner infomation
+              {userLogged.id === booking.renter.id
+                ? "Owner infomation"
+                : "Renter infomation"}
             </StyledTableCell>
             <StyledTableCell align="right">
-              <PopoverUser user={booking.car.owner} />
+              <PopoverUser
+                user={
+                  userLogged.id !== booking.renter.id
+                    ? booking.renter
+                    : booking.car.owner
+                }
+              />
             </StyledTableCell>
           </StyledTableRow>
           <StyledTableRow>
