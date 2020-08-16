@@ -8,8 +8,11 @@ export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 export const FETCH_BRAND_LIST_SUCCESS = "[BRAND_LIST] FETCH DATA SUCCESS";
 export const FETCH_BRAND_LIST_FAILURE = "[BRAND_LIST] FETCH DATA FAILURE";
 
-export const FETCH_BRAND_EDIT_SUCCESS = "[BRAND_EDIT] PUT DATA SUCCESS";
-export const FETCH_BRAND_EDIT_FAILURE = "[BRAND_EDIT] PUT DATA FAILURE";
+export const FETCH_BRAND_EDIT_SUCCESS = "[BRAND] PUT DATA SUCCESS";
+export const FETCH_BRAND_EDIT_FAILURE = "[BRAND] PUT DATA FAILURE";
+
+export const FETCH_BRAND_ADD_SUCCESS = "[BRAND] POST DATA SUCCESS";
+export const FETCH_BRAND_ADD_FAILURE = "[BRAND] POST DATA FAILURE";
 
 export const FETCH_CAR_DETAIL_CHECKING_SUCCESS =
   "[CAR_DETAIL_CHECKING] FETCH DATA SUCCESS";
@@ -50,6 +53,20 @@ export function putEditBrandFailure(error) {
     payload: error,
   };
 }
+
+export function postAddBrandSuccess(brand) {
+  return {
+    type: FETCH_BRAND_ADD_SUCCESS,
+    payload: brand,
+  };
+}
+export function postAddBrandFailure(error) {
+  return {
+    type: FETCH_BRAND_ADD_FAILURE,
+    payload: error,
+  };
+}
+
 export function fetchCountBookingLastMonth(data) {
   return {
     type: FETCH_COUNT_LAST_MONTH_REQUESTS,
@@ -215,6 +232,24 @@ export function fetchBrandByAdminList(page, size) {
       },
       (error) => {
         dispatch(fetchBrandListFailure(error.message));
+      }
+    );
+  };
+}
+
+export function addBrand(name, imageUrl) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BRAND_CONTROLLER_GETALL, { name, imageUrl });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postAddBrandSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(postAddBrandFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(postAddBrandFailure(error.message));
       }
     );
   };

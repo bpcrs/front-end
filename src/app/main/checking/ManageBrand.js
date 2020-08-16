@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { fetchBrandByAdminList, updateBrand } from "./checking.action";
+import { fetchBrandByAdminList, updateBrand, addBrand } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -56,7 +56,9 @@ export default function ManageBrand() {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = (brand) => {
-    setCurrentBrand(brand);
+    if (brand != null) {
+      setCurrentBrand(brand);
+    }
     setOpen(true);
   };
 
@@ -69,7 +71,7 @@ export default function ManageBrand() {
   const uploadImage = (event) => {
     postImg(event.target.files[0]);
   };
-  
+
   const postImg = (image) => {
     const metadata = {
       contentType: "image/jpeg",
@@ -89,15 +91,14 @@ export default function ManageBrand() {
     });
   };
   const handleUpdateBrand = () => {
-    dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+    if (currentBrand.id == null) {
+      dispatch(addBrand(currentBrand.name, currentBrand.logoLink));
+    } else {
+      dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+    }
     setCurrentBrand([]);
     setOpen(false);
   }
-  // const handleUpdateBrand = () => {
-  //   dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
-  //   setCurrentBrand([]);
-  //   setOpen(false);
-  // }
   const handleClose = () => {
     setOpen(false);
   };
