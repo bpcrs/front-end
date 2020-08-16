@@ -1,5 +1,6 @@
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
+import { registerSuccess } from "../user/profile.action";
 
 export const USER_LICENSE_UPDATE_SUCCESS = "[USER_LICENSE] UPDATE SUCCESS";
 export const USER_LICENSE_UPDATE_FAILURE = "[USER_LICENSE] UPDATE FAILURE";
@@ -50,6 +51,7 @@ export function updateUserLicense(user) {
         if (response.success) {
           dispatch(updateUserLicenseSuccess(response.data));
           dispatch(showMessageSuccess("Update success"));
+          dispatch(registerSuccess());
         } else {
           dispatch(updateUserLicenseFailure(response.message));
           dispatch(showMessageError(response.message));

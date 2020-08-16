@@ -27,7 +27,8 @@ import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
 import { checkVerifyRequest, sendOTPConfirm } from "./profile.action";
-import CalendarApp from "../../calendar/CalendarApp";
+import UpdateProfile from "./UpdateProfile";
+import { fetchUserDetail } from "../submitLicense/license.action";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -125,6 +126,8 @@ const Profile = () => {
   useEffect(() => {
     dispatch(resetFlagCreateBooking());
     dispatch(checkVerifyRequest());
+    dispatch(fetchUserDetail(userLogged.id));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
   return (
     <Layout name="Profile">
@@ -227,6 +230,7 @@ const Profile = () => {
                 >
                   <MyLicense />
                 </Typography>
+                <UpdateProfile />
                 <Button
                   variant="text"
                   style={{ textTransform: "none", color: "red" }}

@@ -165,11 +165,6 @@ function RegisterCar() {
         <DialogContent>
           <CarSubmit />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={() =>} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
       <Dialog open={loading} scroll="body">
         <DialogContent>
@@ -195,7 +190,7 @@ function RegisterCar() {
                 Checking information
               </Typography>
               <Typography variant="caption">
-                We uploading your car, please wait a minutes...
+                We are uploading, please wait a minutes...
               </Typography>
             </Grid>
           </Grid>
