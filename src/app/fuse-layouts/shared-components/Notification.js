@@ -337,7 +337,7 @@ const Notification = () => {
     <React.Fragment>
       <Button onClick={notificationClick}>
         <Badge
-          badgeContent={notification.filter((item) => !item.isSeen).length}
+          badgeContent={notification.filter((item) => item.isSeen).length}
           color="error"
         >
           <Icon>notifications_outlined</Icon>
