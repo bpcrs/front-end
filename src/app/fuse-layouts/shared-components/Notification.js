@@ -23,9 +23,7 @@ import {
   MY_NOTIFICATION_STATUS,
 } from "../../../constant";
 import { blue, grey, green, red, yellow } from "@material-ui/core/colors";
-import ReactTimeago from "react-timeago";
-// import { theme } from "@chakra-ui/core";
-// import { blue } from "@material-ui/core/colors";
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   notification: {
     padding: theme.spacing(1),
@@ -88,7 +86,7 @@ const NotificationUI = ({ header, createAt, isSeen, type, content }) => {
             </Typography>
           </span>
           <Typography variant="caption" style={{ color: grey[500] }}>
-            <ReactTimeago date={new Date(createAt)}></ReactTimeago>
+            {moment.utc(createAt).local().fromNow()}
           </Typography>
         </Grid>
         <Badge variant="dot" color="primary" invisible={!isSeen} />
@@ -144,68 +142,69 @@ const Notification = () => {
       case BOOKING_STATUS.PROCESSING:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content="Thanks for choose our services! Happy your trip"
+            header="Trip already"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="info"
           />
         );
       case MY_NOTIFICATION_STATUS.YOU_SIGNED:
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <NotificationUI
-            text="A"
-            createAt={notify.status}
+            content={`Contract of booking has been signed.`}
+            header="Contract already"
+            createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="success"
           />
         );
       case BOOKING_STATUS.BOOKED:
         return (
           <NotificationUI
-            content="BOOKED"
-            header="OK"
+            content="Car already"
+            header="Car already for booking"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="success"
           />
         );
       case BOOKING_STATUS.CONFIRM:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content="Congart, Booking is valid"
+            header="Booking is confrimed"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="success"
           />
         );
       case BOOKING_STATUS.DENY:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content="Your booking has been deny"
+            header="Opps, :( "
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="error"
           />
         );
       case BOOKING_STATUS.REQUEST:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content="Thanks for choose our services! Happy your trip"
+            header="Trip already"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="info"
           />
         );
       case BOOKING_STATUS.OWNER_ACCEPTED:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content="Success, Owner already for agreements"
+            header="Success"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="warn"
