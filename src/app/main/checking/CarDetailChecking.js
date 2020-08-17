@@ -160,7 +160,8 @@ export default function CarDetailChecking({ car }) {
       "Car is accepted. Now your car is Available on system and can be rent!",
       car.owner.email,
       true,
-      car
+      car,
+      car.owner
     );
     dispatch(putCarUpdate(car.id, "UNAVAILABLE"));
     history.push({
@@ -169,7 +170,7 @@ export default function CarDetailChecking({ car }) {
   };
 
   const handleDenyCar = () => {
-    notificationUserCar(valueCheckBox, car.owner.email, false, car);
+    notificationUserCar(valueCheckBox, car.owner.email, false, car, car.owner);
     history.push({
       pathname: APP_PATH.CHECKING,
     });

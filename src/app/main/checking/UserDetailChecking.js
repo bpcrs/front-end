@@ -119,7 +119,8 @@ export default function UserDetailChecking(props) {
     notificationLicenseUser(
       "Your license have been Accepted",
       currentUser.email,
-      true
+      true,
+      currentUser
     );
     dispatch(approveUser(userId, true));
     history.push({
@@ -128,7 +129,7 @@ export default function UserDetailChecking(props) {
   };
 
   const handleSendNotificationCheckLicense = () => {
-    notificationLicenseUser(valueCheckBox, currentUser.email, false);
+    notificationLicenseUser(valueCheckBox, currentUser.email, false, currentUser);
     setOpen(false);
 
     history.push({
