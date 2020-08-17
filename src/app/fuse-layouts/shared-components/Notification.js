@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
-import { APP_PATH, BOOKING_STATUS } from "../../../constant";
+import { APP_PATH, BOOKING_STATUS, CAR_REGISTER } from "../../../constant";
 import { blue, grey, green, red, yellow } from "@material-ui/core/colors";
 import moment from "moment";
 
@@ -134,7 +134,7 @@ const Notification = () => {
       });
   };
   const renderNotification = (notify) => {
-    const isOwner = notify.renter.id !== userLogged.id;
+    const isOwner = notify.renter && notify.renter.id !== userLogged.id;
     switch (notify.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
@@ -248,55 +248,86 @@ const Notification = () => {
             type="success"
           />
         );
-      case BOOKING_STATUS.DENYLICENSE:
+      case CAR_REGISTER.DENYLICENSE:
         return (
           <NotificationUI
             content={
               <div>
-                <div style={{ color: "red" }}>Note:</div>
+                {`Your account not confirm by Admin.`}
                 <div>
-                  <p>{notify.message.checkedA}</p>
-                  <p>{notify.message.checkedB}</p>
-                  <p>{notify.message.checkedC}</p>
-                  <p>{notify.message.checkedD}</p>
-                  <p>{notify.message.checkedE}</p>
+                  {notify.message.checkedA && (
+                    <p>- {notify.message.checkedA}</p>
+                  )}
+                  {notify.message.checkedB && (
+                    <p>- {notify.message.checkedB}</p>
+                  )}
+                  {notify.message.checkedC && (
+                    <p>- {notify.message.checkedC}</p>
+                  )}
+                  {notify.message.checkedD && (
+                    <p>- {notify.message.checkedD}</p>
+                  )}
+                  {notify.message.checkedE && (
+                    <p>- {notify.message.checkedE}</p>
+                  )}
                 </div>
               </div>
             }
-            header={notify.status}
-            createAt={notify.createAt}
-            isSeen={notify.isSeen}
-            type="error"
-          />
-        );
-      case BOOKING_STATUS.ACCEPTLICENSE:
-        return (
-          <NotificationUI
-            content={isOwner ? "1" : "2"}
-            header="OK"
+            header={"Account invalid"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="warn"
           />
         );
-      case BOOKING_STATUS.DENYCAR:
+      case CAR_REGISTER.ACCEPTLICENSE:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content={"Your account ready to rental or booking."}
+            header={"Confirm success"}
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="success"
+          />
+        );
+      case CAR_REGISTER.DENYCAR:
+        return (
+          <NotificationUI
+            content={
+              <div>
+                {`Your car with plate number ${notify.car.plateNum} is invalid.`}
+                <div>
+                  {notify.message.checkedA && (
+                    <p>- {notify.message.checkedA}</p>
+                  )}
+                  {notify.message.checkedB && (
+                    <p>- {notify.message.checkedB}</p>
+                  )}
+                  {notify.message.checkedC && (
+                    <p>- {notify.message.checkedC}</p>
+                  )}
+                  {notify.message.checkedD && (
+                    <p>- {notify.message.checkedD}</p>
+                  )}
+                  {notify.message.checkedE && (
+                    <p>- {notify.message.checkedE}</p>
+                  )}
+                </div>
+              </div>
+            }
+            header={"Car infomation invalid"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="warn"
           />
         );
-      case BOOKING_STATUS.ACCEPTCAR:
+      case CAR_REGISTER.ACCEPTCAR:
         return (
           <NotificationUI
-            content={notify.status}
-            header="OK"
+            content={"Your car already for rental."}
+            header={"Register success"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="success"
           />
         );
       default:
