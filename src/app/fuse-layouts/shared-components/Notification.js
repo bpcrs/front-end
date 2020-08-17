@@ -87,7 +87,7 @@ const NotificationUI = ({ header, createAt, isSeen, type, content }) => {
             {moment.utc(createAt).local().fromNow()}
           </Typography>
         </Grid>
-        <Badge variant="dot" color="primary" invisible={!isSeen} />
+        <Badge variant="dot" color="primary" invisible={isSeen} />
       </Grid>
     </CardActionArea>
   );
@@ -329,7 +329,7 @@ const Notification = () => {
     <React.Fragment>
       <Button onClick={notificationClick}>
         <Badge
-          badgeContent={notification.filter((item) => item.isSeen).length}
+          badgeContent={notification.filter((item) => !item.isSeen).length}
           color="error"
         >
           <Icon>notifications_outlined</Icon>
