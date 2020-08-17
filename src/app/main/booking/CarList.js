@@ -270,8 +270,8 @@ function CarList(props) {
           <Grid
             item
             xs={12}
-            xl={3}
-            lg={3}
+            xl={4}
+            lg={4}
             className={classes.paper}
             key={index}
           >

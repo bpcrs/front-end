@@ -71,8 +71,14 @@ export default function CarItem(props = { isAction: true }) {
       setOpen(true);
     }
   };
+  const [hoving, setHoving] = useState(0);
   return (
-    <Card className={classes.card}>
+    <Card
+      elevation={hoving === info.id ? 4 : 0}
+      className={classes.card}
+      onMouseOver={() => setHoving(info.id)}
+      onMouseOut={() => setHoving(0)}
+    >
       <CardHeader
         avatar={
           <Grid>
