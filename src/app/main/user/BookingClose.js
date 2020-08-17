@@ -86,6 +86,7 @@ export default function BookingClose({ booking, openClose }) {
     overdue: false,
     violate: false,
   });
+  const { agreements } = preReturnPrice;
   const mileageAgree = preReturnPrice.extra
     ? preReturnPrice.agreements.filter(
         (item) => item.criteria.name === CRITERIA_NAME.MILEAGE_LIMIT
@@ -117,7 +118,26 @@ export default function BookingClose({ booking, openClose }) {
       openTotalBill(true);
     }, 3000);
   };
-
+  const getCriteriaValueByName = (name) => {
+    if (
+      agreements &&
+      agreements.filter((item) => item.criteria.name === name)[0]
+    ) {
+      const agreement = agreements.filter(
+        (item) => item.criteria.name === name
+      )[0];
+      return {
+        unit: agreement.criteria.unit,
+        value: JSON.parse(agreement.value),
+        approved: agreement.approved,
+      };
+    }
+    return {
+      unit: "",
+      value: "N/A",
+      approved: false,
+    };
+  };
   return (
     <Grid container>
       <Grid item container lg={6} className={classes.info}>
@@ -485,7 +505,10 @@ export default function BookingClose({ booking, openClose }) {
                                 align="left"
                               >
                                 <NumberFormat
-                                  value="2000"
+                                  value={
+                                    getCriteriaValueByName(CRITERIA_NAME.EXTRA)
+                                      .value
+                                  }
                                   displayType={"text"}
                                   thousandSeparator={true}
                                   suffix={" đ"}
