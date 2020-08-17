@@ -112,7 +112,7 @@ export default function CarDetails(props) {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.booking.reviews);
   const carDetail = useSelector((state) => state.booking.carDetail);
-  const { booking } = props.location.state;
+  const { booking, callback } = props.location.state;
   const [bookingChange, setBookingChange] = useState(booking);
   const distance = useSelector((state) => state.booking.distance);
   const [selectedDate, setDateChange] = useState([

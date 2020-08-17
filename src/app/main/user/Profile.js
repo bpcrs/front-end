@@ -277,21 +277,8 @@ const Profile = () => {
               onChange={handleSetTab}
               aria-label="Vertical tabs example"
             >
-              <Tab
-                // icon={<DriveEtaIcon />}
-                label="Car Information"
-                {...a11yProps(0)}
-              />
-              <Tab
-                // icon={<HistoryIcon />}
-                label="My Booking"
-                {...a11yProps(1)}
-              />
-              {/* <Tab
-                // icon={<UpdateIcon />}
-                label="Lease History"
-                {...a11yProps(3)}
-              />  */}
+              <Tab label="Car Information" {...a11yProps(0)} />
+              <Tab label="My Booking" {...a11yProps(1)} />
             </Tabs>
           </Grid>
           <Grid item xs={12} sm={12}>
@@ -301,7 +288,6 @@ const Profile = () => {
             <TabPanel value={tab} index={1} tab={1}>
               <MyBooking />
             </TabPanel>
-            {/* <TabPanel value={tab} index={3}></TabPanel> */}
           </Grid>
         </Grid>
       </div>

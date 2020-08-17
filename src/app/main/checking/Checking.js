@@ -17,6 +17,7 @@ import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import ManageBrand from "./ManageBrand";
+import ManageModel from "./ManageModel";
 import Widget from "../checking/Widget";
 import BookingWidget from "../checking/BookingWidget";
 function TabPanel(props) {
@@ -135,7 +136,9 @@ export default function Cheking() {
           <TabPanel value={tab} index={2}>
             <ManageBrand />
           </TabPanel>
-          <TabPanel value={tab} index={3}></TabPanel>
+          <TabPanel value={tab} index={3}>
+            <ManageModel />
+          </TabPanel>
         </Grid>
       </Grid>
     </Layout>

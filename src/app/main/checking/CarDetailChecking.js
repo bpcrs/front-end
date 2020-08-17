@@ -8,22 +8,21 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Icon,
+  Tabs,
+  Tab,
+  Box,
+  Typography,
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
-import CancelIcon from "@material-ui/icons/Cancel";
-import Layout from "../../layout";
-import {
-  fetchCarDetailCheck,
-  putCarUpdate,
-  notificationUserCar,
-} from "./checking.action";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { putCarUpdate, notificationUserCar } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+import PropTypes from "prop-types";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -59,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
   card: {
-    margin: 20,
-    padding: 20,
+    margin: 10,
+    padding: 10,
   },
   button: {
     margin: theme.spacing(1),
@@ -71,31 +70,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const fakeImg =
-  "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
-export default function CarDetailChecking(props) {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  tab: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
+  };
+}
+
+export default function CarDetailChecking({ car, callback }) {
+  console.log(car);
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
-  const carDetail = useSelector((state) => state.checking.carDetail);
-  const [currentCar, setCurrentCar] = useState({});
   const [open, setOpen] = React.useState(false);
-  const { carId } = props.location.state;
-  // const [message, setMessage] = useState();
+  const [tab, setTab] = useState(0);
 
   const reason1 = "License not clear";
   const reason2 = "Image car not clear";
   const reason3 = "Wrong information car";
   const reason4 = "Don't have License";
-
-  useEffect(() => {
-    const fetchCar = () => {
-      dispatch(fetchCarDetailCheck(carId));
-      setCurrentCar(carDetail);
-    };
-    fetchCar();
-  }, [carDetail, carDetail.id, carId, dispatch]);
 
   const [valueCheckBox, setValueCheckBox] = useState({
     checkedA: "",
@@ -126,10 +144,6 @@ export default function CarDetailChecking(props) {
     });
   };
 
-  // const handleChangeInput = (event) => {
-  //   setMessage(event.target.value);
-  // };
-
   const handleValueAutoDrive = (state) => {
     if (state) {
       return "TRUE";
@@ -139,44 +153,21 @@ export default function CarDetailChecking(props) {
   };
 
   const handleAcceptCar = () => {
-    // notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
     notificationUserCar(
       "Car is accepted. Now your car is Available on system and can be rent!",
-      currentCar.owner.email,
+      car.owner.email,
       true,
-      carDetail
+      car,
+      car.owner
     );
-    dispatch(
-      // putCarUpdate(currentCar.id, {
-      //   // available: true,
-      //   status: "AVAILABLE"
-      // })
-      putCarUpdate(currentCar.id, "UNAVAILABLE")
-    );
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+    dispatch(putCarUpdate(car.id, "UNAVAILABLE"));
+    callback();
   };
 
   const handleDenyCar = () => {
-    // notificationUser(message, currentCar.owner.email, false);
-    // notificationUserCar(message, currentCar.owner.email, false, carDetail)
-    notificationUserCar(
-      valueCheckBox,
-      currentCar.owner.email,
-      false,
-      carDetail
-    );
-    // dispatch(
-    //   // putCarUpdate(currentCar.id, {
-    //   //   // available: false,
-    //   //   status: "UNAVAILABLE"
-    //   // })
-    //   putCarUpdate(currentCar.id, "UNAVAILABLE")
-    // );
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+    notificationUserCar(valueCheckBox, car.owner.email, false, car);
+    dispatch(showMessageSuccess("Denied success"));
+    callback();
   };
 
   const handleClickOpen = () => {
@@ -187,162 +178,177 @@ export default function CarDetailChecking(props) {
     setOpen(false);
   };
 
+  const handleSetTab = (event, newTab) => {
+    setTab(newTab);
+  };
+
   return (
-    <Layout name="Car checking form">
-      <Grid container>
-        <Grid item xs={12} lg={6} sm={6}>
-          <Card className={classes.card}>
-            <TextField
-              className={classes.textField}
-              label="Brand"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-              value={currentCar.brand ? currentCar.brand.name : ""}
-            />
-            <TextField
-              className={classes.textField}
-              label="Model"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-              value={currentCar.model ? currentCar.model.name : ""}
-            />
-            <TextField
-              className={classes.textField}
-              id="year"
-              name="year"
-              value={currentCar.year ? currentCar.year : ""}
-              label="Years"
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              id="name"
-              value={currentCar.name ? currentCar.name : ""}
-              label="Name"
-              name="name"
-              InputProps={{
-                readOnly: true,
-              }}
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              label="Auto Drive"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-              value={handleValueAutoDrive(currentCar.autoDrive)}
-            />
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} lg={6} sm={6}>
-          <Card className={classes.card}>
-            <TextField
-              className={classes.textField}
-              id="vin"
-              InputProps={{
-                readOnly: true,
-              }}
-              name="vin"
-              value={currentCar.vin ? currentCar.vin : ""}
-              label="Vin number"
-              variant="outlined"
-            />
-            <TextField
-              className={classes.textField}
-              id="seat"
-              name="seat"
-              value={currentCar.seat ? currentCar.seat : ""}
-              label="Seat"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-
-            <TextField
-              className={classes.textField}
-              id="screen"
-              name="screen"
-              value={currentCar.screen ? currentCar.screen : ""}
-              label="Screen"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              className={classes.textField}
-              id="price"
-              name="price"
-              value={currentCar.price ? currentCar.price : ""}
-              label="Price (per day)"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-            <TextField
-              className={classes.textField}
-              id="plateNum"
-              name="plateNum"
-              value={currentCar.plateNum ? currentCar.plateNum : ""}
-              label="Plate number"
-              variant="outlined"
-              InputProps={{
-                readOnly: true,
-              }}
-            />
-          </Card>
-        </Grid>
+    <Grid item container>
+      <Grid item xs={12} lg={12}>
+        <Tabs
+          indicatorColor="primary"
+          textColor="primary"
+          orientation="horizontal"
+          variant="scrollable"
+          value={tab}
+          onChange={handleSetTab}
+          aria-label="Vertical tabs example"
+        >
+          <Tab label="Car Information" {...a11yProps(0)} />
+          <Tab label="Car Image" {...a11yProps(1)} />
+          <Tab label="License Image" {...a11yProps(2)} />
+        </Tabs>
       </Grid>
-      <Grid container justify="center">
-        <Grid item xs={12} lg={8} sm={12}>
+      <Grid item xs={12} sm={12}>
+        <TabPanel value={tab} index={0} tab={0}>
+          <Grid item container lg={12}>
+            <Grid item container lg={6}>
+              <TextField
+                className={classes.textField}
+                label="Brand"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={car.brand ? car.brand.name : ""}
+              />
+              <TextField
+                className={classes.textField}
+                label="Model"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={car.model ? car.model.name : ""}
+              />
+              <TextField
+                className={classes.textField}
+                id="year"
+                name="year"
+                value={car.year ? car.year : ""}
+                label="Years"
+                InputProps={{
+                  readOnly: true,
+                }}
+                variant="outlined"
+              />
+              <TextField
+                className={classes.textField}
+                id="name"
+                value={car.name ? car.name : ""}
+                label="Name"
+                name="name"
+                InputProps={{
+                  readOnly: true,
+                }}
+                variant="outlined"
+              />
+              <TextField
+                className={classes.textField}
+                label="Auto Drive"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+                value={handleValueAutoDrive(car.autoDrive)}
+              />
+            </Grid>
+            <Grid item container lg={6}>
+              <TextField
+                className={classes.textField}
+                id="vin"
+                InputProps={{
+                  readOnly: true,
+                }}
+                name="vin"
+                value={car.vin ? car.vin : ""}
+                label="Vin number"
+                variant="outlined"
+              />
+              <TextField
+                className={classes.textField}
+                id="seat"
+                name="seat"
+                value={car.seat ? car.seat : ""}
+                label="Seat"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+
+              <TextField
+                className={classes.textField}
+                id="screen"
+                name="screen"
+                value={car.screen ? car.screen : ""}
+                label="Screen"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                className={classes.textField}
+                id="price"
+                name="price"
+                value={car.price ? car.price : ""}
+                label="Price (per day)"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                className={classes.textField}
+                id="plateNum"
+                name="plateNum"
+                value={car.plateNum ? car.plateNum : ""}
+                label="Plate number"
+                variant="outlined"
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={1} tab={1}>
           <Card className={classes.card}>
             <SwipeableTextMobileStepper
               images={
-                currentCar.images
-                  ? currentCar.images.filter((image) => image.type == "CAR")
-                  : [fakeImg]
-              }
-            />
-            <SwipeableTextMobileStepper
-              images={
-                currentCar.images
-                  ? currentCar.images.filter((image) => image.type == "LICENSE")
-                  : [fakeImg]
+                car.images && car.images.filter((image) => image.type === "CAR")
               }
             />
           </Card>
-        </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={2} tab={2}>
+          <Card className={classes.card}>
+            <SwipeableTextMobileStepper
+              images={
+                car.images &&
+                car.images.filter((image) => image.type === "LICENSE")
+              }
+            />
+          </Card>
+        </TabPanel>
       </Grid>
-      <Grid container justify="center">
-        <Grid item xs={6} lg={6}>
+      <Grid item container justify="space-around">
+        <Grid item>
           <Button
             variant="contained"
             color="primary"
             onClick={() => handleAcceptCar()}
             startIcon={<CheckCircleIcon />}
-            style={{ marginLeft: "30%" }}
           >
             Accept
           </Button>
         </Grid>
-        <Grid item xs={6} lg={6}>
+        <Grid item>
           <Button
             variant="contained"
             color="primary"
-            startIcon={<CancelIcon />}
-            style={{ marginLeft: "30%" }}
+            startIcon={<Icon>cancel</Icon>}
             onClick={handleClickOpen}
           >
             Deny
@@ -356,16 +362,6 @@ export default function CarDetailChecking(props) {
       >
         <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
         <DialogContent>
-          {/* <TextareaAutosize
-            className={classes.textArea}
-            autoFocus
-            margin="dense"
-            onChange={handleChangeInput}
-            id="message"
-            name="message"
-            label="Reason"
-            fullWidth
-          /> */}
           <Grid container>
             <Grid item xs={12} lg={12}>
               <FormControlLabel
@@ -440,6 +436,6 @@ export default function CarDetailChecking(props) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Layout>
+    </Grid>
   );
 }

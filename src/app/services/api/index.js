@@ -117,9 +117,12 @@ export const ENDPOINT = {
 
   BRAND_CONTROLLER_GETALL: "/brand",
   BRAND_CONTROLLER_GETALLBY_ADMIN: "/brand/admin",
+
   BRAND_UPDATE: (id) => `/brand/${id}`,
 
   MODEL_CONTROLLER_GETALL: "/model",
+  MODEL_CONTROLLER_GETALLBY_ADMIN: "/model/admin",
+  MODEL_UPDATE: (id) => `/model/${id}`,
 
   BOOKING_CONTROLLER_GETALL: "/booking",
   BOOKING_CONTROLLER_GETBYID: (id) => `/booking/${id}`,
