@@ -23,7 +23,7 @@ import ContractTable from "./ContractTable";
 import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useDispatch, useSelector } from "react-redux";
-import { getPreReturnPriceBooking } from "./profile.action";
+import { postReturnBooking } from "./profile.action";
 import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
@@ -97,7 +97,7 @@ export default function BookingClose({ booking, openClose }) {
   const handleExceedLimit = () => {
     setLoading(true);
     console.log(odemeter);
-    dispatch(getPreReturnPriceBooking(booking.id, odemeter));
+    dispatch(postReturnBooking(booking.id, odemeter));
     setTimeout(() => {
       setLoading(false);
       setOpen(true);

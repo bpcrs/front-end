@@ -307,11 +307,14 @@ export function getTrackingsByBooking(id) {
   };
 }
 
-export function getPreReturnPriceBooking(id, odmeter) {
+export function postReturnBooking(id, odometer = 0) {
   return (dispatch) => {
-    const request = POST(ENDPOINT.BOOKING_CONTROLLER_RETURN_PRICE_GETBYID(id), {
-      odmeter,
+    let request = POST(ENDPOINT.BOOKING_CONTROLLER_RETURN_BOOKING_GETBYID(id), {
+      odometer,
     });
+    if (odometer === 0) {
+      request = POST(ENDPOINT.BOOKING_CONTROLLER_ESTIMATE_PRICE_GETBYID(id));
+    }
     request.then(
       (response) => {
         dispatch(
