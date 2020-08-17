@@ -14,14 +14,17 @@ import {
   createAgreement,
   submitMessage,
   deleteAllMsgByTypeFromFirebase,
-  fetchAgreementList,
   closeAgreementDrawer,
   changeBookingStatusRequest,
 } from "./chat.action";
 import { useEffect } from "react";
 import { BOOKING_STATUS, CRITERIA_NAME } from "../../../constant";
-import { useCallback } from "react";
-import { Grid, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -189,7 +192,7 @@ export default function VerticalLinearStepper() {
           </React.Fragment>
         );
       case 2:
-        return <React.Fragment>You comfirm agreement</React.Fragment>;
+        return <React.Fragment></React.Fragment>;
       default:
         return "Unknown step";
     }
@@ -235,26 +238,21 @@ export default function VerticalLinearStepper() {
             <StepLabel>{label}</StepLabel>
             <StepContent>
               <Dialog open={open} scroll="body" onClose={handleClose}>
+                <DialogTitle id="alert-dialog-title">
+                  Skip this agreement?
+                </DialogTitle>
                 <DialogContent>
-                  <Typography variant="subtitle2" color="textPrimary">
+                  <Typography variant="subtitle2" color="textSecondary">
                     If you skip this agreement, This agreement will take the
                     default value.
                   </Typography>
                 </DialogContent>
                 <DialogActions>
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: "red", color: "white" }}
-                    onClick={handleClose}
-                  >
+                  <Button style={{ color: "red" }} onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSkip}
-                  >
-                    I skip this agreement
+                  <Button color="primary" onClick={handleSkip}>
+                    Agree
                   </Button>
                 </DialogActions>
               </Dialog>
@@ -310,7 +308,7 @@ export default function VerticalLinearStepper() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? "Finish" : "Send"}
+                    {activeStep === steps.length - 1 ? "Confirm" : "Send"}
                   </Button>
                 </div>
               </div>
@@ -320,7 +318,9 @@ export default function VerticalLinearStepper() {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Typography>
+            All agreements completed - you&apos;re finished
+          </Typography>
         </Paper>
       )}
       {selectedBooking.status === BOOKING_STATUS.PENDING ? (

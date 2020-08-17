@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { theme } from "@chakra-ui/core";
 import {
   Grid,
   Typography,
@@ -25,7 +24,6 @@ import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useDispatch, useSelector } from "react-redux";
 import { getPreReturnPriceBooking } from "./profile.action";
-import { fetchAgreementList } from "../chat/chat.action";
 import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
@@ -83,7 +81,7 @@ export default function BookingClose({ booking, openClose }) {
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
   const [totalBill, openTotalBill] = useState(false);
-  const [odemeter, setOdemeter] = useState(0);
+  const [odemeter, setOdemeter] = useState(booking && booking.car.odometer);
   const [checkboxValue, setCheckboxValue] = useState({
     carDamage: false,
     overdue: false,
@@ -430,6 +428,23 @@ export default function BookingClose({ booking, openClose }) {
                                       item.criteria.name ===
                                       CRITERIA_NAME.MILEAGE_LIMIT
                                   )[0].value}
+                              </Typography>
+                            </Grid>
+                            <Grid container justify="space-between">
+                              <Typography
+                                variant="subtitle1"
+                                color="initial"
+                                align="right"
+                                display="initial"
+                              >
+                                - Current odmeter
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textPrimary"
+                                align="left"
+                              >
+                                {booking.car.odometer}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />

@@ -1,16 +1,29 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, Button, Typography, TextField, Dialog, DialogTitle, DialogContent, TextareaAutosize, DialogActions } from "@material-ui/core";
+import {
+  Grid,
+  Card,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Layout from "../../layout";
-import { fetchCarDetailCheck, putCarUpdate, notificationUser, notificationUserCar } from "./checking.action";
+import {
+  fetchCarDetailCheck,
+  putCarUpdate,
+  notificationUserCar,
+} from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.contrastText,
   },
   textArea: {
-    width: 500
+    width: 500,
   },
 
   gridList: {
@@ -58,8 +71,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const fakeImg =
   "https://blog.mycar.vn/wp-content/uploads/2019/11/Tham-khao-mau-Honda-Civic-mau-trang.jpeg";
 
@@ -84,9 +95,7 @@ export default function CarDetailChecking(props) {
       setCurrentCar(carDetail);
     };
     fetchCar();
-  }, [
-    carDetail.id,
-  ]);
+  }, [carDetail, carDetail.id, carId, dispatch]);
 
   const [valueCheckBox, setValueCheckBox] = useState({
     checkedA: "",
@@ -108,15 +117,13 @@ export default function CarDetailChecking(props) {
         [event.target.name]: "",
       });
     }
-
   };
-
 
   const handleChangeBoxAnotherReason = (event) => {
     setValueCheckBox({
       ...valueCheckBox,
       checkedE: event.target.value,
-    })
+    });
   };
 
   // const handleChangeInput = (event) => {
@@ -162,7 +169,6 @@ export default function CarDetailChecking(props) {
     });
   };
 
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -172,7 +178,6 @@ export default function CarDetailChecking(props) {
   };
 
   return (
-
     <Layout name="Car checking form">
       <Grid container>
         <Grid item xs={12} lg={6} sm={6}>
@@ -337,7 +342,8 @@ export default function CarDetailChecking(props) {
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="form-dialog-title">
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
         <DialogContent>
           {/* <TextareaAutosize
@@ -353,12 +359,12 @@ export default function CarDetailChecking(props) {
           <Grid container>
             <Grid item xs={12} lg={12}>
               <FormControlLabel
-                control=
-                {<Checkbox
-                  name="checkedA"
-                  value={reason1}
-                  onChange={handleChangeBox}
-                />
+                control={
+                  <Checkbox
+                    name="checkedA"
+                    value={reason1}
+                    onChange={handleChangeBox}
+                  />
                 }
                 label={reason1}
               />
@@ -423,7 +429,7 @@ export default function CarDetailChecking(props) {
             Confirm
           </Button>
         </DialogActions>
-      </Dialog >
-    </Layout >
+      </Dialog>
+    </Layout>
   );
 }

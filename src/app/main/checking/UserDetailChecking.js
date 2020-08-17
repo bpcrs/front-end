@@ -1,16 +1,13 @@
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   Card,
-  CardHeader,
-  Avatar,
   Button,
   TextField,
   Dialog,
   DialogActions,
   DialogContent,
 } from "@material-ui/core";
-import SettingIcon from "@material-ui/icons/Settings";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -70,7 +67,6 @@ export default function UserDetailChecking(props) {
   const [currentUser, setCurrentUser] = useState({});
   const changePage = useSelector((state) => state.checking.changePage);
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState();
   const [linkImage, setLinkImage] = useState([]);
   const reason1 = "License not clear";
   const reason2 = "Identification not clear";
@@ -217,7 +213,13 @@ export default function UserDetailChecking(props) {
                     <div style={{ textAlign: "center" }}>
                       <p>Picture {index + 1}</p>
                       <p>
-                        <img src={image} id="output" width="200" height="200" />
+                        <img
+                          alt={index}
+                          src={image}
+                          id="output"
+                          width="200"
+                          height="200"
+                        />
                       </p>
                     </div>
                   </Grid>

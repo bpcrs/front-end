@@ -105,7 +105,6 @@ function Row({ booking, carId, currentUser, flag }) {
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
     const { booking, carId, isProcess } = props;
-    const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
       handleCloseTimeline();
@@ -122,20 +121,22 @@ function Row({ booking, carId, currentUser, flag }) {
       case BOOKING_STATUS.PROCESSING:
         return (
           <React.Fragment>
-            <Tooltip title={isProcess ? completeText : processingText}>
-              <Button
-                variant="outlined"
-                style={{ textTransform: "none" }}
-                startIcon={
-                  <Icon style={{ color: isProcess ? "green" : "black" }}>
-                    assignment_return
-                  </Icon>
-                }
-                onClick={() => setOpen(true)}
-              >
-                {isProcess ? completeText : processingText}
-              </Button>
-            </Tooltip>
+            {booking.car.owner.email === currentUser.email ? (
+              <Tooltip title={isProcess ? completeText : processingText}>
+                <Button
+                  variant="outlined"
+                  style={{ textTransform: "none" }}
+                  startIcon={
+                    <Icon style={{ color: isProcess ? "green" : "black" }}>
+                      assignment_return
+                    </Icon>
+                  }
+                  onClick={() => setOpen(true)}
+                >
+                  {isProcess ? completeText : processingText}
+                </Button>
+              </Tooltip>
+            ) : null}
             <Dialog open={open} scroll="body">
               <DialogContent>
                 {isProcess ? (

@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React from "react";
-import { useTheme, fade, makeStyles } from "@material-ui/core/styles";
+import { fade, makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
@@ -10,7 +10,6 @@ import ButtonBase from "@material-ui/core/ButtonBase";
 import InputBase from "@material-ui/core/InputBase";
 import { Typography } from "@material-ui/core";
 import { useEffect } from "react";
-import { usePrevious } from "@chakra-ui/core";
 import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({

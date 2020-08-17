@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import {
   Avatar,
   Grid,
@@ -8,7 +8,6 @@ import {
   Box,
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import firebase from "../../firebase/firebase";
 import {
   // getRequestFirebase,
   setSelectedBooking,

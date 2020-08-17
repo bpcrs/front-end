@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  withStyles,
-  Card,
-  Icon,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { withStyles, Card, Icon, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
 import { blue } from "@material-ui/core/colors";
@@ -14,13 +8,11 @@ import { fetchCountBookingRequest } from "./checking.action";
 import { BOOKING_STATUS } from "../../../constant";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-const useStyles = makeStyles((theme) => ({}));
-
 const getDateArray = function (start, end) {
   console.log(start);
   console.log(end);
 
-  var arr = new Array();
+  var arr = [];
   var dt = new Date(start);
   while (dt <= end) {
     dt.setDate(dt.getDate() + 1);
@@ -29,7 +21,7 @@ const getDateArray = function (start, end) {
   return arr;
 };
 const now = new Date();
-const BookingWidget = ({ data, theme }) => {
+const BookingWidget = () => {
   const dispatch = useDispatch();
   const requestsLastMonth = useSelector(
     (state) => state.checking.requestsLastMonth
@@ -61,15 +53,6 @@ const BookingWidget = ({ data, theme }) => {
   )
     .toISOString()
     .split("T")[0];
-  const labels = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
 
   const datasets = [
     {

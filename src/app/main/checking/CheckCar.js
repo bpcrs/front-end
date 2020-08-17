@@ -1,11 +1,16 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, Card, CardHeader, Avatar, TableCell, Typography } from "@material-ui/core";
+import {
+  Grid,
+  CardHeader,
+  Avatar,
+  TableCell,
+  Typography,
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import SettingIcon from "@material-ui/icons/Settings";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -66,103 +71,101 @@ export default function CheckCar() {
 
   return (
     <Grid>
-      {
-        cars.count > 0 ? (
-          <Grid container>
-            <Grid xs={12} lg={12}>
-              <TableContainer>
-                <Table
-                  className={classes.table}
-                  aria-label="customized table"
-                  width="100%"
-                >
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell>Name</StyledTableCell>
-                      <StyledTableCell>Date Create</StyledTableCell>
-                      <StyledTableCell>Owner</StyledTableCell>
-                      <StyledTableCell>Status</StyledTableCell>
-                      <StyledTableCell>Action</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {cars.data &&
-                      cars.data.map((car, index) => (
-                        <StyledTableRow
-                          style={{ wordWrap: "break-word", textAlign: "center" }}
-                          key={index}
-                        >
-                          <TableCell component="th" scope="row">
-                            {car.name}
-                          </TableCell>
+      {cars.count > 0 ? (
+        <Grid container>
+          <Grid xs={12} lg={12}>
+            <TableContainer>
+              <Table
+                className={classes.table}
+                aria-label="customized table"
+                width="100%"
+              >
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell>Date Create</StyledTableCell>
+                    <StyledTableCell>Owner</StyledTableCell>
+                    <StyledTableCell>Status</StyledTableCell>
+                    <StyledTableCell>Action</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {cars.data &&
+                    cars.data.map((car, index) => (
+                      <StyledTableRow
+                        style={{ wordWrap: "break-word", textAlign: "center" }}
+                        key={index}
+                      >
+                        <TableCell component="th" scope="row">
+                          {car.name}
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            {new Date(car.createdDate).toLocaleDateString()}
-                          </TableCell>
+                        <TableCell component="th" scope="row">
+                          {new Date(car.createdDate).toLocaleDateString()}
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            <CardHeader
-                              avatar={
-                                <Avatar
-                                  aria-label="recipe"
-                                  className={classes.avatar}
-                                  src={car.owner.imageUrl}
-                                ></Avatar>
-                              }
-                              title={car.owner.fullName}
+                        <TableCell component="th" scope="row">
+                          <CardHeader
+                            avatar={
+                              <Avatar
+                                aria-label="recipe"
+                                className={classes.avatar}
+                                src={car.owner.imageUrl}
+                              ></Avatar>
+                            }
+                            title={car.owner.fullName}
                             // subheader="on rent"
-                            />
-                          </TableCell>
+                          />
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            <div
-                              className={classNames(
-                                "inline text-12 p-4 rounded truncate",
-                                "bg-red text-white"
-                              )}
-                            >
-                              {car.status}
-                            </div>
-                          </TableCell>
+                        <TableCell component="th" scope="row">
+                          <div
+                            className={classNames(
+                              "inline text-12 p-4 rounded truncate",
+                              "bg-red text-white"
+                            )}
+                          >
+                            {car.status}
+                          </div>
+                        </TableCell>
 
-                          <TableCell component="th" scope="row">
-                            <Button
-                              variant="contained"
-                              color="default"
-                              className={classes.button}
-                              startIcon={<DetailsIcon />}
-                              onClick={() => handleCickSetting(car.id)}
-                            >
-                              Check
-                      </Button>
-                          </TableCell>
-                        </StyledTableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-
-            <Grid xs={12} lg={12} item container justify="flex-end">
-              <Pagination
-                count={
-                  cars.count !== 0 && cars.count % size === 0
-                    ? Math.floor(cars.count / size)
-                    : Math.floor(cars.count / size) + 1
-                }
-                color="primary"
-                onChange={(e, page) => setCurrentPage(page)}
-              />
-            </Grid>
+                        <TableCell component="th" scope="row">
+                          <Button
+                            variant="contained"
+                            color="default"
+                            className={classes.button}
+                            startIcon={<DetailsIcon />}
+                            onClick={() => handleCickSetting(car.id)}
+                          >
+                            Check
+                          </Button>
+                        </TableCell>
+                      </StyledTableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
-        ) : (
-            <Grid container justify="center" alignItems="center">
-              <Typography variant="subtitle2" color="error">
-                List registered cars is empty! Please wait the owner register car.
+
+          <Grid xs={12} lg={12} item container justify="flex-end">
+            <Pagination
+              count={
+                cars.count !== 0 && cars.count % size === 0
+                  ? Math.floor(cars.count / size)
+                  : Math.floor(cars.count / size) + 1
+              }
+              color="primary"
+              onChange={(e, page) => setCurrentPage(page)}
+            />
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid container justify="center" alignItems="center">
+          <Typography variant="subtitle2" color="error">
+            List registered cars is empty! Please wait the owner register car.
           </Typography>
-            </Grid >
-          )
-      }
-    </Grid >
+        </Grid>
+      )}
+    </Grid>
   );
 }

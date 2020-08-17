@@ -211,6 +211,11 @@ export function changeBookingStatusRequest(bookingId, status) {
       (response) => {
         if (response.success) {
           dispatch(changeBookingStatusRequestSuccess(response.data));
+          if (response.data.duplicateList) {
+            response.data.duplicateList.forEach((booking) =>
+              notificationBooking(booking)
+            );
+          }
           notificationBooking(response.data);
           dispatch(showMessageSuccess(messageStatusSuccess(status)));
         } else {
@@ -240,6 +245,7 @@ export function signContractRequest(id, otp) {
       (response) => {
         if (response.success) {
           dispatch(showMessageSuccess("Signed contract successful"));
+          notificationBooking(response.data);
         } else {
           dispatch(showMessageError(response.message));
         }

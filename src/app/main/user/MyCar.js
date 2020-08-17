@@ -15,7 +15,6 @@ import {
   Badge,
   Backdrop,
   Paper,
-  Fade,
   Collapse,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -128,7 +127,7 @@ function Row({ car, isDetail, request }) {
       </TableRow>
       <Dialog onClose={handleClose} open={open} scroll="body">
         <DialogContent>
-          <CarEdit carId={car.id} />
+          <CarEdit carId={car.id} callback={handleClose} />
         </DialogContent>
       </Dialog>
     </React.Fragment>
@@ -214,18 +213,18 @@ const MyCar = () => {
   const [refresh, setRefesh] = useState(1);
   const handleClickRefresh = () => {
     setOpen(true);
-    setRefesh((refresh) => refresh + 1);
     setTimeout(() => {
       setOpen(false);
     }, 2000);
+    setRefesh((refresh) => refresh + 1);
   };
 
   useEffect(() => {
     dispatch(fetchCarInformationOwner(currentUser.id, currentPage, size));
-  }, [currentUser.id, dispatch, currentPage, change]);
+  }, [currentUser.id, dispatch, currentPage, change, refresh]);
 
   return (
-    <Grid>
+    <Grid key={refresh}>
       <Backdrop
         className={classes.backdrop}
         open={open}
@@ -260,7 +259,7 @@ const MyCar = () => {
                 <StyledTableCell>Book request</StyledTableCell>
               </TableRow>
             </TableHead>
-            <TableBody key={refresh}>
+            <TableBody>
               {cars.data &&
                 cars.data.map((car, index) => (
                   <Row
@@ -294,7 +293,7 @@ const MyCar = () => {
               height="300px"
             />
           </Grid>
-          <Typography variant="subtitle2" color="error">
+          <Typography variant="subtitle2">
             You haven't registered any cars yet! Please register car.
           </Typography>
         </Grid>

@@ -352,19 +352,19 @@ export function fetchCarFilter(
 }
 
 export function fetchReviewList(page, size, carId) {
-  return (dispatch) => {
-    const request = GET(ENDPOINT.REVIEW_CONTROLLER_GETALL, {
+  return async (dispatch) => {
+    const response = await GET(ENDPOINT.REVIEW_CONTROLLER_GETALL, {
       page,
       size,
       carId,
     });
-    request.then(
-      (response) =>
-        dispatch(fetchReviewSuccess(response.success ? response.data : [])),
-      (error) => {
-        dispatch(showMessageError(error.message));
-      }
-    );
+    if (response.success) {
+      dispatch(fetchReviewSuccess(response.data));
+    } else {
+      dispatch(fetchReviewSuccess({ data: [], count: 0 }));
+
+      // dispatch(showMessageError(response.message));
+    }
   };
 }
 

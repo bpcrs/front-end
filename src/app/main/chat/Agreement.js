@@ -12,8 +12,6 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { closeAgreement } from "./chat.action";
 import { withStyles } from "@material-ui/styles";
 import { useState } from "react";
 import classNames from "classnames";
@@ -114,9 +112,6 @@ export default function Agreement({ type, onSubmit = () => {} }) {
   const handleExtra = (event, newValue) => {
     setExtra(newValue);
     setSelectedValue(newValue);
-  };
-  const handleInsurrance = (event, newValue) => {
-    console.log(newValue);
   };
   useEffect(() => {
     switch (type) {

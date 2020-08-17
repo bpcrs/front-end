@@ -58,7 +58,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function Row(props) {
-  const { booking, currentUser } = props;
+  const { booking } = props;
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -255,7 +255,23 @@ const RentalCarRequest = (props) => {
 
   return (
     <Grid>
-      {rentalBookings ? (
+      <Box hidden={rentalBookings.data && rentalBookings.data.length !== 0}>
+        <Grid container justify="center" alignItems="center">
+          <Grid item>
+            <img
+              src="assets/images/empty.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle2">
+              We did't find any booking right now.
+            </Typography>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box hidden={!rentalBookings.data || rentalBookings.data.length === 0}>
         <TableContainer>
           <Table
             className={classes.table}
@@ -271,33 +287,16 @@ const RentalCarRequest = (props) => {
                 <StyledTableCell>Approve</StyledTableCell>
               </TableRow>
             </TableHead>
-            {rentalBookings.count > 0 ? (
-              <TableBody>
-                {rentalBookings.data &&
-                  rentalBookings.data.map((booking, index) => (
-                    <Row
-                      key={index}
-                      booking={booking}
-                      currentUser={currentUser}
-                    />
-                  ))}
-              </TableBody>
-            ) : (
-              <Grid container justify="center" alignItems="center">
-                <Grid item>
-                  <img
-                    src="assets/images/empty.jpg"
-                    alt="No resourse"
-                    height="300px"
+            <TableBody>
+              {rentalBookings.data &&
+                rentalBookings.data.map((booking, index) => (
+                  <Row
+                    key={index}
+                    booking={booking}
+                    currentUser={currentUser}
                   />
-                </Grid>
-                <Grid item>
-                  <Typography variant="subtitle2" color="error">
-                    Your car don't have any request
-                  </Typography>
-                </Grid>
-              </Grid>
-            )}
+                ))}
+            </TableBody>
           </Table>
           <Grid xs={12} lg={12} item container justify="flex-end">
             <Backdrop className={classes.backdrop} open={loading}>
@@ -314,13 +313,7 @@ const RentalCarRequest = (props) => {
             />
           </Grid>
         </TableContainer>
-      ) : (
-        <Grid>
-          <Typography variant="body2" color="error">
-            Your car don't have any request
-          </Typography>
-        </Grid>
-      )}
+      </Box>
     </Grid>
   );
 };

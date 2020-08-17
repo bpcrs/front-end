@@ -4,36 +4,18 @@ import Formsy from "formsy-react";
 import { Typography, TextField, Button } from "@material-ui/core";
 import {
   Hero,
-  NavBar,
   LandingProvider,
   Footer,
   Faqs,
   FeaturesList,
 } from "landing-blocks/dist";
 import { GradientCurtains } from "landing-blocks/dist/decorations";
-import { APP_CONST } from "../../../constant";
 import { Box } from "@chakra-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
-import Logo from "app/fuse-layouts/shared-components/Logo";
-import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import GoogleMaps from "./GoogleMaps";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
-import { createBooking } from "../booking/booking.action";
-
-function loadScript(src, pickup, destination, id) {
-  if (!pickup || !destination) {
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.setAttribute("async", "");
-  script.setAttribute("id", id);
-  script.src = src;
-  pickup.appendChild(script);
-  destination.appendChild(destination);
-}
 
 const useStyles = makeStyles((theme) => ({
   layoutRoot: {},
@@ -50,40 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function Landing() {
-  const dispatch = useDispatch();
   const history = useHistory();
   const classes = useStyles();
-  const userLogged = useSelector((state) => state.auth.user);
   const [location, setLocation] = useState();
   const [destination, setDestination] = useState();
   const [selectedDate, handleDateChange] = useState([null, null]);
-
-  const distance = () => {
-    const script = document.createElement("script");
-    script.setAttribute("async", "");
-    script.setAttribute("id", "google-maps");
-    script.src = `https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${location.description}&destinations=${destination.description}&key=${APP_CONST.GOOGE_MAP_KEY}`;
-    var service = new window.google.maps.DistanceMatrixService();
-    // const fetch = React.useMemo(
-    // () =>
-    //   throttle((callback) => {
-    service.getDistanceMatrix(
-      {
-        destinations: [location.description, destination.description],
-        travelMode: "DRIVING",
-        transitOptions: "TransitOptions",
-        drivingOptions: "DrivingOptions",
-        unitSystem: "UnitSystem",
-        avoidHighways: Boolean,
-        avoidTolls: Boolean,
-      },
-      callback
-    );
-
-    function callback(response, status) {
-      console.log("Response distance", response);
-    }
-  };
 
   const handleBooking = () => {
     // const booking = {

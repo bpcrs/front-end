@@ -1,40 +1,39 @@
-import {authRoles} from 'app/auth';
-import submitLicense from './submitLicense'
-import MyLicense from './MyLicense';
+import { authRoles } from "app/auth";
+import submitLicense from "./submitLicense";
+import MyLicense from "./MyLicense";
 import { APP_PATH } from "../../../constant";
-import FuseLoadable from "@fuse/components/FuseLoadable/FuseLoadable";
 
 export const SubmitLicenseConfig = {
-    settings: {
-        layout: {
-            config: {
-                navbar        : {
-                    display: false
-                },
-                toolbar       : {
-                    display: false
-                },
-                footer        : {
-                    display: false
-                },
-                leftSidePanel : {
-                    display: false
-                },
-                rightSidePanel: {
-                    display: false
-                }
-            }
-        }
-    },
-    auth    : authRoles.onlyGuest,
-    routes  : [
-        {
-            path     : APP_PATH.LICENSE_SUBMIT,
-            component: submitLicense
+  settings: {
+    layout: {
+      config: {
+        navbar: {
+          display: false,
         },
-        {
-            path : "/MyLicense",
-            component: MyLicense,
-        }
-    ]
+        toolbar: {
+          display: false,
+        },
+        footer: {
+          display: false,
+        },
+        leftSidePanel: {
+          display: false,
+        },
+        rightSidePanel: {
+          display: false,
+        },
+      },
+    },
+  },
+  auth: authRoles.onlyGuest,
+  routes: [
+    {
+      path: APP_PATH.LICENSE_SUBMIT,
+      component: submitLicense,
+    },
+    {
+      path: "/MyLicense",
+      component: MyLicense,
+    },
+  ],
 };

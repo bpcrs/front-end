@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  AppBar,
-  MuiThemeProvider,
-  Toolbar,
-  makeStyles,
-  Icon,
-  Grid,
-} from "@material-ui/core";
+import { AppBar, MuiThemeProvider, Toolbar } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import Logo from "app/fuse-layouts/shared-components/Logo";
