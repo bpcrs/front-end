@@ -1,5 +1,5 @@
 import { GET, PUT, ENDPOINT, POST } from "../../services/api";
-import { showMessageError } from "../../store/actions/fuse";
+import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
@@ -430,6 +430,7 @@ export function putCarUpdate(id, status) {
       (response) => {
         if (response.success) {
           dispatch(putCarEditSuccess(response.data));
+          dispatch(showMessageSuccess("Accpet Success"));
         } else {
           dispatch(showMessageError(response.message));
         }
@@ -467,6 +468,7 @@ export function approveUser(id, active) {
     request.then(
       (response) => {
         dispatch(approveUserRegister(response.success ? response.data : ""));
+        dispatch(showMessageSuccess("Accept success"));
       },
       (error) => {
         showMessageError(error.message);
@@ -490,7 +492,7 @@ export function notificationLicenseUser(message, userMail, isAccept, renter) {
     });
 }
 
-export function notificationUserCar(message, userMail, isAccept, car, renter) {
+export function notificationUserCar(message, userMail, isAccept, car) {
   firebase
     .firestore()
     .collection("notification")
@@ -502,7 +504,6 @@ export function notificationUserCar(message, userMail, isAccept, car, renter) {
       createAt: new Date().getTime(),
       car: car,
       isSeen: false,
-      renter: renter,
     });
 }
 
