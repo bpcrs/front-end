@@ -370,6 +370,17 @@ function Row({ booking, carId, currentUser, flag }) {
       case BOOKING_STATUS.PENDING:
         return (
           <React.Fragment>
+            <Tooltip title={requestText}>
+              <Button
+                variant="outlined"
+                className={classes.button}
+                style={{ textTransform: "none" }}
+                startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
+                onClick={() => setOpen(true)}
+              >
+                {requestText}
+              </Button>
+            </Tooltip>
             <Tooltip title={carId ? pendingText : ownerAcceptedText}>
               <Button
                 variant="outlined"
@@ -380,16 +391,7 @@ function Row({ booking, carId, currentUser, flag }) {
                 {carId ? pendingText : ownerAcceptedText}
               </Button>
             </Tooltip>
-            <Tooltip title={requestText}>
-              <Button
-                variant="outlined"
-                style={{ textTransform: "none" }}
-                startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
-                onClick={() => setOpen(true)}
-              >
-                {requestText}
-              </Button>
-            </Tooltip>
+
             <Dialog open={open} scroll="body">
               <DialogContent>
                 <Typography variant="subtitle1" color="initial">
