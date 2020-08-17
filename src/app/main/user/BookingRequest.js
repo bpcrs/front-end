@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 0,
     color: "#fff",
   },
+  button: {
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const StyledTableCell = withStyles((theme) => ({
@@ -122,21 +125,45 @@ function Row({ booking, carId, currentUser, flag }) {
         return (
           <React.Fragment>
             {booking.car.owner.email === currentUser.email ? (
-              <Tooltip title={isProcess ? completeText : processingText}>
+              <Grid>
+                <Tooltip title={carId ? pendingText : ownerAcceptedText}>
+                  <Button
+                    className={classes.button}
+                    variant="outlined"
+                    style={{ textTransform: "none" }}
+                    onClick={handleAgreement}
+                    startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
+                  >
+                    {carId ? pendingText : ownerAcceptedText}
+                  </Button>
+                </Tooltip>
+                <Tooltip title={isProcess ? completeText : processingText}>
+                  <Button
+                    variant="outlined"
+                    style={{ textTransform: "none" }}
+                    startIcon={
+                      <Icon style={{ color: isProcess ? "green" : "black" }}>
+                        assignment_return
+                      </Icon>
+                    }
+                    onClick={() => setOpen(true)}
+                  >
+                    {isProcess ? completeText : processingText}
+                  </Button>
+                </Tooltip>
+              </Grid>
+            ) : (
+              <Tooltip title={carId ? pendingText : ownerAcceptedText}>
                 <Button
                   variant="outlined"
                   style={{ textTransform: "none" }}
-                  startIcon={
-                    <Icon style={{ color: isProcess ? "green" : "black" }}>
-                      assignment_return
-                    </Icon>
-                  }
-                  onClick={() => setOpen(true)}
+                  onClick={handleAgreement}
+                  startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
                 >
-                  {isProcess ? completeText : processingText}
+                  {carId ? pendingText : ownerAcceptedText}
                 </Button>
               </Tooltip>
-            ) : null}
+            )}
             <Dialog open={open} scroll="body">
               <DialogContent>
                 {isProcess ? (
