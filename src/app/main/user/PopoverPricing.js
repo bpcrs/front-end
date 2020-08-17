@@ -136,7 +136,7 @@ export default function PopoverPricing({ pricing, children, booking }) {
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
-                  Extra Price
+                  Extra Price <sup>(3)</sup>
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   {agreements &&
