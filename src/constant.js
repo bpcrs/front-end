@@ -7,7 +7,7 @@ export const APP_CONST = {
   GOOGLE_CLIENT_ID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
   GOOGE_MAP_KEY: process.env.REACT_APP_GOOGE_MAP_KEY,
   FIREBASE_CONFIG:
-    process.env.NODE_ENV === "development" ? firebaseProd : firebaseDev,
+    process.env.NODE_ENV === "production" ? firebaseProd : firebaseDev,
 };
 console.log(APP_CONST);
 export const APP_ROLE = {
