@@ -35,6 +35,7 @@ import NumberFormat from "react-number-format";
 import CarStatus from "../user/CarStatus";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import GoogleMaps from "../landing/GoogleMaps";
+import { CAR_STATUS } from "../../../constant";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
   location: {
     margin: theme.spacing(1),
     width: 350,
-    height: 200,
+    height: 400,
   },
   card: {
     margin: 20,
@@ -180,7 +181,7 @@ function a11yProps(index) {
 export default function CarEdits(props) {
   const maxNumber = 10;
   const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
-  const { carId } = props;
+  const { carId, callback } = props;
   const [tabValue, setTabValue] = useState(0);
   const [open, setOpen] = useState(false);
 
@@ -195,8 +196,6 @@ export default function CarEdits(props) {
 
   const change = useSelector((state) => state.booking.change);
   const [currentCar, setCurrentCar] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState();
 
   const handleInputChange = (event) => {
     setCurrentCar({
@@ -217,34 +216,41 @@ export default function CarEdits(props) {
     };
     console.log(upCar);
     const handleChangeStatus = () => {
-      const nextStatus =
-        carDetail.status === "AVAILABLE" ? "UNAVAILABLE" : "AVAILABLE";
-      console.log(nextStatus);
-      dispatch(updateCarStatus(carDetail.id, nextStatus));
+      if (carDetail.status === CAR_STATUS.AVAILABLE) {
+        dispatch(updateCarStatus(carDetail.id, CAR_STATUS.UNAVAILABLE));
+      } else {
+        setUpCar({ ...upCar, status: CAR_STATUS.AVAILABLE });
+        setOpenLocation(true);
+      }
       setOpen(false);
     };
     const handleConfirmUpdate = () => {
-      setCheckSure(true);
+      dispatch(putCarUpdate(upCar.id, upCar));
+      setOpenLocation(false);
     };
     const handleUpdateLocation = () => {
-      setOpenLocation(false);
       setCheckSure(false);
-      dispatch(putCarUpdate(upCar.id, upCar));
     };
 
     return (
       <React.Fragment>
-        {carDetail.status === "AVAILABLE" ||
-        carDetail.status === "UNAVAILABLE" ? (
+        {carDetail.status === CAR_STATUS.AVAILABLE ||
+        carDetail.status === CAR_STATUS.UNAVAILABLE ||
+        carDetail.status === CAR_STATUS.REQUEST ? (
           <Grid
             spacing={1}
             container
             justify="space-between"
             alignItems="baseline"
           >
-            <Typography variant="subtitle2" color="inherit">
-              Turn off your car
-            </Typography>
+            <Grid item lg={6}>
+              <Typography variant="subtitle1" color="inherit">
+                Available for Rental
+              </Typography>
+              <Typography variant="subtitle2" color="primary">
+                The car will appear in search
+              </Typography>
+            </Grid>
 
             <FormControlLabel
               classes={classes.switchButton}
@@ -257,15 +263,6 @@ export default function CarEdits(props) {
                 />
               }
             />
-
-            <Button
-              className={classes.updateButton}
-              color="primary"
-              variant="contained"
-              onClick={() => setOpenLocation(true)}
-            >
-              Update location
-            </Button>
           </Grid>
         ) : (
           <Grid></Grid>
@@ -273,6 +270,10 @@ export default function CarEdits(props) {
         <Dialog open={openLocation} scroll="body">
           <Grid>
             <DialogContent>
+              <Typography variant="subtitle1" color="primary">
+                Please update current location of your car before available for
+                rental
+              </Typography>
               <Grid container item lg={12} className={classes.location}>
                 <GoogleMaps
                   label="Location"
@@ -282,51 +283,29 @@ export default function CarEdits(props) {
                   }
                   onChange={(value) => handleChangeLocation(value)}
                 />
-                {/* {console.log(openLocation)} */}
+                <img
+                  src="assets/images/location.jpg"
+                  alt="Location"
+                  width="400px"
+                  height="250px"
+                />
               </Grid>
             </DialogContent>
             <DialogActions>
+              <Button
+                autoFocus
+                onClick={() => setOpenLocation(false)}
+                style={{ backgroundColor: "red", color: "white" }}
+                variant="contained"
+              >
+                No
+              </Button>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleConfirmUpdate}
               >
                 Yes
-              </Button>
-              <Button
-                autoFocus
-                onClick={() => setOpenLocation(false)}
-                color="secondary"
-                variant="contained"
-              >
-                No
-              </Button>
-            </DialogActions>
-          </Grid>
-        </Dialog>
-        <Dialog open={checkSure} scroll="body">
-          <Grid>
-            <DialogContent>
-              <Typography variant="subtitle1" color="initial">
-                Are you sure want to change your car location from{" "}
-                {carDetail.location} to {upCar.location} ?
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleUpdateLocation}
-              >
-                Yes
-              </Button>
-              <Button
-                autoFocus
-                onClick={() => setCheckSure(false)}
-                color="secondary"
-                variant="contained"
-              >
-                No
               </Button>
             </DialogActions>
           </Grid>
@@ -347,7 +326,7 @@ export default function CarEdits(props) {
                 <Button
                   variant="contained"
                   color="primary"
-                  // onClick={handleChangeStatus}
+                  style={{ backgroundColor: "red", color: "white" }}
                   onClick={() => setOpen(false)}
                 >
                   No
@@ -355,7 +334,7 @@ export default function CarEdits(props) {
                 <Button
                   autoFocus
                   onClick={handleChangeStatus}
-                  color="secondary"
+                  color="primary"
                   variant="contained"
                 >
                   Yes
@@ -555,7 +534,6 @@ export default function CarEdits(props) {
                     </Grid>
                     <Dialog open={open} scroll="body">
                       <DialogContent>
-                        <Grid container justify="center"></Grid>
                         <Typography variant="subtitle1" color="initial">
                           Are you want to update price of your car is{" "}
                           {currentCar.price} per day ?

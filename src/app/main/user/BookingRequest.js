@@ -122,20 +122,22 @@ function Row({ booking, carId, currentUser, flag }) {
       case BOOKING_STATUS.PROCESSING:
         return (
           <React.Fragment>
-            <Tooltip title={isProcess ? completeText : processingText}>
-              <Button
-                variant="outlined"
-                style={{ textTransform: "none" }}
-                startIcon={
-                  <Icon style={{ color: isProcess ? "green" : "black" }}>
-                    assignment_return
-                  </Icon>
-                }
-                onClick={() => setOpen(true)}
-              >
-                {isProcess ? completeText : processingText}
-              </Button>
-            </Tooltip>
+            {booking.car.owner.email === currentUser.email ? (
+              <Tooltip title={isProcess ? completeText : processingText}>
+                <Button
+                  variant="outlined"
+                  style={{ textTransform: "none" }}
+                  startIcon={
+                    <Icon style={{ color: isProcess ? "green" : "black" }}>
+                      assignment_return
+                    </Icon>
+                  }
+                  onClick={() => setOpen(true)}
+                >
+                  {isProcess ? completeText : processingText}
+                </Button>
+              </Tooltip>
+            ) : null}
             <Dialog open={open} scroll="body">
               <DialogContent>
                 {isProcess ? (
