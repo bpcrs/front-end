@@ -6,6 +6,7 @@ import {
   Chip,
   Typography,
   Slider,
+  Box,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
@@ -288,17 +289,18 @@ function CarList(props) {
           <WaveSkeleton loading />
         </Grid>
       )}
-
       <Grid xs={12} lg={12} item container justify="flex-end">
-        <Pagination
-          count={
-            filterCars.count !== 0 && filterCars.count % size === 0
-              ? Math.floor(filterCars.count / size)
-              : Math.floor(filterCars.count / size) + 1
-          }
-          color="primary"
-          onChange={(e, page) => setCurrentPage(page)}
-        />
+        <Box hidden={Math.floor(filterCars.count / size) === 0}>
+          <Pagination
+            count={
+              filterCars.count !== 0 && filterCars.count % size === 0
+                ? Math.floor(filterCars.count / size)
+                : Math.floor(filterCars.count / size) + 1
+            }
+            color="primary"
+            onChange={(e, page) => setCurrentPage(page)}
+          />
+        </Box>
       </Grid>
     </Grid>
   );
