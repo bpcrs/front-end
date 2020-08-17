@@ -133,7 +133,7 @@ export default function CarDetailChecking(props) {
 
   const handleAcceptCar = () => {
     // notificationUser("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true);
-    notificationUserCar("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true, carDetail)
+    notificationUserCar("Car is accepted. Now your car is Available on system and can be rent!", currentCar.owner.email, true, carDetail, currentCar.owner)
     dispatch(
       // putCarUpdate(currentCar.id, {
       //   // available: true,
@@ -149,7 +149,7 @@ export default function CarDetailChecking(props) {
   const handleDenyCar = () => {
     // notificationUser(message, currentCar.owner.email, false);
     // notificationUserCar(message, currentCar.owner.email, false, carDetail)
-    notificationUserCar(valueCheckBox, currentCar.owner.email, false, carDetail);
+    notificationUserCar(valueCheckBox, currentCar.owner.email, false, carDetail, currentCar.owner);
     // dispatch(
     //   // putCarUpdate(currentCar.id, {
     //   //   // available: false,
