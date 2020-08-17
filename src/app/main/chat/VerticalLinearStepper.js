@@ -310,7 +310,7 @@ export default function VerticalLinearStepper() {
                     onClick={handleNext}
                     className={classes.button}
                   >
-                    {activeStep === steps.length - 1 ? "Finish" : "Send"}
+                    {activeStep === steps.length - 1 ? "Confirm" : "Send"}
                   </Button>
                 </div>
               </div>
@@ -320,7 +320,9 @@ export default function VerticalLinearStepper() {
       </Stepper>
       {activeStep === steps.length && (
         <Paper square elevation={0} className={classes.resetContainer}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Typography>
+            All agreements completed - you&apos;re finished
+          </Typography>
         </Paper>
       )}
       {selectedBooking.status === BOOKING_STATUS.PENDING ? (

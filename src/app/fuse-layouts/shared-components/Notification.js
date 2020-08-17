@@ -141,8 +141,12 @@ const Notification = () => {
       case BOOKING_STATUS.PROCESSING:
         return (
           <NotificationUI
-            content="Thanks for choose our services! Happy your trip"
-            header="Trip already"
+            content={
+              isOwner
+                ? `Your car rental period begin of booking #${notify.bookingId} now.`
+                : "The car already for trip"
+            }
+            header={isOwner ? "Rental started" : "Trip already"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="info"
@@ -151,18 +155,12 @@ const Notification = () => {
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <NotificationUI
-            content={`Contract of booking has been signed.`}
-            header="Contract already"
-            createAt={notify.createAt}
-            isSeen={notify.isSeen}
-            type="success"
-          />
-        );
-      case BOOKING_STATUS.BOOKED:
-        return (
-          <NotificationUI
-            content="Car already"
-            header="Car already for booking"
+            content={
+              isOwner
+                ? `Contract of booking #${notify.bookingId} has been signed by ${notify.renter.fullName}.`
+                : `You have sign the contract of booking #${notify.bookingId}.`
+            }
+            header={isOwner ? "Your turn" : "Signing success"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="success"
@@ -171,8 +169,12 @@ const Notification = () => {
       case BOOKING_STATUS.CONFIRM:
         return (
           <NotificationUI
-            content="Congart, Booking is valid"
-            header="Booking is confrimed"
+            content={
+              isOwner
+                ? `Agreements of booking #${notify.bookingId} successfully, contract is ready.`
+                : `Agreements of booking #${notify.bookingId} successfully, waiting to sign.`
+            }
+            header="Agreements successfully"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="success"
@@ -183,8 +185,8 @@ const Notification = () => {
           <NotificationUI
             content={
               isOwner
-                ? "Transaction successfully"
-                : `Thanks for choose ${notify.owner.fullName}'s car. Review a trip now`
+                ? `Rental of booking #${notify.bookingId} is completed. Please enable status "AVAILABLE" for countinutes rental.`
+                : `Thanks for choose ${notify.owner.fullName}'s car for booking #${notify.bookingId}. Please review the trip now.`
             }
             header="Success"
             createAt={notify.createAt}
@@ -195,8 +197,12 @@ const Notification = () => {
       case BOOKING_STATUS.DENY:
         return (
           <NotificationUI
-            content="Your booking has been deny"
-            header="Opps, :( "
+            content={
+              isOwner
+                ? `You had denied booking #${notify.bookingId}.`
+                : `Your booking #${notify.bookingId} has been denied.`
+            }
+            header="Opps :( "
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="error"
@@ -205,8 +211,12 @@ const Notification = () => {
       case BOOKING_STATUS.REQUEST:
         return (
           <NotificationUI
-            content="Thanks for choose our services! Happy your trip"
-            header="Trip already"
+            content={
+              isOwner
+                ? `You receive new request rental for car "${notify.car.name}".`
+                : `You has requested for rental car "${notify.car.name}".`
+            }
+            header={isOwner ? "New Request" : "Requested"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="info"
@@ -215,8 +225,12 @@ const Notification = () => {
       case BOOKING_STATUS.PENDING:
         return (
           <NotificationUI
-            content="Thanks for choose our services! Happy your trip"
-            header="Trip already"
+            content={
+              isOwner
+                ? `You accepted request booking ${notify.bookingId} from ${notify.renter.fullName}. Please join chat for agreeemnts.`
+                : `${notify.car.owner.fullName} accepted you request. Please join chat for agreeemnts.`
+            }
+            header={isOwner ? "Accepted" : "Chat now"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="info"
@@ -225,11 +239,15 @@ const Notification = () => {
       case BOOKING_STATUS.OWNER_ACCEPTED:
         return (
           <NotificationUI
-            content="Success, Owner already for agreements"
-            header="Success"
+            content={
+              isOwner
+                ? `You accepted all agreements of booking #${notify.bookingId}.`
+                : `${notify.car.owner.fullName} accepted all agreements of booking #${notify.bookingId}. Please confirm to completed agreements.`
+            }
+            header={isOwner ? "Accepted" : "Owner accepted"}
             createAt={notify.createAt}
             isSeen={notify.isSeen}
-            type="warn"
+            type="success"
           />
         );
       case BOOKING_STATUS.DENYLICENSE:
