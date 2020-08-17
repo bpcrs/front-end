@@ -432,13 +432,13 @@ const Notification = () => {
                   <Card
                     onMouseOver={() => {
                       setShadow(4);
-                      setHoving(notify.createAt);
+                      setHoving(notify.id);
                     }}
                     onMouseOut={() => {
                       setShadow(0);
                       setHoving(0);
                     }}
-                    elevation={notify.createAt === hoving ? shadow : 0}
+                    elevation={notify.id === hoving ? shadow : 0}
                     onClick={() => handleClick(true, notify.id)}
                   >
                     {renderNotification(notify)}
