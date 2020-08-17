@@ -1,7 +1,7 @@
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
-import firebase from "../../firebase/firebase";
 import { BOOKING_STATUS } from "../../../constant";
+import { notificationBooking } from "../booking/booking.action";
 
 export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
 export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
@@ -340,22 +340,6 @@ export function updateOdometer(id, odometer, cb) {
       });
     }
   );
-}
-
-export function notificationBooking(booking) {
-  firebase
-    .firestore()
-    .collection("notification")
-    .doc(`${booking.renter.email}`)
-    .collection("requests")
-    .add({
-      status: booking.status,
-      car: booking.car,
-      owner: booking.car.owner,
-      renter: booking.renter,
-      bookingId: booking.id,
-      createAt: new Date().getTime(),
-    });
 }
 
 export function sendOTPConfirm(otp) {

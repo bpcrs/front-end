@@ -660,22 +660,6 @@ export function notificationBooking(booking) {
       isSeen: false,
     });
 }
-export function notificationMyBooking(booking, status) {
-  firebase
-    .firestore()
-    .collection("notification")
-    .doc(`${booking.renter.email}`)
-    .collection("requests")
-    .add({
-      status: status,
-      car: booking.car,
-      owner: booking.car.owner,
-      renter: booking.renter,
-      bookingId: booking.id,
-      createAt: new Date().getTime(),
-      isSeen: false,
-    });
-}
 
 export function storeImageToFirebase(imgs) {
   const metadata = {

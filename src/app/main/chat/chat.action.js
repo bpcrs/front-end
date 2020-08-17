@@ -2,8 +2,8 @@ import firebase from "../../firebase/firebase";
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import { GET, ENDPOINT, POST, PUT } from "../../services/api";
 import { use } from "marked";
-import { notificationBooking } from "../user/profile.action";
 import { BOOKING_STATUS } from "../../../constant";
+import { notificationBooking } from "../booking/booking.action";
 
 export const SET_SELECTED_USER = "[CHAT] SET SELECTED USER";
 export const OPEN_AGREEMENT = "[AGREEMENT] OPEN";
