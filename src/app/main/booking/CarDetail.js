@@ -181,7 +181,6 @@ export default function CarDetails(props) {
     });
     handleChangeInfo();
   };
-
   useEffect(() => {
     const carId = props.match.params.id;
     dispatch(fetchReviewList(currentPage, size, carId));
@@ -196,7 +195,7 @@ export default function CarDetails(props) {
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
           <Grid item xl={12} xs={12} lg={12}>
-            <Card>
+            <Card >
               <CardContent>
                 <Grid container spacing={1}>
                   <Grid xs={6} sm={6}>

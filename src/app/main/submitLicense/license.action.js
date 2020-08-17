@@ -1,5 +1,5 @@
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
-import { GET, ENDPOINT, PUT, POST } from "../../services/api";
+import { GET, ENDPOINT, PUT } from "../../services/api";
 import { registerSuccess } from "../user/profile.action";
 
 export const USER_LICENSE_UPDATE_SUCCESS = "[USER_LICENSE] UPDATE SUCCESS";

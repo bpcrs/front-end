@@ -11,24 +11,18 @@ import {
   Icon,
   CircularProgress,
   Backdrop,
-  Drawer,
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/styles";
 import ContactList from "./ContactList";
 import { useSelector, useDispatch } from "react-redux";
 import Chat from "./Chat";
-import {
-  fetchCriteriaList,
-  fetchAgreementList,
-  setIsRenterBooking,
-} from "./chat.action";
+import { fetchCriteriaList, setIsRenterBooking } from "./chat.action";
 import StepAgreement from "./StepAgreement";
 import BookingStatus from "../user/BookingStatus";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { FuseScrollbars } from "../../../@fuse";
 import { useState } from "react";
-import BookingTimeline from "../user/BookingTimeline";
 import DetailBooking from "./DetailBooking";
 
 const useStyles = makeStyles((theme) => ({

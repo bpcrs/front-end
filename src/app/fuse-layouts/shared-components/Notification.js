@@ -5,7 +5,6 @@ import {
   Popover,
   Typography,
   Grid,
-  Chip,
   Card,
   CardActionArea,
   Badge,
@@ -100,7 +99,6 @@ const Notification = () => {
   const userLogged = useSelector((state) => state.auth.user);
   const [notification, setNotification] = useState([]);
   const [hoving, setHoving] = useState();
-  const [shadow, setShadow] = useState(0);
   // const [notifyMsg, setNotifyMsg] = useState();
   const notificationClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -449,14 +447,12 @@ const Notification = () => {
                 <div className={classes.notification}>
                   <Card
                     onMouseOver={() => {
-                      setShadow(4);
                       setHoving(notify.id);
                     }}
                     onMouseOut={() => {
-                      setShadow(0);
                       setHoving(0);
                     }}
-                    elevation={notify.id === hoving ? shadow : 0}
+                    elevation={notify.id === hoving ? 4 : 0}
                     onClick={() => handleClick(true, notify.id)}
                   >
                     {renderNotification(notify)}
