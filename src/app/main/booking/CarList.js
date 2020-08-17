@@ -83,7 +83,7 @@ function CarList(props) {
   const [valueSlider, setValueSlider] = useState([minPrice, maxPrice]);
   const classes = useStyles();
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.booking.loading);
+  const [loading, setLoading] = useState(true);
   const brands = useSelector((state) => state.booking.brands);
   const filterCars = useSelector((state) => state.booking.filterCars);
   const models = useSelector((state) => state.booking.models);
@@ -116,7 +116,6 @@ function CarList(props) {
   const handleChangeSlider = (event, newValue) => {
     setValueSlider(newValue);
   };
-  console.log(props.location.state);
   const locationPickup = props.location.state.location.description;
   useEffect(() => {
     dispatch(fetchBrandList());
@@ -133,6 +132,9 @@ function CarList(props) {
         locationPickup
       )
     );
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
 
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
@@ -260,9 +262,6 @@ function CarList(props) {
           )}
         </Grid>
       </Grid>
-      <Backdrop className={classes.backdrop} open={loading}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       {filterCars.data &&
         filterCars.data.map((car, index) => (
           <Grid
@@ -273,11 +272,15 @@ function CarList(props) {
             className={classes.paper}
             key={index}
           >
-            <CarItem
-              isAction={true}
-              info={car}
-              booking={props.location.state}
-            />
+            {!loading ? (
+              <CarItem
+                isAction={true}
+                info={car}
+                booking={props.location.state}
+              />
+            ) : (
+              <WaveSkeleton loading />
+            )}
           </Grid>
         ))}
       <Box
@@ -294,17 +297,10 @@ function CarList(props) {
             />
           </Grid>
           <Typography variant="subtitle2">
-            We did't find any car with your filter. Please try again
+            We did't find any car at this time. Please try again
           </Typography>
         </Grid>
       </Box>
-      {filterCars.data ? (
-        <Grid></Grid>
-      ) : (
-        <Grid item lg={12}>
-          <WaveSkeleton loading />
-        </Grid>
-      )}
       <Grid xs={12} lg={12} item container justify="flex-end">
         <Box hidden={Math.floor(filterCars.count / size) === 0}>
           <Pagination
