@@ -13,7 +13,7 @@ import PopoverUser from "./PopoverUser";
 import PopoverPricing from "./PopoverPricing";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { postReturnBooking } from "./profile.action";
+import { postReturnBooking, postEstimateBooking } from "./profile.action";
 import { Typography } from "@material-ui/core";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -39,7 +39,7 @@ export default function ContractTable({ booking }) {
   const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(postReturnBooking(booking.id));
+    dispatch(postEstimateBooking(booking.id));
   }, [booking, booking.id, dispatch]);
   return (
     <TableContainer component={Paper}>

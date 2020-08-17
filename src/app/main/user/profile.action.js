@@ -312,9 +312,21 @@ export function postReturnBooking(id, odometer = 0) {
     let request = POST(ENDPOINT.BOOKING_CONTROLLER_RETURN_BOOKING_GETBYID(id), {
       odometer,
     });
-    if (odometer === 0) {
-      request = POST(ENDPOINT.BOOKING_CONTROLLER_ESTIMATE_PRICE_GETBYID(id));
-    }
+    request.then(
+      (response) => {
+        dispatch(
+          getPreReturnPriceSuccess(response.success ? response.data : "")
+        );
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+export function postEstimateBooking(id) {
+  return (dispatch) => {
+    let request = POST(ENDPOINT.BOOKING_CONTROLLER_ESTIMATE_PRICE_GETBYID(id));
     request.then(
       (response) => {
         dispatch(

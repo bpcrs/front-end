@@ -222,7 +222,6 @@ export default function PopoverPricing({ pricing, children, booking }) {
                         <Checkbox
                           color="primary"
                           size="small"
-                          disabled
                           checked={
                             agreements &&
                             getCriteriaValueByName(
@@ -241,7 +240,6 @@ export default function PopoverPricing({ pricing, children, booking }) {
                         <Checkbox
                           size="small"
                           color="primary"
-                          disabled
                           checked={
                             agreements &&
                             getCriteriaValueByName(
