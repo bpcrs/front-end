@@ -21,7 +21,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBookingRentalMyCar,
   changeBookingStatusRequest,
-  notiMyNotification,
 } from "./profile.action";
 import Pagination from "@material-ui/lab/Pagination";
 import { useState } from "react";
@@ -70,12 +69,6 @@ function Row(props) {
         id,
         !isApprove ? BOOKING_STATUS.DENY : BOOKING_STATUS.PENDING
       )
-    );
-
-    notiMyNotification(
-      currentUser,
-      !isApprove ? BOOKING_STATUS.DENY : BOOKING_STATUS.PENDING,
-      booking
     );
   };
   const agreementChat = () => {

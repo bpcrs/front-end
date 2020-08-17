@@ -21,11 +21,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchBookingRequest,
-  fetchBookingRentalMyCar,
-  notiMyNotification,
-} from "./profile.action";
+import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
 import { signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
@@ -112,7 +108,6 @@ function Row({ booking, carId, currentUser, flag }) {
     const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
-      notiMyNotification(currentUser, BOOKING_STATUS.CANCEL, booking);
       handleCloseTimeline();
     };
     const handleProcessRequest = () => {

@@ -7,7 +7,7 @@ export const APP_CONST = {
   GOOGLE_CLIENT_ID: process.env.REACT_APP_GOOGLE_CLIENT_ID,
   GOOGE_MAP_KEY: process.env.REACT_APP_GOOGE_MAP_KEY,
   FIREBASE_CONFIG:
-    process.env.NODE_ENV === "production" ? firebaseProd : firebaseDev,
+    process.env.NODE_ENV === "development" ? firebaseProd : firebaseDev,
 };
 console.log(APP_CONST);
 export const APP_ROLE = {
@@ -52,14 +52,7 @@ export const BOOKING_STATUS = {
   RENTER_SIGNED: "RENTER_SIGNED",
   PROCESSING: "PROCESSING",
 };
-export const MY_NOTIFICATION_STATUS = {
-  ACCEPT: "ACCEPT",
-  REFUSE: "REFUSE",
-  YOU_ACCEPTED: "YOU_ACCEPTED",
-  WAITING: "WAITING",
-  REVOKE: "REVOKE",
-  YOU_SIGNED: "YOU_SIGNED",
-};
+
 export const CAR_STATUS = {
   REGISTER: "REGISTER",
   AVAILABLE: "AVAILABLE",
