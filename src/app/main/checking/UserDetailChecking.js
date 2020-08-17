@@ -20,6 +20,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {
   notificationLicenseUser,
   fetchUserDetailChecking,
+  approveUser,
 } from "./checking.action";
 import { updateUserLicense } from "../submitLicense/license.action";
 
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserDetailChecking(props) {
   const classes = useStyles();
+  const { userId } = props.location.state;
   const history = useHistory();
   const dispatch = useDispatch();
   const userDetail = useSelector((state) => state.checking.userDetail);
@@ -101,31 +103,17 @@ export default function UserDetailChecking(props) {
   };
 
   useEffect(() => {
-    const { userId } = props.location.state;
-
     const fetchUser = async () => {
       dispatch(await fetchUserDetailChecking(userId));
       setCurrentUser(userDetail);
 
       if (userDetail.imageLicense) {
-        // console.log("asdasdasdasdsa", userDetail.imageLicense.length);
         setLinkImage(JSON.parse(userDetail.imageLicense));
       }
     };
     fetchUser();
-    if (changePage) {
-      history.push({
-        pathname: APP_PATH.CHECKING,
-      });
-    }
-  }, [
-    userDetail.id,
-    changePage,
-    props.location.state,
-    dispatch,
-    userDetail,
-    history,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userDetail]);
 
   const handleAcceptUserLicense = () => {
     notificationLicenseUser(
@@ -133,17 +121,13 @@ export default function UserDetailChecking(props) {
       currentUser.email,
       true
     );
-    dispatch(
-      updateUserLicense({
-        licenseCheck: true,
-      })
-    );
+    dispatch(approveUser(userId, true));
+    history.push({
+      pathname: APP_PATH.CHECKING,
+    });
   };
 
   const handleSendNotificationCheckLicense = () => {
-    // setMessage(valueCheckBox);
-    // console.log("check mess:", message);
-    // notificationLicenseUser(message, currentUser.email, false);
     notificationLicenseUser(valueCheckBox, currentUser.email, false);
     setOpen(false);
 
@@ -152,9 +136,6 @@ export default function UserDetailChecking(props) {
     });
   };
 
-  // const handleChangeInput = (event) => {
-  //     setMessage(event.target.value);
-  // };
   return (
     <Layout name="User checking form">
       <Grid spacing={1} container justify="center" alignItems="center">

@@ -113,10 +113,14 @@ function Row({ car, isDetail, request }) {
           >
             {car.status === CAR_STATUS.REQUEST ? (
               <Badge color="error" badgeContent={car.requestCounting}>
-                <Icon style={{ color: "black" }}>sort</Icon>
+                <Icon style={{ color: "black" }}>
+                  {isDetail && request.carId === car.id ? "clear" : "sort"}
+                </Icon>
               </Badge>
             ) : (
-              <Icon style={{ color: "black" }}>sort</Icon>
+              <Icon style={{ color: "black" }}>
+                {isDetail && request.carId === car.id ? "clear" : "sort"}
+              </Icon>
             )}
           </IconButton>
         </TableCell>
@@ -125,11 +129,6 @@ function Row({ car, isDetail, request }) {
         <DialogContent>
           <CarEdit carId={car.id} />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
     </React.Fragment>
   );
@@ -165,11 +164,6 @@ function RegisterCar() {
         <DialogContent>
           <CarSubmit />
         </DialogContent>
-        {/* <DialogActions>
-          <Button autoFocus onClick={() =>} color="primary">
-            Save changes
-          </Button>
-        </DialogActions> */}
       </Dialog>
       <Dialog open={loading} scroll="body">
         <DialogContent>
@@ -195,7 +189,7 @@ function RegisterCar() {
                 Checking information
               </Typography>
               <Typography variant="caption">
-                We uploading your car, please wait a minutes...
+                We are uploading, please wait a minutes...
               </Typography>
             </Grid>
           </Grid>

@@ -100,6 +100,7 @@ export const ENDPOINT = {
   CAR_INFORMATION_OWNER_GETBYID: (id) => `/car/owner/${id}`,
   CAR_CONTROLLER_STATUS_GETBYID: (id) => `/car/status/${id}`,
   CAR_CONTROLLER_CHECK_CAR: `/car/check-car`,
+  CAR_CONTROLLER_ODOMETER_GETBYID: (id) => `/car/odometer/${id}`,
 
   REVIEW_CONTROLLER_GETALL: "/review",
   ACCOUNT_ADDRESS_GETBYID: (id) => `/account/address/${id}`,
@@ -113,7 +114,11 @@ export const ENDPOINT = {
   IMAGE_CONTROLLER_GETALL: "/image",
   IMAGE_CONTROLLER_GETBYID: (id) => `/image/${id}`,
   IMAGE_CONTROLLER_CAR_GETBYID: (id) => `/image/car/${id}`,
+
   BRAND_CONTROLLER_GETALL: "/brand",
+  BRAND_CONTROLLER_GETALLBY_ADMIN: "/brand/admin",
+  BRAND_UPDATE: (id) => `/brand/${id}`,
+
   MODEL_CONTROLLER_GETALL: "/model",
 
   BOOKING_CONTROLLER_GETALL: "/booking",

@@ -401,7 +401,6 @@ export default function CarEdits(props) {
   };
   const handleRemoveImage = (image) => {
     console.log(image.id);
-    // dispatch(deleteImage(image));
     dispatch(changeImageByType(image, "DELETE"));
   };
   const images = useSelector((state) => state.booking.images);
@@ -759,21 +758,6 @@ export default function CarEdits(props) {
                     </div>
                   </Grid>
                 ))}
-
-              {/* <Grid container justify="center" alignItems="center">
-                  <Grid item>
-                    <img
-                      src="assets/images/empty.jpg"
-                      alt="No resourse"
-                      height="100px"
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2">
-                      We did't find any license right now.
-                    </Typography>
-                  </Grid>
-                </Grid> */}
             </Grid>
           </TabPanel>
         </Grid>

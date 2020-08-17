@@ -202,7 +202,7 @@ const Widget = () => {
           <Grid container item>
             <Icon>monetization_on</Icon>
             <Typography className="h3" color="textSecondary">
-              Monthly Revenue
+              Monthly Transactions
             </Typography>
           </Grid>
           {price ? (

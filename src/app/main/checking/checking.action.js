@@ -5,6 +5,15 @@ export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 
+export const FETCH_BRAND_LIST_SUCCESS = "[BRAND_LIST] FETCH DATA SUCCESS";
+export const FETCH_BRAND_LIST_FAILURE = "[BRAND_LIST] FETCH DATA FAILURE";
+
+export const FETCH_BRAND_EDIT_SUCCESS = "[BRAND] PUT DATA SUCCESS";
+export const FETCH_BRAND_EDIT_FAILURE = "[BRAND] PUT DATA FAILURE";
+
+export const FETCH_BRAND_ADD_SUCCESS = "[BRAND] POST DATA SUCCESS";
+export const FETCH_BRAND_ADD_FAILURE = "[BRAND] POST DATA FAILURE";
+
 export const FETCH_CAR_DETAIL_CHECKING_SUCCESS =
   "[CAR_DETAIL_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_DETAIL_CHECKING_FAILURE =
@@ -31,7 +40,40 @@ export const FETCH_LAST_MONTH_TRANSACTIONS = "[TRANSACTION] FETCH LAST MONTH";
 export const FETCH_COUNT_BOOKING_REQUEST = "[COUNT_BOOKING] FETCH REQUEST";
 export const FETCH_COUNT_LAST_MONTH_REQUESTS =
   "[COUNT_BOOKING] FETCH LAST MONTH";
+export const APPROVE_USER_REGISTER = "[USER_REGISTER] APPROVE";
 
+export function putEditBrandSuccess(brand) {
+  return {
+    type: FETCH_BRAND_EDIT_SUCCESS,
+    payload: brand,
+  };
+}
+export function putEditBrandFailure(error) {
+  return {
+    type: FETCH_BRAND_EDIT_FAILURE,
+    payload: error,
+  };
+}
+
+export function postAddBrandSuccess(brand) {
+  return {
+    type: FETCH_BRAND_ADD_SUCCESS,
+    payload: brand,
+  };
+}
+export function postAddBrandFailure(error) {
+  return {
+    type: FETCH_BRAND_ADD_FAILURE,
+    payload: error,
+  };
+}
+
+export function approveUserRegister(data) {
+  return {
+    type: APPROVE_USER_REGISTER,
+    payload: data,
+  };
+}
 export function fetchCountBookingLastMonth(data) {
   return {
     type: FETCH_COUNT_LAST_MONTH_REQUESTS,
@@ -72,6 +114,20 @@ export function fetchCarCheckingSuccess(cars) {
 export function fetchCarCheckingFailure(error) {
   return {
     type: FETCH_CAR_CHECKING_FAILURE,
+    payload: error,
+  };
+}
+
+export function fetchBrandListSuccess(brands) {
+  return {
+    type: FETCH_BRAND_LIST_SUCCESS,
+    payload: brands,
+  };
+}
+
+export function fetchBrandListFailure(error) {
+  return {
+    type: FETCH_BRAND_LIST_FAILURE,
     payload: error,
   };
 }
@@ -132,6 +188,20 @@ export function putCarEditFailure(error) {
   };
 }
 
+export function putUserDetailSuccess(user) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_SUCCESS,
+    payload: user,
+  };
+}
+
+export function putUserDetailFailure(error) {
+  return {
+    type: PUT_USER_DETAIL_CHECKING_FAILURE,
+    payload: error,
+  };
+}
+
 export function fetchCarCheckingAdmin(page, size) {
   return (dispatch) => {
     // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
@@ -156,17 +226,57 @@ export function fetchCarCheckingAdmin(page, size) {
     );
   };
 }
-export function putUserDetailSuccess(user) {
-  return {
-    type: PUT_USER_DETAIL_CHECKING_SUCCESS,
-    payload: user,
+
+export function fetchBrandByAdminList(page, size) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.BRAND_CONTROLLER_GETALLBY_ADMIN, {
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchBrandListSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchBrandListFailure(error.message));
+      }
+    );
   };
 }
 
-export function putUserDetailFailure(error) {
-  return {
-    type: PUT_USER_DETAIL_CHECKING_FAILURE,
-    payload: error,
+export function addBrand(name, imageUrl) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BRAND_CONTROLLER_GETALL, { name, imageUrl });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postAddBrandSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(postAddBrandFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(postAddBrandFailure(error.message));
+      }
+    );
+  };
+}
+
+export function updateBrand(id, name, imageUrl) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.BRAND_UPDATE(id), { name, imageUrl });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putEditBrandSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(putEditBrandFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(putEditBrandFailure(error.message));
+      }
+    );
   };
 }
 
@@ -251,6 +361,20 @@ export async function fetchUserDetailChecking(userId) {
   };
 }
 
+export function approveUser(id, active) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.ACCOUNT_CONTROLLER_GETBYID(id), { active });
+    request.then(
+      (response) => {
+        dispatch(approveUserRegister(response.success ? response.data : ""));
+      },
+      (error) => {
+        showMessageError(error.message);
+      }
+    );
+  };
+}
+
 export function notificationLicenseUser(message, userMail, isAccept) {
   firebase
     .firestore()
@@ -288,8 +412,8 @@ export function fetchRevenueAllDoneBooking(fromDate, toDate, isDay) {
         dispatch(
           isDay
             ? fetchTransactionsPriceBookingWeek(
-                response.success ? response.data : ""
-              )
+              response.success ? response.data : ""
+            )
             : fetchRevenueBooking(response.success ? response.data : "")
         );
       },

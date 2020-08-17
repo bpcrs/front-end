@@ -91,9 +91,6 @@ export default function VerifyOTP({ children, callBack, title, content }) {
         setOpen(false);
         callBack(value);
       }, 3000);
-      // // dispatch(sendOTPConfirm(value));
-      // if (otpConfirm) {
-      // }
     }
   };
 
