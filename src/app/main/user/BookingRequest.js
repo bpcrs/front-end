@@ -240,42 +240,86 @@ function Row({ booking, carId, currentUser, flag }) {
         );
       case BOOKING_STATUS.CONFIRM:
         return (
-          <Tooltip title={confirmText}>
-            <VerifyOTP
-              callBack={handleSignContract}
-              content="Please verify OTP before signing"
-              title="Verify OTP"
-            >
+          <React.Fragment>
+            <Tooltip title={requestText}>
               <Button
                 variant="outlined"
-                startIcon={<Icon style={{ color: "green" }}>fingerprint</Icon>}
+                className={classes.button}
                 style={{ textTransform: "none" }}
+                startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
+                onClick={() => setOpen(true)}
               >
-                {confirmText}
+                {requestText}
               </Button>
-            </VerifyOTP>
-          </Tooltip>
-        );
-      case BOOKING_STATUS.RENTER_SIGNED:
-        return (
-          <React.Fragment>
+            </Tooltip>
             <Tooltip title={confirmText}>
-              <UpdateOdmeter
-                children={handleSignContract}
+              <VerifyOTP
+                callBack={handleSignContract}
                 content="Please verify OTP before signing"
                 title="Verify OTP"
-                booking={booking}
-                currentUser={currentUser}
               >
                 <Button
                   variant="outlined"
-                  startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                  startIcon={
+                    <Icon style={{ color: "green" }}>fingerprint</Icon>
+                  }
                   style={{ textTransform: "none" }}
                 >
                   {confirmText}
                 </Button>
-              </UpdateOdmeter>
+              </VerifyOTP>
             </Tooltip>
+
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                <Typography variant="subtitle1" color="initial">
+                  Are you want to cancel your booking request ?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancelRequest}
+                >
+                  Yes
+                </Button>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  style={{ backgroundColor: "red", color: "white" }}
+                  variant="contained"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        );
+      case BOOKING_STATUS.RENTER_SIGNED:
+        return (
+          <React.Fragment>
+            {booking.renter.email === currentUser.email ? null : (
+              <Tooltip title={confirmText}>
+                <UpdateOdmeter
+                  children={handleSignContract}
+                  content="Please verify OTP before signing"
+                  title="Verify OTP"
+                  booking={booking}
+                  currentUser={currentUser}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={
+                      <Icon style={{ color: "green" }}>fingerprint</Icon>
+                    }
+                    style={{ textTransform: "none" }}
+                  >
+                    {confirmText}
+                  </Button>
+                </UpdateOdmeter>
+              </Tooltip>
+            )}
           </React.Fragment>
         );
       case BOOKING_STATUS.DONE:
@@ -325,16 +369,52 @@ function Row({ booking, carId, currentUser, flag }) {
       case BOOKING_STATUS.OWNER_ACCEPTED:
       case BOOKING_STATUS.PENDING:
         return (
-          <Tooltip title={carId ? pendingText : ownerAcceptedText}>
-            <Button
-              variant="outlined"
-              style={{ textTransform: "none" }}
-              onClick={handleAgreement}
-              startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
-            >
-              {carId ? pendingText : ownerAcceptedText}
-            </Button>
-          </Tooltip>
+          <React.Fragment>
+            <Tooltip title={carId ? pendingText : ownerAcceptedText}>
+              <Button
+                variant="outlined"
+                style={{ textTransform: "none" }}
+                onClick={handleAgreement}
+                startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
+              >
+                {carId ? pendingText : ownerAcceptedText}
+              </Button>
+            </Tooltip>
+            <Tooltip title={requestText}>
+              <Button
+                variant="outlined"
+                style={{ textTransform: "none" }}
+                startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
+                onClick={() => setOpen(true)}
+              >
+                {requestText}
+              </Button>
+            </Tooltip>
+            <Dialog open={open} scroll="body">
+              <DialogContent>
+                <Typography variant="subtitle1" color="initial">
+                  Are you want to cancel your booking request ?
+                </Typography>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancelRequest}
+                >
+                  Yes
+                </Button>
+                <Button
+                  autoFocus
+                  onClick={() => setOpen(false)}
+                  style={{ backgroundColor: "red", color: "white" }}
+                  variant="contained"
+                >
+                  No
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
         );
       default:
         return null;

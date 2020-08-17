@@ -459,10 +459,16 @@ export default function BookingClose({ booking, openClose }) {
                               </Typography>
                               <Typography
                                 variant="body2"
-                                color="textPrimary"
+                                style={{ fontWeight: "bold" }}
+                                color="primary"
                                 align="left"
                               >
-                                {preReturnPrice.mileageLimit}
+                                {odemeter - preReturnPrice.agreements &&
+                                  preReturnPrice.agreements.filter(
+                                    (item) =>
+                                      item.criteria.name ===
+                                      CRITERIA_NAME.MILEAGE_LIMIT
+                                  )[0].value - booking.car.odometer}
                               </Typography>
                             </Grid>
                             <Grid container justify="space-between">
