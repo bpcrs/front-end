@@ -263,8 +263,6 @@ function CarList(props) {
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      {console.log(filterCars)}
-
       {filterCars.data &&
         filterCars.data.map((car, index) => (
           <Grid
@@ -282,6 +280,24 @@ function CarList(props) {
             />
           </Grid>
         ))}
+      <Box
+        hidden={filterCars.data && filterCars.data.length !== 0}
+        style={{ width: "100%" }}
+      >
+        <Grid container justify="center" alignItems="center" item lg={12}>
+          <Grid lg={12} item alignItems="center" justify="center" container>
+            <img
+              src="assets/images/car-finding.jpg"
+              alt="No Review"
+              // width="300px"
+              height="300px"
+            />
+          </Grid>
+          <Typography variant="subtitle2">
+            We did't find any car with your filter. Please try again
+          </Typography>
+        </Grid>
+      </Box>
       {filterCars.data ? (
         <Grid></Grid>
       ) : (
