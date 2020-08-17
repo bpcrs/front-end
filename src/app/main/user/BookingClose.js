@@ -278,9 +278,9 @@ export default function BookingClose({ booking, openClose }) {
                       />
                       {checkboxValue.carDamage ? (
                         <FormControl
-                          fullWidth
                           className={classes.margin}
                           variant="outlined"
+                          style={{ width: "50%" }}
                         >
                           <InputLabel htmlFor="outlined-adornment-amount">
                             Amount
