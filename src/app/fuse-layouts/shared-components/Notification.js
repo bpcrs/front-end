@@ -87,7 +87,7 @@ const NotificationUI = ({ header, createAt, isSeen, type, content }) => {
             {moment.utc(createAt).local().fromNow()}
           </Typography>
         </Grid>
-        <Badge variant="dot" color="primary" invisible={!isSeen} />
+        <Badge variant="dot" color="primary" invisible={isSeen} />
       </Grid>
     </CardActionArea>
   );
@@ -329,7 +329,7 @@ const Notification = () => {
     <React.Fragment>
       <Button onClick={notificationClick}>
         <Badge
-          badgeContent={notification.filter((item) => item.isSeen).length}
+          badgeContent={notification.filter((item) => !item.isSeen).length}
           color="error"
         >
           <Icon>notifications_outlined</Icon>
@@ -432,13 +432,13 @@ const Notification = () => {
                   <Card
                     onMouseOver={() => {
                       setShadow(4);
-                      setHoving(notify.createAt);
+                      setHoving(notify.id);
                     }}
                     onMouseOut={() => {
                       setShadow(0);
                       setHoving(0);
                     }}
-                    elevation={notify.createAt === hoving ? shadow : 0}
+                    elevation={notify.id === hoving ? shadow : 0}
                     onClick={() => handleClick(true, notify.id)}
                   >
                     {renderNotification(notify)}
