@@ -248,6 +248,16 @@ const Notification = () => {
             type="success"
           />
         );
+      case BOOKING_STATUS.CANCEL:
+        return (
+          <NotificationUI
+            content={`Booking #${notify.bookingId} has been cancelled.`}
+            header={"Cancelled"}
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="error"
+          />
+        );
       case CAR_REGISTER.DENYLICENSE:
         return (
           <NotificationUI
