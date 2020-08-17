@@ -28,7 +28,7 @@ import { resetFlagCreateBooking } from "../booking/booking.action";
 import { checkVerifyRequest, sendOTPConfirm } from "./profile.action";
 import UpdateProfile from "./UpdateProfile";
 import { fetchUserDetail } from "../submitLicense/license.action";
-
+import moment from "moment";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -241,16 +241,28 @@ const Profile = () => {
                 </Button>
               </Grid>
             </Grid>
-            <Grid item lg={12} container>
-              <Grid item lg={2}></Grid>
+            <Grid item lg={12} container justify="flex-end" className="my-2">
               <Grid item lg={5}>
                 <Typography variant="subtitle1">PHONE</Typography>
                 <Typography variant="subtitle2">{userDetail.phone} </Typography>
-                {/* <Typography>{userLogged.displayName}</Typography> */}
               </Grid>
               <Grid item lg={5}>
                 <Typography variant="subtitle1">EMAIL</Typography>
                 <Typography variant="subtitle2">{userLogged.email}</Typography>
+              </Grid>
+            </Grid>
+            <Grid item lg={12} container justify="flex-end">
+              <Grid item lg={5}>
+                <Typography variant="subtitle1">IDENTITY CARD NO.</Typography>
+                <Typography variant="subtitle2">
+                  {userDetail.identification}
+                </Typography>
+              </Grid>
+              <Grid item lg={5}>
+                <Typography variant="subtitle1">JOINED AT</Typography>
+                <Typography variant="subtitle2">
+                  {moment.utc(userDetail.createdDate).fromNow()}
+                </Typography>
               </Grid>
             </Grid>
           </Grid>
