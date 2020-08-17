@@ -12,16 +12,13 @@ import {
   TextField,
   Backdrop,
   CircularProgress,
+  Box,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import Rating from "@material-ui/lab/Rating";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchReviewList,
-  fetchCarDetail,
-  fetchCarDetailWithDistance,
-} from "./booking.action";
+import { fetchReviewList, fetchCarDetailWithDistance } from "./booking.action";
 import NumberFormat from "react-number-format";
 import { DateRangePicker, DateRangeDelimiter } from "@material-ui/pickers";
 import GoogleMaps from "../landing/GoogleMaps";
@@ -65,17 +62,22 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-const Review = ({ comment, rating, renter, createdDate }) => {
+const Review = ({ comment, rating, renter, createdDate, id }) => {
   const classes = useStyles();
+  const [hoving, setHoving] = useState();
   return (
-    <Card className={classes.review} elevation={20}>
+    <Card
+      className={classes.review}
+      elevation={hoving === id ? 4 : 0}
+      onMouseOver={() => setHoving(id)}
+      onMouseOut={() => setHoving(0)}
+    >
       <CardContent>
         <Grid container spacing={1}>
           <Grid
             spacing={1}
             item
-            xs={12}
-            xl={4}
+            lg={6}
             container
             justify="space-between"
             alignItems="baseline"
@@ -91,18 +93,11 @@ const Review = ({ comment, rating, renter, createdDate }) => {
               title={renter.fullName}
               subheader={new Date(createdDate).toLocaleDateString()}
             />
-            <Rating name="read-only" value={rating} readOnly size="small" />
           </Grid>
-          <Grid spacing={1} item xs={12} xl={4} container alignContent="center">
+          <Grid spacing={1} item lg={6} container alignContent="center">
+            <Rating name="read-only" value={rating} readOnly size="small" />
             <Grid item lg={12} xs={12}>
-              {/* <Typography variant="subtitle2">{comment}</Typography> */}
-              <TextField
-                value={comment ? comment : ""}
-                className={classes.textField}
-                variant="outlined"
-                multiline
-                disabled
-              />
+              <Typography variant="subtitle2">{comment}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -127,6 +122,7 @@ export default function CarDetails(props) {
   const [loadingProcess, setLoadingProcess] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const size = 3;
+  const isLogged = useSelector((state) => state.auth.login.success);
 
   const isInArea = () => {
     const isKm = distance && distance.text.indexOf("km") !== -1;
@@ -193,7 +189,7 @@ export default function CarDetails(props) {
       fetchCarDetailWithDistance(carId, bookingChange.location.description)
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, props, currentPage, bookingChange.location.description]);
+  }, [props.match.params.id, currentPage, bookingChange.location.description]);
 
   return (
     <Grid container spacing={3}>
@@ -416,36 +412,47 @@ export default function CarDetails(props) {
             <Card>
               <CardContent>
                 <Grid container spacing={1}>
-                  <Typography gutterBottom variant="h5">
-                    Customer reviews
-                  </Typography>
-                </Grid>
-                <Grid container>
-                  {reviews ? (
-                    <Grid>
-                      <Typography variant="subtitle1" color="primary">
-                        Don't have any reviews
-                      </Typography>
-                    </Grid>
-                  ) : (
-                    <Grid item xl={12} lg={12}>
-                      {reviews.data &&
-                        reviews.data.map((review) => (
-                          <Review key={review.id} {...review} />
-                        ))}
-                      <Grid item xl={12} lg={12}>
-                        <Pagination
-                          count={
-                            reviews.count !== 0 && reviews.count % size === 0
-                              ? Math.floor(reviews.count / size)
-                              : Math.floor(reviews.count / size) + 1
-                          }
-                          color="primary"
-                          onChange={(e, page) => setCurrentPage(page)}
-                        />
+                  <Grid spacing={1} container alignItems="baseline">
+                    <Icon className={classes.review}>rate_review</Icon>
+                    <Typography variant="h6">Customer Review</Typography>
+                    <Box hidden={reviews.count !== 0}>
+                      <Grid container justify="center" alignItems="center">
+                        <Grid item>
+                          <img
+                            src="assets/images/review.jpg"
+                            alt="No Review"
+                            // width="300px"
+                            height="300px"
+                          ></img>
+                        </Grid>
+                        <Grid item>
+                          <Typography variant="subtitle2">
+                            The car doesn't any review. Be a first reviewer ^_^.
+                          </Typography>
+                        </Grid>
                       </Grid>
+                    </Box>
+                  </Grid>
+                </Grid>
+                <Grid>
+                  <Grid item xl={12} lg={12}>
+                    {reviews.data &&
+                      reviews.data.map((review) => (
+                        <Review key={review.id} {...review} />
+                      ))}
+                    <Grid container xs={12} lg={12} item justify="flex-end">
+                      <Pagination
+                        hidden={reviews.count === 0}
+                        count={
+                          reviews.count !== 0 && reviews.count % size === 0
+                            ? Math.floor(reviews.count / size)
+                            : Math.floor(reviews.count / size) + 1
+                        }
+                        color="primary"
+                        onChange={(e, page) => setCurrentPage(page)}
+                      />
                     </Grid>
-                  )}
+                  </Grid>
                 </Grid>
               </CardContent>
             </Card>
@@ -502,7 +509,7 @@ export default function CarDetails(props) {
             <Card className="w-full max-w-400 mx-auto m-16 md:m-0" square>
               <CardContent>
                 <Typography variant="h6" color="initial" display="initial">
-                  Price detail{" "}
+                  Price detail
                 </Typography>
                 <Grid container justify="space-between">
                   <Typography
@@ -574,10 +581,13 @@ export default function CarDetails(props) {
                       />
                     }
                   </Typography>
-                  {!isInArea() ? (
+                  {!isInArea() || !isLogged ? (
                     <Grid item lg={12}>
                       <Alert severity="warning" className={classes.comment}>
-                        Distance should less than 50 km
+                        {!isLogged && "Please login to booking car"}
+                        {!isInArea() &&
+                          isLogged &&
+                          "Distance should less than 50 km"}
                       </Alert>
                     </Grid>
                   ) : null}
@@ -588,7 +598,8 @@ export default function CarDetails(props) {
                     disabled={
                       !bookingChange.location ||
                       !bookingChange.destination ||
-                      !isInArea()
+                      !isInArea() ||
+                      !isLogged
                     }
                     onClick={handleBookingChange}
                   >

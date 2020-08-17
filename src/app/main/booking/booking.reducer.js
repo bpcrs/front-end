@@ -3,7 +3,10 @@ import { ca } from "date-fns/locale";
 const initialState = {
   cars: [],
   bookingRequest: {},
-  reviews: [],
+  reviews: {
+    data: [],
+    count: 0,
+  },
   images: [],
   licenses: [],
   loading: false,
