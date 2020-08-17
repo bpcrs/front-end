@@ -72,6 +72,7 @@ function Row({ booking, carId, currentUser, flag }) {
   const [openTimeline, setOpenTimeline] = useState(false);
   const [open, setOpen] = useState(false);
   const [openCloseBook, setOpenCloseBook] = useState(false);
+  const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -120,6 +121,8 @@ function Row({ booking, carId, currentUser, flag }) {
       handleCloseTimeline();
     };
 
+    const now = new Date(Date.now());
+
     switch (booking.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
@@ -137,20 +140,23 @@ function Row({ booking, carId, currentUser, flag }) {
                     {carId ? pendingText : ownerAcceptedText}
                   </Button>
                 </Tooltip>
-                <Tooltip title={isProcess ? completeText : processingText}>
-                  <Button
-                    variant="outlined"
-                    style={{ textTransform: "none" }}
-                    startIcon={
-                      <Icon style={{ color: isProcess ? "green" : "black" }}>
-                        assignment_return
-                      </Icon>
-                    }
-                    onClick={() => setOpen(true)}
-                  >
-                    {isProcess ? completeText : processingText}
-                  </Button>
-                </Tooltip>
+                {!isProcess ? (
+                  <Tooltip title={processingText}>
+                    <Button
+                      variant="outlined"
+                      disabled={now > new Date(booking.toDate)}
+                      style={{ textTransform: "none" }}
+                      startIcon={
+                        <Icon style={{ color: "black" }}>
+                          assignment_return
+                        </Icon>
+                      }
+                      onClick={() => setOpen(true)}
+                    >
+                      {isProcess ? completeText : processingText}
+                    </Button>
+                  </Tooltip>
+                ) : null}
               </Grid>
             ) : (
               <Tooltip title={carId ? pendingText : ownerAcceptedText}>
@@ -166,16 +172,9 @@ function Row({ booking, carId, currentUser, flag }) {
             )}
             <Dialog open={open} scroll="body">
               <DialogContent>
-                {isProcess ? (
-                  <Typography variant="subtitle1" color="initial">
-                    Are you want to finish this booking?
-                  </Typography>
-                ) : (
-                  <Typography variant="subtitle1" color="initial">
-                    Are you want to finish rental process and go to bill
-                    payment?
-                  </Typography>
-                )}
+                <Typography variant="subtitle1" color="initial">
+                  Are you want to finish rental process and go to bill payment?
+                </Typography>
               </DialogContent>
               <DialogActions>
                 <Button
@@ -189,9 +188,7 @@ function Row({ booking, carId, currentUser, flag }) {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={
-                    isProcess ? handleCompleteBooking : handleProcessRequest
-                  }
+                  onClick={handleProcessRequest}
                 >
                   Yes
                 </Button>
@@ -457,7 +454,7 @@ function Row({ booking, carId, currentUser, flag }) {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          {openCloseBook ? (
+          {openCloseBook || booking.totalPrice > 0 ? (
             <BookingClose booking={booking} />
           ) : (
             <CustomizedTimeline booking={booking} />
@@ -466,7 +463,7 @@ function Row({ booking, carId, currentUser, flag }) {
         <DialogActions>
           <Grid container justify="flex-end" alignItems="center">
             <Grid>
-              {openCloseBook ? (
+              {openCloseBook || booking.totalPrice > 0 ? (
                 <StatusAction
                   booking={booking}
                   carId={carId}

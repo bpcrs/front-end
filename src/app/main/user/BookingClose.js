@@ -16,6 +16,7 @@ import {
   CircularProgress,
   Icon,
   Divider,
+  LinearProgress,
 } from "@material-ui/core";
 import classNames from "classnames";
 import { useState } from "react";
@@ -23,8 +24,11 @@ import ContractTable from "./ContractTable";
 import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useDispatch, useSelector } from "react-redux";
-import { postReturnBooking } from "./profile.action";
-import { CRITERIA_NAME } from "../../../constant";
+import {
+  postReturnBooking,
+  changeBookingStatusRequest,
+} from "./profile.action";
+import { CRITERIA_NAME, BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   cardHeader: {
@@ -72,11 +76,6 @@ export default function BookingClose({ booking, openClose }) {
   const classes = useStyles();
   const dispatch = useDispatch();
   const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
-  // const limitAgreement =
-  //   preReturnPrice.agreements &&
-  //   preReturnPrice.agreements.find(
-  //     (item) => item.criteria.name === CRITERIA_NAME.MILEAGE_LIMIT
-  //   );
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
@@ -87,7 +86,11 @@ export default function BookingClose({ booking, openClose }) {
     overdue: false,
     violate: false,
   });
-  console.log(booking.id);
+  const mileageAgree = preReturnPrice.extra
+    ? preReturnPrice.agreements.filter(
+        (item) => item.criteria.name === CRITERIA_NAME.MILEAGE_LIMIT
+      )[0].value
+    : 0;
   const handleChangeCheckbox = (event) => {
     setCheckboxValue({
       ...checkboxValue,
@@ -108,6 +111,7 @@ export default function BookingClose({ booking, openClose }) {
   };
   const handleConfirmTotalPrice = () => {
     setLoadingBill(true);
+    dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
     setTimeout(() => {
       setLoadingBill(false);
       openTotalBill(true);
@@ -117,7 +121,7 @@ export default function BookingClose({ booking, openClose }) {
   return (
     <Grid container>
       <Grid item container lg={6} className={classes.info}>
-        {totalBill ? (
+        {totalBill || booking.totalPrice ? (
           <Grid item lg={12}>
             <div className="w-full">
               <Card raised square>
@@ -463,12 +467,7 @@ export default function BookingClose({ booking, openClose }) {
                                 color="primary"
                                 align="left"
                               >
-                                {odemeter - preReturnPrice.agreements &&
-                                  preReturnPrice.agreements.filter(
-                                    (item) =>
-                                      item.criteria.name ===
-                                      CRITERIA_NAME.MILEAGE_LIMIT
-                                  )[0].value - booking.car.odometer}
+                                {odemeter - mileageAgree - booking.car.odometer}
                               </Typography>
                             </Grid>
                             <Grid container justify="space-between">
@@ -604,10 +603,9 @@ export default function BookingClose({ booking, openClose }) {
                   Confirm
                 </Button>
                 {loadingBill && (
-                  <CircularProgress
-                    size={24}
-                    className={classes.buttonConfirm}
-                  />
+                  <Grid lg={12}>
+                    <LinearProgress />
+                  </Grid>
                 )}
               </div>
             </Grid>
