@@ -14,6 +14,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import firebase from "../../firebase/firebase";
+// import { showMessage, showMessageError } from '../../store/actions/fuse';
+import { showMessageError } from '../../store/actions/fuse';
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -90,13 +92,27 @@ export default function ManageBrand() {
     });
   };
   const handleBrand = () => {
-    if (currentBrand.id == null) {
-      dispatch(addBrand(currentBrand.name, currentBrand.logoLink));
+    if (currentBrand.name.trim() != "" && currentBrand.image != null) {
+      let flag = 1;
+      for (var i = 0; i < brands.data.length; i++) {
+        if (currentBrand.name === brands.data[i].name) {
+          flag = 2;
+          break;
+        }
+      } if (flag == 1) {
+        if (currentBrand.id == null) {
+          dispatch(addBrand(currentBrand.name, currentBrand.logoLink));
+        } else {
+          dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+        }
+        setCurrentBrand({});
+        setOpen(false);
+      } else {
+        dispatch(showMessageError("Brand name existed in list!"));
+      }
     } else {
-      dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+      dispatch(showMessageError("Brand name field and an image cannot be blank!"));
     }
-    setCurrentBrand({});
-    setOpen(false);
   }
   const handleClose = () => {
     setOpen(false);

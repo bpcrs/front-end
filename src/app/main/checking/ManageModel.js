@@ -14,6 +14,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import firebase from "../../firebase/firebase";
+import { showMessageError } from '../../store/actions/fuse';
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -58,6 +59,7 @@ export default function ManageModel() {
     if (model != null) {
       setCurrentModel(model);
     }
+    // console.log(models.data.length);
     setOpen(true);
   };
 
@@ -69,13 +71,28 @@ export default function ManageModel() {
   };
 
   const handleModel = () => {
-    if (currentModel.id == null) {
-      dispatch(addModel(currentModel.name));
+    let flag = 1;
+    if (currentModel.name.trim() != "") {
+      for (var i = 0; i < models.data.length; i++) {
+        if (currentModel.name === models.data[i].name) {
+          flag = 2;
+          break;
+        }
+      }
+      if (flag == 1) {
+        if (currentModel.id == null) {
+          dispatch(addModel(currentModel.name));
+        } else {
+          dispatch(updateModel(currentModel.id, currentModel.name));
+        }
+        setCurrentModel({});
+        setOpen(false);
+      } else {
+        dispatch(showMessageError("Model name existed in list!"));
+      }
     } else {
-      dispatch(updateModel(currentModel.id, currentModel.name));
+      dispatch(showMessageError("Model name field cannot be blank!"));
     }
-    setCurrentModel({});
-    setOpen(false);
   }
   const handleClose = () => {
     setOpen(false);
