@@ -21,7 +21,6 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import MyBooking from "./MyBooking";
 import MyCar from "./MyCar";
-import MyLicense from "../submitLicense/MyLicense";
 import { green, red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";

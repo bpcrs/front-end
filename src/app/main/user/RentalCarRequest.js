@@ -58,7 +58,7 @@ const StyledTableCell = withStyles((theme) => ({
 }))(TableCell);
 
 function Row(props) {
-  const { booking, currentUser } = props;
+  const { booking } = props;
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();

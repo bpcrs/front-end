@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import {
   makeStyles,
-  Backdrop,
   Paper,
   Chip,
   Typography,
@@ -10,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchModelList,

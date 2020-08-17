@@ -1,5 +1,5 @@
 import { GET, PUT, ENDPOINT, POST } from "../../services/api";
-import { showMessageError, showMessage } from "../../store/actions/fuse";
+import { showMessageError } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
 export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";

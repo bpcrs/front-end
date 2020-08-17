@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from "react";
 import firebase from "../../firebase/firebase";
 import {
-  FormControl,
   Button,
   TextField,
-  Card,
   Grid,
   makeStyles,
   Switch,
   Typography,
-  IconButton,
   Icon,
-  CardMedia,
   Dialog,
   DialogContent,
   DialogActions,
@@ -30,7 +26,7 @@ import {
   fetchImageList,
   postImageCar,
 } from "./booking.action";
-import { blue, green } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import CarStatus from "../user/CarStatus";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -178,8 +174,6 @@ function a11yProps(index) {
 }
 
 export default function CarEdits(props) {
-  const maxNumber = 10;
-  const maxMbFileSize = 5 * 1024 * 1024; // 5Mb
   const { carId } = props;
   const [tabValue, setTabValue] = useState(0);
   const [open, setOpen] = useState(false);
@@ -195,8 +189,6 @@ export default function CarEdits(props) {
 
   const change = useSelector((state) => state.booking.change);
   const [currentCar, setCurrentCar] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState();
 
   const handleInputChange = (event) => {
     setCurrentCar({
@@ -373,7 +365,7 @@ export default function CarEdits(props) {
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
   const [imagesCar, setImagesCar] = useState([]);
-  const [linkImagesCar, setLinkImagesCar] = useState([]);
+  const [, setLinkImagesCar] = useState([]);
   const uploadImage = (event) => {
     // storeImageToFirebase(event.target.files);
     setImagesCar([...imagesCar, ...event.target.files]);
@@ -394,7 +386,7 @@ export default function CarEdits(props) {
         .child(img.name);
       setLinkImagesCar((linkImagesCar) => [
         ...linkImagesCar,
-        uploadTask.put(img, metadata).then(function (result) {
+        uploadTask.put(img, metadata).then(function () {
           uploadTask.getDownloadURL().then(function (url) {
             const link = [url];
             dispatch(postImageCar(link, carId, "CAR"));

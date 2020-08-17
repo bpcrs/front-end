@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React from "react";
 import {
   Grid,
   Tabs,
@@ -8,13 +7,12 @@ import {
   Box,
   Button,
   Icon,
-  Paper,
 } from "@material-ui/core";
 import PropTypes from "prop-types";
 import Layout from "../../layout";
 import CheckCar from "./CheckCar";
 import CheckUser from "./CheckUser";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logoutUser } from "../../auth/store/actions";
 import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
@@ -54,44 +52,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  media: {
-    height: 140,
-    width: "100%",
-  },
-  imageUploading: {
-    height: 100,
-  },
-  icon: {
-    height: "100%",
-    width: 50,
-    marginRight: 10,
-  },
-  typography: {
-    width: "100%",
-  },
-  textField: {
-    width: "90%",
-  },
-  avatar: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  button: {
-    marginTop: theme.spacing(3),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    margin: "auto",
-    maxWidth: 500,
-  },
-}));
-
 export default function Cheking() {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
 

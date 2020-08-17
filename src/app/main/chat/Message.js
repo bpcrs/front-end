@@ -6,7 +6,6 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  CardActions,
   Button,
   Divider,
   FormControlLabel,
@@ -20,8 +19,6 @@ import Dialog from "@material-ui/core/Dialog";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
 import {
-  closeAgreement,
-  changeChip,
   acceptAgreement,
   deleteAllMsgByTypeFromFirebase,
   submitMessage,
@@ -67,8 +64,6 @@ const Message = ({ message, receive, type, createAt }) => {
   const dispatch = useDispatch();
   const selectedBooking = useSelector((state) => state.chat.selectedBooking);
   const userLogged = useSelector((state) => state.auth.user);
-  const booking = useSelector((state) => state.chat.booking);
-  const newAgreement = useSelector((state) => state.chat.newAgreement);
   const [openImg, setOpenImg] = useState(false);
   const criteria = useSelector((state) => state.chat.criteria);
 

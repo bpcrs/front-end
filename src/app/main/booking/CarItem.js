@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   Grid,
   Icon,
@@ -11,9 +11,7 @@ import {
   CardActions,
   Typography,
   Dialog,
-  DialogTitle,
   DialogContent,
-  DialogActions,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -23,11 +21,8 @@ import Chip from "@material-ui/core/Chip";
 import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import Skeleton from "@material-ui/lab/Skeleton";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CarCompare from "./CarCompare";
-import { useTheme } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: 20,
@@ -67,7 +62,7 @@ export default function CarItem(props = { isAction: true }) {
   };
   const clickToAddCompareCar = () => {
     carCompare.push({ info });
-    if (carCompare.length == 2) {
+    if (carCompare.length === 2) {
       setOpen(true);
     }
   };

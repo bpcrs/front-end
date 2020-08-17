@@ -1,5 +1,4 @@
 import * as Actions from "./booking.action";
-import { ca } from "date-fns/locale";
 const initialState = {
   cars: [],
   bookingRequest: {},
@@ -14,7 +13,7 @@ const initialState = {
   carCompare: [],
   brands: [],
   filterCars: {
-    count: 8,
+    count: 0,
   },
   models: [],
   agreemnts: [],
