@@ -8,7 +8,7 @@ import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { fetchBrandByAdminList, updateBrand, addBrand } from "./checking.action";
+import { fetchModelByAdminList, updateModel, addModel } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -45,57 +45,36 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-export default function ManageBrand() {
+export default function ManageModel() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const brands = useSelector((state) => state.checking.brands);
-  // const [brands, setBrands] = useState([]);
-  const [currentBrand, setCurrentBrand] = useState({});
+  const models = useSelector((state) => state.checking.models);
+  // const [Models, setModels] = useState([]);
+  const [currentModel, setCurrentModel] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = (brand) => {
-    if (brand != null) {
-      setCurrentBrand(brand);
+  const handleClickOpen = (model) => {
+    if (model != null) {
+      setCurrentModel(model);
     }
     setOpen(true);
   };
 
   const handleInputChange = (event) => {
-    setCurrentBrand({
-      ...currentBrand,
+    setCurrentModel({
+      ...currentModel,
       [event.target.name]: event.target.value,
     });
   };
-  const uploadImage = (event) => {
-    postImg(event.target.files[0]);
-  };
 
-  const postImg = (image) => {
-    const metadata = {
-      contentType: "image/jpeg",
-    };
-    const uploadTask = firebase
-      .storage()
-      .ref("Brand/")
-      .child(image.name);
-
-    uploadTask.put(image, metadata).then(function (result) {
-      uploadTask.getDownloadURL().then(function (url) {
-        setCurrentBrand({
-          ...currentBrand,
-          logoLink: url
-        });
-      });
-    });
-  };
-  const handleBrand = () => {
-    if (currentBrand.id == null) {
-      dispatch(addBrand(currentBrand.name, currentBrand.logoLink));
+  const handleModel = () => {
+    if (currentModel.id == null) {
+      dispatch(addModel(currentModel.name));
     } else {
-      dispatch(updateBrand(currentBrand.id, currentBrand.name, currentBrand.logoLink));
+      dispatch(updateModel(currentModel.id, currentModel.name));
     }
-    setCurrentBrand({});
+    setCurrentModel({});
     setOpen(false);
   }
   const handleClose = () => {
@@ -104,12 +83,12 @@ export default function ManageBrand() {
 
   const size = 10;
   useEffect(() => {
-    dispatch(fetchBrandByAdminList(currentPage, size));
+    dispatch(fetchModelByAdminList(currentPage, size));
   }, [currentPage, dispatch]);
   return (
     <Grid>
       {
-        brands.count > 0 ? (
+        models.count > 0 ? (
           <Grid container>
             <Button
               variant="text"
@@ -117,7 +96,7 @@ export default function ManageBrand() {
               onClick={handleClickOpen}
               startIcon={<Icon>playlist_add</Icon>}
             >
-              Create brand
+              Create model
             </Button>
             <Grid xs={12} lg={12} item>
               <TableContainer>
@@ -129,23 +108,18 @@ export default function ManageBrand() {
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Name</StyledTableCell>
-                      <StyledTableCell>Image</StyledTableCell>
-                      <StyledTableCell>Update</StyledTableCell>
+                      <StyledTableCell style={{ marginLeft: "30%" }}>Update</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {brands.data &&
-                      brands.data.map((brand, index) => (
+                    {models.data &&
+                      models.data.map((model, index) => (
                         <StyledTableRow
                           style={{ wordWrap: "break-word", textAlign: "center" }}
                           key={index}
                         >
                           <TableCell component="th" scope="row">
-                            {brand.name}
-                          </TableCell>
-
-                          <TableCell component="th" scope="row">
-                            <img width="200" src={brand.logoLink} alt="img" />
+                            {model.name}
                           </TableCell>
 
                           <TableCell component="th" scope="row">
@@ -155,7 +129,7 @@ export default function ManageBrand() {
                               className={classes.button}
                               startIcon={<EditIcon />}
                               style={{ marginLeft: "30%" }}
-                              onClick={() => handleClickOpen(brand)}
+                              onClick={() => handleClickOpen(model)}
                             >
                               Update
                             </Button>
@@ -170,32 +144,16 @@ export default function ManageBrand() {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Manage car brand</DialogTitle>
+              <DialogTitle id="form-dialog-title">Manage car model</DialogTitle>
               <DialogContent>
                 <TextField
                   margin="dense"
                   id="name"
                   name="name"
-                  label="Brand"
+                  label="Model"
                   onChange={handleInputChange}
-                  value={currentBrand.name ? currentBrand.name : ""}
+                  value={currentModel.name ? currentModel.name : ""}
                   fullWidth />
-                <img width="200" src={currentBrand.logoLink} />
-                <label
-                  variant="outlined"
-                >
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    accept="image/*"
-                    name="logoLink"
-                    id="file"
-                    onChange={uploadImage}
-                  />
-                  <span aria-hidden="true">
-                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-                  </span>
-                </label>
               </DialogContent>
               <DialogActions>
                 <Grid container justify="center">
@@ -203,7 +161,7 @@ export default function ManageBrand() {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => handleBrand()}
+                      onClick={() => handleModel()}
                       startIcon={<CheckCircleIcon />}
                       style={{ marginLeft: "30%" }}
                     />
@@ -223,9 +181,9 @@ export default function ManageBrand() {
             <Grid xs={12} lg={12} item container justify="flex-end">
               <Pagination
                 count={
-                  brands.count !== 0 && brands.count % size === 0
-                    ? Math.floor(brands.count / size)
-                    : Math.floor(brands.count / size) + 1
+                  models.count !== 0 && models.count % size === 0
+                    ? Math.floor(models.count / size)
+                    : Math.floor(models.count / size) + 1
                 }
                 color="primary"
                 onChange={(e, page) => setCurrentPage(page)}
@@ -235,7 +193,7 @@ export default function ManageBrand() {
         ) : (
             <Grid container justify="center" alignItems="center">
               <Typography variant="subtitle2" color="error">
-                List brands is empty!
+                List Models is empty!
           </Typography>
             </Grid >
           )
