@@ -12,7 +12,13 @@ import {
   Table,
   TableHead,
   TableBody,
+  FormControlLabel,
+  Checkbox,
+  FormControl,
+  Grid,
+  FormGroup,
 } from "@material-ui/core";
+import { CRITERIA_NAME } from "../../../constant";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -37,10 +43,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PopoverPricing({ pricing }) {
+export default function PopoverPricing({ pricing, children, booking }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const { agreements } = pricing;
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -50,7 +56,26 @@ export default function PopoverPricing({ pricing }) {
   };
 
   const open = Boolean(anchorEl);
-
+  const getCriteriaValueByName = (name) => {
+    if (
+      agreements &&
+      agreements.filter((item) => item.criteria.name === name)[0]
+    ) {
+      const agreement = agreements.filter(
+        (item) => item.criteria.name === name
+      )[0];
+      return {
+        unit: agreement.criteria.unit,
+        value: JSON.parse(agreement.value),
+        approved: agreement.approved,
+      };
+    }
+    return {
+      unit: "",
+      value: "N/A",
+      approved: false,
+    };
+  };
   return (
     <div>
       <Typography
@@ -60,7 +85,7 @@ export default function PopoverPricing({ pricing }) {
         onMouseLeave={handlePopoverClose}
         variant="overline"
       >
-        {pricing}
+        {children}
       </Typography>
       <Popover
         elevation={2}
@@ -86,8 +111,8 @@ export default function PopoverPricing({ pricing }) {
           <Table width="100%" aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell width="30%">Name</StyledTableCell>
-                <StyledTableCell width="70%" align="right">
+                <StyledTableCell width="25%">Name</StyledTableCell>
+                <StyledTableCell width="75%" align="right">
                   Value
                 </StyledTableCell>
               </TableRow>
@@ -98,12 +123,12 @@ export default function PopoverPricing({ pricing }) {
                   Mileage limit
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
-                  />
+                  {`${
+                    agreements &&
+                    getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).value
+                  } ${
+                    getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).unit
+                  }`}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -111,12 +136,10 @@ export default function PopoverPricing({ pricing }) {
                   Extra Price
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ/km"}
-                  />
+                  {`${
+                    agreements &&
+                    getCriteriaValueByName(CRITERIA_NAME.EXTRA).value
+                  } ${getCriteriaValueByName(CRITERIA_NAME.EXTRA).unit}`}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -124,10 +147,22 @@ export default function PopoverPricing({ pricing }) {
                   Insurance
                 </StyledTableCell>
                 <StyledTableCell align="right">
+                  {`${getCriteriaValueByName(
+                    CRITERIA_NAME.INSURANCE
+                  ).unit.toUpperCase()} ${
+                    agreements &&
+                    getCriteriaValueByName(
+                      CRITERIA_NAME.INSURANCE
+                    ).value.type.toUpperCase()
+                  } - `}
                   <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
+                    value={
+                      agreements &&
+                      getCriteriaValueByName(CRITERIA_NAME.INSURANCE).value
+                        .value
+                    }
+                    displayType="text"
+                    thousandSeparator
                     suffix={" đ"}
                   />
                 </StyledTableCell>
@@ -137,12 +172,13 @@ export default function PopoverPricing({ pricing }) {
                   Deposit
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
-                  />
+                  {`${
+                    agreements &&
+                    getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).value
+                  } ${
+                    agreements &&
+                    getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).unit
+                  }`}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -150,11 +186,54 @@ export default function PopoverPricing({ pricing }) {
                   Indemnification
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        size="small"
+                        checked={
+                          agreements &&
+                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
+                            .value.carDamage
+                        }
+                      />
+                    }
+                    label={
+                      <Typography variant="overline">Car Damage</Typography>
+                    }
+                    labelPlacement="bottom"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        color="primary"
+                        size="small"
+                        disabled
+                        checked={
+                          agreements &&
+                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
+                            .value.overdue
+                        }
+                      />
+                    }
+                    label={<Typography variant="overline">Overdue</Typography>}
+                    labelPlacement="bottom"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        size="small"
+                        color="primary"
+                        disabled
+                        checked={
+                          agreements &&
+                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
+                            .value.violate
+                        }
+                      />
+                    }
+                    label={<Typography variant="overline">Violate</Typography>}
+                    labelPlacement="bottom"
                   />
                 </StyledTableCell>
               </StyledTableRow>
@@ -164,33 +243,7 @@ export default function PopoverPricing({ pricing }) {
                 </StyledTableCell>
                 <StyledTableCell align="right">
                   <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
-                  />
-                </StyledTableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <StyledTableCell component="th" scope="row">
-                  VAT
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
-                  />
-                </StyledTableCell>
-              </StyledTableRow>
-              <StyledTableRow>
-                <StyledTableCell component="th" scope="row">
-                  Estimate price
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <NumberFormat
-                    value={10000}
+                    value={booking.car.price}
                     displayType={"text"}
                     thousandSeparator={true}
                     suffix={" đ"}

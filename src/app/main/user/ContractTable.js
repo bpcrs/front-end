@@ -11,7 +11,9 @@ import NumberFormat from "react-number-format";
 import PopoverCar from "./PopoverCar";
 import PopoverUser from "./PopoverUser";
 import PopoverPricing from "./PopoverPricing";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getPreReturnPriceBooking } from "./profile.action";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -33,7 +35,11 @@ const StyledTableRow = withStyles((theme) => ({
 
 export default function ContractTable({ booking }) {
   const userLogged = useSelector((state) => state.auth.user);
-
+  const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getPreReturnPriceBooking(booking.id, -1));
+  }, [booking.id, dispatch]);
   return (
     <TableContainer component={Paper}>
       <Table width="100%" aria-label="customized table">
@@ -110,19 +116,25 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Estimate price
+              Estimate price & Agreements
             </StyledTableCell>
             <StyledTableCell align="right">
-              <PopoverPricing
-                pricing={
-                  <NumberFormat
-                    value={booking.rentalPrice}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" đ"}
-                  />
-                }
-              />
+              <PopoverPricing pricing={preReturnPrice} booking={booking}>
+                <NumberFormat
+                  value={preReturnPrice.totalPrice}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" đ"}
+                />
+              </PopoverPricing>
+            </StyledTableCell>
+          </StyledTableRow>
+          <StyledTableRow>
+            <StyledTableCell component="th" scope="row">
+              Total price
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              {booking.totalPrice === 0 ? "N/A" : booking.totalPrice}
             </StyledTableCell>
           </StyledTableRow>
         </TableBody>

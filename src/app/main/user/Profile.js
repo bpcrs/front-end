@@ -253,7 +253,7 @@ const Profile = () => {
             </Grid>
             <Grid item lg={12} container justify="flex-end">
               <Grid item lg={5}>
-                <Typography variant="subtitle1">INDENTITY CARD NO.</Typography>
+                <Typography variant="subtitle1">IDENTITY CARD NO.</Typography>
                 <Typography variant="subtitle2">
                   {userDetail.identification}
                 </Typography>

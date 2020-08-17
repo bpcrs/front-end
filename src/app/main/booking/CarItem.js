@@ -69,7 +69,7 @@ export default function CarItem(props = { isAction: true }) {
   const [hoving, setHoving] = useState(0);
   return (
     <Card
-      elevation={hoving === info.id ? 4 : 0}
+      elevation={hoving === info.id ? 10 : 1}
       className={classes.card}
       onMouseOver={() => setHoving(info.id)}
       onMouseOut={() => setHoving(0)}
