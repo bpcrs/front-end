@@ -14,14 +14,17 @@ import {
   createAgreement,
   submitMessage,
   deleteAllMsgByTypeFromFirebase,
-  fetchAgreementList,
   closeAgreementDrawer,
   changeBookingStatusRequest,
 } from "./chat.action";
 import { useEffect } from "react";
 import { BOOKING_STATUS, CRITERIA_NAME } from "../../../constant";
-import { useCallback } from "react";
-import { Grid, Dialog, DialogContent, DialogActions } from "@material-ui/core";
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -235,26 +238,21 @@ export default function VerticalLinearStepper() {
             <StepLabel>{label}</StepLabel>
             <StepContent>
               <Dialog open={open} scroll="body" onClose={handleClose}>
+                <DialogTitle id="alert-dialog-title">
+                  Skip this agreement?
+                </DialogTitle>
                 <DialogContent>
-                  <Typography variant="subtitle2" color="textPrimary">
+                  <Typography variant="subtitle2" color="textSecondary">
                     If you skip this agreement, This agreement will take the
                     default value.
                   </Typography>
                 </DialogContent>
                 <DialogActions>
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: "red", color: "white" }}
-                    onClick={handleClose}
-                  >
+                  <Button style={{ color: "red" }} onClick={handleClose}>
                     Cancel
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSkip}
-                  >
-                    I skip this agreement
+                  <Button color="primary" onClick={handleSkip}>
+                    Agree
                   </Button>
                 </DialogActions>
               </Dialog>

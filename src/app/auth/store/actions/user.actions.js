@@ -5,7 +5,7 @@ import { setDefaultSettings } from "app/store/actions/fuse";
 import jwtService from "app/services/jwtService";
 import { APP_ROLE } from "../../../../constant";
 import firebase from "../../../firebase/firebase";
-import { setInitialSettings } from "../../../store/actions/fuse";
+// import { setInitialSettings } from "../../../store/actions/fuse";
 import { LOGIN_ERROR } from "./login.actions";
 
 export const SET_USER_DATA = "[USER] SET DATA";

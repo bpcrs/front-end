@@ -13,7 +13,6 @@ import { useEffect } from "react";
 import {
   fetchRevenueAllDoneBooking,
   fetchLastMonthTransactions,
-  fetchCountBookingRequest,
 } from "./checking.action";
 import { green } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
@@ -90,7 +89,7 @@ const formatMoney = (
   }
 };
 
-const Widget = ({ theme }) => {
+const Widget = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const price = useSelector((state) => state.checking.priceTransaction);
@@ -136,7 +135,7 @@ const Widget = ({ theme }) => {
 
   const graphDates = [];
 
-  const [dates, setDates] = useState([]);
+  const [dates] = useState([]);
 
   const getGraphDates = () => {
     for (var i = 1; i < 8; i++) {
@@ -277,7 +276,7 @@ const Widget = ({ theme }) => {
                       max:
                         Math.round(Math.max(...priceTransactions) / 1000000) *
                         1000000,
-                      callback: function (value, index, values) {
+                      callback: function (value) {
                         return formatMoney(value);
                       },
                     },

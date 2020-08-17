@@ -1,6 +1,5 @@
 import React from "react";
 import { Dialog, DialogContent } from "@material-ui/core";
-import _ from "@lodash";
 import BookingTimeline from "../main/user/BookingTimeline";
 
 const EventDialog = ({ booking, isOpen, closeAction }) => {

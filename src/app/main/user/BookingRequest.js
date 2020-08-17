@@ -103,7 +103,6 @@ function Row({ booking, carId }) {
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
     const { booking, carId, isProcess } = props;
-    const currentUser = useSelector((state) => state.auth.user);
     const handleCancelRequest = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.CANCEL));
       handleCloseTimeline();

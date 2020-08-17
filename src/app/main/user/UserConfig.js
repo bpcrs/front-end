@@ -3,9 +3,6 @@ import User from "./User";
 import Profile from "./Profile";
 import { APP_ROLE } from "../../../constant";
 import MyCar from "./MyCar";
-import RentalCarRequest from "./RentalCarRequest";
-import { FuseLoadable } from "@fuse";
-import { APP_PATH } from "../../../constant";
 
 export const UserConfig = {
   settings: {

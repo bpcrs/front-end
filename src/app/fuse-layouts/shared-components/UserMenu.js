@@ -1,14 +1,5 @@
 import React, { Component } from "react";
-import {
-  Avatar,
-  Button,
-  Icon,
-  ListItemIcon,
-  ListItemText,
-  Popover,
-  MenuItem,
-  Typography,
-} from "@material-ui/core";
+import { Avatar, Button, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as authActions from "app/auth/store/actions";
 import { bindActionCreators } from "redux";

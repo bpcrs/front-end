@@ -27,7 +27,6 @@ import VerifyOTP from "./VerifyOTP";
 import { useEffect } from "react";
 import { resetFlagCreateBooking } from "../booking/booking.action";
 import { checkVerifyRequest, sendOTPConfirm } from "./profile.action";
-import CalendarApp from "../../calendar/CalendarApp";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

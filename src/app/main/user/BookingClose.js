@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { theme } from "@chakra-ui/core";
 import {
   Grid,
   Typography,
@@ -25,7 +24,6 @@ import { blue } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 import { useDispatch, useSelector } from "react-redux";
 import { getPreReturnPriceBooking } from "./profile.action";
-import { fetchAgreementList } from "../chat/chat.action";
 import { CRITERIA_NAME } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({

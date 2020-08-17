@@ -8,17 +8,14 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import OtpInput from "react-otp-input";
 import { useState } from "react";
-import { theme } from "@chakra-ui/core";
-import { blue, green, red, grey } from "@material-ui/core/colors";
+import { blue, red, grey } from "@material-ui/core/colors";
 import {
   Grid,
   CircularProgress,
-  Chip,
   Icon,
-  Typography,
   LinearProgress,
 } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { sendOTPRequest } from "./profile.action";
 
 const useStyles = makeStyles((theme) => ({

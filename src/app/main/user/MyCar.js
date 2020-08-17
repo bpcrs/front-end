@@ -15,7 +15,6 @@ import {
   Badge,
   Backdrop,
   Paper,
-  Fade,
   Collapse,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
