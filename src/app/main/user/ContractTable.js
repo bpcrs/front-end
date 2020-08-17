@@ -14,6 +14,7 @@ import PopoverPricing from "./PopoverPricing";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getPreReturnPriceBooking } from "./profile.action";
+import { Typography } from "@material-ui/core";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -38,11 +39,19 @@ export default function ContractTable({ booking }) {
   const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getPreReturnPriceBooking(booking.id, -1));
+    dispatch(getPreReturnPriceBooking(booking.id, 0));
   }, [booking.id, dispatch]);
   return (
     <TableContainer component={Paper}>
       <Table width="100%" aria-label="customized table">
+        <caption>
+          <Typography variant="subtitle2">
+            <sup>(1)</sup> Estimate price with deposit include Agreements
+          </Typography>
+          <Typography variant="subtitle2">
+            <sup>(2)</sup> Deposit price = Deposit days * Price Per Day
+          </Typography>
+        </caption>
         <TableHead>
           <TableRow>
             <StyledTableCell width="30%">Name</StyledTableCell>
@@ -116,25 +125,40 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Estimate price & Agreements
+              Estimate price & Agreements <sup>(1)</sup>
             </StyledTableCell>
             <StyledTableCell align="right">
               <PopoverPricing pricing={preReturnPrice} booking={booking}>
-                <NumberFormat
-                  value={preReturnPrice.totalPrice}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  suffix={" đ"}
-                />
+                {preReturnPrice.estimatePrice === 0 ? (
+                  <u>N/A</u>
+                ) : (
+                  <NumberFormat
+                    value={preReturnPrice.estimatePrice}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    style={{ textDecoration: "underline" }}
+                    suffix={" đ"}
+                  />
+                )}
               </PopoverPricing>
             </StyledTableCell>
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Total price
+              Total price <sup>(1) - (2)</sup>
             </StyledTableCell>
             <StyledTableCell align="right">
-              {booking.totalPrice === 0 ? "N/A" : booking.totalPrice}
+              {preReturnPrice.totalPrice === 0 ? (
+                <Typography variant="overline">N/A</Typography>
+              ) : (
+                <NumberFormat
+                  value={preReturnPrice.totalPrice}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={" đ"}
+                  style={{ fontWeight: "bold" }}
+                />
+              )}
             </StyledTableCell>
           </StyledTableRow>
         </TableBody>

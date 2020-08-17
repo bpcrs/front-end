@@ -123,12 +123,15 @@ export default function PopoverPricing({ pricing, children, booking }) {
                   Mileage limit
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {`${
-                    agreements &&
-                    getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).value
-                  } ${
-                    getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).unit
-                  }`}
+                  {agreements &&
+                  getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).approved
+                    ? `${
+                        getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT)
+                          .value
+                      } ${
+                        getCriteriaValueByName(CRITERIA_NAME.MILEAGE_LIMIT).unit
+                      }`
+                    : "N/A"}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -136,10 +139,12 @@ export default function PopoverPricing({ pricing, children, booking }) {
                   Extra Price
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {`${
-                    agreements &&
-                    getCriteriaValueByName(CRITERIA_NAME.EXTRA).value
-                  } ${getCriteriaValueByName(CRITERIA_NAME.EXTRA).unit}`}
+                  {agreements &&
+                  getCriteriaValueByName(CRITERIA_NAME.EXTRA).approved
+                    ? `${getCriteriaValueByName(CRITERIA_NAME.EXTRA).value} ${
+                        getCriteriaValueByName(CRITERIA_NAME.EXTRA).unit
+                      }`
+                    : "N/A"}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
@@ -147,95 +152,113 @@ export default function PopoverPricing({ pricing, children, booking }) {
                   Insurance
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {`${getCriteriaValueByName(
-                    CRITERIA_NAME.INSURANCE
-                  ).unit.toUpperCase()} ${
-                    agreements &&
-                    getCriteriaValueByName(
-                      CRITERIA_NAME.INSURANCE
-                    ).value.type.toUpperCase()
-                  } - `}
-                  <NumberFormat
-                    value={
-                      agreements &&
-                      getCriteriaValueByName(CRITERIA_NAME.INSURANCE).value
-                        .value
-                    }
-                    displayType="text"
-                    thousandSeparator
-                    suffix={" đ"}
-                  />
+                  {agreements &&
+                  getCriteriaValueByName(CRITERIA_NAME.INSURANCE).approved ? (
+                    <>
+                      {`${getCriteriaValueByName(
+                        CRITERIA_NAME.INSURANCE
+                      ).unit.toUpperCase()} ${
+                        agreements &&
+                        getCriteriaValueByName(
+                          CRITERIA_NAME.INSURANCE
+                        ).value.type.toUpperCase()
+                      } - `}
+                      <NumberFormat
+                        value={
+                          agreements &&
+                          getCriteriaValueByName(CRITERIA_NAME.INSURANCE).value
+                            .value
+                        }
+                        displayType="text"
+                        thousandSeparator
+                        suffix={" đ"}
+                      />
+                    </>
+                  ) : (
+                    "N/A"
+                  )}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
-                  Deposit
+                  Deposit <sup>(2)</sup>
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  {`${
-                    agreements &&
-                    getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).value
-                  } ${
-                    agreements &&
-                    getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).unit
-                  }`}
+                  {agreements &&
+                  getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).approved
+                    ? `${getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).value} ${
+                        getCriteriaValueByName(CRITERIA_NAME.DEPOSIT).unit
+                      }`
+                    : "N/A"}
                 </StyledTableCell>
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
                   Indemnification
                 </StyledTableCell>
-                <StyledTableCell align="right">
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        size="small"
-                        checked={
-                          agreements &&
-                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
-                            .value.carDamage
-                        }
-                      />
-                    }
-                    label={
-                      <Typography variant="overline">Car Damage</Typography>
-                    }
-                    labelPlacement="bottom"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        color="primary"
-                        size="small"
-                        disabled
-                        checked={
-                          agreements &&
-                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
-                            .value.overdue
-                        }
-                      />
-                    }
-                    label={<Typography variant="overline">Overdue</Typography>}
-                    labelPlacement="bottom"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        size="small"
-                        color="primary"
-                        disabled
-                        checked={
-                          agreements &&
-                          getCriteriaValueByName(CRITERIA_NAME.INDEMNTIFICATION)
-                            .value.violate
-                        }
-                      />
-                    }
-                    label={<Typography variant="overline">Violate</Typography>}
-                    labelPlacement="bottom"
-                  />
-                </StyledTableCell>
+                {agreements &&
+                getCriteriaValueByName(CRITERIA_NAME.EXTRA).approved ? (
+                  <StyledTableCell align="right">
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          size="small"
+                          checked={
+                            agreements &&
+                            getCriteriaValueByName(
+                              CRITERIA_NAME.INDEMNTIFICATION
+                            ).value.carDamage
+                          }
+                        />
+                      }
+                      label={
+                        <Typography variant="overline">Car Damage</Typography>
+                      }
+                      labelPlacement="bottom"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          color="primary"
+                          size="small"
+                          disabled
+                          checked={
+                            agreements &&
+                            getCriteriaValueByName(
+                              CRITERIA_NAME.INDEMNTIFICATION
+                            ).value.overdue
+                          }
+                        />
+                      }
+                      label={
+                        <Typography variant="overline">Overdue</Typography>
+                      }
+                      labelPlacement="bottom"
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          color="primary"
+                          disabled
+                          checked={
+                            agreements &&
+                            getCriteriaValueByName(
+                              CRITERIA_NAME.INDEMNTIFICATION
+                            ).value.violate
+                          }
+                        />
+                      }
+                      label={
+                        <Typography variant="overline">Violate</Typography>
+                      }
+                      labelPlacement="bottom"
+                    />
+                  </StyledTableCell>
+                ) : (
+                  <StyledTableCell align="right">N/A</StyledTableCell>
+                )}
               </StyledTableRow>
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
