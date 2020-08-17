@@ -475,7 +475,7 @@ export function approveUser(id, active) {
   };
 }
 
-export function notificationLicenseUser(message, userMail, isAccept) {
+export function notificationLicenseUser(message, userMail, isAccept, renter) {
   firebase
     .firestore()
     .collection("notification")
@@ -486,10 +486,11 @@ export function notificationLicenseUser(message, userMail, isAccept) {
       status: isAccept ? "ACCEPTLICENSE" : "DENYLICENSE",
       createAt: new Date().getTime(),
       isSeen: false,
+      renter: renter,
     });
 }
 
-export function notificationUserCar(message, userMail, isAccept, car) {
+export function notificationUserCar(message, userMail, isAccept, car, renter) {
   firebase
     .firestore()
     .collection("notification")
@@ -501,6 +502,7 @@ export function notificationUserCar(message, userMail, isAccept, car) {
       createAt: new Date().getTime(),
       car: car,
       isSeen: false,
+      renter: renter,
     });
 }
 
