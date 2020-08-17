@@ -248,6 +248,20 @@ const Notification = () => {
             type="success"
           />
         );
+      case BOOKING_STATUS.CANCEL:
+        return (
+          <NotificationUI
+            content={
+              isOwner
+                ? `Booking #${notify.bookingId} has been cancelled. Your car with plate number ${notify.car.plateNum} is UNAVALIABE.  Please enable status "AVAILABLE" for countinutes rental.`
+                : `Booking #${notify.bookingId} has been cancelled.`
+            }
+            header={"Cancelled"}
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="error"
+          />
+        );
       case CAR_REGISTER.DENYLICENSE:
         return (
           <NotificationUI
