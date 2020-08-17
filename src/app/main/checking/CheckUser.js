@@ -1,5 +1,11 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, CardHeader, Avatar, TableCell } from "@material-ui/core";
+import {
+  Grid,
+  CardHeader,
+  Avatar,
+  TableCell,
+  Typography,
+} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -70,121 +76,100 @@ export default function CheckUser() {
   };
 
   return (
-    <TableContainer>
-      <Table
-        className={classes.table}
-        aria-label="customized table"
-        width="100%"
-      >
-        <TableHead>
-          <TableRow>
-            <StyledTableCell></StyledTableCell>
-            <StyledTableCell>User</StyledTableCell>
-            <StyledTableCell>Date Join</StyledTableCell>
-            <StyledTableCell>Status</StyledTableCell>
-            <StyledTableCell>Action</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {users.map((user) => (
-            // <Card className={classes.card}>
-            <TableRow>
-              <TableCell>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      aria-label="recipe"
-                      className={classes.avatar}
-                      src={user.imageUrl}
-                    ></Avatar>
-                  }
-                  // title={user.fullName}
-                />
-              </TableCell>
+    <Grid>
+      {users.count > 0 ? (
+        <TableContainer>
+          <Table
+            className={classes.table}
+            aria-label="customized table"
+            width="100%"
+          >
+            <TableHead>
+              <TableRow>
+                <StyledTableCell></StyledTableCell>
+                <StyledTableCell>User</StyledTableCell>
+                <StyledTableCell>Date Join</StyledTableCell>
+                <StyledTableCell>Status</StyledTableCell>
+                <StyledTableCell>Action</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                // <Card className={classes.card}>
+                <TableRow>
+                  <TableCell>
+                    <CardHeader
+                      avatar={
+                        <Avatar
+                          aria-label="recipe"
+                          className={classes.avatar}
+                          src={user.imageUrl}
+                        ></Avatar>
+                      }
+                      // title={user.fullName}
+                    />
+                  </TableCell>
 
-              <TableCell>{user.fullName}</TableCell>
+                  <TableCell>{user.fullName}</TableCell>
 
-              <TableCell>
-                <p>{new Date(user.createdDate).toLocaleDateString()}</p>
-              </TableCell>
+                  <TableCell>
+                    <p>{new Date(user.createdDate).toLocaleDateString()}</p>
+                  </TableCell>
 
-              <TableCell>
-                <Grid
-                  style={{
-                    border: "2px solid",
-                    borderColor: "#B0C4DE",
-                    borderRadius: "0px 50px 50px 50px",
-                    height: "50%",
-                    textAlign: "center",
-                    marginTop: "1%",
-                  }}
-                >
-                  <p style={{ color: handleColorStateUser(user.licenseCheck) }}>
-                    {handleStateUser(user.licenseCheck)}
-                  </p>
-                </Grid>
-              </TableCell>
+                  <TableCell>
+                    <Grid
+                      style={{
+                        border: "2px solid",
+                        borderColor: "#B0C4DE",
+                        borderRadius: "0px 50px 50px 50px",
+                        height: "50%",
+                        textAlign: "center",
+                        marginTop: "1%",
+                      }}
+                    >
+                      <p
+                        style={{
+                          color: handleColorStateUser(user.licenseCheck),
+                        }}
+                      >
+                        {handleStateUser(user.licenseCheck)}
+                      </p>
+                    </Grid>
+                  </TableCell>
 
-              <TableCell>
-                {/* <SettingIcon onClick={() => handleCickSetting(user.id)} /> */}
-                <Button
-                  variant="contained"
-                  color="default"
-                  className={classes.button}
-                  startIcon={<DetailsIcon />}
-                  onClick={() => handleCickSetting(user.id)}
-                >
-                  Check
-                </Button>
-              </TableCell>
-            </TableRow>
-            // </Card>
-
-            // <TableRow>
-            //     <Card className={classes.card}>
-            //         <Grid container spacing={0} style={{ wordWrap: "break-word", textAlign: "center" }}>
-
-            //             <Grid item xs={5} lg={5}>
-            //                 <CardHeader
-            //                     avatar={
-            //                         <Avatar
-            //                             aria-label="recipe"
-            //                             className={classes.avatar}
-            //                             src={user.imageUrl}
-            //                         ></Avatar>
-            //                     }
-            //                     title={user.fullName}
-            //                 // subheader={"Email: " + user.email}
-            //                 />
-            //             </Grid>
-
-            //             <Grid item xs={3} lg={3}>
-            //                 <p>{new Date(user.createdDate).toLocaleDateString()}</p>
-            //             </Grid>
-
-            //             <Grid item xs={3} lg={3}
-            //                 style={{
-            //                     border: "2px solid",
-            //                     borderColor: "#B0C4DE",
-            //                     borderRadius: "0px 50px 50px 50px",
-            //                     height: "50%",
-            //                     textAlign: "center",
-            //                     marginTop: "1%",
-            //                 }}>
-            //                 <p style={{ color: handleColorStateUser(user.licenseCheck) }} >{handleStateUser(user.licenseCheck)}</p>
-            //             </Grid>
-
-            //             <Grid item xs={1} lg={1}>
-            //                 <div >
-            //                     <SettingIcon style={{ marginTop: "50%" }} onClick={() => handleCickSetting(user.id)} />
-            //                 </div>
-            //             </Grid>
-            //         </Grid>
-            //     </Card>
-            // </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                  <TableCell>
+                    {/* <SettingIcon onClick={() => handleCickSetting(user.id)} /> */}
+                    <Button
+                      variant="contained"
+                      color="default"
+                      className={classes.button}
+                      startIcon={<DetailsIcon />}
+                      onClick={() => handleCickSetting(user.id)}
+                    >
+                      Check
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Grid container justify="center" alignItems="center">
+          <Grid item lg={6}>
+            <img
+              src="assets/images/approve.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
+          <Grid item lg={6} justify="flex-start" container>
+            <Typography variant="subtitle1" color="error">
+              Don't have any new user!
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+    </Grid>
   );
 }

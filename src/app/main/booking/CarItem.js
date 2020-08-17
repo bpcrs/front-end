@@ -198,43 +198,8 @@ export default function CarItem(props = { isAction: true }) {
       </CardContent>
       {props.isAction ? (
         <CardActions className={classes.actions}>
-          <Grid
-            container
-            alignContent="flex-end"
-            spacing={1}
-            alignItems="center"
-          >
-            {info ? (
-              <Grid item xs={5}>
-                <Button
-                  component={Link}
-                  variant="contained"
-                  startIcon={<FavoriteIcon />}
-                  to={(location) => ({
-                    ...location,
-                    pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
-                    state: { booking: props.booking ? props.booking : "" },
-                  })}
-                >
-                  View
-                </Button>
-              </Grid>
-            ) : (
-              <Skeleton animation="wave" height={10} width="80%" />
-            )}
-
-            <Grid item xs={7}>
-              <Button
-                variant="contained"
-                startIcon={<CompareIcon />}
-                onClick={() => {
-                  clickToAddCompareCar();
-                }}
-              >
-                Compare
-              </Button>
-            </Grid>
-            <Grid item xs={6} className={classes.alignRight}>
+          <Grid item container justify="space-between">
+            <Grid item className={classes.alignRight}>
               {info ? (
                 // <Typography variant="subtitle1" color="primary">
                 <Chip
@@ -254,6 +219,36 @@ export default function CarItem(props = { isAction: true }) {
               ) : (
                 <Skeleton animation="wave" height={10} width="80%" />
               )}
+            </Grid>
+            <Grid item alignContent="flex-end" spacing={1} alignItems="center">
+              {info ? (
+                <Button
+                  component={Link}
+                  variant="contained"
+                  startIcon={<Icon>pageview</Icon>}
+                  to={(location) => ({
+                    ...location,
+                    pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
+                    state: { booking: props.booking ? props.booking : "" },
+                  })}
+                >
+                  View
+                </Button>
+              ) : (
+                <Skeleton animation="wave" height={10} width="80%" />
+              )}
+
+              {/* <Grid item xs={7}>
+              <Button
+                variant="contained"
+                startIcon={<CompareIcon />}
+                onClick={() => {
+                  clickToAddCompareCar();
+                }}
+              >
+                Compare
+              </Button>
+            </Grid> */}
             </Grid>
           </Grid>
         </CardActions>

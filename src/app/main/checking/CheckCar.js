@@ -5,6 +5,9 @@ import {
   Avatar,
   TableCell,
   Typography,
+  Icon,
+  Dialog,
+  DialogContent,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,9 +20,8 @@ import { useHistory } from "react-router-dom";
 import { APP_PATH } from "../../../constant";
 import { fetchCarCheckingAdmin } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
-import classNames from "classnames";
-import DetailsIcon from "@material-ui/icons/Details";
 import Button from "@material-ui/core/Button";
+import CarDetailChecking from "./CarDetailChecking";
 const useStyles = makeStyles((theme) => ({
   root: {
     // display: "flex",
@@ -49,13 +51,74 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
+function Row({ car }) {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  return (
+    <React.Fragment>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          <CarDetailChecking car={car} />
+        </DialogContent>
+      </Dialog>
+      <StyledTableRow
+        style={{
+          wordWrap: "break-word",
+          textAlign: "center",
+        }}
+        // key={index}
+      >
+        <TableCell component="th" scope="row">
+          {car.name ? car.name : ""}
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          {new Date(car.createdDate).toLocaleDateString()}
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          <CardHeader
+            avatar={
+              <Avatar
+                aria-label="recipe"
+                className={classes.avatar}
+                src={car && car.owner.imageUrl}
+              ></Avatar>
+            }
+            title={car.owner.fullName}
+          />
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          {car.plateNum}
+        </TableCell>
+
+        <TableCell component="th" scope="row">
+          <Button
+            variant="outlined"
+            style={{ textTransform: "none" }}
+            className={classes.button}
+            startIcon={<Icon style={{ color: "green" }}>search</Icon>}
+            onClick={() => setOpen(true)}
+          >
+            Check
+          </Button>
+        </TableCell>
+      </StyledTableRow>
+    </React.Fragment>
+  );
+}
+
 export default function CheckCar() {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.checking.cars);
   const [currentPage, setCurrentPage] = useState(1);
-  const size = 10;
+  const size = 5;
   useEffect(() => {
     dispatch(fetchCarCheckingAdmin(currentPage, size));
   }, [currentPage, dispatch]);
@@ -92,55 +155,7 @@ export default function CheckCar() {
                 <TableBody>
                   {cars.data &&
                     cars.data.map((car, index) => (
-                      <StyledTableRow
-                        style={{ wordWrap: "break-word", textAlign: "center" }}
-                        key={index}
-                      >
-                        <TableCell component="th" scope="row">
-                          {car.name}
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          {new Date(car.createdDate).toLocaleDateString()}
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          <CardHeader
-                            avatar={
-                              <Avatar
-                                aria-label="recipe"
-                                className={classes.avatar}
-                                src={car.owner.imageUrl}
-                              ></Avatar>
-                            }
-                            title={car.owner.fullName}
-                            // subheader="on rent"
-                          />
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          <div
-                            className={classNames(
-                              "inline text-12 p-4 rounded truncate",
-                              "bg-red text-white"
-                            )}
-                          >
-                            {car.status}
-                          </div>
-                        </TableCell>
-
-                        <TableCell component="th" scope="row">
-                          <Button
-                            variant="contained"
-                            color="default"
-                            className={classes.button}
-                            startIcon={<DetailsIcon />}
-                            onClick={() => handleCickSetting(car.id)}
-                          >
-                            Check
-                          </Button>
-                        </TableCell>
-                      </StyledTableRow>
+                      <Row car={car} key={index} />
                     ))}
                 </TableBody>
               </Table>
@@ -161,6 +176,13 @@ export default function CheckCar() {
         </Grid>
       ) : (
         <Grid container justify="center" alignItems="center">
+          <Grid item lg={6}>
+            <img
+              src="assets/images/approve.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
           <Typography variant="subtitle2" color="error">
             List registered cars is empty! Please wait the owner register car.
           </Typography>

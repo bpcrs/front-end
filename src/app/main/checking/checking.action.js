@@ -407,12 +407,12 @@ export function fetchUserListChecking() {
         if (response.success) {
           dispatch(fetchUserCheckingSuccess(response.data));
         } else {
-          dispatch(showMessageError(response.message));
+          // dispatch(showMessageError(response.message));
         }
       },
       (error) => {
-        dispatch(fetchUserCheckingFailure(error));
-        dispatch(showMessageError(error.message));
+        // dispatch(fetchUserCheckingFailure(error));
+        showMessageError(error.message);
       }
     );
   };
@@ -514,8 +514,8 @@ export function fetchRevenueAllDoneBooking(fromDate, toDate, isDay) {
         dispatch(
           isDay
             ? fetchTransactionsPriceBookingWeek(
-              response.success ? response.data : ""
-            )
+                response.success ? response.data : ""
+              )
             : fetchRevenueBooking(response.success ? response.data : "")
         );
       },

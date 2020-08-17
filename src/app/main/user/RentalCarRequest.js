@@ -27,6 +27,7 @@ import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import moment from "moment";
+import ContractTable from "./ContractTable";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -152,84 +153,7 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h6" gutterBottom component="div">
-                Detail:
-              </Typography>
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-              >
-                <Typography color="textSecondary" variant="subtitle2">
-                  Renter name:{" "}
-                </Typography>
-                <Typography className={classes.detailBooking}>
-                  {" "}
-                  {booking.renter.fullName}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-              >
-                <Typography color="textSecondary" variant="subtitle2">
-                  Pick-up location:{" "}
-                </Typography>
-                <Typography className={classes.detailBooking}>
-                  {" "}
-                  {booking.location}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-              >
-                <Typography color="textSecondary" variant="subtitle2">
-                  Drop location:{" "}
-                </Typography>
-                <Typography className={classes.detailBooking}>
-                  {" "}
-                  {booking.destination}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-              >
-                <Typography color="textSecondary" variant="subtitle2">
-                  From date:{" "}
-                </Typography>
-                <Typography className={classes.detailBooking}>
-                  {" "}
-                  {new Date(booking.fromDate).toDateString()}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                container
-                direction="row"
-                alignItems="center"
-                justify="flex-start"
-              >
-                <Typography color="textSecondary" variant="subtitle2">
-                  End date:{" "}
-                </Typography>
-                <Typography className={classes.detailBooking}>
-                  {" "}
-                  {new Date(booking.toDate).toDateString()}
-                </Typography>
-              </Grid>
+              <ContractTable booking={booking} />
             </Box>
           </Collapse>
         </TableCell>
