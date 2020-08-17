@@ -7,22 +7,21 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
+  Box,
+  Typography,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
-import Layout from "../../layout";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import {
-  notificationLicenseUser,
-  fetchUserDetailChecking,
-  approveUser,
-} from "./checking.action";
+import { notificationLicenseUser, approveUser } from "./checking.action";
 import { updateUserLicense } from "../submitLicense/license.action";
+import PropTypes from "prop-types";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -58,16 +57,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UserDetailChecking(props) {
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`vertical-tabpanel-${index}`}
+      aria-labelledby={`vertical-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  tab: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `vertical-tab-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
+  };
+}
+
+export default function UserDetailChecking({ user, callback }) {
   const classes = useStyles();
-  const { userId } = props.location.state;
-  const history = useHistory();
   const dispatch = useDispatch();
-  const userDetail = useSelector((state) => state.checking.userDetail);
-  const [currentUser, setCurrentUser] = useState({});
-  const changePage = useSelector((state) => state.checking.changePage);
+  const [linkImage, setLinkImage] = useState(JSON.parse(user.imageLicense));
   const [open, setOpen] = useState(false);
-  const [linkImage, setLinkImage] = useState([]);
+  const [tab, setTab] = useState(0);
   const reason1 = "License not clear";
   const reason2 = "Identification not clear";
   const reason3 = "Don't have Identificatoin";
@@ -102,58 +130,56 @@ export default function UserDetailChecking(props) {
     });
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      dispatch(await fetchUserDetailChecking(userId));
-      setCurrentUser(userDetail);
-
-      if (userDetail.imageLicense) {
-        setLinkImage(JSON.parse(userDetail.imageLicense));
-      }
-    };
-    fetchUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userDetail]);
-
   const handleAcceptUserLicense = () => {
     notificationLicenseUser(
       "Your license have been Accepted",
-      currentUser.email,
+      user.email,
       true,
-      currentUser
+      user
     );
-    dispatch(approveUser(userId, true));
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+    dispatch(approveUser(user.id, true));
+    callback();
   };
 
   const handleSendNotificationCheckLicense = () => {
-    notificationLicenseUser(valueCheckBox, currentUser.email, false, currentUser);
+    notificationLicenseUser(valueCheckBox, user.email, false, user);
+    dispatch(showMessageSuccess("Denied success"));
     setOpen(false);
+    callback();
+  };
 
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+  const handleSetTab = (event, newTab) => {
+    setTab(newTab);
   };
 
   return (
-    <Layout name="User checking form">
-      <Grid spacing={1} container justify="center" alignItems="center">
-        <h1>Information User</h1>
+    <Grid item container>
+      <Grid item xs={12} lg={12}>
+        <Tabs
+          indicatorColor="primary"
+          textColor="primary"
+          orientation="horizontal"
+          variant="scrollable"
+          value={tab}
+          onChange={handleSetTab}
+          aria-label="Vertical tabs example"
+        >
+          <Tab label="User Infomation" {...a11yProps(0)} />
+          <Tab label="License Image" {...a11yProps(1)} />
+          {/* <Tab label="Indentification Image" {...a11yProps(2)} /> */}
+        </Tabs>
       </Grid>
-
-      <Grid container justify="center">
-        <Grid item lg={5} xs={12}>
-          <Grid item xs={12} sm={6} lg={10}>
-            <Card className={classes.card}>
+      <Grid item xs={12} sm={12}>
+        <TabPanel value={tab} index={0} tab={0}>
+          <Grid item lg={12} xs={12}>
+            <Grid item xs={12} sm={12} lg={12}>
               <Grid spacing={2} container justify="center" alignItems="center">
                 <Grid item xs={12} lg={12}>
                   <TextField
                     className={classes.textField}
                     label="Full Name"
                     variant="outlined"
-                    value={currentUser.fullName ? currentUser.fullName : ""}
+                    value={user.fullName ? user.fullName : ""}
                     disabled
                   />
                 </Grid>
@@ -163,7 +189,7 @@ export default function UserDetailChecking(props) {
                     className={classes.textField}
                     label="Email"
                     variant="outlined"
-                    value={currentUser.email ? currentUser.email : ""}
+                    value={user.email ? user.email : ""}
                     disabled
                   />
                 </Grid>
@@ -174,7 +200,7 @@ export default function UserDetailChecking(props) {
                   className={classes.textField}
                   disabled
                   label="Phone"
-                  value={currentUser.phone ? currentUser.phone : ""}
+                  value={user.phone ? user.phone : ""}
                   variant="outlined"
                 />
               </Grid>
@@ -184,7 +210,7 @@ export default function UserDetailChecking(props) {
                   className={classes.textField}
                   disabled
                   label="Date Join"
-                  value={new Date(currentUser.createdDate).toLocaleDateString()}
+                  value={new Date(user.createdDate).toLocaleDateString()}
                   variant="outlined"
                 />
               </Grid>
@@ -193,169 +219,158 @@ export default function UserDetailChecking(props) {
                 <TextField
                   className={classes.textField}
                   disabled
-                  value={
-                    currentUser.identification ? currentUser.identification : ""
-                  }
+                  value={user.identification ? user.identification : ""}
                   label="Identification"
                   variant="outlined"
                 />
               </Grid>
-            </Card>
+            </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value={tab} index={1} tab={1}>
+          <Grid container>
+            {linkImage &&
+              linkImage.map((image, index) => (
+                <Grid item xs={12} lg={6}>
+                  <div style={{ textAlign: "center" }}>
+                    <p>Picture {index + 1}</p>
+                    <p>
+                      <img
+                        alt={index}
+                        src={image}
+                        id="output"
+                        width="200"
+                        height="200"
+                      />
+                    </p>
+                  </div>
+                </Grid>
+              ))}
+          </Grid>
+        </TabPanel>
+        {/* <TabPanel value={tab} index={2} tab={2}></TabPanel> */}
+        <Grid container justify="center">
+          <Grid item xs={6} lg={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<PublishIcon />}
+              style={{ marginLeft: "30%" }}
+              onClick={handleAcceptUserLicense}
+            >
+              Accept
+            </Button>
+          </Grid>
+
+          <Grid item xs={6} lg={6}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<CancelIcon />}
+              style={{ marginLeft: "30%" }}
+              onClick={() => {
+                setOpen(true);
+              }}
+            >
+              Deny
+            </Button>
+
+            <Dialog open={open}>
+              <DialogContent>
+                <Grid container>
+                  <Grid item xs={12} lg={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="checkedA"
+                          value={reason1}
+                          onChange={handleChangeBox}
+                        />
+                      }
+                      label={reason1}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} lg={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="checkedB"
+                          value={reason2}
+                          onChange={handleChangeBox}
+                        />
+                      }
+                      label={reason2}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} lg={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="checkedC"
+                          value={reason3}
+                          onChange={handleChangeBox}
+                        />
+                      }
+                      label={reason3}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} lg={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          name="checkedD"
+                          value={reason4}
+                          onChange={handleChangeBox}
+                        />
+                      }
+                      label={reason4}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} lg={12}>
+                    <TextField
+                      className={classes.textField}
+                      variant="outlined"
+                      multiline
+                      value={valueCheckBox.checkedE}
+                      onChange={handleChangeBoxAnotherReason}
+                      placeholder="Another reason..."
+                    />
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <Grid item container justify="space-around">
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: "red" }}
+                      onClick={() => {
+                        setOpen(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSendNotificationCheckLicense}
+                    >
+                      Send
+                    </Button>
+                  </Grid>
+                </Grid>
+              </DialogActions>
+            </Dialog>
           </Grid>
         </Grid>
-
-        <Grid item xs={12} lg={7}>
-          <Card className={classes.card}>
-            <Grid container>
-              {linkImage &&
-                linkImage.map((image, index) => (
-                  <Grid item xs={12} lg={6}>
-                    <div style={{ textAlign: "center" }}>
-                      <p>Picture {index + 1}</p>
-                      <p>
-                        <img
-                          alt={index}
-                          src={image}
-                          id="output"
-                          width="200"
-                          height="200"
-                        />
-                      </p>
-                    </div>
-                  </Grid>
-                ))}
-            </Grid>
-          </Card>
-        </Grid>
       </Grid>
-
-      <Grid container justify="center">
-        <Grid item xs={6} lg={6}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<PublishIcon />}
-            style={{ marginLeft: "30%" }}
-            onClick={handleAcceptUserLicense}
-          >
-            Accept
-          </Button>
-        </Grid>
-
-        <Grid item xs={6} lg={6}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<CancelIcon />}
-            style={{ marginLeft: "30%" }}
-            onClick={() => {
-              setOpen(true);
-            }}
-          >
-            Deny
-          </Button>
-
-          <Dialog open={open}>
-            <DialogContent>
-              {/* <TextField
-                                // className={classes.textField}
-                                label="Notification"
-                                variant="outlined"
-                                onChange={handleChangeInput}
-                            /> */}
-              <Grid container>
-                <Grid item xs={12} lg={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="checkedA"
-                        value={reason1}
-                        onChange={handleChangeBox}
-                      />
-                    }
-                    label={reason1}
-                  />
-                </Grid>
-
-                <Grid item xs={12} lg={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="checkedB"
-                        value={reason2}
-                        onChange={handleChangeBox}
-                      />
-                    }
-                    label={reason2}
-                  />
-                </Grid>
-
-                <Grid item xs={12} lg={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="checkedC"
-                        value={reason3}
-                        onChange={handleChangeBox}
-                      />
-                    }
-                    label={reason3}
-                  />
-                </Grid>
-
-                <Grid item xs={12} lg={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        name="checkedD"
-                        value={reason4}
-                        onChange={handleChangeBox}
-                      />
-                    }
-                    label={reason4}
-                  />
-                </Grid>
-
-                <Grid item xs={12} lg={12}>
-                  <TextField
-                    className={classes.textField}
-                    variant="outlined"
-                    multiline
-                    value={valueCheckBox.checkedE}
-                    onChange={handleChangeBoxAnotherReason}
-                    placeholder="Another reason..."
-                  />
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions>
-              <Grid container>
-                <Grid xs={6} lg={6}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </Grid>
-
-                <Grid item xs={6} lg={6}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleSendNotificationCheckLicense}
-                  >
-                    Send
-                  </Button>
-                </Grid>
-              </Grid>
-            </DialogActions>
-          </Dialog>
-        </Grid>
-      </Grid>
-    </Layout>
+    </Grid>
   );
 }

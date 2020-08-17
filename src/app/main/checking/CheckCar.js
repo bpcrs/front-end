@@ -61,7 +61,7 @@ function Row({ car }) {
     <React.Fragment>
       <Dialog open={open} onClose={handleClose}>
         <DialogContent>
-          <CarDetailChecking car={car} />
+          <CarDetailChecking car={car} callback={handleClose} />
         </DialogContent>
       </Dialog>
       <StyledTableRow

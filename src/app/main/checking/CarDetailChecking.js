@@ -14,17 +14,15 @@ import {
   Box,
   Typography,
 } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
-import Layout from "../../layout";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { putCarUpdate, notificationUserCar } from "./checking.action";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import PropTypes from "prop-types";
+import { showMessageSuccess } from "../../store/actions/fuse";
 
 const ITEM_HEIGHT = 48;
 const useStyles = makeStyles((theme) => ({
@@ -105,10 +103,9 @@ function a11yProps(index) {
   };
 }
 
-export default function CarDetailChecking({ car }) {
+export default function CarDetailChecking({ car, callback }) {
   console.log(car);
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const [tab, setTab] = useState(0);
@@ -164,16 +161,13 @@ export default function CarDetailChecking({ car }) {
       car.owner
     );
     dispatch(putCarUpdate(car.id, "UNAVAILABLE"));
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+    callback();
   };
 
   const handleDenyCar = () => {
-    notificationUserCar(valueCheckBox, car.owner.email, false, car, car.owner);
-    history.push({
-      pathname: APP_PATH.CHECKING,
-    });
+    notificationUserCar(valueCheckBox, car.owner.email, false, car);
+    dispatch(showMessageSuccess("Denied success"));
+    callback();
   };
 
   const handleClickOpen = () => {
@@ -189,7 +183,6 @@ export default function CarDetailChecking({ car }) {
   };
 
   return (
-    // <Layout name="Car checking form">
     <Grid item container>
       <Grid item xs={12} lg={12}>
         <Tabs
