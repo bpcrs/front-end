@@ -584,7 +584,6 @@ export function postBookingRequest(booking) {
         } else {
           dispatch(postBookingSuccess(response.data));
           notificationBooking(response.data);
-          notificationMyBooking(response.data, "BOOKED");
           dispatch(showMessageSuccess("Book success"));
         }
       },
@@ -636,6 +635,20 @@ export function notificationBooking(booking) {
     .firestore()
     .collection("notification")
     .doc(`${booking.car.owner.email}`)
+    .collection("requests")
+    .add({
+      status: booking.status,
+      car: booking.car,
+      owner: booking.car.owner,
+      renter: booking.renter,
+      bookingId: booking.id,
+      createAt: new Date().getTime(),
+      isSeen: false,
+    });
+  firebase
+    .firestore()
+    .collection("notification")
+    .doc(`${booking.renter.email}`)
     .collection("requests")
     .add({
       status: booking.status,

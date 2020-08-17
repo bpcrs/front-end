@@ -1,7 +1,7 @@
 import { GET, ENDPOINT, PUT, POST } from "../../services/api";
 import { showMessageError, showMessageSuccess } from "../../store/actions/fuse";
 import firebase from "../../firebase/firebase";
-import { BOOKING_STATUS, MY_NOTIFICATION_STATUS } from "../../../constant";
+import { BOOKING_STATUS } from "../../../constant";
 
 export const FETCH_ADDRESS_SUCCESS = "[ACCOUNT] FETCH DATA SUCCESS";
 export const FETCH_ADDRESS_FAILURE = "[ACCOUNT] FETCH DATA FAILURE";
@@ -328,47 +328,6 @@ export function notificationBooking(booking) {
     });
 }
 
-export function notiMyNotification(currentUser, status, booking) {
-  switch (status) {
-    case BOOKING_STATUS.PENDING:
-      status = MY_NOTIFICATION_STATUS.ACCEPT;
-      break;
-    case BOOKING_STATUS.DENY:
-      status = MY_NOTIFICATION_STATUS.REFUSE;
-      break;
-    case BOOKING_STATUS.OWNER_ACCEPTED:
-      status = MY_NOTIFICATION_STATUS.YOU_ACCEPTED;
-      break;
-    case BOOKING_STATUS.CONFIRM:
-      status = MY_NOTIFICATION_STATUS.WAITING;
-      break;
-    case BOOKING_STATUS.CANCEL:
-      status = MY_NOTIFICATION_STATUS.REVOKE;
-      break;
-    case BOOKING_STATUS.RENTER_SIGNED:
-      status = MY_NOTIFICATION_STATUS.YOU_SIGNED;
-      break;
-    case BOOKING_STATUS.PROCESSING:
-      status = BOOKING_STATUS.PROCESSING;
-      break;
-    default:
-      status = "";
-  }
-  firebase
-    .firestore()
-    .collection("notification")
-    .doc(`${currentUser.email}`)
-    .collection("requests")
-    .add({
-      status: status,
-      car: booking.car,
-      owner: booking.car.owner,
-      renter: booking.renter,
-      bookingId: booking.id,
-      createAt: new Date().getTime(),
-      isSeen: false,
-    });
-}
 export function sendOTPConfirm(otp) {
   return (dispatch) => {
     const request = POST(ENDPOINT.ACCOUNT_SEND_CONFIRM_OTP, {

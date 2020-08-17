@@ -15,16 +15,13 @@ import {
 } from "@material-ui/core";
 // import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import firebase from "../../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
-import {
-  APP_PATH,
-  BOOKING_STATUS,
-  MY_NOTIFICATION_STATUS,
-} from "../../../constant";
+import { APP_PATH, BOOKING_STATUS } from "../../../constant";
 import { blue, grey, green, red, yellow } from "@material-ui/core/colors";
 import moment from "moment";
+
 const useStyles = makeStyles((theme) => ({
   notification: {
     padding: theme.spacing(1),
@@ -139,6 +136,7 @@ const Notification = () => {
       });
   };
   const renderNotification = (notify) => {
+    const isOwner = notify.renter.id !== userLogged.id;
     switch (notify.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
@@ -150,7 +148,6 @@ const Notification = () => {
             type="info"
           />
         );
-      case MY_NOTIFICATION_STATUS.YOU_SIGNED:
       case BOOKING_STATUS.RENTER_SIGNED:
         return (
           <NotificationUI
@@ -176,6 +173,20 @@ const Notification = () => {
           <NotificationUI
             content="Congart, Booking is valid"
             header="Booking is confrimed"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="success"
+          />
+        );
+      case BOOKING_STATUS.DONE:
+        return (
+          <NotificationUI
+            content={
+              isOwner
+                ? "Transaction successfully"
+                : `Thanks for choose ${notify.owner.fullName}'s car. Review a trip now`
+            }
+            header="Success"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
             type="success"
@@ -235,7 +246,7 @@ const Notification = () => {
       case BOOKING_STATUS.ACCEPTLICENSE:
         return (
           <NotificationUI
-            content={notify.status}
+            content={isOwner ? "1" : "2"}
             header="OK"
             createAt={notify.createAt}
             isSeen={notify.isSeen}
@@ -262,36 +273,6 @@ const Notification = () => {
             type="warn"
           />
         );
-      case MY_NOTIFICATION_STATUS.ACCEPT:
-        return (
-          <NotificationUI
-            content={notify.status}
-            header="OK"
-            createAt={notify.createAt}
-            isSeen={notify.isSeen}
-            type="warn"
-          />
-        );
-      case MY_NOTIFICATION_STATUS.REFUSE:
-        return (
-          <NotificationUI
-            content={notify.status}
-            header="OK"
-            createAt={notify.createAt}
-            isSeen={notify.isSeen}
-            type="warn"
-          />
-        );
-      case MY_NOTIFICATION_STATUS.REVOKE:
-        return (
-          <NotificationUI
-            content={notify.status}
-            header="OK"
-            createAt={notify.createAt}
-            isSeen={notify.isSeen}
-            type="warn"
-          />
-        );
       default:
         console.log(notify);
     }
@@ -304,6 +285,7 @@ const Notification = () => {
   const open = Boolean(anchorEl);
   const id = open ? "notification-popover" : undefined;
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchNotificationFromFirebase = () => {
       firebase
@@ -453,8 +435,8 @@ const Notification = () => {
                   </Card>
                 </div>
               ))}
-          {loading && <LinearProgress style={{ height: "8px" }} />}
         </React.Fragment>
+        {loading && <LinearProgress style={{ height: "8px", width: "100%" }} />}
       </Popover>
     </React.Fragment>
   );
