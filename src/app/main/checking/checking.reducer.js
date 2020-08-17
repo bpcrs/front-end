@@ -7,6 +7,7 @@ const initialState = {
   users: [],
   // loading: false,
   brands: [],
+  models:[],
   changePage: false,
   userDetail: {},
   priceTransaction: 0,
@@ -18,6 +19,30 @@ const initialState = {
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_MODEL_LIST_SUCCESS: {
+      return {
+        ...state,
+        models: payload,
+      };
+    }
+    case Actions.FETCH_MODEL_EDIT_SUCCESS: {
+      return {
+        ...state,
+        models : {
+          data : state.models.data.map(model => model.id === payload.id ? payload : model),
+          count: state.models.count
+        }
+      };
+    }
+    case Actions.FETCH_MODEL_ADD_SUCCESS: {
+      return {
+        ...state,
+        models : {
+          data : [...state.models.data, payload],
+          count: state.models.count
+        }
+      };
+    }
     case Actions.FETCH_BRAND_LIST_SUCCESS: {
       return {
         ...state,

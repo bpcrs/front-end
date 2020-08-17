@@ -5,6 +5,15 @@ export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 
+export const FETCH_MODEL_LIST_SUCCESS = "[MODEL_LIST] FETCH DATA SUCCESS";
+export const FETCH_MODEL_LIST_FAILURE = "[MODEL_LIST] FETCH DATA FAILURE";
+
+export const FETCH_MODEL_EDIT_SUCCESS = "[MODEL] PUT DATA SUCCESS";
+export const FETCH_MODEL_EDIT_FAILURE = "[MODEL] PUT DATA FAILURE";
+
+export const FETCH_MODEL_ADD_SUCCESS = "[MODEL] POST DATA SUCCESS";
+export const FETCH_MODEL_ADD_FAILURE = "[MODEL] POST DATA FAILURE";
+
 export const FETCH_BRAND_LIST_SUCCESS = "[BRAND_LIST] FETCH DATA SUCCESS";
 export const FETCH_BRAND_LIST_FAILURE = "[BRAND_LIST] FETCH DATA FAILURE";
 
@@ -42,6 +51,45 @@ export const FETCH_COUNT_LAST_MONTH_REQUESTS =
   "[COUNT_BOOKING] FETCH LAST MONTH";
 export const APPROVE_USER_REGISTER = "[USER_REGISTER] APPROVE";
 
+export function fetchModelListSuccess(models) {
+  return {
+    type: FETCH_MODEL_LIST_SUCCESS,
+    payload: models,
+  };
+}
+
+export function fetchModelListFailure(error) {
+  return {
+    type: FETCH_MODEL_LIST_FAILURE,
+    payload: error,
+  };
+}
+export function putEditModelSuccess(model) {
+  return {
+    type: FETCH_MODEL_EDIT_SUCCESS,
+    payload: model,
+  };
+}
+
+export function putEditModelFailure(error) {
+  return {
+    type: FETCH_MODEL_EDIT_FAILURE,
+    payload: error,
+  };
+}
+
+export function postAddModelSuccess(model) {
+  return {
+    type: FETCH_MODEL_ADD_SUCCESS,
+    payload: model,
+  };
+}
+export function postAddModelFailure(error) {
+  return {
+    type: FETCH_MODEL_ADD_FAILURE,
+    payload: error,
+  };
+}
 export function putEditBrandSuccess(brand) {
   return {
     type: FETCH_BRAND_EDIT_SUCCESS,
@@ -222,6 +270,58 @@ export function fetchCarCheckingAdmin(page, size) {
       (error) => {
         dispatch(fetchCarCheckingFailure(error));
         dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function fetchModelByAdminList(page, size) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.MODEL_CONTROLLER_GETALLBY_ADMIN, {
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        dispatch(fetchModelListSuccess(response.success ? response.data : []));
+      },
+      (error) => {
+        dispatch(fetchModelListFailure(error.message));
+      }
+    );
+  };
+}
+export function addModel(name) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.MODEL_CONTROLLER_GETALL, { name });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(postAddModelSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(postAddModelFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(postAddModelFailure(error.message));
+      }
+    );
+  };
+}
+
+export function updateModel(id, name) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.MODEL_UPDATE(id), { name });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putEditModelSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(putEditModelFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(putEditModelFailure(error.message));
       }
     );
   };
