@@ -51,6 +51,10 @@ export default function ContractTable({ booking }) {
           <Typography variant="subtitle2">
             <sup>(2)</sup> Deposit price = Deposit days * Price Per Day
           </Typography>
+          <Typography variant="subtitle2">
+            <sup>(3)</sup> (If have): Extra Free = Extra Price * Number 'km' of
+            over Mileage Limit
+          </Typography>
         </caption>
         <TableHead>
           <TableRow>
@@ -125,6 +129,14 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
+              Distance
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              {booking.distance === 0 ? "N/A" : `${booking.distance} km`}
+            </StyledTableCell>
+          </StyledTableRow>
+          <StyledTableRow>
+            <StyledTableCell component="th" scope="row">
               Estimate price & Agreements <sup>(1)</sup>
             </StyledTableCell>
             <StyledTableCell align="right">
@@ -145,7 +157,7 @@ export default function ContractTable({ booking }) {
           </StyledTableRow>
           <StyledTableRow>
             <StyledTableCell component="th" scope="row">
-              Total price <sup>(1) - (2)</sup>
+              Total price <sup>(1) - (2) + (3)</sup>
             </StyledTableCell>
             <StyledTableCell align="right">
               {preReturnPrice.totalPrice === 0 ? (
