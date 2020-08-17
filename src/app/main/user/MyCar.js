@@ -300,7 +300,7 @@ const MyCar = () => {
               height="300px"
             />
           </Grid>
-          <Typography variant="subtitle2" color="error">
+          <Typography variant="subtitle2">
             You haven't registered any cars yet! Please register car.
           </Typography>
         </Grid>
