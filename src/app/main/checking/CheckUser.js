@@ -8,6 +8,8 @@ import {
   Icon,
   Dialog,
   DialogContent,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -29,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: theme.spacing(2),
     borderRadius: "80px",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -97,15 +103,40 @@ export default function CheckUser() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const users = useSelector((state) => state.checking.users);
-
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+  const handleClickRefresh = () => {
+    setOpen(true);
+    setRefresh((refresh) => refresh + 1);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+  };
   useEffect(() => {
     dispatch(fetchUserListChecking());
-  }, [dispatch]);
+  }, [dispatch, refresh]);
 
   return (
     <Grid>
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Grid item container justify="flex-start">
+        <Button
+          variant="text"
+          style={{ textTransform: "none", color: "blue" }}
+          onClick={() => handleClickRefresh()}
+          startIcon={<Icon>refresh</Icon>}
+        >
+          Refresh
+        </Button>
+      </Grid>
       {users.length > 0 ? (
-        <TableContainer>
+        <TableContainer key={refresh}>
           <Table
             className={classes.table}
             aria-label="customized table"

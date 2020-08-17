@@ -8,6 +8,8 @@ import {
   Icon,
   Dialog,
   DialogContent,
+  CircularProgress,
+  Backdrop,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,7 +19,6 @@ import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { APP_PATH } from "../../../constant";
 import { fetchCarCheckingAdmin } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import Button from "@material-ui/core/Button";
@@ -30,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   card: {
     margin: theme.spacing(2),
     borderRadius: "80px",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -114,28 +119,45 @@ function Row({ car }) {
 
 export default function CheckCar() {
   const classes = useStyles();
-  const history = useHistory();
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.checking.cars);
   const [currentPage, setCurrentPage] = useState(1);
+  const [refresh, setRefresh] = useState(0);
+  const [open, setOpen] = useState(false);
   const size = 5;
+
+  const handleClickRefresh = () => {
+    setOpen(true);
+    setRefresh((refresh) => refresh + 1);
+    setTimeout(() => {
+      setOpen(false);
+    }, 2000);
+  };
   useEffect(() => {
     dispatch(fetchCarCheckingAdmin(currentPage, size));
-  }, [currentPage, dispatch]);
-
-  const handleCickSetting = (carId) => {
-    history.push({
-      pathname: APP_PATH.CAR_CHECKING + "/" + carId,
-      state: {
-        carId,
-      },
-    });
-  };
+  }, [currentPage, dispatch, refresh]);
 
   return (
     <Grid>
+      <Backdrop
+        className={classes.backdrop}
+        open={open}
+        // onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Grid item container justify="flex-start">
+        <Button
+          variant="text"
+          style={{ textTransform: "none", color: "blue" }}
+          onClick={() => handleClickRefresh()}
+          startIcon={<Icon>refresh</Icon>}
+        >
+          Refresh
+        </Button>
+      </Grid>
       {cars.count > 0 ? (
-        <Grid container>
+        <Grid container key={refresh}>
           <Grid xs={12} lg={12}>
             <TableContainer>
               <Table
