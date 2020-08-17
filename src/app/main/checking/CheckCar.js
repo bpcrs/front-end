@@ -5,6 +5,7 @@ import {
   Avatar,
   TableCell,
   Typography,
+  Icon,
 } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -55,7 +56,7 @@ export default function CheckCar() {
   const dispatch = useDispatch();
   const cars = useSelector((state) => state.checking.cars);
   const [currentPage, setCurrentPage] = useState(1);
-  const size = 10;
+  const size = 5;
   useEffect(() => {
     dispatch(fetchCarCheckingAdmin(currentPage, size));
   }, [currentPage, dispatch]);
@@ -119,22 +120,17 @@ export default function CheckCar() {
                         </TableCell>
 
                         <TableCell component="th" scope="row">
-                          <div
-                            className={classNames(
-                              "inline text-12 p-4 rounded truncate",
-                              "bg-red text-white"
-                            )}
-                          >
-                            {car.status}
-                          </div>
+                          {car.plateNum}
                         </TableCell>
 
                         <TableCell component="th" scope="row">
                           <Button
-                            variant="contained"
-                            color="default"
+                            variant="outlined"
+                            style={{ textTransform: "none" }}
                             className={classes.button}
-                            startIcon={<DetailsIcon />}
+                            startIcon={
+                              <Icon style={{ color: "green" }}>search</Icon>
+                            }
                             onClick={() => handleCickSetting(car.id)}
                           >
                             Check
@@ -161,6 +157,13 @@ export default function CheckCar() {
         </Grid>
       ) : (
         <Grid container justify="center" alignItems="center">
+          <Grid item lg={6}>
+            <img
+              src="assets/images/approve.jpg"
+              alt="No resourse"
+              height="300px"
+            />
+          </Grid>
           <Typography variant="subtitle2" color="error">
             List registered cars is empty! Please wait the owner register car.
           </Typography>

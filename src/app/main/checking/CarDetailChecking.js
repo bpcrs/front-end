@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Icon,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -325,24 +326,24 @@ export default function CarDetailChecking(props) {
           </Card>
         </Grid>
       </Grid>
-      <Grid container justify="center">
-        <Grid item xs={6} lg={6}>
+      <Grid item container justify="space-around">
+        <Grid item>
           <Button
             variant="contained"
             color="primary"
             onClick={() => handleAcceptCar()}
             startIcon={<CheckCircleIcon />}
-            style={{ marginLeft: "30%" }}
+            // style={{ marginLeft: "30%" }}
           >
             Accept
           </Button>
         </Grid>
-        <Grid item xs={6} lg={6}>
+        <Grid item>
           <Button
-            variant="contained"
-            color="primary"
-            startIcon={<CancelIcon />}
-            style={{ marginLeft: "30%" }}
+            variant="outlined"
+            style={{ textTransform: "none" }}
+            startIcon={<Icon style={{ color: "red" }}>cancel</Icon>}
+            // style={{ marginLeft: "30%" }}
             onClick={handleClickOpen}
           >
             Deny
@@ -356,16 +357,6 @@ export default function CarDetailChecking(props) {
       >
         <DialogTitle id="form-dialog-title">Deny car reason</DialogTitle>
         <DialogContent>
-          {/* <TextareaAutosize
-            className={classes.textArea}
-            autoFocus
-            margin="dense"
-            onChange={handleChangeInput}
-            id="message"
-            name="message"
-            label="Reason"
-            fullWidth
-          /> */}
           <Grid container>
             <Grid item xs={12} lg={12}>
               <FormControlLabel
