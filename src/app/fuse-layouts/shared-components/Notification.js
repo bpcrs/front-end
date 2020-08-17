@@ -212,6 +212,16 @@ const Notification = () => {
             type="info"
           />
         );
+      case BOOKING_STATUS.PENDING:
+        return (
+          <NotificationUI
+            content="Thanks for choose our services! Happy your trip"
+            header="Trip already"
+            createAt={notify.createAt}
+            isSeen={notify.isSeen}
+            type="info"
+          />
+        );
       case BOOKING_STATUS.OWNER_ACCEPTED:
         return (
           <NotificationUI
