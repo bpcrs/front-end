@@ -330,7 +330,14 @@ export function postEstimateBooking(id) {
     request.then(
       (response) => {
         dispatch(
-          getPreReturnPriceSuccess(response.success ? response.data : "")
+          getPreReturnPriceSuccess(
+            response.success
+              ? response.data
+              : {
+                  totalPrice: 0,
+                  estimatePrice: 0,
+                }
+          )
         );
       },
       (error) => {

@@ -240,7 +240,7 @@ function Row({ booking, carId, currentUser, flag }) {
               >
                 <Button
                   variant="outlined"
-                  startIcon={<Icon style={{ color: "green" }}>assignment</Icon>}
+                  startIcon={<Icon style={{ color: "green" }}>fingerprint</Icon>}
                   style={{ textTransform: "none" }}
                 >
                   {confirmText}
