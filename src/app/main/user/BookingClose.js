@@ -81,7 +81,7 @@ export default function BookingClose({ booking, openClose }) {
   const [open, setOpen] = useState(false);
   const [loadingBill, setLoadingBill] = useState(false);
   const [totalBill, openTotalBill] = useState(false);
-  const [odemeter, setOdemeter] = useState(0);
+  const [odemeter, setOdemeter] = useState(booking && booking.car.odometer);
   const [checkboxValue, setCheckboxValue] = useState({
     carDamage: false,
     overdue: false,
@@ -428,6 +428,23 @@ export default function BookingClose({ booking, openClose }) {
                                       item.criteria.name ===
                                       CRITERIA_NAME.MILEAGE_LIMIT
                                   )[0].value}
+                              </Typography>
+                            </Grid>
+                            <Grid container justify="space-between">
+                              <Typography
+                                variant="subtitle1"
+                                color="initial"
+                                align="right"
+                                display="initial"
+                              >
+                                - Current odmeter
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="textPrimary"
+                                align="left"
+                              >
+                                {booking.car.odometer}
                               </Typography>
                             </Grid>
                             <Divider orientation="horizontal" light="true" />
