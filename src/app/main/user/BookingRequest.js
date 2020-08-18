@@ -72,7 +72,6 @@ function Row({ booking, carId, currentUser, flag }) {
   const [openTimeline, setOpenTimeline] = useState(false);
   const [open, setOpen] = useState(false);
   const [openCloseBook, setOpenCloseBook] = useState(false);
-  const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -119,6 +118,9 @@ function Row({ booking, carId, currentUser, flag }) {
     const handleCompleteBooking = () => {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
       handleCloseTimeline();
+    };
+    const handleClose = () => {
+      setOpen(false);
     };
 
     const now = new Date(Date.now());
@@ -325,7 +327,7 @@ function Row({ booking, carId, currentUser, flag }) {
             {booking.car.owner.email === currentUser.email ? (
               <Grid></Grid>
             ) : (
-              <React.Fragment>
+              <Grid>
                 <Tooltip title={doneText}>
                   <Button
                     variant="outlined"
@@ -338,12 +340,10 @@ function Row({ booking, carId, currentUser, flag }) {
                     {doneText}
                   </Button>
                 </Tooltip>
-
-                <Dialog open={open} scroll="body">
+                <Dialog open={open} scroll="body" onClose={handleClose}>
                   <DialogContent>
-                    <Review carId={booking.car.id} bookingId={booking.id} />
+                    <Review booking={booking} />
                   </DialogContent>
-
                   <DialogActions>
                     <Button
                       autoFocus
@@ -355,7 +355,7 @@ function Row({ booking, carId, currentUser, flag }) {
                     </Button>
                   </DialogActions>
                 </Dialog>
-              </React.Fragment>
+              </Grid>
             )}
           </React.Fragment>
         );
@@ -483,6 +483,9 @@ function Row({ booking, carId, currentUser, flag }) {
         onClick={() => handleSelected(booking)}
       >
         <TableCell component="th" scope="row">
+          {booking.id}
+        </TableCell>
+        <TableCell component="th" scope="row">
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
           ) > 0
@@ -564,6 +567,7 @@ const BookingRequest = (props) => {
           <Table aria-label="customized table" width="100%">
             <TableHead>
               <TableRow>
+                <StyledTableCell>Booking ID</StyledTableCell>
                 <StyledTableCell>Book time</StyledTableCell>
                 <StyledTableCell>Car Name</StyledTableCell>
                 <StyledTableCell>Time Rental</StyledTableCell>

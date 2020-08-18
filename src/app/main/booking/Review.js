@@ -45,32 +45,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review(props) {
+export default function Review({ booking }) {
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
-  // const disableButton = useSelector((state) => state.booking.disableButton);
   const dispatch = useDispatch();
-  const { carId } = props;
-  const { bookingId } = props;
   const [error, setError] = useState(false);
   const [errortext, setErrorText] = useState("");
 
   const [review, setReview] = useState({
     rating: 5,
     comment: "",
+    accountId: booking.renter.id,
+    carId: booking.car.id,
+    bookingId: booking.id,
   });
-
-  useEffect(() => {
-    if (carId > 0) {
-      if (bookingId > 0) {
-        setReview({
-          ...review,
-          carId: carId,
-          bookingId: bookingId,
-        });
-      }
-    }
-  }, [carId, bookingId, review]);
 
   const handleChangeInput = (event) => {
     setReview({
@@ -104,35 +92,6 @@ export default function Review(props) {
 
   return (
     <Grid>
-      {/* <div>
-                <Dialog
-                    open={loading}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
-                >
-                    <DialogTitle id="alert-dialog-slide-title">
-                        {"Submit Review"}
-                    </DialogTitle>
-                    <DialogContent>
-
-                        <p>{messageResponeReview}</p>
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            autoFocus
-                            onClick={setClose}
-                            color="secondary"
-                            variant="contained"
-                        >
-                            Close
-                </Button>
-                    </DialogActions>
-                </Dialog>
-            </div> */}
-
       <Card className={classes.review} elevation={20}>
         <CardContent>
           <Grid container spacing={1}>
@@ -154,7 +113,6 @@ export default function Review(props) {
                   ></Avatar>
                 }
                 title={currentUser.displayName}
-                // subheader={new Date(createdDate).toLocaleDateString()}
               />
               <Rating
                 name="rating"
