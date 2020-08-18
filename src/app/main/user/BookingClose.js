@@ -278,7 +278,7 @@ export default function BookingClose({ booking, openClose }) {
           </Grid>
         ) : (
           <Grid item lg={12}>
-            <Grid item lg={12}>
+            {/* <Grid item lg={12}>
               <div className="w-full">
                 <Card raised square>
                   <div
@@ -390,7 +390,7 @@ export default function BookingClose({ booking, openClose }) {
                   </CardContent>
                 </Card>
               </div>
-            </Grid>
+            </Grid> */}
             <Grid item lg={12} className={classes.agreement}>
               <div className="w-full">
                 <Card raised square>
@@ -617,9 +617,7 @@ export default function BookingClose({ booking, openClose }) {
                 <Button
                   variant="outlined"
                   disabled={!preReturnPrice.extra}
-                  startIcon={
-                    <Icon style={{ color: "green" }}>attach_money</Icon>
-                  }
+                  startIcon={<Icon style={{ color: "green" }}>done_all</Icon>}
                   style={{ textTransform: "none" }}
                   onClick={handleConfirmTotalPrice}
                 >
