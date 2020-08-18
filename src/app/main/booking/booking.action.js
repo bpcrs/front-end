@@ -615,6 +615,7 @@ export function postReviewSubmit(review) {
       (response) => {
         if (response.success) {
           dispatch(postReviewSubmitSuccess(response.data));
+          dispatch(showMessageSuccess("Review success"));
           console.log("Success submit review car");
         } else {
           dispatch(showMessageError(response.message));

@@ -72,7 +72,6 @@ function Row({ booking, carId, currentUser, flag }) {
   const [openTimeline, setOpenTimeline] = useState(false);
   const [open, setOpen] = useState(false);
   const [openCloseBook, setOpenCloseBook] = useState(false);
-  const preReturnPrice = useSelector((state) => state.profile.preReturnPrice);
   const history = useHistory();
   const handleAgreement = () => {
     history.push({
@@ -161,17 +160,17 @@ function Row({ booking, carId, currentUser, flag }) {
                 ) : null}
               </Grid>
             ) : (
-                <Tooltip title={carId ? pendingText : ownerAcceptedText}>
-                  <Button
-                    variant="outlined"
-                    style={{ textTransform: "none" }}
-                    onClick={handleAgreement}
-                    startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
-                  >
-                    {carId ? pendingText : ownerAcceptedText}
-                  </Button>
-                </Tooltip>
-              )}
+              <Tooltip title={carId ? pendingText : ownerAcceptedText}>
+                <Button
+                  variant="outlined"
+                  style={{ textTransform: "none" }}
+                  onClick={handleAgreement}
+                  startIcon={<Icon style={{ color: "purple" }}>chat</Icon>}
+                >
+                  {carId ? pendingText : ownerAcceptedText}
+                </Button>
+              </Tooltip>
+            )}
             <Dialog open={open} scroll="body">
               <DialogContent>
                 <Typography variant="subtitle1" color="initial">
@@ -327,38 +326,27 @@ function Row({ booking, carId, currentUser, flag }) {
             {booking.car.owner.email === currentUser.email ? (
               <Grid></Grid>
             ) : (
-                <React.Fragment>
-                  <Tooltip title={doneText}>
-                    <Button
-                      variant="outlined"
-                      startIcon={<Icon style={{ color: "green" }}>start</Icon>}
-                      style={{ textTransform: "none" }}
-                      onClick={() => {
-                        setOpen(true);
-                      }}
-                    >
-                      {doneText}
-                    </Button>
-                  </Tooltip>
+              <React.Fragment>
+                <Tooltip title={doneText}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Icon style={{ color: "green" }}>start</Icon>}
+                    style={{ textTransform: "none" }}
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    {doneText}
+                  </Button>
+                </Tooltip>
 
-                  <Dialog open={open}>
-                    <DialogContent>
-                      <Review carId={booking.car.id} bookingId={booking.id} callBack={handleCloseReview} />
-                    </DialogContent>
-                    {/* 
-                  <DialogActions>
-                    <Button
-                      autoFocus
-                      onClick={() => setOpen(false)}
-                      color="secondary"
-                      variant="contained"
-                    >
-                      Close
-                    </Button>
-                  </DialogActions> */}
-                  </Dialog>
-                </React.Fragment>
-              )}
+                <Dialog open={open}>
+                  <DialogContent>
+                    <Review booking={booking} callBack={handleCloseReview} />
+                  </DialogContent>
+                </Dialog>
+              </React.Fragment>
+            )}
           </React.Fragment>
         );
       case BOOKING_STATUS.DENY:
@@ -427,7 +415,7 @@ function Row({ booking, carId, currentUser, flag }) {
       <Backdrop
         className={classes.backdrop}
         open={open}
-      // onClick={handleClose}
+        // onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -459,8 +447,8 @@ function Row({ booking, carId, currentUser, flag }) {
           {openCloseBook || booking.totalPrice > 0 ? (
             <BookingClose booking={booking} />
           ) : (
-              <CustomizedTimeline booking={booking} />
-            )}
+            <CustomizedTimeline booking={booking} />
+          )}
         </DialogContent>
         <DialogActions>
           <Grid container justify="flex-end" alignItems="center">
@@ -472,8 +460,8 @@ function Row({ booking, carId, currentUser, flag }) {
                   isProcess={true}
                 />
               ) : (
-                  <StatusAction booking={booking} carId={carId} />
-                )}
+                <StatusAction booking={booking} carId={carId} />
+              )}
             </Grid>
           </Grid>
         </DialogActions>
@@ -484,6 +472,9 @@ function Row({ booking, carId, currentUser, flag }) {
         tabIndex={-1}
         onClick={() => handleSelected(booking)}
       >
+        <TableCell component="th" scope="row">
+          #{booking.id}
+        </TableCell>
         <TableCell component="th" scope="row">
           {Math.round(
             (Date.now() - new Date(booking.createdDate)) / (1000 * 60 * 60 * 24)
@@ -497,7 +488,7 @@ function Row({ booking, carId, currentUser, flag }) {
         <TableCell component="th" scope="row">
           {Math.round(
             (new Date(booking.toDate) - new Date(booking.fromDate)) /
-            (1000 * 60 * 60 * 24)
+              (1000 * 60 * 60 * 24)
           ) + 1}{" "}
           days
         </TableCell>
@@ -526,21 +517,21 @@ const BookingRequest = (props) => {
   useEffect(() => {
     carId
       ? dispatch(
-        fetchBookingRentalMyCar(
-          carId,
-          status && status.map((item) => item.name),
-          currentPage,
-          size
+          fetchBookingRentalMyCar(
+            carId,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
         )
-      )
       : dispatch(
-        fetchBookingRequest(
-          currentUser.id,
-          status && status.map((item) => item.name),
-          currentPage,
-          size
-        )
-      );
+          fetchBookingRequest(
+            currentUser.id,
+            status && status.map((item) => item.name),
+            currentPage,
+            size
+          )
+        );
   }, [currentPage, dispatch, currentUser.id, status, carId]);
 
   return (
@@ -566,6 +557,7 @@ const BookingRequest = (props) => {
           <Table aria-label="customized table" width="100%">
             <TableHead>
               <TableRow>
+                <StyledTableCell>Booking ID</StyledTableCell>
                 <StyledTableCell>Book time</StyledTableCell>
                 <StyledTableCell>Car Name</StyledTableCell>
                 <StyledTableCell>Time Rental</StyledTableCell>

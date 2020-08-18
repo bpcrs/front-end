@@ -8,6 +8,7 @@ import {
   Button,
   makeStyles,
   TextField,
+  Icon,
 } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,35 +48,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Review(props) {
+export default function Review({ booking, callBack }) {
   const classes = useStyles();
   const currentUser = useSelector((state) => state.auth.user);
-  // const disableButton = useSelector((state) => state.booking.disableButton);
   const dispatch = useDispatch();
-  const { carId } = props;
-  const { bookingId } = props;
-  const { callBack } = props;
   const [error, setError] = useState(false);
   const [errortext, setErrorText] = useState("");
 
   const [review, setReview] = useState({
     rating: 5,
     comment: "",
-    carId: carId,
-    bookingId: bookingId,
+    accountId: booking.renter.id,
+    carId: booking.car.id,
+    bookingId: booking.id,
   });
-
-  // useEffect(() => {
-  //   if (carId > 0) {
-  //     if (bookingId > 0) {
-  //       setReview({
-  //         ...review,
-  //         carId: carId,
-  //         bookingId: bookingId,
-  //       });
-  //     }
-  //   }
-  // }, [carId, bookingId]);
 
   const handleChangeInput = (event) => {
     setReview({
@@ -110,9 +96,6 @@ export default function Review(props) {
 
   return (
     <Grid>
-  
-      {/* <Card className={classes.review} elevation={20}>
-        <CardContent> */}
       <Grid container spacing={1}>
         <Grid
           spacing={1}
@@ -132,7 +115,6 @@ export default function Review(props) {
               ></Avatar>
             }
             title={currentUser.displayName}
-          // subheader={new Date(createdDate).toLocaleDateString()}
           />
           <Rating
             name="rating"
@@ -141,14 +123,7 @@ export default function Review(props) {
             onChange={handleChangeInput}
           />
         </Grid>
-        <Grid
-          spacing={1}
-          item
-          xs={12}
-          xl={4}
-          container
-          alignContent="center"
-        >
+        <Grid spacing={1} item xs={12} xl={4} container alignContent="center">
           <Grid item lg={12} xs={12}>
             <TextField
               error={error}
@@ -165,7 +140,6 @@ export default function Review(props) {
         </Grid>
 
         <Grid container justify="space-around">
-
           <Grid item>
             <Button
               id="submitButton"
@@ -174,25 +148,25 @@ export default function Review(props) {
               style={{ backgroundColor: "red" }}
               startIcon={<CancelIcon />}
               // disabled={disableButton}
-              onClick={() => { callBack() }}
+              onClick={() => {
+                callBack();
+              }}
             >
               Close
-              </Button>
+            </Button>
           </Grid>
 
-          <Grid item >
+          <Grid item>
             <Button
               id="submitButton"
               variant="contained"
-              color="primary"
-              startIcon={<PublishIcon />}
-              // disabled={disableButton}
+              style={{ color: "white", backgroundColor: "green" }}
+              startIcon={<Icon>star_rate</Icon>}
               onClick={submitReviewBooking}
             >
               Rate
-              </Button>
+            </Button>
           </Grid>
-
         </Grid>
       </Grid>
       {/* </CardContent>
