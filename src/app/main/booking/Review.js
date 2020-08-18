@@ -12,6 +12,8 @@ import {
 import Rating from "@material-ui/lab/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { postReviewSubmit } from "./booking.action";
+import PublishIcon from "@material-ui/icons/Publish";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,25 +54,28 @@ export default function Review(props) {
   const dispatch = useDispatch();
   const { carId } = props;
   const { bookingId } = props;
+  const { callBack } = props;
   const [error, setError] = useState(false);
   const [errortext, setErrorText] = useState("");
 
   const [review, setReview] = useState({
     rating: 5,
     comment: "",
+    carId: carId,
+    bookingId: bookingId,
   });
 
-  useEffect(() => {
-    if (carId > 0) {
-      if (bookingId > 0) {
-        setReview({
-          ...review,
-          carId: carId,
-          bookingId: bookingId,
-        });
-      }
-    }
-  }, [carId, bookingId, review]);
+  // useEffect(() => {
+  //   if (carId > 0) {
+  //     if (bookingId > 0) {
+  //       setReview({
+  //         ...review,
+  //         carId: carId,
+  //         bookingId: bookingId,
+  //       });
+  //     }
+  //   }
+  // }, [carId, bookingId]);
 
   const handleChangeInput = (event) => {
     setReview({
@@ -91,6 +96,7 @@ export default function Review(props) {
         comment: "",
         rating: 5,
       });
+      callBack();
     }
   };
 
@@ -104,102 +110,93 @@ export default function Review(props) {
 
   return (
     <Grid>
-      {/* <div>
-                <Dialog
-                    open={loading}
-                    TransitionComponent={Transition}
-                    keepMounted
-                    aria-labelledby="alert-dialog-slide-title"
-                    aria-describedby="alert-dialog-slide-description"
-                >
-                    <DialogTitle id="alert-dialog-slide-title">
-                        {"Submit Review"}
-                    </DialogTitle>
-                    <DialogContent>
-
-                        <p>{messageResponeReview}</p>
-
-                    </DialogContent>
-                    <DialogActions>
-                        <Button
-                            autoFocus
-                            onClick={setClose}
-                            color="secondary"
-                            variant="contained"
-                        >
-                            Close
-                </Button>
-                    </DialogActions>
-                </Dialog>
-            </div> */}
-
-      <Card className={classes.review} elevation={20}>
-        <CardContent>
-          <Grid container spacing={1}>
-            <Grid
-              spacing={1}
-              item
-              xs={12}
-              xl={4}
-              container
-              justify="space-between"
-              alignItems="baseline"
-            >
-              <CardHeader
-                avatar={
-                  <Avatar
-                    aria-label="recipe"
-                    className={classes.avatar}
-                    src={currentUser.photoURL}
-                  ></Avatar>
-                }
-                title={currentUser.displayName}
-                // subheader={new Date(createdDate).toLocaleDateString()}
-              />
-              <Rating
-                name="rating"
-                value={review.rating}
-                size="small"
-                onChange={handleChangeInput}
-              />
-            </Grid>
-            <Grid
-              spacing={1}
-              item
-              xs={12}
-              xl={4}
-              container
-              alignContent="center"
-            >
-              <Grid item lg={12} xs={12}>
-                <TextField
-                  error={error}
-                  name="comment"
-                  value={review.comment}
-                  className={classes.textField}
-                  variant="outlined"
-                  multiline
-                  placeholder="Tell us about your feeling..."
-                  helperText={errortext}
-                  onChange={handleChangeInput}
-                />
-              </Grid>
-            </Grid>
-
-            <Grid container justify="center">
-              <Button
-                id="submitButton"
-                variant="contained"
-                color="secondary"
-                // disabled={disableButton}
-                onClick={submitReviewBooking}
-              >
-                Rate
-              </Button>
-            </Grid>
+  
+      {/* <Card className={classes.review} elevation={20}>
+        <CardContent> */}
+      <Grid container spacing={1}>
+        <Grid
+          spacing={1}
+          item
+          xs={12}
+          xl={4}
+          container
+          justify="space-between"
+          alignItems="baseline"
+        >
+          <CardHeader
+            avatar={
+              <Avatar
+                aria-label="recipe"
+                className={classes.avatar}
+                src={currentUser.photoURL}
+              ></Avatar>
+            }
+            title={currentUser.displayName}
+          // subheader={new Date(createdDate).toLocaleDateString()}
+          />
+          <Rating
+            name="rating"
+            value={review.rating}
+            size="small"
+            onChange={handleChangeInput}
+          />
+        </Grid>
+        <Grid
+          spacing={1}
+          item
+          xs={12}
+          xl={4}
+          container
+          alignContent="center"
+        >
+          <Grid item lg={12} xs={12}>
+            <TextField
+              error={error}
+              name="comment"
+              value={review.comment}
+              className={classes.textField}
+              variant="outlined"
+              multiline
+              placeholder="Tell us about your feeling..."
+              helperText={errortext}
+              onChange={handleChangeInput}
+            />
           </Grid>
-        </CardContent>
-      </Card>
+        </Grid>
+
+        <Grid container justify="space-around">
+
+          <Grid item>
+            <Button
+              id="submitButton"
+              variant="contained"
+              color="primary"
+              style={{ backgroundColor: "red" }}
+              startIcon={<CancelIcon />}
+              // disabled={disableButton}
+              onClick={() => { callBack() }}
+            >
+              Close
+              </Button>
+          </Grid>
+
+          <Grid item >
+            <Button
+              id="submitButton"
+              variant="contained"
+              color="primary"
+              startIcon={<PublishIcon />}
+              // disabled={disableButton}
+              onClick={submitReviewBooking}
+            >
+              Rate
+              </Button>
+          </Grid>
+
+        </Grid>
+      </Grid>
+      {/* </CardContent>
+      </Card> */}
     </Grid>
   );
 }

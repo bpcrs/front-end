@@ -25,6 +25,7 @@ import { useState } from "react";
 import NumberFormat from "react-number-format";
 import SubmitLicense from "../submitLicense/submitLicense";
 import { useEffect } from "react";
+import UpdateProfileStepper from "../user/StepUpdateProfile";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -157,7 +158,8 @@ export default function ViewBooking(props) {
         </Dialog>
         <Dialog open={openUpdate} scroll="body" onClose={handleUpdateClose}>
           <DialogContent>
-            <SubmitLicense />
+            {/* <SubmitLicense /> */}
+            <UpdateProfileStepper />
           </DialogContent>
           <DialogActions>
             <Button
