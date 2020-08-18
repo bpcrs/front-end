@@ -90,6 +90,9 @@ function Row({ car, isDetail, request }) {
         // selected={isSelected}
       >
         <TableCell component="th" scope="row">
+          #{car.id}
+        </TableCell>
+        <TableCell component="th" scope="row">
           {car.name}
         </TableCell>
         <TableCell component="th" scope="row">
@@ -252,11 +255,12 @@ const MyCar = () => {
           >
             <TableHead>
               <TableRow>
+                <StyledTableCell>Car ID</StyledTableCell>
                 <StyledTableCell>Name</StyledTableCell>
                 <StyledTableCell>Plate number</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
                 <StyledTableCell>Detail</StyledTableCell>
-                <StyledTableCell>Book request</StyledTableCell>
+                <StyledTableCell>Info</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>

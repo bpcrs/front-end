@@ -119,10 +119,9 @@ function Row({ booking, carId, currentUser, flag }) {
       dispatch(changeBookingStatusRequest(booking.id, BOOKING_STATUS.DONE));
       handleCloseTimeline();
     };
-    const handleClose = () => {
+    const handleCloseReview = () => {
       setOpen(false);
     };
-
     const now = new Date(Date.now());
 
     switch (booking.status) {
@@ -327,7 +326,7 @@ function Row({ booking, carId, currentUser, flag }) {
             {booking.car.owner.email === currentUser.email ? (
               <Grid></Grid>
             ) : (
-              <Grid>
+              <React.Fragment>
                 <Tooltip title={doneText}>
                   <Button
                     variant="outlined"
@@ -340,22 +339,13 @@ function Row({ booking, carId, currentUser, flag }) {
                     {doneText}
                   </Button>
                 </Tooltip>
-                <Dialog open={open} scroll="body" onClose={handleClose}>
+
+                <Dialog open={open}>
                   <DialogContent>
-                    <Review booking={booking} />
+                    <Review booking={booking} callBack={handleCloseReview} />
                   </DialogContent>
-                  <DialogActions>
-                    <Button
-                      autoFocus
-                      onClick={() => setOpen(false)}
-                      color="secondary"
-                      variant="contained"
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
                 </Dialog>
-              </Grid>
+              </React.Fragment>
             )}
           </React.Fragment>
         );
@@ -483,7 +473,7 @@ function Row({ booking, carId, currentUser, flag }) {
         onClick={() => handleSelected(booking)}
       >
         <TableCell component="th" scope="row">
-          {booking.id}
+          #{booking.id}
         </TableCell>
         <TableCell component="th" scope="row">
           {Math.round(

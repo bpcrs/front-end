@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import BookingFilter from "../user/BookingFilter";
 import BookingRequest from "./BookingRequest";
 import CalendarApp from "../../calendar/CalendarApp";
+import TableReview from "./TableReview";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -106,9 +107,15 @@ const Booking = ({ carId }) => {
             label="Calendar"
             {...a11yProps(2)}
           />
+
+          <Tab
+            className="h-64 normal-case"
+            label="View review"
+            // {...a11yProps(0)}
+          />
         </Tabs>
       }
-      <Grid item container lg={12} style={{ minHeight: "480px" }}>
+      <Grid item container lg={12}>
         <Grid item lg={12}>
           <TabPanel value={tabValue} index={0}>
             <Button
@@ -167,6 +174,13 @@ const Booking = ({ carId }) => {
         <Grid item lg={12}>
           <TabPanel value={tabValue} index={2} tab={2}>
             <CalendarApp carId={carId} />
+          </TabPanel>
+        </Grid>
+        <Grid item lg={12}>
+          <TabPanel value={tabValue} index={3} tab={3}>
+            {/* <Grid item lg={12}> */}
+            <TableReview carId={carId} />
+            {/* </Grid> */}
           </TabPanel>
         </Grid>
       </Grid>
