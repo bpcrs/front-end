@@ -260,7 +260,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       <div className="flex flex-col">
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Collision Damage Waiver</li>
+                            <li>Collision Damage Waiver (CDW)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -283,7 +283,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                         </Grid>
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Loss Damage Waiver</li>
+                            <li>Loss Damage Waiver (LDW)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -343,7 +343,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                         Super Protection
                       </Typography>
                       <Typography variant="caption" color="inherit">
-                        Save 20%
+                        Save 30%
                       </Typography>
                     </div>
 
@@ -359,7 +359,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       <div className="flex flex-col">
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Collision Damage Waiver</li>
+                            <li>Collision Damage Waiver (CDW)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -382,7 +382,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                         </Grid>
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Loss Damage Waiver</li>
+                            <li>Loss Damage Waiver (LDW)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -402,7 +402,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
 
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Theft Protection</li>
+                            <li>Theft Protection (TP)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -423,7 +423,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                         </Grid>
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Third–Party Liability </li>
+                            <li>Third–Party Liability (TPL)</li>
                           </Typography>
                           <Tooltip
                             title={
