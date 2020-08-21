@@ -17,8 +17,6 @@ import {
   StepConnector,
   InputAdornment,
   Tooltip,
-  FormGroup,
-  FormControlLabel,
 } from "@material-ui/core";
 import firebase from "../../firebase/firebase";
 import {
@@ -206,6 +204,14 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
       ...currentCar,
       autoDriver: event.target.value,
     });
+  };
+
+  const handleRemoveCarImage = (image) => {
+    setImageCarArr(imageCarArr.filter((item) => item.name !== image.name));
+  };
+
+  const handleRemoveLicenseImage = (image) => {
+    setLicenses(licenses.filter((item) => item.name !== image.name));
   };
 
   useEffect(() => {
@@ -476,9 +482,12 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 imageCarArr.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
-                      {/* <Icon className={classes.productImageFeaturedStar}>
-                            star
-                          </Icon> */}
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveCarImage(image)}
+                      >
+                        remove_circle
+                      </Icon>
                       <img
                         src={URL.createObjectURL(image)}
                         alt="img"
@@ -489,6 +498,13 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 ))}
             </div>
           </Grid>
+          <Typography
+            variant="subtitle2"
+            color="primary"
+            className={classes.smallTextField}
+          >
+            Please upload 2 ~ 5 images about your car
+          </Typography>
         </Grid>
       );
     case 2:
@@ -516,8 +532,11 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 licenses.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
-                      <Icon className={classes.productImageFeaturedStar}>
-                        star
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveLicenseImage(image)}
+                      >
+                        remove_circle
                       </Icon>
                       <img
                         src={URL.createObjectURL(image)}
@@ -529,6 +548,13 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 ))}
             </div>
           </Grid>
+          <Typography
+            variant="subtitle2"
+            color="primary"
+            className={classes.smallTextField}
+          >
+            Please upload 2 ~ 5 images about your licenses
+          </Typography>
         </Grid>
       );
     default:
@@ -965,15 +991,35 @@ export default function CarSubmit(props) {
                 Back
               </Button>
               {activeStep === steps.length - 1 ? (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleSubmit}
-                  className={classes.button}
-                  disabled={carImages.length === 0 || carLicense.length === 0}
-                >
-                  Register
-                </Button>
+                <React.Fragment>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    className={classes.button}
+                    disabled={
+                      carImages.length < 2 ||
+                      carImages.length > 5 ||
+                      carLicense.length < 2 ||
+                      carLicense.length > 5
+                    }
+                  >
+                    Register
+                  </Button>
+                  {carImages.length < 2 ||
+                  carImages.length > 5 ||
+                  carLicense.length < 2 ||
+                  carLicense.length > 5 ? (
+                    <Typography
+                      variant="subtitle2"
+                      color="error"
+                      className={classes.smallTextField}
+                    >
+                      Your car images or license images are invalid! Please
+                      upload 2 ~ 5 images of each kind{" "}
+                    </Typography>
+                  ) : null}
+                </React.Fragment>
               ) : (
                 <Button
                   variant="contained"
@@ -981,15 +1027,15 @@ export default function CarSubmit(props) {
                   onClick={handleStepNext}
                   className={classes.button}
                   disabled={
-                    !currentCar.name ||
-                    !currentCar.brandId ||
-                    !currentCar.modelId ||
-                    !currentCar.year ||
-                    !currentCar.seat ||
-                    !currentCar.screen ||
-                    !currentCar.vin ||
-                    !currentCar.price > 0 ||
-                    !currentCar.plateNum ||
+                    // !currentCar.name ||
+                    // !currentCar.brandId ||
+                    // !currentCar.modelId ||
+                    // !currentCar.year ||
+                    // !currentCar.seat ||
+                    // !currentCar.screen ||
+                    // !currentCar.vin ||
+                    // !currentCar.price > 0 ||
+                    // !currentCar.plateNum ||
                     (currentCar.vin && currentCar.vin.length !== 17) ||
                     (currentCar.price && currentCar.price < 100000)
                   }
