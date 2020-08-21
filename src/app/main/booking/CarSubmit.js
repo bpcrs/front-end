@@ -1027,15 +1027,15 @@ export default function CarSubmit(props) {
                   onClick={handleStepNext}
                   className={classes.button}
                   disabled={
-                    // !currentCar.name ||
-                    // !currentCar.brandId ||
-                    // !currentCar.modelId ||
-                    // !currentCar.year ||
-                    // !currentCar.seat ||
-                    // !currentCar.screen ||
-                    // !currentCar.vin ||
-                    // !currentCar.price > 0 ||
-                    // !currentCar.plateNum ||
+                    !currentCar.name ||
+                    !currentCar.brandId ||
+                    !currentCar.modelId ||
+                    !currentCar.year ||
+                    !currentCar.seat ||
+                    !currentCar.screen ||
+                    !currentCar.vin ||
+                    !currentCar.price > 0 ||
+                    !currentCar.plateNum ||
                     (currentCar.vin && currentCar.vin.length !== 17) ||
                     (currentCar.price && currentCar.price < 100000)
                   }
