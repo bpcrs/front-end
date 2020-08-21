@@ -260,7 +260,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       <div className="flex flex-col">
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Collision Damage Waiver (CDW)</li>
+                            <li>Collision Damage (CDW)</li>
                           </Typography>
                           <Tooltip
                             title={
@@ -359,7 +359,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                       <div className="flex flex-col">
                         <Grid item container justify="space-between">
                           <Typography variant="subtitle1" className="">
-                            <li>Collision Damage Waiver (CDW)</li>
+                            <li>Collision Damage (CDW)</li>
                           </Typography>
                           <Tooltip
                             title={
