@@ -178,6 +178,7 @@ export default function CarEdits(props) {
   const { carId } = props;
   const [tabValue, setTabValue] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
 
   const handleChangeTab = (event, newValue) => {
     setTabValue(newValue);
@@ -221,9 +222,6 @@ export default function CarEdits(props) {
     const handleConfirmUpdate = () => {
       dispatch(putCarUpdate(upCar.id, upCar));
       setOpenLocation(false);
-    };
-    const handleUpdateLocation = () => {
-      setCheckSure(false);
     };
 
     return (
@@ -346,12 +344,18 @@ export default function CarEdits(props) {
     dispatch(putCarUpdate(currentCar.id, currentCar));
   };
   const [imagesCar, setImagesCar] = useState([]);
+  const [imagesLicense, setImageLicense] = useState([]);
   const [, setLinkImagesCar] = useState([]);
   const uploadImage = (event) => {
     // storeImageToFirebase(event.target.files);
     setImagesCar([...imagesCar, ...event.target.files]);
     postImg(event.target.files);
-    console.log(event.target.files);
+    dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+  };
+  const uploadImageLicense = (event) => {
+    setImageLicense([...imagesLicense, ...event.target.files]);
+    postImgLicense(event.target.files);
+    dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
   };
   const postImg = (images) => {
     // console.log(imagesCar);
@@ -376,16 +380,59 @@ export default function CarEdits(props) {
       ]);
     });
   };
+  const postImgLicense = (images) => {
+    // console.log(imagesCar);
+    console.log(images);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    const date = new Date().getTime();
+    Array.from(images).forEach((img) => {
+      const uploadTask = firebase
+        .storage()
+        .ref("Img/" + date)
+        .child(img.name);
+      setLinkImagesCar((linkImagesCar) => [
+        ...linkImagesCar,
+        uploadTask.put(img, metadata).then(function () {
+          uploadTask.getDownloadURL().then(function (url) {
+            const link = [url];
+            dispatch(postImageCar(link, carId, "LICENSE"));
+          });
+        }),
+      ]);
+    });
+  };
   const handleRemoveItem = (image) => {
     console.log(imagesCar);
     setImagesCar(imagesCar.filter((item) => item.name !== image.name));
   };
+  const handleRemoveLicItem = (image) => {
+    // console.log(imagesCar);
+    setImagesCar(imagesLicense.filter((item) => item.name !== image.name));
+  };
   const handleRemoveImage = (image) => {
     console.log(image.id);
     dispatch(changeImageByType(image, "DELETE"));
+    dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
   };
   const images = useSelector((state) => state.booking.images);
   const licenses = useSelector((state) => state.booking.licenses);
+
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
+  };
+  const handleOpenUpdate = (event) => {
+    console.log(event);
+    setOpenUpdate(true);
+  };
+  const [openUpload, setOpenUpload] = useState(false);
+  const handleUpdateImage = (event) => {
+    setOpenUpdate(false);
+    setOpenUpload(true);
+    // uploadImage(event);
+  };
+
   useEffect(() => {
     const fetchCar = async () => {
       dispatch(await fetchCarDetail(carId));
@@ -483,6 +530,31 @@ export default function CarEdits(props) {
           </Tabs>
         }
         <Grid>
+          <Dialog open={openUpdate} onClose={handleCloseUpdate}>
+            <DialogContent>
+              <Typography variant="subtitle1" color="primary">
+                If you update image, your car will be unavailable until BPCRS
+                System confirm your images is valid !
+              </Typography>
+              <DialogActions>
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: "red", color: "white" }}
+                  onClick={handleCloseUpdate}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleUpdateImage}
+                >
+                  Continue
+                </Button>
+              </DialogActions>
+            </DialogContent>
+          </Dialog>
           <TabPanel value={tabValue} index={0}>
             <Grid>
               <Grid container>
@@ -552,13 +624,6 @@ export default function CarEdits(props) {
                       </DialogActions>
                     </Dialog>
                   </Grid>
-                  {/* <GoogleMaps
-                    className={classes.textField}
-                    label="Location"
-                    name="location"
-                    value={currentCar && currentCar.location}
-                    onChange={(value) => setLocation(value)}
-                  /> */}
                   <TextField
                     className={classes.textField}
                     id="brand"
@@ -640,34 +705,39 @@ export default function CarEdits(props) {
           <TabPanel value={tabValue} index={1}>
             {images.data ? (
               <Grid container item lg={12}>
-                <Grid item lg={3}>
-                  <label
-                    className={classes.productImageItem}
-                    variant="outlined"
-                  >
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      multiple
-                      accept="image/*"
-                      name="image"
-                      id="file"
-                      onChange={uploadImage}
-                    />
-                    <span aria-hidden="true">
-                      <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-                    </span>
-                  </label>
-                </Grid>
+                {carDetail.status === CAR_STATUS.RENTING ||
+                !openUpload ? null : (
+                  <Grid item lg={3}>
+                    <label
+                      className={classes.productImageItem}
+                      variant="outlined"
+                    >
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple
+                        accept="image/*"
+                        name="image"
+                        id="file"
+                        onChange={uploadImage}
+                      />
+                      <span aria-hidden="true">
+                        <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                      </span>
+                    </label>
+                  </Grid>
+                )}
                 {images.data.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
-                      <Icon
-                        className={classes.productImageFeaturedStar}
-                        onClick={() => handleRemoveImage(image)}
-                      >
-                        remove_circle
-                      </Icon>
+                      {openUpload ? (
+                        <Icon
+                          className={classes.productImageFeaturedStar}
+                          onClick={() => handleRemoveImage(image)}
+                        >
+                          remove_circle
+                        </Icon>
+                      ) : null}
                       <img
                         src={image.link}
                         alt="img"
@@ -694,6 +764,20 @@ export default function CarEdits(props) {
                       </div>
                     </Grid>
                   ))}
+                <Grid item lg={12}>
+                  {carDetail.status === CAR_STATUS.RENTING ? null : (
+                    <Button
+                      variant="outlined"
+                      style={{ textTransform: "none" }}
+                      color="primary"
+                      className={classes.status}
+                      startIcon={<Icon>update</Icon>}
+                      onClick={() => setOpenUpdate(true)}
+                    >
+                      Update Image
+                    </Button>
+                  )}
+                </Grid>
               </Grid>
             ) : (
               <Grid>
@@ -703,33 +787,40 @@ export default function CarEdits(props) {
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
             <Grid container item lg={12}>
-              <Grid item lg={3}>
-                <label className={classes.productImageItem} variant="outlined">
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    multiple
-                    accept="image/*"
-                    name="image"
-                    id="file"
-                    onChange={uploadImage}
-                  />
-                  <span aria-hidden="true">
-                    <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-                  </span>
-                </label>
-              </Grid>
+              {carDetail.status === CAR_STATUS.RENTING || !openUpload ? null : (
+                <Grid item lg={3}>
+                  <label
+                    className={classes.productImageItem}
+                    variant="outlined"
+                  >
+                    <input
+                      type="file"
+                      style={{ display: "none" }}
+                      multiple
+                      accept="image/*"
+                      name="image"
+                      id="file"
+                      onChange={uploadImageLicense}
+                    />
+                    <span aria-hidden="true">
+                      <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                    </span>
+                  </label>
+                </Grid>
+              )}
 
               {licenses.data &&
                 licenses.data.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
-                      <Icon
-                        className={classes.productImageFeaturedStar}
-                        onClick={() => handleRemoveImage(image)}
-                      >
-                        remove_circle
-                      </Icon>
+                      {openUpload ? (
+                        <Icon
+                          className={classes.productImageFeaturedStar}
+                          onClick={() => handleRemoveImage(image)}
+                        >
+                          remove_circle
+                        </Icon>
+                      ) : null}
                       <img
                         src={image.link}
                         alt="img"
@@ -738,6 +829,38 @@ export default function CarEdits(props) {
                     </div>
                   </Grid>
                 ))}
+              {imagesLicense &&
+                imagesLicense.map((image, index) => (
+                  <Grid item lg={3}>
+                    <div className={classes.productImageItem} key={index}>
+                      <Icon
+                        className={classes.productImageFeaturedStar}
+                        onClick={() => handleRemoveLicItem(image)}
+                      >
+                        remove_circle
+                      </Icon>
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt="img"
+                        style={{ width: "90%", height: "90%" }}
+                      />
+                    </div>
+                  </Grid>
+                ))}
+              <Grid item lg={12}>
+                {carDetail.status === CAR_STATUS.RENTING ? null : (
+                  <Button
+                    variant="outlined"
+                    style={{ textTransform: "none" }}
+                    color="primary"
+                    className={classes.status}
+                    startIcon={<Icon>update</Icon>}
+                    onClick={() => setOpenUpdate(true)}
+                  >
+                    Update Image
+                  </Button>
+                )}
+              </Grid>
             </Grid>
           </TabPanel>
         </Grid>
