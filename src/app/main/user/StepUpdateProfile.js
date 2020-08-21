@@ -26,6 +26,7 @@ import {
   updateUserLicense,
   fetchUserDetail,
 } from "../submitLicense/license.action";
+import { is } from "date-fns/locale";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -185,9 +186,9 @@ function GetStepContent(
                   </InputAdornment>
                 ),
               }}
-              error={info.phone && info.phone.length < 10}
+              error={info.phone && info.phone.length != 10}
               helperText={
-                info.phone && info.phone.length < 10
+                info.phone && info.phone.length != 10
                   ? "Phone number must be 10 charaters"
                   : ""
               }
@@ -202,13 +203,14 @@ function GetStepContent(
               onChange={handleChangeInfo}
               label="Identification Number"
               variant="outlined"
+              disabled={currentUser.licenseCheck}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <Tooltip
                       title={
                         <Typography variant="caption">
-                          Identification must be from 9 to 12 charaters
+                          Identification must be 9 or 12 charaters
                         </Typography>
                       }
                       placement="top"
@@ -221,13 +223,13 @@ function GetStepContent(
               error={
                 info.identification &&
                 (info.identification.length < 9 ||
-                  info.identification.length > 12)
+                  (info.identification.length > 9 && info.identification.length != 12))
               }
               helperText={
                 info.identification &&
-                (info.identification.length < 9 ||
-                  info.identification.length > 12)
-                  ? "Identification must be larger than 9 charaters"
+                  (info.identification.length < 9 ||
+                    (info.identification.length > 9 && info.identification.length != 12))
+                  ? "Identification must be 9 charaters or 12 charateres"
                   : ""
               }
             />
@@ -274,8 +276,8 @@ function GetStepContent(
                 </div>
               </Grid>
             ))}
-          {imageJson &&
-            imageJson.map((image, index) => (
+          {/* {imageJson.license &&
+            imageJson.license.map((image, index) => (
               <Grid item lg={3}>
                 <div className={classes.productImageItem} key={index}>
                   <Icon
@@ -291,10 +293,12 @@ function GetStepContent(
                   />
                 </div>
               </Grid>
-            ))}
-          <Typography variant="subtitle2" color="error">
-            {imageJson ? "" : "Please upload minimal 2 images of your license"}
-          </Typography>
+            ))} */}
+          <Grid item xs={12} lg={12}>
+            <Typography variant="subtitle2" color="error">
+              {licenses.length >= 2 ? "" : "Please upload from 2 to 4 images of your license"}
+            </Typography>
+          </Grid>
         </Grid>
       );
     case 2:
@@ -337,8 +341,8 @@ function GetStepContent(
                 </div>
               </Grid>
             ))}
-          {imageJson &&
-            imageJson.map((image, index) => (
+          {/* {imageJson.identification &&
+            imageJson.identification.map((image, index) => (
               <Grid item lg={3}>
                 <div className={classes.productImageItem} key={index}>
                   <Icon
@@ -354,10 +358,20 @@ function GetStepContent(
                   />
                 </div>
               </Grid>
-            ))}
-          <Typography variant="subtitle2" color="error">
-            {imageJson ? "" : "Please upload minimal 2 images of your license"}
-          </Typography>
+            ))} */}
+          <Grid item xs={12} lg={12}>
+            <Typography variant="subtitle2" color="error">
+              {identification.length >= 2 ? "" : "Please upload from 2 to 4 images of your identification"}
+            </Typography>
+          </Grid>
+
+
+          <Grid item xs={12} lg={12}>
+            <Typography variant="subtitle2" color="error">
+              {identification.length >= 2 && licenses.length >= 2 
+              && identification.length <= 4 && licenses.length <= 4 ? "" : "Your images of identification and license not enough or to many!!"}
+            </Typography>
+          </Grid>
         </Grid>
       );
     default:
@@ -388,13 +402,21 @@ export default function UpdateProfileStepper() {
     setActiveStep(0);
   };
   var linkImageArr = new Array();
+  var linkImageArr2 = new Array();
+
   const handleUpdate = () => {
     console.log(information);
     dispatch(processingRegister());
     uploadFile();
   };
   const handleSubmitInfo = () => {
-    const imageLicense = JSON.stringify(linkImageArr);
+    const linkTotal = {
+      "license": linkImageArr,
+      "identification": linkImageArr2,
+    };
+    const imageLicense = JSON.stringify(linkTotal);
+    console.log("check link total: ", imageLicense);
+    // const imageLicense = JSON.stringify(linkImageArr);
     dispatch(
       updateUserLicense({
         phone: information.phone,
@@ -489,6 +511,91 @@ export default function UpdateProfileStepper() {
     }
   };
 
+  let uploadFile2 = () => {
+    if (information.imgIdentification && information.imgIdentification.length > 0) {
+      //   dispatch(updateUserLicenseLoading());
+      // Create the file metadata
+      var metadata = {
+        contentType: "image/jpeg",
+      };
+
+      var today = new Date();
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
+      var count = 0;
+      var flag = false;
+
+      for (let i = 0; i < information.imgIdentification.length; i++) {
+        var uploadTask = firebase
+          .storage()
+          .ref("License/" + date + "/" + userLogged.email)
+          .child(information.imgIdentification[i].name)
+          .put(information.imgIdentification[i], metadata);
+
+        uploadTask.on(
+          firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function (snapshot) {
+            var progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log("Upload is paused");
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log("Upload is running");
+                break;
+            }
+            if (progress == 100) {
+              console.log("count: " + count);
+              count = count + 1;
+            }
+            if (count == information.imgIdentification.length) {
+              count = 0;
+              flag = true;
+            }
+          },
+          function (error) {
+            // Errors list: https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case "storage/unauthorized":
+                // User doesn't have permission to access the object
+                break;
+
+              case "storage/canceled":
+                // User canceled the upload
+                break;
+
+              case "storage/unknown":
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          async function () {
+            if (flag) {
+              flag = false;
+              if (count == 0) {
+                console.log("start get link download!!!");
+                await new Promise((resolve, reject) =>
+                  setTimeout(resolve, 3000)
+                );
+                downloadFile2(date);
+              } else {
+                console.log("check lai cho nay");
+              }
+            }
+          }
+        );
+      }
+    } else {
+      console.log("Khong co file");
+    }
+  };
+
   var downloadFile = (date) => {
     var storage = firebase.storage();
     var storageRef = storage.ref("License");
@@ -521,6 +628,66 @@ export default function UpdateProfileStepper() {
                 "length link download image: " + information.imgLicense.length
               );
               console.log("Starting store car info to DB...");
+              // handleSubmitInfo();
+              uploadFile2();
+            }
+          }
+        })
+        .catch(function (error) {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case "storage/object-not-found":
+              // File doesn't exist
+              console.log("File doesn't exist vi tri: " + (i + 1));
+              break;
+            case "storage/unauthorized":
+              // User doesn't have permission to access the object
+              console.log("User doesn't have permission to access the object");
+              break;
+            case "storage/canceled":
+              // User canceled the upload
+              break;
+            case "storage/unknown":
+              // Unknown error occurred, inspect the server response
+              break;
+          }
+        });
+    }
+  };
+
+  var downloadFile2 = (date) => {
+    var storage = firebase.storage();
+    var storageRef = storage.ref("License");
+    var count = 0;
+    var flag2 = false;
+
+    for (let i = 0; i < information.imgIdentification.length; i++) {
+      // Create a reference to the file we want to download
+      var starsRef = storageRef.child(
+        date + "/" + userLogged.email + "/" + information.imgIdentification[i].name
+      );
+
+      // Get the download URL
+      console.log("state download: " + starsRef.state);
+      starsRef
+        .getDownloadURL()
+        .then(function (url) {
+          // Insert url into an <img> tag to "download"
+          console.log("test vi tri: " + (i + 1) + "-" + url);
+          linkImageArr2.push(url);
+
+          count = count + 1;
+          if (count == information.imgIdentification.length) {
+            count = 0;
+
+            flag2 = true;
+            if (flag2) {
+              flag2 = false;
+              console.log(
+                "length link download image: " + information.imgIdentification.length
+              );
+              console.log("Starting store car info to DB...");
               handleSubmitInfo();
             }
           }
@@ -547,6 +714,7 @@ export default function UpdateProfileStepper() {
         });
     }
   };
+
   const [imageJson, setImageJson] = useState([]);
   const userDetail = useSelector((state) => state.license.userDetail);
   const isVerify = useSelector((state) => state.profile.isVerify);
@@ -593,65 +761,75 @@ export default function UpdateProfileStepper() {
             <Button onClick={handleReset}>Reset</Button>
           </div>
         ) : (
-          <div>
-            <Typography className={classes.instructions}>
-              {GetStepContent(
-                activeStep,
-                setInformation,
-                userDetail,
-                imageJson,
-                isVerify
-              )}
-            </Typography>
             <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.backButton}
-              >
-                Back
-              </Button>
-              {activeStep === steps.length - 1 ? (
+              <Typography className={classes.instructions}>
+                {GetStepContent(
+                  activeStep,
+                  setInformation,
+                  userDetail,
+                  imageJson,
+                  isVerify
+                )}
+              </Typography>
+              <div>
                 <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleUpdate}
-                  disabled={
-                    (information.imgLicense &&
-                      information.imgLicense.length < 2) ||
-                    (information.imgIdentification &&
-                      information.imgIdentification.length < 2)
-                  }
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  className={classes.backButton}
                 >
-                  Update
-                </Button>
-              ) : (
-                <Grid item container justify="space-between">
-                  {isVerify ? (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={updateImfoNoImage}
-                      disabled={
-                        !information.phone || !information.identification
-                      }
-                    >
-                      Update Phone & Identification
-                    </Button>
-                  ) : null}
+                  Back
+              </Button>
+                {activeStep === steps.length - 1 ? (
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={handleNext}
-                    disabled={!information.phone || !information.identification}
+                    onClick={handleUpdate}
+                    disabled={
+                      (information.imgLicense &&
+                        information.imgLicense.length < 2) ||
+                      (information.imgLicense &&
+                        information.imgLicense.length > 4) ||
+                      (information.imgIdentification &&
+                        information.imgIdentification.length < 2) ||
+                        (information.imgIdentification &&
+                          information.imgIdentification.length > 4) ||
+                      (userDetail.licenseCheck)
+                    }
                   >
-                    Next
+                    Update
                   </Button>
-                </Grid>
-              )}
+                ) : (
+                    <Grid item container justify="space-between">
+                      {userDetail.licenseCheck ? (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={updateImfoNoImage}
+                          disabled={
+                            !information.phone
+                          }
+                        >
+                          {/* Update Phone & Identification */}
+                      Update Phone
+                        </Button>
+                      ) : null}
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleNext}
+                        disabled={!information.phone || !information.identification
+                          || information.phone.length != 10 || userDetail.licenseCheck
+                          || information.identification.length < 9
+                          || (information.identification.length > 9 && information.identification.length != 12)
+                        }
+                      >
+                        Next
+                  </Button>
+                    </Grid>
+                  )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   );
