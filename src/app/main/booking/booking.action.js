@@ -62,7 +62,19 @@ export const FETCH_LICENSE_CAR = "[IMAGE] FETCH LICENSE CAR";
 export const POST_IMAGES_CAR = "[IMAGE] POST IMAGES CAR";
 export const LOADING_CREATE_BOOKING = "[BOOKING] LOADING";
 export const RESET_CREATE_BOOKING = "[BOOKING] RESET CREATE";
+export const ADD_CAR_COMPARE = "[COMPARE] ADD CAR";
+export const RESET_CAR_COMPARE = "[COMPARE] RESET CAR";
 
+export function resetCarCompare() {
+  return {
+    type: RESET_CAR_COMPARE,
+  };
+}
+export function addCarCompare() {
+  return {
+    type: ADD_CAR_COMPARE,
+  };
+}
 export function resetFlagCreateBooking() {
   return {
     type: RESET_CREATE_BOOKING,
