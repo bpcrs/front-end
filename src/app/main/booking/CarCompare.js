@@ -1,6 +1,6 @@
 import React from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, Icon } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import SwipeableTextMobileStepper from "../booking/SlideShow";
 import { useSelector } from "react-redux";
+import NumberFormat from "react-number-format";
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
@@ -39,7 +40,7 @@ export default function CarCompare() {
   var carDetail2 = [];
   var rows = [];
   const carCompare = useSelector((state) => state.booking.carCompare);
-  if (carCompare.length == 2) {
+  if (carCompare.length === 2) {
     carDetail1 = carCompare[0];
     carDetail2 = carCompare[1];
     console.log(carDetail1);
@@ -59,6 +60,16 @@ export default function CarCompare() {
         carDetail1.info.auto_driver ? "Automatic" : "Manual",
         carDetail2.info.auto_driver ? "Automatic" : "Manual"
       ),
+      createData(
+        "Car Location",
+        carDetail1.info.location,
+        carDetail2.info.location
+      ),
+      createData(
+        "Distance to pickup location",
+        carDetail1.info.distance,
+        carDetail2.info.distance
+      ),
     ];
   }
 
@@ -74,7 +85,7 @@ export default function CarCompare() {
                   images={
                     carDetail1.info
                       ? carDetail1.info.images.filter(
-                          (image) => image.type == "CAR"
+                          (image) => image.type === "CAR"
                         )
                       : [fakeImg]
                   }
@@ -85,7 +96,7 @@ export default function CarCompare() {
                   images={
                     carDetail2.info
                       ? carDetail2.info.images.filter(
-                          (image) => image.type == "CAR"
+                          (image) => image.type === "CAR"
                         )
                       : [fakeImg]
                   }
@@ -101,12 +112,47 @@ export default function CarCompare() {
                 <Grid item xs={2} lg={2} align="center">
                   <p style={{ fontSize: "14" }}>{row.name}</p>
                 </Grid>
-                <Grid item xs={5} lg={5} align="center">
-                  <p style={{ fontSize: "14" }}>{row.property1}</p>
-                </Grid>
-                <Grid item xs={5} lg={5} align="center">
-                  <p style={{ fontSize: "14" }}>{row.property2}</p>
-                </Grid>
+                {row.name === "Price" ? (
+                  <React.Fragment>
+                    <Grid item xs={5} lg={5} align="center">
+                      <p style={{ fontSize: "15", fontWeight: "bold" }}>
+                        <NumberFormat
+                          value={row.property1}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          // prefix={"$"}
+                          suffix={" đ/ day"}
+                        />
+                      </p>
+                      {/* {console.log(row.property1)} */}
+                    </Grid>
+                    <Grid item xs={5} lg={5} align="center">
+                      <p style={{ fontSize: "15", fontWeight: "bold" }}>
+                        <NumberFormat
+                          value={row.property2}
+                          displayType={"text"}
+                          thousandSeparator={true}
+                          // prefix={"$"}
+                          suffix={" đ/ day"}
+                        />
+                      </p>
+                    </Grid>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <Grid item xs={5} lg={5} align="center">
+                      <p style={{ fontSize: "15", fontWeight: "bold" }}>
+                        {row.property1}
+                      </p>
+                      {console.log(row.property1)}
+                    </Grid>
+                    <Grid item xs={5} lg={5} align="center">
+                      <p style={{ fontSize: "15", fontWeight: "bold" }}>
+                        {row.property2}
+                      </p>
+                    </Grid>
+                  </React.Fragment>
+                )}
               </Grid>
             </StyledTableRow>
           ))}

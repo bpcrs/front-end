@@ -12,6 +12,8 @@ import {
   Typography,
   Dialog,
   DialogContent,
+  IconButton,
+  Badge,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -20,9 +22,11 @@ import { Link } from "react-router-dom";
 import Chip from "@material-ui/core/Chip";
 import { APP_PATH } from "../../../constant";
 import NumberFormat from "react-number-format";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Skeleton from "@material-ui/lab/Skeleton";
 import CarCompare from "./CarCompare";
+import { useEffect } from "react";
+import { addCarCompare, resetCarCompare } from "./booking.action";
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: 20,
@@ -49,21 +53,29 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     maxWidth: "75%",
   },
+  compare: {
+    marginTop: theme.spacing(1),
+  },
 }));
 
 export default function CarItem(props = { isAction: true }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { info } = props;
   const [open, setOpen] = React.useState(false);
   const carCompare = useSelector((state) => state.booking.carCompare);
+  // const num = useSelector((state) => state.booking.numCompare);
+  const [num, setNum] = useState(0);
   const handleClose = () => {
     carCompare.length = 0;
     setOpen(false);
   };
   const clickToAddCompareCar = () => {
     carCompare.push({ info });
+    // setNum(1);
     if (carCompare.length === 2) {
       setOpen(true);
+      // setNum(0);
     }
   };
   const [hoving, setHoving] = useState(0);
@@ -203,6 +215,7 @@ export default function CarItem(props = { isAction: true }) {
               {info ? (
                 // <Typography variant="subtitle1" color="primary">
                 <Chip
+                  className={classes.compare}
                   label={
                     <NumberFormat
                       value={info.price}
@@ -220,9 +233,22 @@ export default function CarItem(props = { isAction: true }) {
                 <Skeleton animation="wave" height={10} width="80%" />
               )}
             </Grid>
+            <IconButton
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                clickToAddCompareCar();
+              }}
+            >
+              <Badge badgeContent={num} color="primary">
+                {" "}
+                <Icon>compare</Icon>
+              </Badge>
+            </IconButton>
             <Grid item alignContent="flex-end" spacing={1} alignItems="center">
               {info ? (
                 <Button
+                  className={classes.compare}
                   component={Link}
                   variant="contained"
                   startIcon={<Icon>pageview</Icon>}
@@ -237,18 +263,6 @@ export default function CarItem(props = { isAction: true }) {
               ) : (
                 <Skeleton animation="wave" height={10} width="80%" />
               )}
-
-              {/* <Grid item xs={7}>
-              <Button
-                variant="contained"
-                startIcon={<CompareIcon />}
-                onClick={() => {
-                  clickToAddCompareCar();
-                }}
-              >
-                Compare
-              </Button>
-            </Grid> */}
             </Grid>
           </Grid>
         </CardActions>

@@ -27,10 +27,23 @@ const initialState = {
   loadingBooking: false,
   messageResponeReview: "",
   flagBookSuccess: false,
+  numCompare: 0,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.RESET_CAR_COMPARE: {
+      return {
+        ...state,
+        numCompare: 0,
+      };
+    }
+    case Actions.ADD_CAR_COMPARE: {
+      return {
+        ...state,
+        numCompare: state.numCompare + 1,
+      };
+    }
     case Actions.RESET_CREATE_BOOKING: {
       return {
         ...state,
