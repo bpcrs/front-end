@@ -135,80 +135,70 @@ export default function CarCompare() {
     carDetail2 = carCompare[1];
     console.log(carDetail1);
     rows = [
-      createData("Brand", carDetail1.info.brand, carDetail2.info.brand),
-      createData("Name", carDetail1.info.name, carDetail2.info.name),
-      createData("Model", carDetail1.info.year, carDetail2.info.year),
-      createData("Screen", carDetail1.info.screen, carDetail2.info.screen),
-      createData("Seats", carDetail1.info.seat, carDetail2.info.seat),
-      createData("Price", carDetail1.info.price, carDetail2.info.price),
+      createData("Brand", carDetail1.brand, carDetail2.brand),
+      createData("Name", carDetail1.name, carDetail2.name),
+      createData("Model", carDetail1.model.name, carDetail2.model.name),
+      createData("Screen", carDetail1.screen, carDetail2.screen),
+      createData("Seats", carDetail1.seat, carDetail2.seat),
+      createData("Price", carDetail1.price, carDetail2.price),
       createData(
         "Type",
-        carDetail1.info.auto_driver ? "Automatic" : "Manual",
-        carDetail2.info.auto_driver ? "Automatic" : "Manual"
+        carDetail1.auto_driver ? "Automatic" : "Manual",
+        carDetail2.auto_driver ? "Automatic" : "Manual"
       ),
-      createData(
-        "Car Location",
-        carDetail1.info.location,
-        carDetail2.info.location
-      ),
+      createData("Car Location", carDetail1.location, carDetail2.location),
       createData(
         "Distance to pickup location",
-        carDetail1.info.distance,
-        carDetail2.info.distance
+        carDetail1.distance,
+        carDetail2.distance
       ),
     ];
   }
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <Grid container spacing={5}>
-              <Grid item xs={5} lg={5}>
-                <SwipeableTextMobileStepper
-                  images={
-                    carDetail1.info
-                      ? carDetail1.info.images.filter(
-                          (image) => image.type === "CAR"
-                        )
-                      : [fakeImg]
-                  }
-                />
-              </Grid>
-              <Grid item xs={2} lg={2} align="center">
-                <Typography
-                  variant="subtitle1"
-                  color="primary"
-                  className={classes.compare}
-                >
-                  VS
-                </Typography>
-              </Grid>
-              <Grid item xs={5} lg={5}>
-                <SwipeableTextMobileStepper
-                  images={
-                    carDetail2.info
-                      ? carDetail2.info.images.filter(
-                          (image) => image.type === "CAR"
-                        )
-                      : [fakeImg]
-                  }
-                />
-              </Grid>
+    <Table className={classes.table} aria-label="customized table">
+      <TableHead>
+        <TableRow>
+          <Grid container spacing={5}>
+            <Grid item xs={5} lg={5}>
+              <SwipeableTextMobileStepper
+                images={
+                  carDetail1
+                    ? carDetail1.images.filter((image) => image.type === "CAR")
+                    : [fakeImg]
+                }
+              />
             </Grid>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <Grid container>
-                <Row row={row} />
-              </Grid>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            <Grid item xs={2} lg={2} align="center">
+              <Typography
+                variant="h3"
+                color="primary"
+                className={classes.compare}
+              >
+                VS
+              </Typography>
+            </Grid>
+            <Grid item xs={5} lg={5}>
+              <SwipeableTextMobileStepper
+                images={
+                  carDetail2
+                    ? carDetail2.images.filter((image) => image.type === "CAR")
+                    : [fakeImg]
+                }
+              />
+            </Grid>
+          </Grid>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {rows.map((row) => (
+          <StyledTableRow key={row.name}>
+            <Grid container>
+              <Row row={row} />
+            </Grid>
+          </StyledTableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

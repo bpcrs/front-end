@@ -14,6 +14,8 @@ import {
   DialogContent,
   IconButton,
   Badge,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 import red from "@material-ui/core/colors/red";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -26,7 +28,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Skeleton from "@material-ui/lab/Skeleton";
 import CarCompare from "./CarCompare";
 import { useEffect } from "react";
-import { addCarCompare, resetCarCompare } from "./booking.action";
+import { addCarCompare, removeCarCompare } from "./booking.action";
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: 20,
@@ -58,30 +60,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CarItem(props = { isAction: true }) {
+export default function CarItem({ isAction = true, info, booking }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { info } = props;
-  const [open, setOpen] = React.useState(false);
   const carCompare = useSelector((state) => state.booking.carCompare);
-  // const num = useSelector((state) => state.booking.numCompare);
-  const [num, setNum] = useState(0);
-  const handleClose = () => {
-    carCompare.length = 0;
-    setOpen(false);
-  };
+
   const clickToAddCompareCar = () => {
-    carCompare.push({ info });
-    // setNum(1);
-    if (carCompare.length === 2) {
-      setOpen(true);
-      // setNum(0);
+    if (carCompare.find((item) => item.id === info.id)) {
+      dispatch(removeCarCompare(info.id));
+    } else {
+      dispatch(addCarCompare(info));
     }
   };
   const [hoving, setHoving] = useState(0);
   return (
     <Card
-      elevation={hoving === info.id ? 10 : 1}
+      elevation={
+        hoving === info.id || carCompare.find((item) => item.id === info.id)
+          ? 10
+          : 1
+      }
       className={classes.card}
       onMouseOver={() => setHoving(info.id)}
       onMouseOut={() => setHoving(0)}
@@ -117,6 +115,20 @@ export default function CarItem(props = { isAction: true }) {
               style={{ marginBottom: 6 }}
             />
           )
+        }
+        action={
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={
+                  carCompare.find((item) => item.id === info.id) ? true : false
+                }
+                color="primary"
+                onChange={clickToAddCompareCar}
+                inputProps={{ "aria-label": "primary checkbox" }}
+              />
+            }
+          />
         }
         // subheader={info.model.name + " " + info.year}
         subheader={
@@ -208,7 +220,7 @@ export default function CarItem(props = { isAction: true }) {
           </Grid>
         </Grid>
       </CardContent>
-      {props.isAction ? (
+      {isAction ? (
         <CardActions className={classes.actions}>
           <Grid item container justify="space-between">
             <Grid item className={classes.alignRight}>
@@ -233,18 +245,6 @@ export default function CarItem(props = { isAction: true }) {
                 <Skeleton animation="wave" height={10} width="80%" />
               )}
             </Grid>
-            <IconButton
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                clickToAddCompareCar();
-              }}
-            >
-              <Badge badgeContent={num} color="primary">
-                {" "}
-                <Icon>compare</Icon>
-              </Badge>
-            </IconButton>
             <Grid item alignContent="flex-end" spacing={1} alignItems="center">
               {info ? (
                 <Button
@@ -255,7 +255,7 @@ export default function CarItem(props = { isAction: true }) {
                   to={(location) => ({
                     ...location,
                     pathname: `${APP_PATH.CAR_ITEM}/${info.id}`,
-                    state: { booking: props.booking ? props.booking : "" },
+                    state: { booking: booking ? booking : "" },
                   })}
                 >
                   View
@@ -267,16 +267,6 @@ export default function CarItem(props = { isAction: true }) {
           </Grid>
         </CardActions>
       ) : null}
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        scroll="paper"
-        classes={{ paper: classes.paper }}
-      >
-        <DialogContent>
-          <CarCompare />
-        </DialogContent>
-      </Dialog>
     </Card>
   );
 }

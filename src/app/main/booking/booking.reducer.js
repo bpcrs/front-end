@@ -27,7 +27,6 @@ const initialState = {
   loadingBooking: false,
   messageResponeReview: "",
   flagBookSuccess: false,
-  numCompare: 0,
 };
 
 const bookingReducer = (state = initialState, { type, payload }) => {
@@ -35,13 +34,19 @@ const bookingReducer = (state = initialState, { type, payload }) => {
     case Actions.RESET_CAR_COMPARE: {
       return {
         ...state,
-        numCompare: 0,
+        carCompare: state.carCompare.filter((item) => item.id !== payload),
       };
     }
     case Actions.ADD_CAR_COMPARE: {
+      if (state.carCompare.length === 2) {
+        return {
+          ...state,
+          carCompare: [...state.carCompare.splice(1, 1), payload],
+        };
+      }
       return {
         ...state,
-        numCompare: state.numCompare + 1,
+        carCompare: [...state.carCompare, payload],
       };
     }
     case Actions.RESET_CREATE_BOOKING: {
