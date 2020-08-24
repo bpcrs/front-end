@@ -12,7 +12,7 @@ import {
   Tabs,
   Tab,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import PublishIcon from "@material-ui/icons/Publish";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
   textField: {
     width: "100%",
     margin: theme.spacing(1),
+    readOnly: true,
   },
   card: {
     margin: 20,
@@ -93,7 +94,7 @@ function a11yProps(index) {
 export default function UserDetailChecking({ user, callback }) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [linkImage, setLinkImage] = useState(JSON.parse(user.imageLicense));
+  const [linkImage, setLinkImage] = useState({});
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState(0);
   const reason1 = "License not clear";
@@ -108,6 +109,14 @@ export default function UserDetailChecking({ user, callback }) {
     checkedD: "",
     checkedE: "",
   });
+
+  useEffect(() => {
+
+    if (user.imageLicense) {
+      setLinkImage(JSON.parse(user.imageLicense));
+    }
+
+  }, []);
 
   const handleChangeBox = (event) => {
     if (event.target.checked) {
@@ -166,6 +175,7 @@ export default function UserDetailChecking({ user, callback }) {
         >
           <Tab label="User Infomation" {...a11yProps(0)} />
           <Tab label="License Image" {...a11yProps(1)} />
+          <Tab label="Identification Image" {...a11yProps(2)} />
           {/* <Tab label="Indentification Image" {...a11yProps(2)} /> */}
         </Tabs>
       </Grid>
@@ -180,7 +190,6 @@ export default function UserDetailChecking({ user, callback }) {
                     label="Full Name"
                     variant="outlined"
                     value={user.fullName ? user.fullName : ""}
-                    disabled
                   />
                 </Grid>
 
@@ -190,7 +199,6 @@ export default function UserDetailChecking({ user, callback }) {
                     label="Email"
                     variant="outlined"
                     value={user.email ? user.email : ""}
-                    disabled
                   />
                 </Grid>
               </Grid>
@@ -198,7 +206,6 @@ export default function UserDetailChecking({ user, callback }) {
               <Grid item xs={12} lg={12}>
                 <TextField
                   className={classes.textField}
-                  disabled
                   label="Phone"
                   value={user.phone ? user.phone : ""}
                   variant="outlined"
@@ -208,7 +215,6 @@ export default function UserDetailChecking({ user, callback }) {
               <Grid item xs={12} lg={12}>
                 <TextField
                   className={classes.textField}
-                  disabled
                   label="Date Join"
                   value={new Date(user.createdDate).toLocaleDateString()}
                   variant="outlined"
@@ -218,7 +224,6 @@ export default function UserDetailChecking({ user, callback }) {
               <Grid item xs={12} lg={12}>
                 <TextField
                   className={classes.textField}
-                  disabled
                   value={user.identification ? user.identification : ""}
                   label="Identification"
                   variant="outlined"
@@ -228,27 +233,80 @@ export default function UserDetailChecking({ user, callback }) {
           </Grid>
         </TabPanel>
         <TabPanel value={tab} index={1} tab={1}>
-          <Grid container>
-            {linkImage &&
-              linkImage.map((image, index) => (
-                <Grid item xs={12} lg={6}>
-                  <div style={{ textAlign: "center" }}>
-                    <p>Picture {index + 1}</p>
-                    <p>
-                      <img
-                        alt={index}
-                        src={image}
-                        id="output"
-                        width="200"
-                        height="200"
-                      />
-                    </p>
-                  </div>
-                </Grid>
-              ))}
-          </Grid>
+          {linkImage.license ? (
+            <Grid container>
+              {linkImage.license &&
+                linkImage.license.map((image, index) => (
+                  <Grid item xs={12} lg={6}>
+                    <div style={{ textAlign: "center" }}>
+                      <p>Picture {index + 1}</p>
+                      <p>
+                        <img
+                          alt={index}
+                          src={image}
+                          id="output"
+                          width="200"
+                          height="200"
+                        />
+                      </p>
+                    </div>
+                  </Grid>
+                ))}
+            </Grid>
+          ) : (
+              <Grid container justify="center" alignItems="center">
+                {/* <Grid item lg={6}>
+                  <img
+                    src="assets/images/approve.jpg"
+                    alt="No resourse"
+                    height="300px"
+                  />
+                </Grid> */}
+                <Typography variant="subtitle2" color="error">
+                  User have not update profile yet!!
+          </Typography>
+              </Grid>
+            )}
+
         </TabPanel>
-        {/* <TabPanel value={tab} index={2} tab={2}></TabPanel> */}
+        <TabPanel value={tab} index={2} tab={2}>
+
+          {
+            linkImage.identification ? (
+              <Grid container>
+                {linkImage.identification &&
+                  linkImage.identification.map((image, index) => (
+                    <Grid item xs={12} lg={6}>
+                      <div style={{ textAlign: "center" }}>
+                        <p>Picture {index + 1}</p>
+                        <p>
+                          <img
+                            alt={index}
+                            src={image}
+                            id="output"
+                            width="200"
+                            height="200"
+                          />
+                        </p>
+                      </div>
+                    </Grid>
+                  ))}
+              </Grid>
+            ) : (
+                <Grid container justify="center" alignItems="center">
+                  {/* <Grid item lg={6}>
+                    <img
+                      src="assets/images/approve.jpg"
+                      alt="No resourse"
+                      height="300px"
+                    />
+                  </Grid> */}
+                  <Typography variant="subtitle2" color="error">
+                    User have not update profile yet!!
+          </Typography>
+                </Grid>
+              )}
+        </TabPanel>
         <Grid container justify="center">
           <Grid item xs={6} lg={6}>
             <Button
@@ -347,6 +405,7 @@ export default function UserDetailChecking({ user, callback }) {
                   <Grid item>
                     <Button
                       variant="contained"
+                      color="primary"
                       style={{ backgroundColor: "red" }}
                       onClick={() => {
                         setOpen(false);
