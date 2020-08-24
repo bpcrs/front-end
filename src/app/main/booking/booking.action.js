@@ -65,14 +65,16 @@ export const RESET_CREATE_BOOKING = "[BOOKING] RESET CREATE";
 export const ADD_CAR_COMPARE = "[COMPARE] ADD CAR";
 export const RESET_CAR_COMPARE = "[COMPARE] RESET CAR";
 
-export function resetCarCompare() {
+export function removeCarCompare(id) {
   return {
     type: RESET_CAR_COMPARE,
+    payload: id,
   };
 }
-export function addCarCompare() {
+export function addCarCompare(car) {
   return {
     type: ADD_CAR_COMPARE,
+    payload: car,
   };
 }
 export function resetFlagCreateBooking() {

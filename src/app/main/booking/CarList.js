@@ -6,6 +6,10 @@ import {
   Typography,
   Slider,
   Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import CarItem from "./CarItem";
@@ -20,6 +24,7 @@ import { useState } from "react";
 import { FilterButton } from "./FilterButton";
 import NumberFormat from "react-number-format";
 import WaveSkeleton from "../booking/WaveSkeleton";
+import CarCompare from "./CarCompare";
 
 const useStyles = makeStyles((theme) => ({
   rootChip: {
@@ -90,6 +95,8 @@ function CarList(props) {
     model: [],
     seat: [],
   });
+  const carCompare = useSelector((state) => state.booking.carCompare);
+
   const showPriceRange = () => {
     return (
       <Grid>
@@ -110,10 +117,12 @@ function CarList(props) {
     );
   };
   const [chipData, setChipData] = useState([]);
+  const [open, setOpen] = React.useState(false);
 
   const handleChangeSlider = (event, newValue) => {
     setValueSlider(newValue);
   };
+
   const locationPickup = props.location.state.location.description;
   useEffect(() => {
     dispatch(fetchBrandList());
@@ -133,7 +142,7 @@ function CarList(props) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 2000);
 
     const filterToChip = () => {
       const tags = Object.keys(filter).map((key) =>
@@ -260,6 +269,34 @@ function CarList(props) {
             <></>
           )}
         </Grid>
+      </Grid>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        scroll="paper"
+        classes={{ paper: classes.paper }}
+        maxWidth="lg"
+        fullWidth
+      >
+        <DialogTitle id="max-width-dialog-title">{`Compare ${
+          carCompare[0] && carCompare[0].name
+        } vs ${carCompare[1] ? carCompare[1].name : "..."}`}</DialogTitle>
+        <DialogContent>
+          <CarCompare />
+        </DialogContent>
+      </Dialog>
+      <Grid container xs={12} lg={12} item justify="flex-end">
+        {carCompare && carCompare.length !== 0 && (
+          <Button
+            variant="text"
+            disabled={carCompare.length < 2}
+            onClick={() => setOpen(true)}
+          >
+            {`Compare ${carCompare[0].name} vs ${
+              carCompare[1] ? carCompare[1].name : "..."
+            }`}
+          </Button>
+        )}
       </Grid>
       {filterCars.data &&
         filterCars.data.map((car, index) => (
