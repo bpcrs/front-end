@@ -92,14 +92,15 @@ export default function ManageBrand() {
     });
   };
   const handleBrand = () => {
-    if (currentBrand.name.trim() != "" && currentBrand.image != null) {
+    if (currentBrand.name.trim() != "" || currentBrand.image != null) {
       let flag = 1;
       for (var i = 0; i < brands.data.length; i++) {
-        if (currentBrand.name === brands.data[i].name) {
+        if (currentBrand.name === brands.data[i].name && currentBrand.id != brands.data[i].id) {
           flag = 2;
           break;
         }
-      } if (flag == 1) {
+      } 
+      if (flag == 1) {
         if (currentBrand.id == null) {
           dispatch(addBrand(currentBrand.name, currentBrand.logoLink));
         } else {
