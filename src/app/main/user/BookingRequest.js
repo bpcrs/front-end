@@ -21,7 +21,11 @@ import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingRequest, fetchBookingRentalMyCar } from "./profile.action";
+import {
+  fetchBookingRequest,
+  fetchBookingRentalMyCar,
+  isBookingReviewYet,
+} from "./profile.action";
 import { signContractRequest } from "./profile.action";
 import { useHistory } from "react-router-dom";
 import { APP_PATH, BOOKING_STATUS } from "../../../constant";
@@ -96,6 +100,16 @@ function Row({ booking, carId, currentUser, flag }) {
       setOpen(false);
     }, 3000);
   };
+
+  // useEffect(() => {
+  //   const checkBookingDone = () => {
+  //     if (booking.status === BOOKING_STATUS.DONE) {
+  //       dispatch(isBookingReviewYet(booking.id, booking.renter.id));
+  //     }
+  //   };
+  //   checkBookingDone();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const pendingText = `Join chat room`;
   const requestText = `Cancel booking`;
@@ -563,7 +577,6 @@ const BookingRequest = (props) => {
                 <StyledTableCell>Time Rental</StyledTableCell>
                 <StyledTableCell>Start date</StyledTableCell>
                 <StyledTableCell>Status</StyledTableCell>
-                {/* <StyledTableCell>Action</StyledTableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>

@@ -195,7 +195,7 @@ export default function CarDetails(props) {
       <Grid item xl={8} lg={8}>
         <Grid container spacing={3}>
           <Grid item xl={12} xs={12} lg={12}>
-            <Card >
+            <Card>
               <CardContent>
                 <Grid container spacing={1}>
                   <Grid xs={6} sm={6}>
@@ -355,7 +355,7 @@ export default function CarDetails(props) {
                           color="textSecondary"
                           className={classes.platenum}
                         >
-                          {carDetail.plateNum}
+                          Plate Number: {carDetail.plateNum}
                         </Typography>
                       </Grid>
                     </CardContent>

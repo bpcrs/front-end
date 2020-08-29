@@ -130,6 +130,8 @@ export const ENDPOINT = {
   BOOKING_CONTROLLER_USER_GETBYID: (id) => `/booking/user/${id}`,
   BOOKING_CONTROLLER_ESTIMATE_PRICE_GETBYID: (id) => `/booking/estimate/${id}`,
   BOOKING_CONTROLLER_RETURN_BOOKING_GETBYID: (id) => `/booking/return/${id}`,
+  BOOKING_CONTROLLER_REVIEW: (id) => `/booking/review/${id}`,
+
   CRITERIA_CONTROLLER_GETALL: "/criteria",
 
   AGREEMENT_CONTROLLER_GETALL: "/agreement",

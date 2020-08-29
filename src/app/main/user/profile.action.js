@@ -24,11 +24,18 @@ export const FETCH_ACCOUNT_VERIFY = "[ACCOUNT] CHECK VERIFY";
 export const FETCH_CONFRIM_OTP = "[ACCOUNT] CHECK OTP";
 export const GET_PRE_RETURN_PRICE_BOOKING = "[BOOKING] GET PRE-RETURN PRICE";
 export const UPDATE_ODOMETER_CAR = "[ODOMETER] UPDATE";
+export const IS_BOOKING_REVIEW_YET = "[REVIEW] IS BOOKING REVIEW YET";
 
+export function responseBookingReviewYet(isReview) {
+  return {
+    type: IS_BOOKING_REVIEW_YET,
+    payload: isReview,
+  };
+}
 export function updateOdometerSuccess(car) {
   return {
     type: UPDATE_ODOMETER_CAR,
-    paylaod: car,
+    payload: car,
   };
 }
 export function getPreReturnPriceSuccess(price) {
@@ -247,7 +254,7 @@ export function signContractRequest(id, otp) {
           dispatch(showMessageSuccess("Signed contract successful"));
           notificationBooking(response.data);
         } else {
-          dispatch(showMessageError(response.message));
+          dispatch(showMessageError("Please sign again !"));
         }
       },
       (error) => {
@@ -382,6 +389,20 @@ export function sendOTPConfirm(otp) {
         } else {
           dispatch(showMessageError(response.message));
         }
+      },
+      (error) => {
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function isBookingReviewYet(id, renterId) {
+  return (dispatch) => {
+    const request = POST(ENDPOINT.BOOKING_CONTROLLER_REVIEW, { id, renterId });
+    request.then(
+      (response) => {
+        dispatch(responseBookingReviewYet(response));
       },
       (error) => {
         dispatch(showMessageError(error.message));

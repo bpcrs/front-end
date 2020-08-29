@@ -24,7 +24,6 @@ import {
   sendOTPRequest,
   signContractRequest,
 } from "./profile.action";
-import { showMessageError } from "../../store/actions/fuse";
 import OtpInput from "react-otp-input";
 
 const useStyles = makeStyles((theme) => ({
@@ -113,7 +112,6 @@ function GetStepContent(
         setLoading(false);
         setCounter(60);
         setOpen(false);
-        // callBack(value);
       }, 3000);
     }
   };
@@ -135,11 +133,6 @@ function GetStepContent(
               }
               labelWidth={60}
               error={booking && odemeter < booking.car.odometer}
-              // helperText={
-              //   odemeter < booking.car.odometer
-              //     ? "Current dometer must be bigger than old odometer"
-              //     : ""
-              // }
             />
           </FormControl>
           {message ? (
@@ -189,7 +182,7 @@ function GetStepContent(
               </React.Fragment>
             )}
             {confirming && (
-              <Grid lg={12}>
+              <Grid lg={12} className={classes.step}>
                 <LinearProgress />
               </Grid>
             )}
