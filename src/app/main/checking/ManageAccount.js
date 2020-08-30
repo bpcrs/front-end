@@ -21,58 +21,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "80px",
     },
 }));
-const IOSSwitch = withStyles((theme) => ({
-    root: {
-        width: 42,
-        height: 26,
-        padding: 0,
-        margin: theme.spacing(1),
-    },
-    switchBase: {
-        padding: 1,
-        "&$checked": {
-            transform: "translateX(16px)",
-            color: theme.palette.common.white,
-            "& + $track": {
-                backgroundColor: "#52d869",
-                opacity: 1,
-                border: "none",
-            },
-        },
-        "&$focusVisible $thumb": {
-            color: "#52d869",
-            border: "6px solid #fff",
-        },
-    },
-    thumb: {
-        width: 24,
-        height: 24,
-    },
-    track: {
-        borderRadius: 26 / 2,
-        border: `1px solid ${theme.palette.grey[400]}`,
-        backgroundColor: theme.palette.grey[50],
-        opacity: 1,
-        transition: theme.transitions.create(["background-color", "border"]),
-    },
-    checked: {},
-    focusVisible: {},
-}))(({ classes, ...props }) => {
-    return (
-        <Switch
-            focusVisibleClassName={classes.focusVisible}
-            disableRipple
-            classes={{
-                root: classes.root,
-                switchBase: classes.switchBase,
-                thumb: classes.thumb,
-                track: classes.track,
-                checked: classes.checked,
-            }}
-            {...props}
-        />
-    );
-});
+
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.common.black,
@@ -95,30 +44,79 @@ export default function ManageAccount() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const accounts = useSelector((state) => state.checking.accounts);
-    const [currentAccount, setCurrentAccount] = useState({});
     const [currentPage, setCurrentPage] = useState(1);
     const [open, setOpen] = useState(false);
-
-    const handleClickOpen = (account) => {
-        if (account != null) {
-            setCurrentAccount(account);
-        }
-        // console.log(accounts.data.length);
+    const [currentId, setCurrentId] = useState(0);
+    console.log(accounts);
+    const handleClickOpen = (id) => {
+        setCurrentId(id);
         setOpen(true);
     };
 
     const handleAccount = () => {
-        console.log(currentAccount);
-        // dispatch(updateAccountStatus(currentAccount.id));
+        dispatch(updateAccountStatus(currentId));
+        handleClose();
     }
     const handleClose = () => {
+        setCurrentId(0);
         setOpen(false);
     };
     const size = 10;
     useEffect(() => {
         dispatch(fetchAccountByAdminList(currentPage, size));
-
     }, [currentPage, dispatch]);
+    const IOSSwitch = withStyles((theme) => ({
+        root: {
+            width: 42,
+            height: 26,
+            padding: 0,
+            margin: theme.spacing(1),
+        },
+        switchBase: {
+            padding: 1,
+            "&$checked": {
+                transform: "translateX(16px)",
+                color: theme.palette.common.white,
+                "& + $track": {
+                    backgroundColor: "#52d869",
+                    opacity: 1,
+                    border: "none",
+                },
+            },
+            "&$focusVisible $thumb": {
+                color: "#52d869",
+                border: "6px solid #fff",
+            },
+        },
+        thumb: {
+            width: 24,
+            height: 24,
+        },
+        track: {
+            borderRadius: 26 / 2,
+            border: `1px solid ${theme.palette.grey[400]}`,
+            backgroundColor: theme.palette.grey[50],
+            opacity: 1,
+            transition: theme.transitions.create(["background-color", "border"]),
+        },
+        checked: {},
+        focusVisible: {},
+    }))(({ classes, ...props }) => {
+        return (
+            <Switch
+                focusVisibleClassName={classes.focusVisible}
+                disableRipple
+                classes={{
+                    root: classes.root,
+                    switchBase: classes.switchBase,
+                    thumb: classes.thumb,
+                    track: classes.track,
+                    checked: classes.checked,
+                }}
+                {...props}
+            />
+        );
+    });
     return (
         <Grid>
             {
@@ -161,8 +159,8 @@ export default function ManageAccount() {
                                                             control={
                                                                 <IOSSwitch
                                                                     id="status"
-                                                                    checked={account.status = true}
-                                                                    onChange={() => setOpen(true)}
+                                                                    checked={account.active ? true : false}
+                                                                    onChange={() => handleClickOpen(account.id)}
                                                                     name="status"
                                                                 />
                                                             }
