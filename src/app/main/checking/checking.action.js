@@ -5,6 +5,12 @@ export const CHANGE_OPEN = "[OPEN] CHANGE";
 export const FETCH_CAR_CHECKING_SUCCESS = "[CAR_CHECKING] FETCH DATA SUCCESS";
 export const FETCH_CAR_CHECKING_FAILURE = "[CAR_CHECKING] FETCH DATA FAILURE";
 
+export const FETCH_ACCOUNT_LIST_SUCCESS = "[ACCOUNT_LIST] FETCH DATA SUCCESS";
+export const FETCH_ACCOUNT_LIST_FAILURE = "[ACCOUNT_LIST] FETCH DATA FAILURE";
+
+export const FETCH_ACCOUNT_STATUS_EDIT_SUCCESS = "[ACCOUNT] PUT DATA SUCCESS";
+export const FETCH_ACCOUNT_STATUS_EDIT_FAILURE = "[ACCOUNT] PUT DATA FAILURE";
+
 export const FETCH_MODEL_LIST_SUCCESS = "[MODEL_LIST] FETCH DATA SUCCESS";
 export const FETCH_MODEL_LIST_FAILURE = "[MODEL_LIST] FETCH DATA FAILURE";
 
@@ -51,6 +57,34 @@ export const FETCH_COUNT_LAST_MONTH_REQUESTS =
   "[COUNT_BOOKING] FETCH LAST MONTH";
 export const APPROVE_USER_REGISTER = "[USER_REGISTER] APPROVE";
 
+export function fetchAccountListSuccess(accounts) {
+  return {
+    type: FETCH_ACCOUNT_LIST_SUCCESS,
+    payload: accounts,
+  };
+}
+
+export function fetchAccountListFailure(error) {
+  return {
+    type: FETCH_ACCOUNT_LIST_FAILURE,
+    payload: error,
+  };
+}
+
+export function putEditAccountStatusSuccess(account) {
+  return {
+    type: FETCH_ACCOUNT_STATUS_EDIT_SUCCESS,
+    payload: account,
+  };
+}
+
+export function putEditAccountStatusFailure(error) {
+  return {
+    type: FETCH_ACCOUNT_STATUS_EDIT_FAILURE,
+    payload: error,
+  };
+}
+
 export function fetchModelListSuccess(models) {
   return {
     type: FETCH_MODEL_LIST_SUCCESS,
@@ -64,6 +98,7 @@ export function fetchModelListFailure(error) {
     payload: error,
   };
 }
+
 export function putEditModelSuccess(model) {
   return {
     type: FETCH_MODEL_EDIT_SUCCESS,
@@ -250,6 +285,48 @@ export function putUserDetailFailure(error) {
   };
 }
 
+export function fetchAccountByAdminList(page, size) {
+  return (dispatch) => {
+    const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETALL, {
+      page,
+      size,
+    });
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(
+            fetchAccountListSuccess(response.success ? response.data : [])
+          );
+        } else {
+          // dispatch(showMessageError(response.message));
+        }
+      },
+      (error) => {
+        dispatch(fetchAccountListFailure(error));
+        dispatch(showMessageError(error.message));
+      }
+    );
+  };
+}
+
+export function updateAccountStatus(id) {
+  return (dispatch) => {
+    const request = PUT(ENDPOINT.ACCOUNT_STATUS_UPDATE(id));
+    request.then(
+      (response) => {
+        if (response.success) {
+          dispatch(putEditAccountStatusSuccess(response.success ? response.data : []));
+        } else {
+          dispatch(putEditAccountStatusFailure(response.message));
+        }
+      },
+      (error) => {
+        dispatch(putEditAccountStatusFailure(error.message));
+      }
+    );
+  };
+}
+
 export function fetchCarCheckingAdmin(page, size) {
   return (dispatch) => {
     // const request = GET(ENDPOINT.CAR_CONTROLLER_GETALL);
@@ -401,7 +478,7 @@ export function fetchCarDetailCheck(carId) {
 
 export function fetchUserListChecking() {
   return (dispatch) => {
-    const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETALL);
+    const request = GET(ENDPOINT.ACCOUNT_CONTROLLER_GETALL_LICENSE);
     request.then(
       (response) => {
         if (response.success) {

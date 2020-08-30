@@ -20,6 +20,7 @@ import ManageBrand from "./ManageBrand";
 import ManageModel from "./ManageModel";
 import Widget from "../checking/Widget";
 import BookingWidget from "../checking/BookingWidget";
+import ManageAccount from "./ManageAccount";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -124,6 +125,11 @@ export default function Cheking() {
               label="Manage model"
               {...a11yProps(3)}
             />
+            <Tab
+              // icon={<UpdateIcon />}
+              label="Manage account"
+              {...a11yProps(4)}
+            />
           </Tabs>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -138,6 +144,9 @@ export default function Cheking() {
           </TabPanel>
           <TabPanel value={tab} index={3}>
             <ManageModel />
+          </TabPanel>
+          <TabPanel value={tab} index={4}>
+            <ManageAccount />
           </TabPanel>
         </Grid>
       </Grid>

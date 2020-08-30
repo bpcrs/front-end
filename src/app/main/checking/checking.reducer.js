@@ -5,6 +5,7 @@ const initialState = {
   carDetail: {},
   images: [],
   users: [],
+  accounts: [],
   // loading: false,
   brands: [],
   models:[],
@@ -19,6 +20,21 @@ const initialState = {
 
 const CheckingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+    case Actions.FETCH_ACCOUNT_LIST_SUCCESS: {
+      return {
+        ...state,
+        accounts: payload,
+      };
+    }
+    case Actions.FETCH_ACCOUNT_STATUS_EDIT_SUCCESS: {
+      return {
+        ...state,
+        accounts : {
+          data : state.accounts.data.map(account => account.id === payload.id ? payload : account),
+          count: state.accounts.count
+        }
+      };
+    }
     case Actions.FETCH_MODEL_LIST_SUCCESS: {
       return {
         ...state,
