@@ -177,50 +177,186 @@ const Message = ({ message, receive, type, createAt }) => {
                 <Typography variant="subtitle1" color="inherit">
                   Insurance Offer
                 </Typography>
-                {/* <Typography variant="caption" color="inherit">
-                  Save 15%
-                </Typography> */}
               </div>
+
               <CardContent>
                 <Typography gutterBottom variant="overline">
                   Package infomation
                 </Typography>
+
                 <Card raised square>
-                  <CardContent className="p-32">
-                    <div className="flex justify-center">
-                      <Typography variant="h6" color="textSecondary">
-                        {message.type}
-                      </Typography>
-                    </div>
+                  {message.type === "basic" ? (
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +200.000VND
+                        </Typography>
+                      </div>
 
-                    <Divider className="my-32" />
+                      <Divider className="my-32" />
 
-                    <div className="flex flex-col">
-                      <Typography variant="subtitle1" className="">
-                        <span className="font-bold mr-4">10</span>
-                        Projects
-                      </Typography>
-                      <Typography variant="subtitle1" className="">
-                        <span className="font-bold mr-4">10</span>
-                        Pages
-                      </Typography>
-                      <Typography variant="subtitle1" className="">
-                        <span className="font-bold mr-4">100</span>
-                        Mb Disk Space
-                      </Typography>
-                    </div>
-                    <Divider className="my-32" />
-                    <div className="flex justify-center">
-                      <Typography variant="h6" color="textPrimary">
-                        <NumberFormat
-                          value={message.value}
-                          displayType={"text"}
-                          thousandSeparator={true}
-                          suffix={" đ"}
-                        />
-                      </Typography>
-                    </div>
-                  </CardContent>
+                      <div className="flex flex-col">
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Collision Damage (CDW)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                During the rental period, CDW covers physical
+                                damage that the car might suffer in the event of
+                                an accident. However, it usually comes with some
+                                exclusion – for example, it might not cover
+                                damage to windscreens, tires, undercarriage,
+                                replacement locks, replacement keys, and towing
+                                charges.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Loss Damage Waiver (LDW)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                Coverage for both CDW and LDW are similar – both
+                                waive your financial responsibility for any
+                                damage that the rental car might incur.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item container justify="space-between">
+                          <Typography
+                            variant="subtitle1"
+                            style={{ color: "white" }}
+                          >
+                            .
+                          </Typography>
+                        </Grid>
+                        <Grid item container justify="space-between">
+                          <Typography
+                            variant="subtitle1"
+                            style={{ color: "white" }}
+                          >
+                            .
+                          </Typography>
+                        </Grid>
+                      </div>
+                    </CardContent>
+                  ) : (
+                    <CardContent className="p-32">
+                      <div className="flex justify-center">
+                        <Typography variant="h6" color="textSecondary">
+                          +400.000VND
+                        </Typography>
+                      </div>
+
+                      <Divider className="my-32" />
+
+                      <div className="flex flex-col">
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Collision Damage (CDW)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                During the rental period, CDW covers physical
+                                damage that the car might suffer in the event of
+                                an accident. However, it usually comes with some
+                                exclusion – for example, it might not cover
+                                damage to windscreens, tires, undercarriage,
+                                replacement locks, replacement keys, and towing
+                                charges.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Loss Damage Waiver (LDW)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                Coverage for both CDW and LDW are similar – both
+                                waive your financial responsibility for any
+                                damage that the rental car might incur.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Theft Protection (TP)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                TP covers part of the cost for replacing the
+                                hire car if it’s stolen or damaged as a result
+                                of attempted theft, while you have it. However,
+                                TP coverage excludes items inside the car, such
+                                as your luggage, phone or GPS.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+                        <Grid item container justify="space-between">
+                          <Typography variant="subtitle1" className="">
+                            <li>Third–Party Liability (TPL)</li>
+                          </Typography>
+                          <Tooltip
+                            title={
+                              <Typography variant="caption">
+                                TPL covers the third party’s bodily injuries,
+                                death, and damage to property. In most
+                                countries, either you, the driver, or your
+                                rental company are legally required to purchase
+                                Third-Party liability coverage before renting a
+                                car, thus TPL is most likely already included in
+                                your rental package.
+                              </Typography>
+                            }
+                            placement="top"
+                          >
+                            <Icon style={{ cursor: "pointer" }}>
+                              error_outline
+                            </Icon>
+                          </Tooltip>
+                        </Grid>
+                      </div>
+                    </CardContent>
+                  )}
                   {!isRevice ? (
                     <div className="flex justify-center pb-32">
                       <Button
