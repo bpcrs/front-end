@@ -13,7 +13,7 @@ import PopoverUser from "./PopoverUser";
 import PopoverPricing from "./PopoverPricing";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { postReturnBooking, postEstimateBooking } from "./profile.action";
+import { postEstimateBooking } from "./profile.action";
 import { Typography } from "@material-ui/core";
 
 const StyledTableCell = withStyles((theme) => ({
@@ -141,11 +141,38 @@ export default function ContractTable({ booking }) {
             </StyledTableCell>
             <StyledTableCell align="right">
               <PopoverPricing pricing={preReturnPrice} booking={booking}>
-                {preReturnPrice.estimatePrice === 0 ? (
+                {booking.rentalPrice === 0 ? (
                   <u>N/A</u>
                 ) : (
                   <NumberFormat
-                    value={preReturnPrice.estimatePrice}
+                    value={booking.rentalPrice}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    style={{ textDecoration: "underline" }}
+                    suffix={" đ"}
+                  />
+                )}
+                {/* <NumberFormat
+                  value={booking.rentalPrice}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  style={{ textDecoration: "underline" }}
+                  suffix={" đ"}
+                /> */}
+              </PopoverPricing>
+            </StyledTableCell>
+          </StyledTableRow>
+          <StyledTableRow>
+            <StyledTableCell component="th" scope="row">
+              Deposit
+            </StyledTableCell>
+            <StyledTableCell align="right">
+              <PopoverPricing pricing={preReturnPrice} booking={booking}>
+                {preReturnPrice.deposit === 0 ? (
+                  <u>N/A</u>
+                ) : (
+                  <NumberFormat
+                    value={preReturnPrice.deposit}
                     displayType={"text"}
                     thousandSeparator={true}
                     style={{ textDecoration: "underline" }}

@@ -266,7 +266,6 @@ const Profile = () => {
               </Grid>
             </Grid>
           </Grid>
-
           <Grid item xs={12} lg={12}>
             <Tabs
               indicatorColor="primary"

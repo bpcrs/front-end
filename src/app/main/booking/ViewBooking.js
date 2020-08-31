@@ -81,7 +81,7 @@ export default function ViewBooking(props) {
     destination: bookingChange.destination.description || "destination",
     status: "REQUEST",
     fromDate: convert(fromDate) || "",
-    toDate: convert(toDate) || "",
+    toDate: convert(toDate) + "T12:00:00" || "",
     location: bookingChange.location.description || "",
     carId: carDetail.id || "",
     price: carDetail.price || "",
@@ -99,7 +99,6 @@ export default function ViewBooking(props) {
   const handleClose = () => {
     setOpen(false);
     dispatch(changeLoadingBooking());
-    // setCheck(false);
   };
 
   const handleUpdateClose = () => {
@@ -108,14 +107,9 @@ export default function ViewBooking(props) {
 
   const handleBooking = () => {
     createBookingRequest();
-    // history.push({
-    //   pathname: APP_PATH.PROFILE,
-    //   state: {},
-    // });
   };
   const createBookingRequest = () => {
     dispatch(postBookingRequest(bookingReq, carDetail.name, currentUser));
-    // loadingBooking
   };
 
   useEffect(() => {

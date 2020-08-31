@@ -173,7 +173,7 @@ export default function Agreement({ type, onSubmit = () => {} }) {
                         onDragStop={(e) => console.log(e)}
                         step={50}
                         min={100}
-                        max={500}
+                        max={1000}
                         valueLabelFormat={(value) =>
                           value === 15 ? "Unlimited" : value
                         }
