@@ -149,7 +149,7 @@ function Landing() {
           }
           image={
             <img
-              src="assets/images/car-landing.jpg"
+              src="assets/images/car-landing.png"
               alt="No Review"
               width="500px"
             />
