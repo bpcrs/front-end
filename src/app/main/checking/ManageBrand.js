@@ -14,7 +14,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
 import firebase from "../../firebase/firebase";
-// import { showMessage, showMessageError } from '../../store/actions/fuse';
 import { showMessageError } from '../../store/actions/fuse';
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +50,6 @@ export default function ManageBrand() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const brands = useSelector((state) => state.checking.brands);
-  // const [brands, setBrands] = useState([]);
   const [currentBrand, setCurrentBrand] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);

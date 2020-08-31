@@ -7,14 +7,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { fetchAccountByAdminList, updateAccountStatus } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
-import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import firebase from "../../firebase/firebase";
-import { showMessageError } from '../../store/actions/fuse';
 const useStyles = makeStyles((theme) => ({
     card: {
         margin: theme.spacing(2),

@@ -1,5 +1,5 @@
 import { withStyles, makeStyles } from "@material-ui/core/styles";
-import { Grid, DialogActions, Icon, Avatar, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
+import { Grid, DialogActions, Icon, TableCell, Typography, TextField, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -7,13 +7,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { fetchModelByAdminList, updateModel, addModel } from "./checking.action";
 import Pagination from "@material-ui/lab/Pagination";
 import EditIcon from '@material-ui/icons/Edit';
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import firebase from "../../firebase/firebase";
 import { showMessageError } from '../../store/actions/fuse';
 const useStyles = makeStyles((theme) => ({
   root: {
