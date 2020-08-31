@@ -149,9 +149,9 @@ function Landing() {
           }
           image={
             <img
-              width="400px"
-              alt=""
-              src="https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/hero.png"
+              src="assets/images/car-landing.jpg"
+              alt="No Review"
+              width="500px"
             />
           }
           // cta={<Button>Book a demo</Button>}
@@ -162,7 +162,7 @@ function Landing() {
           centerText
           features={[
             {
-              heading: "Control",
+              heading: "Smart Contract",
               icon: (
                 <img
                   width="200px"
@@ -170,7 +170,7 @@ function Landing() {
                   src="https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step1.svg"
                 />
               ),
-              subheading: "Multi-level approvals and custom spending limits.",
+              subheading: "Contract is always valid and no central authority is required anymore",
             },
             {
               heading: "Pay",
@@ -182,7 +182,7 @@ function Landing() {
                 />
               ),
               subheading:
-                "Smart company cards, virtual cards, and invoice tracking.",
+                "Negotiate about price between renter and car owner",
             },
             {
               heading: "Track",
@@ -193,7 +193,7 @@ function Landing() {
                   src="https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step3.svg"
                 />
               ),
-              subheading: "Real-time spending overview and receipt capture.",
+              subheading: "Track & notify location to car owners.",
             },
             {
               heading: "Report",
@@ -204,35 +204,27 @@ function Landing() {
                   src="https://raw.githubusercontent.com/remorses/landing-blocks/master/website/public/spendesk/step4.svg"
                 />
               ),
-              subheading: "Simplified bookkeeping and budget analysis.",
+              subheading: "Generate contracts reports daily/monthly",
             },
           ]}
         />
-        {/* <Feature
-            heading='Prismic is a Content Management System, a tool for editing online content'
-            subheading="Also known as a headless CMS, an API CMS, a content platform, a disruptive content-as-a-service digital experience...basically we've built a tool that lets you choose your technology, framework, and language and then easily manage your content."
-            image={<img src='/spendesk/feature1.png' width='500px' />}
-            flip
-        /> */}
         <Faqs
           faqs={[
             {
-              question: "What is Spendesk",
+              question: "What is Blockchain-based Personal Car Renting System",
               answer: (
                 <Box>
-                  Spendesk is the first spend management platform built for both
-                  finance teams and employees. It gives finance leaders
-                  visibility across all company spending.
+                  Blockchain-based Personal Car Renting System is a website which helps users to rent cars easier using smart contracts, a process built based on blockchain without any intermediary. Besides that, car owners can offer their cars for rental easier
                 </Box>
               ),
             },
             {
-              question: "Should i care?",
+              question: "Advantages?",
               answer: (
                 <Box>
-                  Spendesk is the first spend management platform built for both
-                  finance teams and employees. It gives finance leaders
-                  visibility across all company spending.
+                  •	Picking and returning at the same location is more secure and easier for management.<br />
+                    •	Spend less money on renting premises for other branches.<br />
+                    •	Keep contracts transparent, security and immutable.
                 </Box>
               ),
             },
@@ -240,34 +232,12 @@ function Landing() {
               question: "Why is this useful",
               answer: (
                 <Box>
-                  Spendesk is the first spend management platform built for both
-                  finance teams and employees. It gives finance leaders
-                  visibility across all company spending.
+                  •	Convenience for renters to rent the car and car owners to offer their cars. <br />
+                  •	Easier to manage contracts and car states.
                 </Box>
               ),
             },
           ]}
-        />
-
-        <Footer
-          businessName="Prismic"
-          columns={{
-            Developers: [
-              <Typography variant="subtitle2">Quickstart</Typography>,
-              <Typography variant="subtitle2">Documentation</Typography>,
-              <Typography variant="subtitle2">Samples</Typography>,
-            ],
-            Company: [
-              <Typography variant="subtitle2">Quickstart</Typography>,
-              <Typography variant="subtitle2">Documentation</Typography>,
-              <Typography variant="subtitle2">Samples</Typography>,
-            ],
-            Product: [
-              <Typography variant="subtitle2">Quickstart</Typography>,
-              <Typography variant="subtitle2">Documentation</Typography>,
-              <Typography variant="subtitle2">Samples</Typography>,
-            ],
-          }}
         />
       </LandingProvider>
     </div>
