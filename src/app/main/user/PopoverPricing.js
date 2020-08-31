@@ -192,7 +192,7 @@ export default function PopoverPricing({ pricing, children, booking }) {
                     : "N/A"}
                 </StyledTableCell>
               </StyledTableRow>
-              <StyledTableRow>
+              {/* <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
                   Indemnification
                 </StyledTableCell>
@@ -257,7 +257,7 @@ export default function PopoverPricing({ pricing, children, booking }) {
                 ) : (
                   <StyledTableCell align="right">N/A</StyledTableCell>
                 )}
-              </StyledTableRow>
+              </StyledTableRow> */}
               <StyledTableRow>
                 <StyledTableCell component="th" scope="row">
                   Price per day

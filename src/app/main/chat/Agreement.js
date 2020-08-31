@@ -127,9 +127,9 @@ export default function Agreement({ type, onSubmit = () => {} }) {
       case CRITERIA_NAME.EXTRA:
         onSubmit({ type, value: extra });
         break;
-      case CRITERIA_NAME.INDEMNTIFICATION:
-        onSubmit({ type, value: checkboxValue });
-        break;
+      // case CRITERIA_NAME.INDEMNTIFICATION:
+      //   onSubmit({ type, value: checkboxValue });
+      //   break;
       case CRITERIA_NAME.DEPOSIT:
         onSubmit({ type, value: scope });
         break;
@@ -504,61 +504,61 @@ export default function Agreement({ type, onSubmit = () => {} }) {
             </Grid>
           </Box>
         );
-      case CRITERIA_NAME.INDEMNTIFICATION:
-        return (
-          <Box>
-            <Grid container spacing={1}>
-              <Grid lg={12} item>
-                <div className="w-full">
-                  <Card raised square>
-                    <div
-                      className={classNames(classes.cardHeader, "px-24 py-16")}
-                    >
-                      <Typography variant="subtitle1" color="inherit">
-                        Indemnification Checklist
-                      </Typography>
-                    </div>
+      // case CRITERIA_NAME.INDEMNTIFICATION:
+      //   return (
+      //     <Box>
+      //       <Grid container spacing={1}>
+      //         <Grid lg={12} item>
+      //           <div className="w-full">
+      //             <Card raised square>
+      //               <div
+      //                 className={classNames(classes.cardHeader, "px-24 py-16")}
+      //               >
+      //                 <Typography variant="subtitle1" color="inherit">
+      //                   Indemnification Checklist
+      //                 </Typography>
+      //               </div>
 
-                    <CardContent className="p-32">
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={checkboxValue.carDamage}
-                              onChange={handleChangeCheckbox}
-                              name="carDamage"
-                            />
-                          }
-                          label="Car damage"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={checkboxValue.overdue}
-                              onChange={handleChangeCheckbox}
-                              name="overdue"
-                            />
-                          }
-                          label="Overdue return time"
-                        />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={checkboxValue.violate}
-                              onChange={handleChangeCheckbox}
-                              name="violate"
-                            />
-                          }
-                          label="Violate transport"
-                        />
-                      </FormGroup>
-                    </CardContent>
-                  </Card>
-                </div>
-              </Grid>
-            </Grid>
-          </Box>
-        );
+      //               <CardContent className="p-32">
+      //                 <FormGroup>
+      //                   <FormControlLabel
+      //                     control={
+      //                       <Checkbox
+      //                         checked={checkboxValue.carDamage}
+      //                         onChange={handleChangeCheckbox}
+      //                         name="carDamage"
+      //                       />
+      //                     }
+      //                     label="Car damage"
+      //                   />
+      //                   <FormControlLabel
+      //                     control={
+      //                       <Checkbox
+      //                         checked={checkboxValue.overdue}
+      //                         onChange={handleChangeCheckbox}
+      //                         name="overdue"
+      //                       />
+      //                     }
+      //                     label="Overdue return time"
+      //                   />
+      //                   <FormControlLabel
+      //                     control={
+      //                       <Checkbox
+      //                         checked={checkboxValue.violate}
+      //                         onChange={handleChangeCheckbox}
+      //                         name="violate"
+      //                       />
+      //                     }
+      //                     label="Violate transport"
+      //                   />
+      //                 </FormGroup>
+      //               </CardContent>
+      //             </Card>
+      //           </div>
+      //         </Grid>
+      //       </Grid>
+      //     </Box>
+      //   );
       default:
         return <Box>Error</Box>;
     }
