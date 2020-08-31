@@ -45,12 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function getSteps() {
-  return [
-    "Select Extra",
-    "Choose Indemnification plan",
-    "Choose Deposit",
-    "Commplete agreement",
-  ];
+  return ["Select Extra", "Choose Deposit", "Commplete agreement"];
 }
 function getStepsRenter() {
   return ["Select Mileage limit", "Select Insurance", "Commplete agreement"];
