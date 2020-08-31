@@ -227,38 +227,38 @@ export default function CarEdits(props) {
     return (
       <React.Fragment>
         {carDetail.status === CAR_STATUS.AVAILABLE ||
-        carDetail.status === CAR_STATUS.UNAVAILABLE ||
-        carDetail.status === CAR_STATUS.REQUEST ? (
-          <Grid
-            spacing={1}
-            container
-            justify="space-between"
-            alignItems="baseline"
-          >
-            <Grid item lg={6}>
-              <Typography variant="subtitle1" color="inherit">
-                Available for Rental
+          carDetail.status === CAR_STATUS.UNAVAILABLE ||
+          carDetail.status === CAR_STATUS.REQUEST ? (
+            <Grid
+              spacing={1}
+              container
+              justify="space-between"
+              alignItems="baseline"
+            >
+              <Grid item lg={6}>
+                <Typography variant="subtitle1" color="inherit">
+                  Available for Rental
               </Typography>
-              <Typography variant="subtitle2" color="primary">
-                The car will appear in search
+                <Typography variant="subtitle2" color="primary">
+                  The car will appear in search
               </Typography>
-            </Grid>
+              </Grid>
 
-            <FormControlLabel
-              classes={classes.switchButton}
-              control={
-                <IOSSwitch
-                  id="staus"
-                  checked={carDetail.status === "AVAILABLE"}
-                  onChange={() => setOpen(true)}
-                  name="staus"
-                />
-              }
-            />
-          </Grid>
-        ) : (
-          <Grid></Grid>
-        )}
+              <FormControlLabel
+                classes={classes.switchButton}
+                control={
+                  <IOSSwitch
+                    id="staus"
+                    checked={carDetail.status === "AVAILABLE"}
+                    onChange={() => setOpen(true)}
+                    name="staus"
+                  />
+                }
+              />
+            </Grid>
+          ) : (
+            <Grid></Grid>
+          )}
         <Dialog open={openLocation} scroll="body">
           <Grid>
             <DialogContent>
@@ -304,36 +304,36 @@ export default function CarEdits(props) {
         </Dialog>
         <Dialog open={open} scroll="body">
           {carDetail.status === "AVAILABLE" ||
-          carDetail.status === "UNAVAILABLE" ? (
-            <Grid>
-              <DialogContent>
-                <Grid container justify="center"></Grid>
-                <Typography variant="subtitle1" color="initial">
-                  Are you sure to{" "}
-                  {carDetail.status === "AVAILABLE" ? "turn off" : "turn on"}{" "}
+            carDetail.status === "UNAVAILABLE" ? (
+              <Grid>
+                <DialogContent>
+                  <Grid container justify="center"></Grid>
+                  <Typography variant="subtitle1" color="initial">
+                    Are you sure to{" "}
+                    {carDetail.status === "AVAILABLE" ? "turn off" : "turn on"}{" "}
                   your car?
                 </Typography>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  style={{ backgroundColor: "red", color: "white" }}
-                  onClick={() => setOpen(false)}
-                >
-                  No
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ backgroundColor: "red", color: "white" }}
+                    onClick={() => setOpen(false)}
+                  >
+                    No
                 </Button>
-                <Button
-                  autoFocus
-                  onClick={handleChangeStatus}
-                  color="primary"
-                  variant="contained"
-                >
-                  Yes
+                  <Button
+                    autoFocus
+                    onClick={handleChangeStatus}
+                    color="primary"
+                    variant="contained"
+                  >
+                    Yes
                 </Button>
-              </DialogActions>
-            </Grid>
-          ) : null}
+                </DialogActions>
+              </Grid>
+            ) : null}
         </Dialog>
       </React.Fragment>
     );
@@ -349,14 +349,45 @@ export default function CarEdits(props) {
   const uploadImage = (event) => {
     // storeImageToFirebase(event.target.files);
     setImagesCar([...imagesCar, ...event.target.files]);
-    postImg(event.target.files);
-    dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+    // if (event.target.files && event.target.files.length >= 2 && event.target.files.length <= 5) {
+    //   postImg(event.target.files);
+    //   dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+    // } else {
+
+    // }
+
   };
   const uploadImageLicense = (event) => {
     setImageLicense([...imagesLicense, ...event.target.files]);
-    postImgLicense(event.target.files);
-    dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+    // if (event.target.files.length >= 2 && event.target.files.length <= 5) {
+    //   postImgLicense(event.target.files);
+    //   dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+    // } else {
+
+    // }
   };
+
+  const handleSubmitImageCar = () => {
+    if (imagesCar.length >= 2 && imagesCar.length <= 5) {
+      const lengthTotal = imagesCar.length + images.count;
+      if (lengthTotal >= 2 && lengthTotal <= 5) {
+        postImg(imagesCar);
+        dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+      }
+
+    }
+  };
+
+  const handleSubmitImageCarLicense = () => {
+    if (imagesLicense.length >= 2 && imagesLicense.length <= 5) {
+      const lengthTotal = imagesLicense.length + licenses.count;
+      if (lengthTotal >= 2 && lengthTotal <= 5) {
+        postImgLicense(imagesLicense);
+        dispatch(updateCarStatus(carDetail.id, CAR_STATUS.REGISTER));
+      }
+    }
+  };
+
   const postImg = (images) => {
     // console.log(imagesCar);
     console.log(images);
@@ -409,7 +440,8 @@ export default function CarEdits(props) {
   };
   const handleRemoveLicItem = (image) => {
     // console.log(imagesCar);
-    setImagesCar(imagesLicense.filter((item) => item.name !== image.name));
+    // setImagesCar(imagesLicense.filter((item) => item.name !== image.name));
+    setImageLicense(imagesLicense.filter((item) => item.name !== image.name));
   };
   const handleRemoveImage = (image) => {
     console.log(image.id);
@@ -656,7 +688,7 @@ export default function CarEdits(props) {
                     name="model"
                     variant="outlined"
                     disabled
-                    // onChange={handleInputChange}
+                  // onChange={handleInputChange}
                   />
                   <TextField
                     className={classes.textField}
@@ -706,27 +738,27 @@ export default function CarEdits(props) {
             {images.data ? (
               <Grid container item lg={12}>
                 {carDetail.status === CAR_STATUS.RENTING ||
-                !openUpload ? null : (
-                  <Grid item lg={3}>
-                    <label
-                      className={classes.productImageItem}
-                      variant="outlined"
-                    >
-                      <input
-                        type="file"
-                        style={{ display: "none" }}
-                        multiple
-                        accept="image/*"
-                        name="image"
-                        id="file"
-                        onChange={uploadImage}
-                      />
-                      <span aria-hidden="true">
-                        <Icon style={{ color: "blue" }}>cloud_upload</Icon>
-                      </span>
-                    </label>
-                  </Grid>
-                )}
+                  !openUpload ? null : (
+                    <Grid item lg={3}>
+                      <label
+                        className={classes.productImageItem}
+                        variant="outlined"
+                      >
+                        <input
+                          type="file"
+                          style={{ display: "none" }}
+                          multiple
+                          accept="image/*"
+                          name="image"
+                          id="file"
+                          onChange={uploadImage}
+                        />
+                        <span aria-hidden="true">
+                          <Icon style={{ color: "blue" }}>cloud_upload</Icon>
+                        </span>
+                      </label>
+                    </Grid>
+                  )}
                 {images.data.map((image, index) => (
                   <Grid item lg={3}>
                     <div className={classes.productImageItem} key={index}>
@@ -764,6 +796,30 @@ export default function CarEdits(props) {
                       </div>
                     </Grid>
                   ))}
+
+                {carDetail.status === CAR_STATUS.RENTING ||
+                  !openUpload ? null : (
+                    <Grid container item xs={12} lg={12}>
+                      <Grid>
+                        <Button
+                          variant="outlined"
+                          style={{ textTransform: "none" }}
+                          color="primary"
+                          className={classes.status}
+                          onClick={handleSubmitImageCar}
+                        >
+                          Submit
+                      </Button>
+                      </Grid>
+                      <Grid item xs={12} lg={12}>
+                        <Typography variant="subtitle2" color="error">
+                          {imagesCar.length + images.count >= 2 && imagesCar.length + images.count <= 5 ? "" : "Please upload from 2 to 5 images of your car"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  )}
+
+
                 <Grid item lg={12}>
                   {carDetail.status === CAR_STATUS.RENTING ? null : (
                     <Button
@@ -780,10 +836,10 @@ export default function CarEdits(props) {
                 </Grid>
               </Grid>
             ) : (
-              <Grid>
-                <Typography>The car dont have images</Typography>
-              </Grid>
-            )}
+                <Grid>
+                  <Typography>The car dont have images</Typography>
+                </Grid>
+              )}
           </TabPanel>
           <TabPanel value={tabValue} index={2}>
             <Grid container item lg={12}>
@@ -847,6 +903,31 @@ export default function CarEdits(props) {
                     </div>
                   </Grid>
                 ))}
+
+              {carDetail.status === CAR_STATUS.RENTING ||
+                !openUpload ? null : (
+                  <Grid container item xs={12} lg={12}>
+                    <Grid>
+                      <Button
+                        variant="outlined"
+                        style={{ textTransform: "none" }}
+                        color="primary"
+                        className={classes.status}
+                        onClick={handleSubmitImageCarLicense}
+                      >
+                        Submit
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} lg={12}>
+                      <Typography variant="subtitle2" color="error">
+                        {imagesLicense.length + licenses.count >= 2 && imagesLicense.length + licenses.count <= 5 ? "" : "Please upload from 2 to 5 images of your license"}
+                      </Typography>
+                    </Grid>
+
+                  </Grid>
+                )}
+
+
               <Grid item lg={12}>
                 {carDetail.status === CAR_STATUS.RENTING ? null : (
                   <Button
