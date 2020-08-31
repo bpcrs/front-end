@@ -146,16 +146,16 @@ export default function VerticalLinearStepper() {
             />
           </React.Fragment>
         );
+      // case 1:
+      //   return (
+      //     <React.Fragment>
+      //       <Agreement
+      //         type={CRITERIA_NAME.INDEMNTIFICATION}
+      //         onSubmit={setCurrentAgreement}
+      //       />
+      //     </React.Fragment>
+      //   );
       case 1:
-        return (
-          <React.Fragment>
-            <Agreement
-              type={CRITERIA_NAME.INDEMNTIFICATION}
-              onSubmit={setCurrentAgreement}
-            />
-          </React.Fragment>
-        );
-      case 2:
         return (
           <React.Fragment>
             <Agreement
@@ -164,7 +164,7 @@ export default function VerticalLinearStepper() {
             />
           </React.Fragment>
         );
-      case 3:
+      case 2:
         return <React.Fragment>You comfirm agreement</React.Fragment>;
       default:
         return "Unknown step";

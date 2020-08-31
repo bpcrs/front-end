@@ -275,65 +275,65 @@ const Message = ({ message, receive, type, createAt }) => {
             ) : null}
           </Card>
         );
-      case CRITERIA_NAME.INDEMNTIFICATION:
-        return (
-          <Card className="w-1/2">
-            <CardActionArea>
-              <div className={classNames(classes.cardHeader, "px-24 py-16")}>
-                <Typography variant="subtitle1" color="inherit">
-                  Indemnification Offer
-                </Typography>
-              </div>
-              <CardContent>
-                <Typography gutterBottom variant="overline">
-                  Checked list
-                </Typography>
-                <Card raised square>
-                  <Box className="px-24 py-24">
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={message.carDamage}
-                            name="carDamage"
-                          />
-                        }
-                        label="Car damage"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox checked={message.overdue} name="overdue" />
-                        }
-                        label="Overdue return time"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox checked={message.violate} name="violate" />
-                        }
-                        label="Violate transport"
-                      />
-                    </FormGroup>
-                  </Box>
-                </Card>
-              </CardContent>
-              {!isRevice ? (
-                <div className="flex justify-center pb-8 w-100">
-                  <Button
-                    size="small"
-                    color="default"
-                    style={{ backgroundColor: "green", color: "white" }}
-                    variant="outlined"
-                    onClick={() => {
-                      handAgreementAccepted(type);
-                    }}
-                  >
-                    Agree
-                  </Button>
-                </div>
-              ) : null}
-            </CardActionArea>
-          </Card>
-        );
+      // case CRITERIA_NAME.INDEMNTIFICATION:
+      //   return (
+      //     <Card className="w-1/2">
+      //       <CardActionArea>
+      //         <div className={classNames(classes.cardHeader, "px-24 py-16")}>
+      //           <Typography variant="subtitle1" color="inherit">
+      //             Indemnification Offer
+      //           </Typography>
+      //         </div>
+      //         <CardContent>
+      //           <Typography gutterBottom variant="overline">
+      //             Checked list
+      //           </Typography>
+      //           <Card raised square>
+      //             <Box className="px-24 py-24">
+      //               <FormGroup>
+      //                 <FormControlLabel
+      //                   control={
+      //                     <Checkbox
+      //                       checked={message.carDamage}
+      //                       name="carDamage"
+      //                     />
+      //                   }
+      //                   label="Car damage"
+      //                 />
+      //                 <FormControlLabel
+      //                   control={
+      //                     <Checkbox checked={message.overdue} name="overdue" />
+      //                   }
+      //                   label="Overdue return time"
+      //                 />
+      //                 <FormControlLabel
+      //                   control={
+      //                     <Checkbox checked={message.violate} name="violate" />
+      //                   }
+      //                   label="Violate transport"
+      //                 />
+      //               </FormGroup>
+      //             </Box>
+      //           </Card>
+      //         </CardContent>
+      //         {!isRevice ? (
+      //           <div className="flex justify-center pb-8 w-100">
+      //             <Button
+      //               size="small"
+      //               color="default"
+      //               style={{ backgroundColor: "green", color: "white" }}
+      //               variant="outlined"
+      //               onClick={() => {
+      //                 handAgreementAccepted(type);
+      //               }}
+      //             >
+      //               Agree
+      //             </Button>
+      //           </div>
+      //         ) : null}
+      //       </CardActionArea>
+      //     </Card>
+      //   );
       case "IMG":
         return (
           <Grid
