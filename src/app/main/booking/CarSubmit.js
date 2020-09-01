@@ -33,6 +33,7 @@ import NumberFormat from "react-number-format";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { showMessageError } from "../../store/actions/fuse";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     color: theme.palette.primary.contrastText,
@@ -154,7 +155,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
   const [imageCarArr, setImageCarArr] = useState([]);
   const [licenses, setLicenses] = useState([]);
   // const [linkLicenses, setLinkLicenses] = useState([]);
-
+  console.log("test seta:", currentCar);
   const years = Array(now - (now - 10))
     .fill("")
     .map((v, idx) => now - idx);
@@ -310,7 +311,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
               >
                 <InputLabel
                   id="demo-simple-select-outlined-label"
-                  // variant="outlined"
+                // variant="outlined"
                 >
                   Auto Drive
                 </InputLabel>
@@ -333,7 +334,35 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
           </Grid>
           <Grid container>
             <Grid item xs={3} lg={3}>
-              <TextField
+              <FormControl
+                required
+                variant="outlined"
+                className={classes.formScreen}>
+
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Seat
+                </InputLabel>
+
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  value={currentCar.seat}
+                  onChange={handleInputChange}
+                  label="Seat"
+                  name="seat"
+                >
+                  <MenuItem value="4">
+                    <Typography>4 Seat</Typography>
+                  </MenuItem>
+
+                  <MenuItem value="7">
+                    <Typography>7 Seat</Typography>
+                  </MenuItem>
+
+                </Select>
+
+              </FormControl>
+              {/* <TextField
                 required
                 className={classes.smallTextField}
                 id="seat"
@@ -343,7 +372,7 @@ function GetStepContent(step, onSubmit, onSubmitImage, onSubmitLicense) {
                 type="number"
                 variant="outlined"
                 onChange={handleInputChange}
-              />
+              /> */}
             </Grid>
 
             <Grid item xs={9} lg={9}>
@@ -973,80 +1002,80 @@ export default function CarSubmit(props) {
             </Button>
           </div>
         ) : (
-          <div>
-            <Grid>
-              {GetStepContent(
-                activeStep,
-                setCurrentCar,
-                setCarImages,
-                setCarLicenses
-              )}
-            </Grid>
             <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleStepBack}
-                className={classes.button}
-              >
-                Back
+              <Grid>
+                {GetStepContent(
+                  activeStep,
+                  setCurrentCar,
+                  setCarImages,
+                  setCarLicenses
+                )}
+              </Grid>
+              <div>
+                <Button
+                  disabled={activeStep === 0}
+                  onClick={handleStepBack}
+                  className={classes.button}
+                >
+                  Back
               </Button>
-              {activeStep === steps.length - 1 ? (
-                <React.Fragment>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleSubmit}
-                    className={classes.button}
-                    disabled={
-                      carImages.length < 2 ||
+                {activeStep === steps.length - 1 ? (
+                  <React.Fragment>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSubmit}
+                      className={classes.button}
+                      disabled={
+                        carImages.length < 2 ||
+                        carImages.length > 5 ||
+                        carLicense.length < 2 ||
+                        carLicense.length > 5
+                      }
+                    >
+                      Register
+                  </Button>
+                    {carImages.length < 2 ||
                       carImages.length > 5 ||
                       carLicense.length < 2 ||
-                      carLicense.length > 5
-                    }
-                  >
-                    Register
-                  </Button>
-                  {carImages.length < 2 ||
-                  carImages.length > 5 ||
-                  carLicense.length < 2 ||
-                  carLicense.length > 5 ? (
-                    <Typography
-                      variant="subtitle2"
-                      color="error"
-                      className={classes.smallTextField}
-                    >
-                      Your car images or license images are invalid! Please
+                      carLicense.length > 5 ? (
+                        <Typography
+                          variant="subtitle2"
+                          color="error"
+                          className={classes.smallTextField}
+                        >
+                          Your car images or license images are invalid! Please
                       upload 2 ~ 5 images of each kind{" "}
-                    </Typography>
-                  ) : null}
-                </React.Fragment>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleStepNext}
-                  className={classes.button}
-                  disabled={
-                    !currentCar.name ||
-                    !currentCar.brandId ||
-                    !currentCar.modelId ||
-                    !currentCar.year ||
-                    !currentCar.seat ||
-                    !currentCar.screen ||
-                    !currentCar.vin ||
-                    !currentCar.price > 0 ||
-                    !currentCar.plateNum ||
-                    (currentCar.vin && currentCar.vin.length !== 17) ||
-                    (currentCar.price && currentCar.price < 100000)
-                  }
-                >
-                  Next
-                </Button>
-                // </Grid>
-              )}
+                        </Typography>
+                      ) : null}
+                  </React.Fragment>
+                ) : (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleStepNext}
+                      className={classes.button}
+                      disabled={
+                        !currentCar.name ||
+                        !currentCar.brandId ||
+                        !currentCar.modelId ||
+                        !currentCar.year ||
+                        !currentCar.seat ||
+                        !currentCar.screen ||
+                        !currentCar.vin ||
+                        !currentCar.price > 0 ||
+                        !currentCar.plateNum ||
+                        (currentCar.vin && currentCar.vin.length !== 17) ||
+                        (currentCar.price && currentCar.price < 100000)
+                      }
+                    >
+                      Next
+                    </Button>
+                    // </Grid>
+                  )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </Grid>
   );
