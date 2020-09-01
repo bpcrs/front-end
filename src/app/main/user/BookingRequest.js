@@ -264,6 +264,10 @@ function Row({ booking, carId, currentUser, flag }) {
                 {requestText}
               </Button>
             </Tooltip>
+            {console.log(
+              new Date(booking.fromDate).toLocaleDateString() ===
+                now.toLocaleDateString()
+            )}
             <Tooltip title={confirmText}>
               <VerifyOTP
                 callBack={handleSignContract}
@@ -272,6 +276,12 @@ function Row({ booking, carId, currentUser, flag }) {
               >
                 <Button
                   variant="outlined"
+                  disabled={
+                    new Date(booking.fromDate).toLocaleDateString() ===
+                    now.toLocaleDateString()
+                      ? ""
+                      : "true"
+                  }
                   startIcon={
                     <Icon style={{ color: "green" }}>fingerprint</Icon>
                   }
