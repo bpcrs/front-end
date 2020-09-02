@@ -19,11 +19,13 @@ import Chat from "./Chat";
 import { fetchCriteriaList, setIsRenterBooking } from "./chat.action";
 import StepAgreement from "./StepAgreement";
 import BookingStatus from "../user/BookingStatus";
+import TimeAgreement from "./TimeAgreement";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { FuseScrollbars } from "../../../@fuse";
 import { useState } from "react";
 import DetailBooking from "./DetailBooking";
+import { BOOKING_STATUS } from "../../../constant";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -262,6 +264,9 @@ export const ChatArea = ({ location }) => {
     <Grid container>
       {selectedBooking.id && (
         <div>
+          {selectedBooking.status === BOOKING_STATUS.PENDING && (
+            <TimeAgreement />
+          )}
           <StepAgreement />
           <DetailBooking />
         </div>

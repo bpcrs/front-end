@@ -616,7 +616,7 @@ export default function BookingClose({ booking, openClose }) {
               <div className={classes.wrapper}>
                 <Button
                   variant="outlined"
-                  disabled={!preReturnPrice.extra}
+                  disabled={!preReturnPrice.deposit}
                   startIcon={<Icon style={{ color: "green" }}>done_all</Icon>}
                   style={{ textTransform: "none" }}
                   onClick={handleConfirmTotalPrice}

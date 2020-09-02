@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary[800],
     color: theme.palette.getContrastText(theme.palette.primary[800]),
   },
+  time: {
+    margin: theme.spacing(1),
+  },
 }));
 
 export default function StepAgreement() {
