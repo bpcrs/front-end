@@ -14,6 +14,7 @@ import {
   Button,
   Tooltip,
   DialogTitle,
+  Fab,
 } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Table from "@material-ui/core/Table";
@@ -39,8 +40,10 @@ import { red } from "@material-ui/core/colors";
 import VerifyOTP from "./VerifyOTP";
 import BookingClose from "../user/BookingClose";
 import UpdateOdmeter from "./UpdateOdmeter";
+import TimeAgreement from "../chat/TimeAgreement";
 
 import moment from "moment";
+import { now } from "lodash";
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > *": {
@@ -101,16 +104,6 @@ function Row({ booking, carId, currentUser, flag }) {
     }, 3000);
   };
 
-  // useEffect(() => {
-  //   const checkBookingDone = () => {
-  //     if (booking.status === BOOKING_STATUS.DONE) {
-  //       dispatch(isBookingReviewYet(booking.id, booking.renter.id));
-  //     }
-  //   };
-  //   checkBookingDone();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const pendingText = `Join chat room`;
   const requestText = `Cancel booking`;
   const confirmText = `Sign contract`;
@@ -118,6 +111,7 @@ function Row({ booking, carId, currentUser, flag }) {
   const ownerAcceptedText = `Join chat room`;
   const processingText = `Complete the rental process`;
   const completeText = `Complete booking`;
+  const waitSignText = `Please wait until receive car date`;
 
   function StatusAction(props) {
     const [open, setOpen] = useState(false);
@@ -137,7 +131,9 @@ function Row({ booking, carId, currentUser, flag }) {
       setOpen(false);
     };
     const now = new Date(Date.now());
-
+    // const timeSign = moment
+    //   .duration(moment(moment(new Date(booking.fromDate)).diff(moment())))
+    //   .humanize();
     switch (booking.status) {
       case BOOKING_STATUS.PROCESSING:
         return (
@@ -276,6 +272,7 @@ function Row({ booking, carId, currentUser, flag }) {
               >
                 <Button
                   variant="outlined"
+                  className={classes.button}
                   disabled={
                     new Date(booking.fromDate).toLocaleDateString() ===
                     now.toLocaleDateString()
@@ -287,7 +284,19 @@ function Row({ booking, carId, currentUser, flag }) {
                   }
                   style={{ textTransform: "none" }}
                 >
-                  {confirmText}
+                  {`${confirmText}  ${
+                    new Date(booking.fromDate).toLocaleDateString() ===
+                    now.toLocaleDateString()
+                      ? ""
+                      : "in " +
+                        moment
+                          .duration(
+                            moment(moment(new Date(booking.fromDate))).diff(
+                              moment()
+                            )
+                          )
+                          .humanize()
+                  }`}
                 </Button>
               </VerifyOTP>
             </Tooltip>
